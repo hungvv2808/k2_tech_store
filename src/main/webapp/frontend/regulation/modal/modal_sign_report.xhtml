@@ -1,0 +1,158 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!-- Modal sign report-->
+    <div class="modal fade" id="signReportPopup">
+        <div class="modal-dialog modal-login">
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal">&#xd7;</button>
+                <div class="register-area auction-form">
+                    <div class="register-form">
+                        <h3>Biên bản đấu giá</h3>
+                        <p class="note" style="word-wrap: break-word;">
+                            <i class="fa fa-info-circle" aria-hidden="true"/> Bạn vui lòng tải file biên bản đã được ký số lên hệ thống (Ký đúng vị trí cần ký trên file tương ứng với tài sản đã trúng đấu giá)
+                        </p>
+                        <h:form role="form" id="sign-report-form" prependId="false" autocomplete="off"
+                                styleClass="auction_register">
+                            <div class="row">
+                                <div class="col-md-2 col-sm-4 col-xs-12">
+                                    <label><b>File biên bản</b></label>
+                                </div>
+                                <div class="col-md-10 col-sm-8 col-xs-12">
+                                    <div class="inputfile-box">
+                                        <h:commandLink style="padding-top: 10px; text-overflow: ellipsis;"
+                                                       value="#{propertySaleHistoryController.regulationReportFile.fileName}"
+                                                       actionListener="#{commonController.download(propertySaleHistoryController.regulationReportFile.filePath, propertySaleHistoryController.regulationReportFile.fileName)}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row attachment-file">
+                                <div class="col-md-2 col-sm-4 col-xs-12">
+                                    <label><b>File biên bản đã ký</b></label>
+                                </div>
+                                <div class="col-md-10 col-sm-8 col-xs-12">
+                                    <div class="inputfile-box">
+                                        <p:remoteCommand name="btnRendered" update="sign-report-form" global="false"
+                                                         actionListener="#{propertySaleHistoryController.renderBySizeInfo}"/>
+
+                                        <p:fileUpload id="fileUploadReportRegisted" mode="advanced"
+                                                      styleClass="inputfile" auto="true"
+                                                      disabled="#{propertySaleHistoryController.regulationReportFile.status eq DbConstant.REGULATION_REPORT_FILE_STATUS_FINISH}"
+                                                      fileUploadListener="#{propertySaleHistoryController.pdfSignatureInfoController.upload}"
+                                                      oncomplete="btnRendered();"
+                                                      update="fileUploadFilenameReportRegisted #{Constant.ERROR_FE_GROWL_ID}"/>
+
+                                        <label for="fileUploadReportRegisted_input" class="lable-for-file">
+                                                <span id="file-name-report-registed" class="file-box">
+                                                    <h:outputLabel value="Chọn file biên bản đính kèm"
+                                                                   rendered="#{propertySaleHistoryController.pdfSignatureInfoController.fileName eq null}"/>
+                                                     <h:commandLink
+                                                             rendered="#{propertySaleHistoryController.pdfSignatureInfoController.fileName ne null}"
+                                                             value="#{propertySaleHistoryController.pdfSignatureInfoController.fileName}"
+                                                             actionListener="#{commonController.download(propertySaleHistoryController.pdfSignatureInfoController.filePath, propertySaleHistoryController.pdfSignatureInfoController.fileName)}"/>
+                                                </span>
+                                            <span class="file-button"><i class="fa fa-folder-o"
+                                                                         aria-hidden="true"/></span>
+                                        </label>
+                                    </div>
+
+                                    <span class="help-block">
+                                        <mdall>Vui lòng chọn file có định dạng pdf có dung lượng nhỏ hơn 10 MB</mdall>
+                                    </span>
+
+                                    <h:panelGroup id="fileUploadFilenameReportRegisted">
+                                        <script>
+                                            var element = document.getElementById("fileUploadReportRegisted_input");
+                                            element.addEventListener("change", function () {
+                                                if ("#{pdfSignatureInfoController.getAcceptFilePDFString()}".indexOf(this.files[0].name.split(".").pop().toLowerCase()) >= 0) {
+                                                    document.getElementById("file-name-report-registed").innerHTML = this.files[0].name;
+                                                } else {
+                                                    document.getElementById("file-name-report-registed").innerHTML = "Chọn file biên bản đính kèm";
+                                                }
+                                            });
+                                        </script>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+
+                            <h:panelGroup
+                                    rendered="#{propertySaleHistoryController.renderZone eq propertySaleHistoryController.SIGNATURE_NOT_SIGN}">
+                                <div class="row">
+                                    <div class="col-lg-2"></div>
+                                    <div class="col-lg-10">
+                                        <h:outputText value="File biên bản chưa có chữ ký số" style="color: #F19B40"/>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+
+                            <h:panelGroup
+                                    rendered="#{propertySaleHistoryController.renderZone eq propertySaleHistoryController.SIGNATURE_SIGNED}">
+                                <div class="row"
+                                     style="border: 1px solid #F19B40; border-radius: 5px; padding: 5px; margin: 20px">
+                                    <div class="col-lg-12 text-center">
+                                        <h3>Thông tin chữ ký số</h3>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <p:repeat
+                                                value="#{propertySaleHistoryController.pdfSignatureInfoController.info}"
+                                                var="pdfSignatureInfoDto">
+                                            <h:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid"
+                                                         columnClasses="ui-grid-col-3 no-padding, ui-grid-col-9 no-padding">
+                                                <h:outputLabel value="Lý do:"/>
+                                                <h:outputText value="#{pdfSignatureInfoDto.reason}"/>
+
+                                                <h:outputLabel value="Vị trí:"/>
+                                                <h:outputText value="#{pdfSignatureInfoDto.location}"/>
+
+                                                <h:outputLabel value="Ngày ký:"/>
+                                                <h:outputText value="#{pdfSignatureInfoDto.signDate}"/>
+
+                                                <h:outputLabel value="Nhà cung cấp ký số:"/>
+                                                <h:outputText value="#{pdfSignatureInfoDto.certificateInfo.issuerDN}"/>
+
+                                                <h:outputLabel value="Tổ chức xử lý ký số:"/>
+                                                <h:outputText value="#{pdfSignatureInfoDto.certificateInfo.subjectDN}"/>
+
+                                                <h:outputLabel value="Phương thức mã hoá:"/>
+                                                <h:outputText
+                                                        value="#{pdfSignatureInfoDto.certificateInfo.signAlgorithm}"/>
+
+                                                <h:outputLabel value="Số serial:"/>
+                                                <h:outputText value="#{pdfSignatureInfoDto.certificateInfo.serial}"/>
+                                            </h:panelGrid>
+                                        </p:repeat>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+
+                            <div class="row text-center">
+                                <h:commandButton id="buttonSendReport" styleClass="btn btn-success btn-custom"
+                                                 value="Gửi biên bản"
+                                                 action="#{propertySaleHistoryController.onSaveFileRegulationReport}">
+                                    <f:ajax execute="@form"
+                                            render="@form #{Constant.ERROR_FE_GROWL_ID} buttonSendReport dataMyAuctionHistory"/>
+                                </h:commandButton>
+                                <input type="button" value="Hủy bỏ"
+                                       class="btn btn-default btn-custom reset"
+                                       onclick="closeModal('#signReportPopup');">
+                                </input>
+                                <div class="row text-center" >
+                                    <div class="col-md-6">
+                                        <p:link style="color: #2F80ED;padding-top: 15px;" outcome="/frontend/account/instructions_signature.xhtml">Hướng dẫn sử dụng phần mềm kí chữ kí số</p:link>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h:outputLink style="color: #2F80ED;padding-top: 15px;" value="#{request.contextPath}/resources/signature-file/KySoDaNang_13072020.jar">Tải phần mềm kí số</h:outputLink>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ui:composition>

@@ -1,0 +1,141 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <c:set var="controller" value="#{controller}"/>
+
+    <!-- Modal Payment Option-->
+    <div class="modal fade" id="paymentOptionPopup">
+        <div class="modal-dialog modal-login">
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal">&#xd7;</button>
+                <div class="register-area">
+                    <div class="register-form">
+                        <h3>Lựa chọn phương thức thanh toán</h3>
+                        <div class="row type-register">
+                            <div class="col-md-3 col-xs-12 col-sm-12">
+                                <label class="register-label">Phương thức thanh toán</label>
+                            </div>
+                            <div class="col-md-9 col-xs-12 col-sm-12 choice-type">
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-6 col-sm-6">
+                                        <label class="radio">Thanh toán trực tuyến
+                                            <input id="radioPersonal" type="radio" checked="checked"
+                                                   name="typeRegister"
+                                                   value="pay-online"/>
+                                            <span class="checkround"/>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4 col-xs-6 col-sm-6">
+                                        <label class="radio">Thanh toán chuyển khoản
+                                            <input type="radio"
+                                                   name="typeRegister"
+                                                   value="pay-offline"/>
+                                            <span class="checkround"/>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="payment-online-form" class="pay-online box active text-center">
+                                <h:form role="form" id="pay-online-form" prependId="false">
+                                    <h:commandButton id="paymentSubmit"
+                                                     styleClass="btn btn-success btn-custom"
+                                                     style="color: white !important;"
+                                                     value="Thanh toán trực tuyến"
+                                                     onclick="loadingScreen()"
+                                                     action="#{auctionHistoryController.redirectPaymentWallet()}">
+                                        <f:ajax execute="@form" render=":pay-online-form #{Constant.ERROR_FE_GROWL_ID}"/>
+                                    </h:commandButton>
+                                </h:form>
+                            </div>
+                            <div id="payment-outside-form" class="pay-offline box" style="display: none;">
+                                <h:form role="form" id="pay-offline-form" prependId="false" autocomplete="off" onsubmit="return false;">
+                                    <div class="col-md-12 col-xs-12 col-sm-12">
+                                        <div class="form-wrap">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <label class="col-md-2 col-sm-4 col-xs-12"><b>Số tiền thanh toán</b></label>
+                                                    <div class="col-md-10 col-sm-8 col-xs-12">
+
+                                                        <h:inputText styleClass="form-control autonumber"
+                                                                     id="amount"
+                                                                     disabled="true"
+                                                                     placeholder="Số tiền thanh toán"
+                                                                     value="#{controller.amountPayment}"/>
+                                                        <script>
+                                                            jQuery(document).ready(function () {
+                                                                jQuery('.autonumber').autoNumeric('init', {mDec: '0'});
+                                                            });
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <div class="row attachment-file">
+                                                    <div class="col-md-2 col-sm-4 col-xs-12">
+                                                        <label><b>File biên lai</b></label>
+                                                    </div>
+                                                    <div class="col-md-10 col-sm-8 col-xs-12">
+                                                        <div class="inputfile-box">
+                                                            <p:fileUpload id="fileUploadPayment" mode="advanced"
+                                                                          styleClass="inputfile" auto="true"
+                                                                          fileUploadListener="#{uploadSingleFilePaymentFEController.onUploadFile}"
+                                                                          update="fileUploadFilenamePayment #{Constant.ERROR_FE_GROWL_ID}"/>
+                                                            <label for="fileUploadPayment_input" class="lable-for-file">
+                                                                <span id="file-name-payment"
+                                                                      class="file-box">Chọn file biên lai đính kèm</span>
+                                                                <span class="file-button"><i class="fa fa-folder-o"
+                                                                                             aria-hidden="true"/></span>
+                                                            </label>
+                                                        </div>
+
+                                                        <span class="help-block">
+                                                            <mdall>Vui lòng chọn file ảnh có định dạng jpg, JPG, jpeg, JPEG, png, PNG có dung lượng nhỏ hơn 5 MB</mdall>
+                                                        </span>
+
+                                                        <h:panelGroup id="fileUploadFilenamePayment">
+                                                            <script>
+                                                                var element = document.getElementById("fileUploadPayment_input");
+                                                                element.addEventListener("change", function () {
+                                                                    if ("#{uploadSingleFilePaymentFEController.getAcceptFileImageString()}".indexOf(this.files[0].name.split(".").pop().toLowerCase()) >= 0) {
+                                                                        document.getElementById("file-name-payment").innerHTML = this.files[0].name;
+                                                                    } else {
+                                                                        document.getElementById("file-name-payment").innerHTML = "Chọn file biên lai đính kèm";
+                                                                    }
+                                                                });
+                                                            </script>
+                                                        </h:panelGroup>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12 col-sm-12 submit-area text-left">
+                                        <div class="form-wrap">
+                                            <div class="form-group">
+                                                <div class="row text-center">
+                                                    <h:commandButton id="buttonPayment" styleClass="btn btn-success btn-custom"
+                                                                     value="Gửi thanh toán"
+                                                                     action="#{controller.createNotifyPayment()}">
+                                                        <f:ajax execute="@form"
+                                                                render="@form #{Constant.ERROR_FE_GROWL_ID} buttonPayment"/>
+                                                    </h:commandButton>
+                                                    <input type="button" value="Hủy bỏ"
+                                                           class="btn btn-default btn-custom reset"
+                                                           onclick="closeModal('#paymentOptionPopup');">
+                                                    </input>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ui:composition>

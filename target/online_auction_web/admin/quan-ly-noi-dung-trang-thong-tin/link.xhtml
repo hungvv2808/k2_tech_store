@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <ui:define name="title">Quản trị liên kết </ui:define>
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{linkController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="breadcrumb">
+        <li><p:link outcome="/admin/quan-ly-noi-dung-trang-thong-tin/link">Quản lý nội dung trang thông tin / Quản lý liên kết </p:link></li>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="mainForm">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" style="padding-top:0">
+                        <div class="card no-margin">
+                            <p:panelGrid id="panel" columns="1" columnClasses="ui-grid-col-12"
+                                         styleClass="ui-panelgrid-blank" layout="grid">
+                                <p:focus id = "focus" context="panel"/>
+                                <p:panelGrid id="bannerPanel" columns="1" columnClasses="ui-grid-col-12"
+                                             style="border: 1px solid #ddd" styleClass="ui-panelgrid-blank"
+                                             layout="grid">
+                                    <p:repeat value="#{linkController.listLink}" var="linkVar" varStatus="status">
+                                        <p:panel header="Liên kết #{status.index + 1}" style="margin-bottom: 10px">
+                                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10"
+                                                         layout="grid" style="margin:10px"
+                                                         styleClass="ui-panelgrid-blank">
+
+                                                <p:outputLabel value="Tiêu đề:" styleClass="requireLabel"/>
+                                                <p:inputText id="txtTitle" value="#{linkVar.title}"
+                                                             onchange="this.value = this.value.trim()"
+                                                             placeholder="Nhập tiêu đề liên kết" maxlength="100"/>
+                                                <p:outputLabel value="Link:" styleClass="requireLabel"/>
+                                                <p:inputText id="txtLink" value="#{linkVar.linkPath}"
+                                                             onchange="this.value = this.value.trim()" onkeyup="this.value=this.value.replace(/ /g, '');"
+                                                             placeholder="Nhập đường đẫn liên kết" maxlength="300">
+                                                </p:inputText>
+                                                <p:commandButton value="Xóa liên kết" style="width: auto"
+                                                                 styleClass="red-btn" icon="fa fa-remove"
+                                                                 actionListener="#{linkController.onDelete(linkVar)}"
+                                                                 update="mainForm:bannerPanel"
+                                                                 immediate="true"
+                                                                 rendered="#{linkController.getActions().canDelete()}">
+                                                    <p:confirm header="Xác nhận xóa"
+                                                               message="Bạn chắc chắn muốn xóa liên kết?"
+                                                               icon="fa fa-question-circle"/>
+                                                </p:commandButton>
+                                            </p:panelGrid>
+                                        </p:panel>
+                                    </p:repeat>
+
+                                    <p:commandButton value="Thêm liên kết" style="width: auto"
+                                                     action="#{linkController.onAddNew()}"
+                                                     update="mainForm:bannerPanel" icon="fa fa-plus"
+                                                     rendered="#{linkController.getActions().canCreate()}"/>
+                                </p:panelGrid>
+
+                                <p:commandButton id="btnSave" value="Lưu" style="width: auto"
+                                                 action="#{linkController.onSave}" icon="fa fa-save"
+                                                 rendered="#{linkController.getActions().canUpdate()}"
+                                                 update="mainForm growl"/>
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

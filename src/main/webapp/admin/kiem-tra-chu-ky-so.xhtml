@@ -1,0 +1,113 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{pdfSignatureInfoController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="head">
+        <style>
+            td.column1Class {
+                width: 200px !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="breadcrumb">
+        <li><p:link outcome="/admin/testing-setup">Kiểm tra chữ ký số</p:link></li>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <p:growl id="growlDetail" life="10000" widgetVar="growlDetail" showDetail="true"/>
+
+        <h:form id="mainForm">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" style="padding-top:0">
+                        <div class="card no-margin">
+                                <p:fileUpload id="fileUpload" mode="advanced"
+                                              label="Chọn file"
+                                              update="panel growl"
+                                              dragDropSupport="false" auto="true"
+                                              style="margin-bottom: 10px;"
+                                              fileUploadListener="#{pdfSignatureInfoController.upload}">
+                                </p:fileUpload>
+                                <p:outputLabel value="(Chỉ cho phép tải file PDF. Dung lượng tối đa 50MB)" />
+
+                            <p:panelGrid id="panel" columns="1" columnClasses="ui-grid-col-12"
+                                         styleClass="ui-panelgrid-blank" layout="grid">
+                                <p:focus id="focus" context="panel"/>
+                                <p:repeat value="#{pdfSignatureInfoController.info}" var="info1"
+                                          varStatus="status">
+                                    <p:panel header="Chữ kí #{status.index + 1}"
+                                             style="margin-bottom: 10px">
+                                        <h:panelGrid columns="2" style="width:100%"
+                                                     columnClasses="ui-grid-col-4,ui-grid-col-8">
+                                            <p:outputLabel value="Thông tin chữ kí:" style="font-weight: bold;font-size: 20px;"/>
+                                            <p:outputPanel>
+                                                <h:panelGrid columns="2" cellpadding="5">
+                                                    <p:outputLabel value="Lý do:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.reason}"/>
+                                                    <p:outputLabel value="Tên:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.name}"/>
+                                                    <p:outputLabel value="Thông tin liên hệ:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.contactInfo}"/>
+                                                    <p:outputLabel value="Địa chỉ:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.location}"/>
+                                                    <p:outputLabel value="Ngày ký:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.signDate}"/>
+                                                    <p:outputLabel value="Chữ ký đã xác thực:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.signatureVerified}"/>
+                                                    <br/>
+                                                </h:panelGrid>
+                                            </p:outputPanel>
+                                        </h:panelGrid>
+                                        <hr/>
+                                        <h:panelGrid columns="2" style="width:100%"
+                                                     columnClasses="ui-grid-col-4,ui-grid-col-8">
+                                            <p:outputLabel value="Thông tin chứng chỉ số:"
+                                                           style="font-weight: bold;font-size: 20px;"/>
+                                            <p:outputPanel>
+                                                <h:panelGrid columns="2" cellpadding="5">
+
+                                                    <p:outputLabel value="Thông tin tổ chức cung cấp chứng thư:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.certificateInfo.issuerDN}"/>
+
+                                                    <p:outputLabel value="Thông tin cá nhân/tổ chức sở hữu chữ kí:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.certificateInfo.subjectDN}"/>
+
+                                                    <p:outputLabel value="Có hiệu lực từ ngày:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.certificateInfo.notValidBefore}"/>
+
+                                                    <p:outputLabel value="Hết hạn sau ngày:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.certificateInfo.notValidAfter}"/>
+
+                                                    <p:outputLabel value="Thuật toán dùng để mã hóa:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.certificateInfo.signAlgorithm}"/>
+
+                                                    <p:outputLabel value="Số serial:" style="font-weight: bold;"/>
+                                                    <h:outputText value="#{info1.certificateInfo.serial}"/>
+
+                                                </h:panelGrid>
+                                            </p:outputPanel>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:repeat>
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+        <script>
+            jQuery("#sign").click()
+        </script>
+
+    </ui:define>
+</ui:composition>

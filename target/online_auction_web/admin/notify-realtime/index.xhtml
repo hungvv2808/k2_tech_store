@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{notifyRealtimeController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Thông báo thời gian thực</ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/notify-realtime/index">Thông báo thời gian thực</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:panel columns="1" styleClass="ui-g-12 ui-noborder" header="Thông tin: ">
+                            <h:outputText value="#{notifyRealtimeController.sizeSession()} client connected!"/>
+                        </p:panel>
+
+                        <p:panel columns="1" styleClass="ui-g-12 ui-noborder" header="Nội dung thông tin: " style="margin-top: 5px;">
+                            <p:textEditor id="content" placeholder="Nhập vào nội dung" height="400"
+                                          styleClass="ui-noborder"
+                                          value="#{notifyRealtimeController.content}">
+                            </p:textEditor>
+
+                            <p:commandButton value="Gửi thông báo"
+                                             actionListener="#{notifyRealtimeController.onSave}"
+                                             update="growl form" style="width: auto; margin-top: 5px;"/>
+                        </p:panel>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

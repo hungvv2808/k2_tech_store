@@ -1,0 +1,45 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+    <!-- Modal Confirm Auction-->
+    <div class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" id="modalAuctionOpportunity2">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&#xd7;</span>
+                    </button>
+                    <h5 class="modal-title">Thông báo</h5>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <h:outputText value="Rất tiếc, bạn không được chọn ngẫu nhiên. Hệ thống đang chờ người trúng đấu giá xác nhận. "/>
+                        <h:outputText value="Bạn có cơ hội trúng đấu giá nếu người được chọn trúng đấu giá từ chối. "/>
+                        <h:outputText value="Bạn vui lòng chờ xác nhận trong "/>
+                        <h:panelGroup id="countdownOpportunity2">
+                            <span class="countTheWin2" data-countdown="#{auctionController.formatDate(task.auctionMethodId ne DbConstant.AUCTION_METHOD_ID_DOWN ? task.endTimeRound : task.endTimeAcceptPrice())}">00:00</span>
+                        </h:panelGroup>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary no-processing" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p:remoteCommand name="cmdRefreshOpportunity2"
+                     update="countdownOpportunity2"
+                     oncomplete="countDownTheWin('countTheWin2');jQuery('#modalAuctionOpportunity2').modal('show');"/>
+
+    <h:panelGroup rendered="#{commonTask.hasOpportunity2(task, accountId)}">
+        <script>
+            jQuery(document).ready(function() {
+                countDownTheWin("countTheWin2");
+                jQuery('#modalAuctionOpportunity2').modal('show');
+            });
+        </script>
+    </h:panelGroup>
+</ui:composition>

@@ -1,0 +1,56 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                <div class="logo">
+                    <h:link outcome="/frontend/index.xhtml"><img class="logo-header" src="#{resource['frontend-layout:images/logo_bottom.svg']}" alt="Danang"/></h:link>
+                </div>
+                <div class="footer-info">
+                    <ul>
+                        <li>
+                            <img src="#{resource['frontend-layout:images/icon-map.svg']}" /> Số 08 Phan Bội Châu, quận Hải Châu, thành phố Đà Nẵng
+                        </li>
+                        <li>
+                            <img src="#{resource['frontend-layout:images/icon-phone.svg']}" />
+                            <a href="tel:02363889627">(0236) 3889 627</a><span>hoặc</span><a href="tel:02363889627">38 876 768 </a> <span>hoặc</span><a href="tel:02363889627">3895 593</a>
+                        </li>
+                        <li>
+                            <img src="#{resource['frontend-layout:images/icon-mail.svg']}" />
+                            <a href="mailto:daugia@danang.gov.vn">daugia@danang.gov.vn</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                <form class="subcribe-form">
+                    <div class="row"></div>
+                </form>
+                <ul class="menu-footer-menu menu">
+                    <li><h:link value="Trang chủ" outcome="/frontend/index.xhtml"/></li>
+                    <li><h:link value="Giới thiệu" outcome="/frontend/intro/about.xhtml" /></li>
+                    <li><h:link value="Tin tức" outcome="/frontend/news/category_news.xhtml"/></li>
+                    <li><h:link value="Danh sách quy chế" outcome="/frontend/regulation/regulation_list.xhtml"/></li>
+                    <li><h:link value="Danh sách tài sản" outcome="/frontend/asset/asset_list.xhtml"/></li>
+                    <li><h:link value="Văn bản" outcome="/frontend/document/document.xhtml"/></li>
+                    <li><h:link value="Hướng dẫn" outcome="/frontend/help/help.xhtml"/></li>
+                    <li><h:link value="Liên hệ" outcome="/frontend/contact/contact.xhtml"/></li>
+                </ul>
+                <h:panelGroup rendered="#{commonController.linkList.size() > 0}">
+                    <h:selectOneMenu styleClass="bootbox-input bootbox-input-select form-control" style="margin-top: 10px;"
+                                     onchange="if(this.value!==''){window.open(this.value,'_blank');}">
+                        <f:selectItem itemValue="" itemLabel="----Liên kết website----"/>
+                        <f:selectItems value="#{commonController.linkList}" var="link" itemLabel="#{link.title}" itemValue="#{link.linkPath}"/>
+                    </h:selectOneMenu>
+                </h:panelGroup>
+            </div>
+        </div>
+        <div class="row footer-bottom">
+            <p class="text-center">Phát triển bởi Công ty Cổ phần Công nghệ phần mềm và Nội dung số OSP</p>
+        </div>
+    </div>
+</ui:composition>

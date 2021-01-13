@@ -1,0 +1,220 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pa="http://primefaces.org/apollo">
+
+    <div class="layout-menu-container">
+        <div class="nano">
+            <div class="nano-content menu-scroll-content">
+                <div class="layout-menu-title">MENU</div>
+                <h:form id="menuForm" prependId="false">
+                    <pa:menu widgetVar="menuWidget">
+                        <p:menuitem id="menu-1" icon="fa fa-home" value="Trang chủ"
+                                    outcome="/admin/dashboard"
+                                    rendered="#{authorizationController.hasRole(EScope.PUBLIC)}"/>
+
+                        <p:menuitem id="menu-2" value="Thông tin đăng ký bán tài sản" icon="fa fa-file-text-o"
+                                    rendered="#{authorizationController.hasRole(EScope.AUCTION_REQ)}"
+                                    outcome="/admin/don-yeu-cau-dau-gia/quan-ly-don-yeu-cau-dau-gia-tai-san"/>
+
+                        <p:menuitem id="menu-3" value="Quản lý quy chế đấu giá" icon="fa fa-files-o"
+                                    rendered="#{authorizationController.hasRole(EScope.REGULATION)}"
+                                    outcome="/admin/quan-ly-dau-gia/quy-che-dau-gia"/>
+
+                        <p:menuitem id="menu-4" value="Thông tin đăng ký tham gia đấu giá" icon="fa fa-group"
+                                    rendered="#{authorizationController.hasRole(EScope.AUCTION_REGISTER)}"
+                                    outcome="/admin/quan-ly-dau-gia/thong-tin-dang-ky-tham-gia-dau-gia"/>
+
+                        <p:menuitem id="menu-5" value="Phân công điều hành đấu giá" icon="fa fa-tasks"
+                                    rendered="#{authorizationController.hasRole(EScope.ASSIGN_AUCTIONEER)}"
+                                    outcome="/admin/dieu-hanh-dau-gia/phan-cong-dieu-hanh-dau-gia"/>
+
+                        <p:menuitem id="menu-6" value="Cuộc đấu giá được phân công" icon="fa fa-gavel"
+                                    rendered="#{authorizationController.hasRole(EScope.AUCTION_MANAGE)}"
+                                    outcome="/admin/dieu-hanh-dau-gia/dieu-hanh-phien-dau-gia"/>
+
+                        <p:submenu id="menu-7" label="Quản trị hệ thống" icon="fa fa-cog"
+                                   rendered="#{authorizationController.hasRole(
+                                       EScope.ACCOUNT_OFFICIALS,
+                                       EScope.ACCOUNT_USER,
+                                       EScope.ROLE,
+                                       EScope.HISTORY_SYSTEM,
+                                       EScope.SYSTEM_CONFIG
+                                   )}">
+                            <p:menuitem id="menu-7-1" value="Danh sách cán bộ" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-nguoi-dung/danh-sach-can-bo"
+                                        rendered="#{authorizationController.hasRole(EScope.ACCOUNT_OFFICIALS)}"/>
+                            <p:menuitem id="menu-7-2" value="Tài khoản đấu giá/người có tài sản"
+                                        icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-nguoi-dung/quan-ly-nguoi-dung"
+                                        rendered="#{authorizationController.hasRole(EScope.ACCOUNT_USER)}"/>
+                            <p:menuitem id="menu-7-3" value="Quản lý nhóm quyền" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-chung/nhom-quyen"
+                                        rendered="#{authorizationController.hasRole(EScope.ROLE)}"/>
+                            <p:menuitem id="menu-7-4" value="Quản lý lịch sử thao tác hệ thống"
+                                        icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-chung/quan-ly-lich-su-thao-tac-he-thong"
+                                        rendered="#{authorizationController.hasRole(EScope.HISTORY_SYSTEM)}"/>
+                            <p:menuitem id="menu-7-5" value="Cấu hình tham số hệ thống"
+                                        icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-tri-he-thong/cau-hinh-tham-so-he-thong"
+                                        rendered="#{authorizationController.hasRole(EScope.SYSTEM_CONFIG)}"/>
+                        </p:submenu>
+
+                        <p:submenu id="menu-8" label="Quản lý nội dung trang thông tin" icon="fa fa-list"
+                                   rendered="#{authorizationController.hasRole(
+                                        EScope.LINK,
+                                        EScope.DECISION,
+                                        EScope.CONTACT_INFO,
+                                        EScope.PROCEDURE_GUIDE,
+                                        EScope.NEWS,
+                                        EScope.ABOUT_INFO,
+                                        EScope.BANNER
+                                   )}">
+                            <p:menuitem id="menu-8-1" value="Quản lý liên kết" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-noi-dung-trang-thong-tin/link"
+                                        rendered="#{authorizationController.hasRole(EScope.LINK)}"/>
+                            <p:menuitem id="menu-8-2" value="Quản lý thông tin văn bản" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-noi-dung-trang-thong-tin/cau-hinh-thong-tin-van-ban"
+                                        rendered="#{authorizationController.hasRole(EScope.DECISION)}"/>
+                            <p:menuitem id="menu-8-3" value="Cấu hình thông tin liên hệ" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-noi-dung-trang-thong-tin/cau-hinh-thong-tin-lien-he"
+                                        rendered="#{authorizationController.hasRole(EScope.CONTACT_INFO)}"/>
+                            <p:menuitem id="menu-8-4" value="Quản lý hướng dẫn thủ tục" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-noi-dung-trang-thong-tin/cau-hinh-thong-tin-huong-dan-thu-tuc"
+                                        rendered="#{authorizationController.hasRole(EScope.PROCEDURE_GUIDE)}"/>
+                            <p:menuitem id="menu-8-5" value="Quản lý tin tức" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-noi-dung-trang-thong-tin/cau-hinh-tin-tuc"
+                                        rendered="#{authorizationController.hasRole(EScope.NEWS)}"/>
+                            <p:menuitem id="menu-8-6" value="Cấu hình thông tin giới thiệu" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-noi-dung-trang-thong-tin/cau-hinh-thong-tin"
+                                        rendered="#{authorizationController.hasRole(EScope.ABOUT_INFO)}"/>
+                            <p:menuitem id="menu-8-7" value="Quản lý banner" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-noi-dung-trang-thong-tin/banner"
+                                        rendered="#{authorizationController.hasRole(EScope.BANNER)}"/>
+                        </p:submenu>
+
+                        <p:submenu id="menu-9" label="Quản lý danh mục" icon="fa fa-cogs"
+                                   rendered="#{authorizationController.hasRole(
+                                        EScope.PROVINCE,
+                                        EScope.DISTRICT,
+                                        EScope.COMMUNE,
+                                        EScope.TYPE_ASSET,
+                                        EScope.AUCTION_METHOD,
+                                        EScope.AUCTION_FORMALITY,
+                                        EScope.PAYMENT,
+                                        EScope.RECEIPT_MANAGEMENT
+                                   )}">
+                            <p:menuitem id="menu-9-1" value="Quản lý tỉnh/thành phố" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-chung/tinh-thanh"
+                                        rendered="#{authorizationController.hasRole(EScope.PROVINCE)}"/>
+                            <p:menuitem id="menu-9-2" value="Quản lý quận/huyện" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-chung/quan-huyen"
+                                        rendered="#{authorizationController.hasRole(EScope.DISTRICT)}"/>
+                            <p:menuitem id="menu-9-3" value="Quản lý phường/xã" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-chung/phuong-xa"
+                                        rendered="#{authorizationController.hasRole(EScope.COMMUNE)}"/>
+                            <p:menuitem id="menu-9-4" value="Quản lý loại tài sản" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-chung/tai-san"
+                                        rendered="#{authorizationController.hasRole(EScope.TYPE_ASSET)}"/>
+                            <p:menuitem id="menu-9-5" value="Quản lý phương thức đấu giá" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-chung/phuong-thuc-dau-gia"
+                                        rendered="#{authorizationController.hasRole(EScope.AUCTION_METHOD)}"/>
+                            <p:menuitem id="menu-9-6" value="Quản lý hình thức đấu giá" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-chung/hinh-thuc-dau-gia"
+                                        rendered="#{authorizationController.hasRole(EScope.AUCTION_FORMALITY)}"/>
+                            <p:menuitem id="menu-9-7" value="Quản lý giao dịch" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-chung/quan-ly-giao-dich"
+                                        rendered="#{authorizationController.hasRole(EScope.PAYMENT)}"/>
+                            <p:menuitem id="menu-9-8" value="Quản lý biên lai" icon="fa fa-angle-double-right"
+                                        outcome="/admin/quan-ly-chung/quan-ly-bien-lai"
+                                        rendered="#{authorizationController.hasRole(EScope.RECEIPT_MANAGEMENT)}"/>
+                        </p:submenu>
+
+                        <p:submenu id="menu-10" label="Danh mục API" icon="fa fa-outdent" rendered="#{authorizationController.hasRole(
+                                        EScope.API_RELIGION,
+                                        EScope.API_NATION,
+                                        EScope.API_RELATIONSHIP,
+                                        EScope.API_CAREER_GROUP,
+                                        EScope.API_CURRENCY,
+                                        EScope.API_SEX,
+                                        EScope.API_POSITION,
+                                        EScope.API_MANAGEMENT_LEVEL,
+                                        EScope.API_MANAGEMENT_AGENCY,
+                                        EScope.API_FOLK,
+                                        EScope.API_JOB,
+                                        EScope.API_BUSINESS,
+                                        EScope.API_OFFICIALS,
+                                        EScope.API_PAPER,
+                                        EScope.API_REGULAR,
+                                        EScope.API_EDUCATION
+                                   )}">
+                            <p:menuitem id="menu-10-1" value="Danh mục tôn giáo" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_ton_giao"
+                                        rendered="#{authorizationController.hasRole(EScope.API_RELIGION)}"/>
+                            <p:menuitem id="menu-10-2" value="Danh mục quốc gia" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_quoc_gia"
+                                        rendered="#{authorizationController.hasRole(EScope.API_NATION)}"/>
+                            <p:menuitem id="menu-10-3" value="Danh mục quan hệ gia đình" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/quan_he_gia_dinh"
+                                        rendered="#{authorizationController.hasRole(EScope.API_RELATIONSHIP)}"/>
+                            <p:menuitem id="menu-10-4" value="Danh mục nhóm ngành nghề" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_nhom_nganh_nghe"
+                                        rendered="#{authorizationController.hasRole(EScope.API_CAREER_GROUP)}"/>
+                            <p:menuitem id="menu-10-5" value="Danh mục ngoại tệ" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_ngoai_te"
+                                        rendered="#{authorizationController.hasRole(EScope.API_CURRENCY)}"/>
+                            <p:menuitem id="menu-10-6" value="Danh mục giới tính" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_gioi_tinh"
+                                        rendered="#{authorizationController.hasRole(EScope.API_SEX)}"/>
+                            <p:menuitem id="menu-10-7" value="Danh mục chức vụ" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_chuc_vu"
+                                        rendered="#{authorizationController.hasRole(EScope.API_POSITION)}"/>
+                            <p:menuitem id="menu-10-8" value="Danh mục cấp cơ quan quản lý" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_cap_co_quan_quan_ly"
+                                        rendered="#{authorizationController.hasRole(EScope.API_MANAGEMENT_LEVEL)}"/>
+                            <p:menuitem id="menu-10-9" value="Danh mục cơ quan quản lý" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_co_quan_quan_ly"
+                                        rendered="#{authorizationController.hasRole(EScope.API_MANAGEMENT_AGENCY)}"/>
+                            <p:menuitem id="menu-10-10" value="Danh mục dân tộc" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_dan_toc"
+                                        rendered="#{authorizationController.hasRole(EScope.API_FOLK)}"/>
+                            <p:menuitem id="menu-10-11" value="Danh mục nghề nghiệp" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_nghe_nghiep"
+                                        rendered="#{authorizationController.hasRole(EScope.API_JOB)}"/>
+                            <p:menuitem id="menu-10-12" value="Danh mục ngành nghề kinh doanh" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_nganh_nghe_kinh_doanh"
+                                        rendered="#{authorizationController.hasRole(EScope.API_BUSINESS)}"/>
+                            <p:menuitem id="menu-10-13" value="Danh mục chuyên môn" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_chuyen_mon"
+                                        rendered="#{authorizationController.hasRole(EScope.API_REGULAR)}"/>
+                            <p:menuitem id="menu-10-14" value="Danh mục học vấn" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_hoc_van"
+                                        rendered="#{authorizationController.hasRole(EScope.API_EDUCATION)}"/>
+                            <p:menuitem id="menu-10-15" value="Danh mục giấy tờ" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_giay_to"
+                                        rendered="#{authorizationController.hasRole(EScope.API_PAPER)}"/>
+                            <p:menuitem id="menu-10-16" value="Danh mục công chức" icon="fa fa-angle-double-right"
+                                        outcome="/admin/api/danh_muc_cong_chuc"
+                                        rendered="#{authorizationController.hasRole(EScope.API_OFFICIALS)}"/>
+                        </p:submenu>
+
+                        <p:menuitem id="menu-11" value="Lưu trữ biên bản đấu giá" icon="fa fa-folder-open"
+                                    outcome="/admin/bien-ban-dau-gia/luu-tru-bien-ban-dau-gia"/>
+
+                        <p:menuitem id="menu-12" value="Thống kê, báo cáo" icon="fa fa-bar-chart-o"
+                                    outcome="/admin/thong-ke-bao-cao" rendered="#{authorizationController.hasRole(EScope.STATS_REPORT)}"/>
+
+                        <p:menuitem id="menu-13" value="Kiểm tra chữ ký số" icon="fa fa-check-square"
+                                    outcome="/admin/kiem-tra-chu-ky-so" rendered="#{authorizationController.hasRole(EScope.CHECK_DIGITAL_SIGN)}"/>
+                    </pa:menu>
+                </h:form>
+
+                <div class="layout-menu-footer"></div>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>

@@ -1,0 +1,273 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{receiptManagementController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Quản lý biên lai</ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/quan-ly-chung/quan-ly-bien-lai">Quản lý danh mục / Quản lý biên lai</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+        <p:outputPanel styleClass="ui-g" rendered="#{receiptManagementController.getActions().canCreate()}">
+            <div class="ui-g-12" style="padding-top:0">
+                <div class="card no-margin">
+                    <p:commandButton value="Thêm mới" icon="fa fa-plus"
+                                     actionListener="#{receiptManagementController.resetDialog}"
+                                     oncomplete="PF('dialogInsertUpdate').show();" update="dlForm"/>
+                </div>
+            </div>
+        </p:outputPanel>
+
+        <div class="ui-fluid">
+            <p:dialog id="dlg" header="Nhập thông tin biên lai"
+                      style="max-height: 90vh; max-width: 90vw"
+                      rendered="#{receiptManagementController.getActions().hasAction(EAction.CREATE, EAction.UPDATE)}"
+                      widgetVar="dialogInsertUpdate" modal="true" width="800">
+                <h:form id="dlForm">
+                    <p:focus id="focus"/>
+                    <p:panelGrid id="basicPanel1" columns="2"
+                                 columnClasses="ui-grid-col-3,ui-grid-col-9"
+                                 styleClass="ui-panelgrid-blank" layout="grid">
+
+                        <p:outputLabel value="Mã giao dịch:" for="code"/>
+                        <p:outputPanel>
+                            <p:selectOneMenu id="code" autoWidth="false" effect="fade"
+                                             required="true" requiredMessage="Bạn vui lòng chọn mã giao dịch"
+                                             value="#{receiptManagementController.paymentId}" filter="true"
+                                             filterMatchMode="contains">
+                                <f:selectItem itemLabel="Chọn mã giao dịch" itemValue=""/>
+                                <f:selectItems value="#{receiptManagementController.codePaymentList}"/>
+                                <p:ajax event="change"
+                                        global="false"
+                                        listener="#{receiptManagementController.onChangeReceipt(receiptManagementController.paymentId)}"
+                                        update="payer money dlForm"/>
+                            </p:selectOneMenu>
+                            <p:message id="id-code" for="code" styleClass="focus-input-text" display="text"/>
+                        </p:outputPanel>
+
+                        <p:outputLabel value="Người thanh toán:" for="payer"/>
+                        <p:outputPanel>
+                            <p:inputText id="payer" required="true" placeholder="Họ tên người thanh toán"
+                                         requiredMessage="Bạn vui lòng nhập người thanh toán"
+                                         disabled="true"
+                                         value="#{receiptManagementController.receiptManagementDto.payerFullname}"/>
+                            <p:message id="id-payer" for="payer" styleClass="focus-input-text" display="text"/>
+                        </p:outputPanel>
+
+                        <p:outputLabel value="Địa chỉ:" styleClass="requireLabel"/>
+                        <p:outputLabel>
+                            <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank"
+                                         columnClasses="ui-grid-col-4 ui-no-margin-padding, ui-grid-col-4 ui-no-margin-padding, ui-grid-col-4 ui-no-margin-padding">
+                                <ui:include src="/common/tinh-quan-phuong.xhtml"/>
+                            </p:panelGrid>
+                        </p:outputLabel>
+
+                        <p:outputLabel value="Địa chỉ tổ chức/cá nhân:" for="address" styleClass="requireLabel"/>
+                        <p:inputText id="address" placeholder="Địa chỉ" disabled="true"
+                                     maxlength="100" value="#{receiptManagementController.receiptManagementDto.payerAddress}"/>
+
+                        <p:outputLabel value="Số tiền thu: " for="money"/>
+                        <p:outputPanel>
+                            <p:inputText id="money" placeholder="Số tiền thu" required="true" disabled="true"
+                                           requiredMessage="Bạn vui lòng nhập số tiền thu"
+                                           value="#{receiptManagementController.receiptManagementDto.amount}">
+                                <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                 minFractionDigits="0" locale="vi_VN"/>
+                            </p:inputText>
+                            <p:message id="id-money" for="money" styleClass="focus-input-text" display="text"/>
+                        </p:outputPanel>
+
+                        <p:outputLabel value="Nội dung:" for="content"/>
+                        <p:outputPanel>
+                            <p:inputTextarea id="content" placeholder="Nhập nội dung" required="true" maxlength="500"
+                                             requiredMessage="Bạn vui lòng nhập nội dung"
+                                             onchange="this.value = this.value.trim()"
+                                             value="#{receiptManagementController.receiptManagementDto.contentPayment}"/>
+                            <p:message id="id-content" for="content" styleClass="focus-input-text" display="text"/>
+                        </p:outputPanel>
+                    </p:panelGrid>
+
+                    <p:panelGrid columns="3"
+                                 columnClasses="ui-grid-col-1.5,ui-grid-col-1.5"
+                                 layout="grid" styleClass="ui-panelgrid-blank">
+                        <p:commandButton value="Lưu" actionListener="#{receiptManagementController.onSaveData()}"
+                                         icon="fa fa-save" style="width: 80px"
+                                         update="id-code id-content focus"/>
+                        <p:commandButton value="Ðóng" styleClass="close"
+                                         actionListener="#{receiptManagementController.resetDialog()}"
+                                         oncomplete="PF('dialogInsertUpdate').hide()" icon="fa fa-close"
+                                         style="width: 80px"/>
+                    </p:panelGrid>
+                </h:form>
+            </p:dialog>
+        </div>
+
+        <h:form id="searchForm">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" style="padding-top:0">
+                        <div class="card no-margin">
+                            <p:panel header="Tìm kiếm biên lai"
+                                     rendered="#{receiptManagementController.getActions().canSearch()}"
+                                     style="margin-bottom:5px">
+                                <p:panelGrid id="searchPanel" columns="4" styleClass="ui-panelgrid-blank" layout="grid"
+                                             columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+                                    <p:outputLabel value="Chọn giao dịch:"/>
+                                    <p:selectOneMenu value="#{receiptManagementController.searchDto.paymentId}"
+                                                     filter="true" filterMatchMode="contains" effect="fade">
+                                        <f:selectItem itemLabel="Tất cả" itemValue=""/>
+                                        <f:selectItems value="#{receiptManagementController.codePaymentForSearchList}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Thời gian tạo:"/>
+                                    <p:panelGrid columns="3" styleClass="ui-panelgrid-blank" layout="grid"
+                                                 columnClasses="ui-grid-col-5 ui-no-margin-padding, ui-grid-col-2 ui-no-margin-padding, ui-grid-col-5 ui-no-margin-padding">
+                                        <p:calendar styleClass="calendar" id="startTime"
+                                                    mask="true" navigator="true" mode="popup" placeholder="Từ ngày"
+                                                    autocomplete="off" readonlyInput="true"
+                                                    value="#{receiptManagementController.searchDto.startDate}"
+                                                    maxdate="#{receiptManagementController.searchDto.endDate}">
+                                            <p:ajax event="dateSelect"
+                                                    listener="#{receiptManagementController.onDateSelect}"
+                                                    update="endTime"/>
+                                        </p:calendar>
+                                        <p:outputLabel value=""/>
+                                        <p:calendar styleClass="calendar" mask="true"
+                                                    navigator="true" mode="popup" placeholder="Đến ngày"
+                                                    autocomplete="off" id="endTime" readonlyInput="true"
+                                                    value="#{receiptManagementController.searchDto.endDate}"
+                                                    mindate="#{receiptManagementController.searchDto.startDate}">
+                                            <p:ajax event="dateSelect"
+                                                    listener="#{receiptManagementController.onDateSelect}"
+                                                    update="startTime"/>
+                                        </p:calendar>
+                                    </p:panelGrid>
+
+                                    <p:outputLabel value="Trạng thái:"/>
+                                    <p:selectOneMenu value="#{receiptManagementController.searchDto.status}"
+                                                     filterMatchMode="contains">
+                                        <f:selectItem itemLabel="Tất cả" itemValue=""/>
+                                        <f:selectItem itemLabel="Chưa gửi biên lai" itemValue="0"/>
+                                        <f:selectItem itemLabel="Đã gửi biên lai" itemValue="1"/>
+                                    </p:selectOneMenu>
+
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="3" styleClass="ui-panelgrid-blank" layout="grid"
+                                             columnClasses="ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5">
+                                    <p:commandButton value="Tìm kiếm"
+                                                     actionListener="#{receiptManagementController.onSearch()}"
+                                                     update="searchForm tblSearchResult growl" icon="fa fa-search"
+                                                     style="width: 100px"/>
+                                    <p:commandButton value="Làm mới"
+                                                     actionListener="#{receiptManagementController.resetAll()}"
+                                                     update="searchForm tblSearchResult" icon="fa fa-refresh"
+                                                     styleClass="orange-btn" style="width: 100px"/>
+                                    <p:commandButton value="Xuất dữ liệu" icon="fa fa-copy" update="growl" ajax="false" rendered="#{receiptManagementController.lazyDataModel.rowCount gt 0}">
+                                        <p:dataExporter type="xlsxstream" target="tblSearchResult" fileName="Danh sách thông tin quản lý biên lai" />
+                                    </p:commandButton>
+                                </p:panelGrid>
+                            </p:panel>
+
+                            <p:panel id="searchResult" header="Kết quả tìm kiếm" style="margin-bottom:5px">
+                                <p:dataTable id="tblSearchResult" tableStyle="table-layout: auto;"
+                                             resizableColumns="true" paginator="true"
+                                             rows="10"
+                                             value="#{receiptManagementController.lazyDataModel}"
+                                             lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
+                                             paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{receiptManagementController.lazyDataModel.rowCount}"
+                                             emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                             rowKey="#{resultDto.paymentId}">
+                                    <p:column headerText="STT" width="30" style="text-align: center">
+                                        <h:outputText value="#{rowIndex + 1}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Mã giao dịch" sortBy="#{resultDto.paymentCode}" width="10%" style="text-align: center">
+                                        <h:outputText value="#{resultDto.paymentCode}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Mã biên lai" sortBy="#{resultDto.code}" width="10%" style="text-align: center">
+                                        <h:outputText value="#{resultDto.code}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Người thanh toán" sortBy="#{resultDto.payerFullname}" width="10%">
+                                        <h:outputText value="#{resultDto.payerFullname}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Địa chỉ" sortBy="#{resultDto.payerAddress}">
+                                        <h:outputText value="#{receiptManagementController.upperCaseFirstChar(commonController.showAddress(resultDto.payerAddress, resultDto.communeName, resultDto.districtName, resultDto.provinceName))}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Số tiền thu" sortBy="#{resultDto.amount}" width="10%">
+                                        <h:outputText value="#{resultDto.amount}">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Nội dung thu" sortBy="#{resultDto.contentPayment}" width="10%">
+                                        <h:outputText value="#{resultDto.contentPayment}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Thời gian tạo" sortBy="#{resultDto.createDate}" style="text-align: center" width="10%">
+                                        <h:outputText value="#{resultDto.createDate}">
+                                            <f:convertDateTime pattern="HH:mm, dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Trạng thái" sortBy="#{resultDto.status}" width="10%">
+                                        <h:outputText value="Chưa gửi biên lai" rendered="#{!resultDto.status}"/>
+                                        <h:outputText value="Đã gửi biên lai" rendered="#{resultDto.status}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Gửi"
+                                              rendered="#{receiptManagementController.getActions().hasAction(EAction.SEND_RECEIPT)}"
+                                              exportable="false" width="40">
+                                        <div class="my-data-table">
+                                            <p:commandLink
+                                                    actionListener="#{receiptManagementController.sendBill(resultDto)}"
+                                                    rendered="#{!resultDto.status}"
+                                                    styleClass="edit"
+                                                    update="#{Constant.ERROR_GROWL_ID}" style="align-content: center">
+
+                                                <p:confirm header="Xác nhận gửi biên lai"
+                                                           message="Bạn chắc chắn muốn gửi biên lai ?"
+                                                           icon="fa fa-question-circle"/>
+                                                <i class="fa fa-send-o"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </p:column>
+
+                                    <p:column headerText="Sửa"
+                                              rendered="#{receiptManagementController.getActions().canUpdate()}"
+                                              exportable="false" width="40">
+                                        <div class="my-data-table">
+                                            <p:commandLink styleClass="edit" update="dlForm growl"
+                                                           action="#{receiptManagementController.showUpdatePopup(resultDto)}"
+                                                           rendered="#{!resultDto.status}" process="@this"
+                                                           oncomplete="PF('dialogInsertUpdate').show();">
+                                                <i class="fa fa-edit"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

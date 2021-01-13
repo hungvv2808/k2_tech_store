@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- Modal Regulation cancel-->
+    <div class="modal fade" id="regulationPopup">
+        <div class="modal-dialog modal-login">
+            <div class="modal-content">
+                <h2 class="title-heading">Lý do tạm dừng quy chế #{regulationIsInFinishController.regulationDetail.code}</h2>
+                <button id="close_regulationCancelPopup" type="button" class="close" data-dismiss="modal">&#xd7;</button>
+
+                <h:outputLabel value="Lý do tạm dừng:" style="margin: 10px"/>
+                <h:outputText value="#{regulationIsInFinishController.regulationDetail.reasonCancel}" style="text-align: justify"/>
+                <div class="register-area auction-form">
+                    <div class="document-viewer">
+                        <object data="#{resource[regulationIsInFinishController.regulationFileCancel.filePath]}" type="application/pdf" width="100%" height="700px">
+                            <p style="padding: 20px 50px 0;">Nếu trình duyệt của bạn không có PDF plugin. <a style="display: inline;" href="#{resource[regulationIsInFinishController.regulationFileCancel.filePath]}">Nhấn vào đây để tải xuống file PDF.</a></p>
+                        </object>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ui:composition>

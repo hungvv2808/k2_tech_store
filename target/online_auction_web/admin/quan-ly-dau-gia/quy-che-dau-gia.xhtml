@@ -1,0 +1,312 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{regulationDetailController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Quản lý quy chế</ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/quan-ly-dau-gia/quy-che-dau-gia">Quản lý quy chế đấu giá</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <p:outputPanel styleClass="ui-g" rendered="#{regulationDetailController.id ne null}">
+            <div class="ui-g-12" style="padding-top:0">
+                <div class="card no-margin">
+                    <p:button outcome="/admin/don-yeu-cau-dau-gia/quan-ly-don-yeu-cau-dau-gia-tai-san"
+                              value="Quay lại" icon="fa fa-arrow-left"/>
+                </div>
+            </div>
+        </p:outputPanel>
+
+        <p:dialog id="dlg" header="Cập nhật lý do tạm dừng quy chế"
+                  style="max-height: 90vh; max-width: 90vw"
+                  rendered="#{regulationDetailController.getActions().hasAction(EAction.UNPIN)}"
+                  widgetVar="dialoglidohuybo" modal="true" width="800">
+            <h:form id="dlForm" enctype="multipart/form-data">
+                <div class="ui-fluid">
+                    <p:panelGrid id="basicPanel1" columns="2"
+                                 columnClasses="ui-grid-col-2,ui-grid-col-10"
+                                 styleClass="ui-panelgrid-blank" layout="grid">
+
+                        <p:outputLabel styleClass="requireLabel" value="Lý do tạm dừng:" for="lido"/>
+                        <p:outputPanel>
+                            <p:inputTextarea id="lido" placeholder="Nhập lý do tạm dừng cuộc đấu giá" rows="6" cols="33"
+                                             disabled="#{regulationDetailController.statusDisable}"
+                                             value="#{regulationDetailController.regulationDto.reasonCancel}"
+                                             maxlength="1000"/>
+                        </p:outputPanel>
+
+                        <p:outputLabel styleClass="requireLabel" value="Tải file văn bản:"/>
+                        <p:outputPanel rendered="#{!regulationDetailController.statusDisable}">
+                            <ui:include src="/common/upload-single-file.xhtml"/>
+                            <p:outputLabel
+                                    value="(Vui lòng chọn tài liệu định dạng PDF, DOCX, JPG, JPEG, PNG dung lượng ảnh nhỏ hơn 5MB)"/>
+                        </p:outputPanel>
+
+                        <p:outputPanel rendered="#{regulationDetailController.statusDisable}">
+                            <p:commandButton value="Tải về" style="width:80px;" ajax="false" immediate="true"
+                                             icon="fa fa-fw fa-download">
+                                <p:fileDownload value="#{regulationDetailController.downloadDepositionReasonFile()}"/>
+                            </p:commandButton>
+                        </p:outputPanel>
+
+                    </p:panelGrid>
+                    <p:panelGrid columns="3"
+                                 columnClasses="ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5"
+                                 layout="grid" styleClass="ui-panelgrid-blank">
+                        <p:commandButton value="Xác nhận" actionListener="#{regulationDetailController.checkConfirm}"
+                                         rendered="#{!regulationDetailController.statusDisable}" id="check"
+                                         icon="fa fa-save" style="width: auto"
+                                         update="dlForm confirmDialog #{Constant.ERROR_GROWL_ID}"/>
+                        <p:commandButton value="Đóng" styleClass="close"
+                                         global="false"
+                                         actionListener="#{regulationDetailController.resetDialog}"
+                                         oncomplete="PF('dialoglidohuybo').hide()" icon="fa fa-close"
+                                         style="width: auto;"/>
+
+                    </p:panelGrid>
+                </div>
+            </h:form>
+        </p:dialog>
+
+
+        <p:confirmDialog global="true" showEffect="fade" icon="fa fa-question-circle" hideEffect="fade" widgetVar="confirm" header="Xác nhận tạm dừng quy chế" id="confirmDialog">
+            <f:facet name="message">
+                <p:outputLabel value="Bạn có chắc chắn tạm dừng quy chế &lt;b&gt;#{regulationDetailController.regulationDto.code}&lt;/b&gt; hay không? Nếu tạm dừng, lý do và văn bản tạm dừng sẽ được cập nhật công khai trên Trang đấu giá?" escape="false"/>
+            </f:facet>
+            <p:commandButton value="Đồng ý" id="checkbutton" actionListener="#{regulationDetailController.onSend}" update="#{Constant.ERROR_GROWL_ID}" process="@this" oncomplete="PF('confirm').hide()"/>
+            <p:commandButton value="Hủy bỏ" oncomplete="PF('confirm').hide()"/>
+        </p:confirmDialog>
+
+        <h:form id="searchForm">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" style="padding-top:0">
+                        <div class="card no-margin">
+                            <p:panel id="searchCode" header="Tìm kiếm quy chế đấu giá#{not empty request.getParameter('status') ? ': Chưa đăng tải' : ''}"
+                                     rendered="#{regulationDetailController.getActions().canSearch()}"
+                                     style="margin-bottom:5px">
+                                <p:panelGrid id="searchPanel" columns="4"
+                                             columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:outputLabel value="Mã quy chế:" for="maquyche"/>
+                                    <p:inputText id="maquyche" placeholder="Nhập mã quy chế"
+                                                 value="#{regulationDetailController.regulationSearchDto.code}"/>
+
+                                    <p:outputLabel value="Tên tài sản:" for="tentaisan"/>
+                                    <p:inputText id="tentaisan" placeholder="Nhập tên tài sản"
+                                                 value="#{regulationDetailController.regulationSearchDto.nameAsset}"/>
+                                    <p:outputLabel value="Thời gian bắt đầu tổ chức đấu giá:"/>
+                                    <p:panelGrid id="searchPanelDate" columns="3"
+                                                 columnClasses="ui-grid-col-5 ui-no-margin-padding, ui-grid-col-2 ui-no-margin-padding, ui-grid-col-5 ui-no-margin-padding"
+                                                 styleClass="ui-panelgrid-blank" layout="grid">
+                                        <p:calendar id="ctbhStartTime" styleClass="calendar set-width-field"
+                                                    navigator="true" mode="popup" placeholder="Từ ngày"
+                                                    label="Thời gian "
+                                                    yearRange="c-50:c"
+                                                    validatorMessage="Nhập thời gian bắt đầu tổ chức đấu giá giá từ ngày phải nhỏ hơn đến ngày"
+                                                    maxdate="#{regulationDetailController.regulationSearchDto.toDate}"
+                                                    value="#{regulationDetailController.regulationSearchDto.fromDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            <p:ajax event="dateSelect"
+                                                    listener="#{regulationDetailController.onDateSelect}"
+                                                    update="ctbhValidDate"/>
+                                        </p:calendar>
+                                        <p:outputLabel value=""/>
+
+                                        <p:calendar id="ctbhValidDate" styleClass="calendar set-width-field"
+                                                    navigator="true" mode="popup" placeholder="Đến ngày"
+                                                    label="Thời gian "
+                                                    yearRange="c-50:c"
+                                                    validatorMessage="Nhập thời gian bắt đầu cuộc đấu giá đến ngày phải lớn hơn từ ngày"
+                                                    mindate="#{regulationDetailController.regulationSearchDto.fromDate}"
+                                                    value="#{regulationDetailController.regulationSearchDto.toDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            <p:ajax event="dateSelect"
+                                                    listener="#{regulationDetailController.onDateSelect}"
+                                                    update="ctbhStartTime"/>
+                                        </p:calendar>
+                                    </p:panelGrid>
+
+                                    <p:outputLabel value="Trạng thái đăng tải:"/>
+                                    <p:selectOneMenu value="#{regulationDetailController.regulationSearchDto.status}"
+                                                     filter="true" filterMatchMode="contains"
+                                                     autoWidth="false"
+                                                     effect="fade">
+                                        <f:selectItem itemLabel="Tất cả" itemValue=""/>
+                                        <f:selectItem itemLabel="Chưa đăng tải"
+                                                      itemValue="#{DbConstant.CHUA_DANG_TAI}"/>
+                                        <f:selectItem itemLabel="Đã đăng tải"
+                                                      itemValue="#{DbConstant.DA_DANG_TAI}"/>
+                                        <f:selectItem itemLabel="Đã tạm dừng"
+                                                      itemValue="#{DbConstant.DA_HUY_QUY_CHE}"/>
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                                <p:panelGrid columns="3" columnClasses="ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5" layout="grid"
+                                             styleClass="ui-panelgrid-blank">
+                                    <p:commandButton value="Tìm kiếm"
+                                                     actionListener="#{regulationDetailController.onSearch()}"
+                                                     update="searchForm tblSearchResult #{Constant.ERROR_GROWL_ID}" icon="fa fa-search"/>
+                                    <p:commandButton value="Làm mới" process="@this"
+                                                     action="#{regulationDetailController.resetAll()}"
+                                                     update="searchForm tblSearchResult" icon="fa fa-refresh"
+                                                     styleClass="orange-btn">
+                                    </p:commandButton>
+                                    <p:commandButton value="Xuất dữ liệu" icon="fa fa-copy" update="growl" ajax="false">
+                                        <p:dataExporter type="xlsxstream" target="tblSearchResult" fileName="Danh sách thông tin quản lý quy chế" />
+                                    </p:commandButton>
+                                </p:panelGrid>
+                            </p:panel>
+
+                            <p:panel id="searchResult" header="Kết quả tìm kiếm" style="margin-bottom:5px">
+                                <p:dataTable id="tblSearchResult" tableStyle="table-layout: auto;"
+                                             widgetVar="wdgNhomQuyen" resizableColumns="true" paginator="true"
+                                             rows="10"
+                                             value="#{regulationDetailController.lazyDataModel}"
+                                             lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
+                                             paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{regulationDetailController.lazyDataModel.rowCount}"
+                                             emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                             rowKey="#{resultDto.regulationId}">
+
+                                    <p:column headerText="STT" width="30" style="text-align: center">
+                                        <h:outputText value="#{rowIndex + 1}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Mã quy chế" width="10%" style="text-align: center" visible="false"
+                                              sortBy="#{resultDto.code}">
+                                        <h:outputText value="#{resultDto.code}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Mã quy chế" sortBy="#{resultDto.code}" exportable="false" style="text-align: center;" width="10%">
+                                        <p:dialog header="Quy chế đấu giá" widgetVar="detailInfoDialog#{rowIndex}"
+                                                  styleClass="text-center"
+                                                  style="max-height: 90vh; max-width: 90vw"
+                                                  modal="true" position="top center" showEffect="clip" hideEffect="clip"
+                                                  width="800" height="600">
+                                            <p:scrollPanel mode="native"
+                                                           style="width: 100%; height: 100%; border: none; overflow-y: hidden;">
+                                                <p:media value="/resources#{resultDto.filePathRegulation}" player="pdf" width="100%" height="100%">
+                                                    Không thể hiển thị được file tải lên, <h:outputLink value="#{request.contextPath}/resources#{resultDto.filePathRegulation}">bấm vào đây</h:outputLink> để tải file về
+                                                </p:media>
+                                            </p:scrollPanel>
+                                        </p:dialog>
+                                        <p:commandLink value="#{resultDto.code}" style="text-decoration: underline"
+                                                       oncomplete="PF('detailInfoDialog#{rowIndex}').show();"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên danh mục tài sản" exportable="false">
+                                        <h:outputText value="#{commonController.abbreviate(resultDto.nameAsset, DbConstant.LIMITCHARACTER)}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên danh mục tài sản" visible="false">
+                                        <h:outputText value="#{resultDto.nameAsset}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Thời gian bắt đầu" width="12%" sortBy="#{resultDto.startTime}"
+                                              style="text-align: center">
+                                        <h:outputText value="#{resultDto.startTime}">
+                                            <f:convertDateTime pattern="HH:mm, dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Hình thức đấu giá trực tuyến" width="12%" sortBy="#{resultDto.numberOfRounds}" style="text-align: center">
+                                        <h:outputText value="Trả giá xác định vòng"
+                                                      rendered="#{resultDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL}"/>
+                                        <h:outputText value="Trả giá không xác định vòng"
+                                                      rendered="#{resultDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Phương thức đấu giá" width="12%" sortBy="#{resultDto.timePerRound}" style="text-align: center">
+                                        <h:outputText value="#{resultDto.auctionMethodName}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Trạng thái đấu giá" width="12%" sortBy="#{resultDto.auctionStatus}">
+                                        <p:outputLabel value="Sắp diễn ra"
+                                                       rendered="#{resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING}"/>
+                                        <p:outputLabel value="Đang diễn ra"
+                                                       rendered="#{resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_PLAYING}"/>
+                                        <p:outputLabel value="Đã kết thúc"
+                                                       rendered="#{resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_ENDED}"/>
+                                        <p:outputLabel value="Đã tạm dừng"
+                                                       rendered="#{resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_CANCELLED}"/>
+                                        <p:outputLabel value="Không diễn ra"
+                                                       rendered="#{resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_NOT_HAPPEN}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Trạng thái quy chế" width="12%" sortBy="#{resultDto.status}">
+                                        <h:outputText value="Chưa đăng tải"
+                                                      rendered="#{resultDto.status eq DbConstant.CHUA_DANG_TAI}"/>
+                                        <h:outputText value="Đã đăng tải"
+                                                      rendered="#{resultDto.status eq DbConstant.DA_DANG_TAI}"/>
+                                        <h:outputText value="Đã tạm dừng"
+                                                      rendered="#{resultDto.status eq DbConstant.DA_HUY_QUY_CHE}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Thao tác" width="40" exportable="false">
+                                        <p:menuButton icon="fa fa-cogs">
+                                            <p:menuitem
+                                                    rendered="#{regulationDetailController.getActions().hasAction(EAction.PIN) and resultDto.status eq DbConstant.CHUA_DANG_TAI and resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING and !regulationDetailController.checkStarttimeWithActions(resultDto)}"
+                                                    actionListener="#{regulationDetailController.onSave(resultDto)}"
+                                                    value="Đăng tải quy chế"
+                                                    update="tblSearchResult #{Constant.ERROR_GROWL_ID}"
+                                                    icon="fa fa-upload">
+                                                <p:confirm header="Xác nhận đăng tải quy chế"
+                                                           message="Bạn có chắc chắn đăng tải quy chế &lt;b&gt;#{resultDto.code}&lt;/b&gt; lên trang đấu giá hay không?&lt;br/&gt;&lt;br/&gt;
+                                                                    Nếu đăng tải hệ thống sẽ không cho phép chỉnh sửa lại thông tin quy chế"
+                                                           icon="fa fa-question-circle" escape="false"/>
+                                            </p:menuitem>
+                                            <p:menuitem
+                                                    rendered="#{regulationDetailController.getActions().hasAction(EAction.UNPIN) and resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING and resultDto.status ne DbConstant.REGULATION_STATUS_NOT_PUBLIC}"
+                                                    actionListener="#{regulationDetailController.onShow(resultDto)}"
+                                                    update="dlForm"
+                                                    value="Tạm dừng quy chế"
+                                                    icon="fa fa-times"/>
+                                            <p:menuitem
+                                                    rendered="#{(regulationDetailController.getActions().hasAction(EAction.VIEW_REGULATION) and regulationDetailController.getActions().canDetail())}"
+                                                    actionListener="#{regulationDetailController.seeRegulationId(resultDto.regulationId, resultDto.auctionReqId)}"
+                                                    update="tblSearchResult #{Constant.ERROR_GROWL_ID}"
+                                                    value="Xem quy chế"
+                                                    icon="fa fa-eye"/>
+                                            <p:menuitem
+                                                    oncomplete="PF('dlForm').show();"
+                                                    update="#{Constant.ERROR_GROWL_ID}"
+                                                    rendered="#{regulationDetailController.getActions().canUpdate() and resultDto.status eq DbConstant.CHUA_DANG_TAI and resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING and !regulationDetailController.checkStarttimeWithActions(resultDto)}"
+                                                    actionListener="#{regulationDetailController.transferRegulationId(resultDto.regulationId, resultDto.auctionReqId)}"
+                                                    value="Sửa quy chế"
+                                                    icon="fa fa-edit"/>
+                                            <p:menuitem
+                                                    actionListener="#{regulationDetailController.onDelete(resultDto)}"
+                                                    rendered="#{regulationDetailController.getActions().canDelete() and resultDto.status eq DbConstant.CHUA_DANG_TAI}"
+                                                    update="searchForm tblSearchResult #{Constant.ERROR_GROWL_ID}"
+                                                    value="Xóa quy chế"
+                                                    icon="fa fa-remove">
+                                                <p:confirm header="Xác nhận xóa" message="Bạn có chắc chắn xóa quy chế hay không ?"
+                                                           icon="fa fa-question-circle"/>
+                                            </p:menuitem>
+                                            <p:menuitem
+                                                    rendered="#{resultDto.status eq DbConstant.DA_HUY_QUY_CHE}"
+                                                    actionListener="#{regulationDetailController.getLydoByRegulationId(resultDto)}"
+                                                    update="dlForm" value="Xem lý do tạm dừng" icon="fa fa-eye"/>
+                                        </p:menuButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

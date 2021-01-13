@@ -1,0 +1,26 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- Modal Confirm Auction-->
+    <div class="modal hide-at-update fade" data-backdrop="static" data-keyboard="false" id="auctionConfirmPopupSecond">
+        <div class="modal-dialog modal-login">
+            <div class="modal-content pt-10" style="text-align: center">
+                <h:panelGroup rendered="#{!task.deposit1th}">
+                    <p style="margin-top: 50px;font-size: 30px; line-height: 40px;">Người trả giá cao nhất đã từ chối kết quả</p>
+                </h:panelGroup>
+                <p style="margin-top: 20px;font-size: 40px; line-height: 40px;">Đang chờ người trả giá cao thứ hai xác nhận</p>
+                <br/>
+                <p style="font-size: 30px">Thời gian xác nhận còn</p>
+                <br/>
+                <p class="text-danger mt-5" id="countTheWin"  data-countdown="#{auctionController.formatDate(task.endTimeRound)}" style="margin-bottom: 50px;margin-top: 15px;font-size: 50px;">00:00</p>
+            </div>
+        </div>
+    </div>
+    <a id="showPopupConfirmTheWin" href="#" data-toggle="modal" data-target="#auctionConfirmPopupSecond" style="display: none !important;"> </a>
+    <script>
+        countDownTheWin("countTheWin");
+        document.getElementById('showPopupConfirmTheWin').click();
+    </script>
+</ui:composition>

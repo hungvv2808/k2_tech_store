@@ -1,0 +1,296 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <c:set var="task" value="#{auctionTask.getAssetDtoList().get(auctionController.assetId)}"/>
+    <c:set var="accountId" value="#{authorizationFEController.accountDto.accountId}"/>
+    <c:set var="asset" value="#{auctionController.assetDto}"/>
+    <c:set var="auctionReq" value="#{auctionController.auctionReq}"/>
+    <c:set var="auctionRegister" value="#{auctionController.auctionRegister}" />
+
+    <h:panelGroup rendered="#{asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL}">
+        <script>
+            var numberOfRound = null;
+            var changeRound = false;
+        </script>
+    </h:panelGroup>
+    <h:panelGroup rendered="#{asset.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP}">
+        <script>
+            var price = null;
+        </script>
+    </h:panelGroup>
+
+    <div class="button-area">
+        <h:form class="variations_form" prependId="false">
+            <h:panelGroup id="#{Constant.AREA_BUTTON}" style="display: inline-block">
+                <h:panelGroup id="#{Constant.AREA_BUTTON}1" rendered="#{authorizationFEController.hasLogged()}">
+                    <h:panelGroup rendered="#{not empty asset.auctionRegisterId and asset.auctionRegisterStatus eq DbConstant.AUCTION_REGISTER_STATUS_ACCEPTED and asset.status eq DbConstant.ASSET_STATUS_PLAYING}">
+
+                        <h:panelGroup rendered="#{(not empty task and (task.hasDepositionBySystem(accountId) or (!task.hasDeposition(accountId) and (not empty auctionController.auctionRegister and auctionController.auctionRegister.statusDeposit ne DbConstant.AUCTION_REGISTER_STATUS_DEPOSIT_REFUSE))))}">
+                            <!-- Form input price -->
+                            <h:panelGroup id="#{Constant.AREA_BUTTON_BARGAIN}" rendered="#{asset.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP and !task.hasDeposition(accountId) and !task.inTimeConfirm and !task.refuseWinner and !task.ended}">
+                                <h:panelGroup rendered="#{!task.hasBargained(accountId) or (asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT and task.getWinner().accountId ne accountId)}">
+                                    <h:outputScript>
+                                        var currentPrice = #{asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT ? task.currentPrice : task.priceRoundCurrent.startingPrice};
+                                    </h:outputScript>
+                                    <div class="quantity" style="margin-right: 10px;">
+                                        <div class="qty-number decrease"
+                                             onclick="decreaseQty('#{asset.priceStep}', '#{asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT ? (task.priceBargained.isEmpty() ? task.currentPrice : (task.currentPrice + asset.priceStep)) : task.priceRoundCurrent.startingPrice}')">
+                                            <span id="default-decrease" class="decrease-qty noselect">-</span>
+                                        </div>
+                                        <input class="input-text qty qty-input price-bargain autonumber noselect"
+                                               value="#{asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT ? (task.priceBargained.isEmpty() ? task.currentPrice : (task.currentPrice + asset.priceStep)) : task.priceRoundCurrent.startingPrice}" placeholder="Số tiền đấu giá (VNĐ)" maxlength="19"
+                                               id="price" name="qty" type="text"/>
+                                        <div class="qty-number inscrease"
+                                             onclick="increaseQty('#{asset.priceStep}')">
+                                            <span id="default-increase" class="increase-qty noselect">+</span>
+                                        </div>
+                                    </div>
+                                    <input type="button" class="btn btn-custom main-color no-processing" value="Đấu giá ngay"
+                                           onclick="onBargainConfirm('price', currentPrice, '#{asset.priceStep}', true);"/>
+                                    <!-- Form bargain -->
+                                    <h:panelGroup id="bargainForm" style="display: none !important;">
+                                        <h:inputHidden id="bargainMoney" value="#{auctionController.money}"/>
+                                        <h:inputHidden id="bargainPriceRoundId"
+                                                       value="#{auctionController.priceRoundId}"/>
+                                        <h:commandButton id="bargainSubmit" action="#{auctionController.onBargain()}">
+                                            <f:ajax execute="@form" render="#{Constant.AREA_BUTTON} #{Constant.ERROR_FE_GROWL_ID}"/>
+                                        </h:commandButton>
+                                        <h:panelGroup rendered="#{asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL}">
+                                            <script>
+                                                //<![CDATA[
+                                                if ('#{task.priceRoundCurrent.numberOfRound}' > 1 && numberOfRound !== '#{task.priceRoundCurrent.numberOfRound}') {
+                                                    changeRound = true;
+                                                    numberOfRound = '#{task.priceRoundCurrent.numberOfRound}';
+                                                }
+                                                //]]>
+                                            </script>
+                                        </h:panelGroup>
+                                        <script>
+                                            //<![CDATA[
+                                            document.getElementById('bargainPriceRoundId').value = '#{task.priceRoundCurrent.priceRoundId}';
+                                            if (typeof price_set !== "undefined" && price_set != '') {
+                                                document.getElementById('price').value = price_set;
+                                            }
+                                            if (typeof decreaseQty === "function") {
+                                                if (price == null || price < '#{asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT ? task.currentPrice : task.priceRoundCurrent.startingPrice}') {
+                                                    document.getElementById('default-increase').click();
+                                                    document.getElementById('default-decrease').click();
+                                                }
+                                            }
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                if (price == null || price < '#{asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT ? task.currentPrice : task.priceRoundCurrent.startingPrice}') {
+                                                    document.getElementById('default-increase').click();
+                                                    document.getElementById('default-decrease').click();
+                                                }
+                                            }, false);
+                                            //]]>
+                                        </script>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                                <!-- Show bargained -->
+                                <h:panelGroup
+                                        rendered="#{asset.auctionMethodId ne DbConstant.AUCTION_METHOD_ID_DOWN and ((asset.auctionFormalityId ne DbConstant.AUCTION_FORMALITY_ID_DIRECT and task.hasBargained(accountId)) or (asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT and task.getWinner().accountId eq accountId))}">
+                                    <div class="price-set" id="yourPrice" style="margin-right: 10px;">Bạn đã trả giá <span><h:outputText
+                                            value="#{task.getBargained(accountId)}">
+                                        <f:convertNumber type="currency"
+                                                         currencySymbol="VNĐ"
+                                                         maxFractionDigits="6"
+                                                         minFractionDigits="0"
+                                                         locale="vi_VN"/>
+                                        </h:outputText></span>
+                                    </div>
+                                    <h:panelGroup rendered="#{asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT and asset.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP and asset.retractPrice}">
+                                        <div style="clear: both;"></div>
+                                        <input type="button" class="btn btn-danger" value="RÚT LẠI GIÁ" onclick="onRetractPrice();" style="margin-left: 0px;"/>
+                                        <h:panelGroup style="display: none !important;">
+                                            <h:commandButton id="retractPriceSubmit" action="#{auctionController.onRetractPrice()}">
+                                                <f:ajax execute="@this" render="#{Constant.AREA_BUTTON} #{Constant.ERROR_FE_GROWL_ID}"/>
+                                            </h:commandButton>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                            <!-- Show confirm accept price -->
+                            <h:panelGroup rendered="#{!task.hasDeposition(accountId) and !task.inTimeConfirm and asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT and asset.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN}">
+                                <h:panelGroup rendered="#{!task.hasBargained(accountId)}">
+                                    <button type="button" class="btn btn-custom main-color" id="btn" onclick="onBargainConfirm('price_accept', 0, 0, false);">
+                                        Chấp nhận mức giá <h:panelGroup id="price_accept"><h:outputText
+                                            value="#{auctionTask.assetDtoList.get(auctionController.assetId).currentPrice}">
+                                            <f:convertNumber type="currency"
+                                                             currencySymbol="VNĐ"
+                                                             maxFractionDigits="6"
+                                                             minFractionDigits="0"
+                                                             locale="vi_VN"/>
+                                        </h:outputText></h:panelGroup>
+                                    </button>
+                                    <!-- Form bargain -->
+                                    <h:panelGroup style="display: none !important;">
+                                        <h:inputHidden id="bargainMoney1" value="#{auctionController.money}"/>
+                                        <h:inputHidden id="bargainPriceRoundId1"
+                                                       value="#{auctionController.priceRoundId}"/>
+                                        <h:commandButton id="bargainSubmitAccept" action="#{auctionController.onAcceptPrice()}">
+                                            <f:ajax execute="@this" render="#{Constant.AREA_BUTTON} #{Constant.ERROR_FE_GROWL_ID}"/>
+                                        </h:commandButton>
+                                    </h:panelGroup>
+                                    <script>
+                                        //<![CDATA[
+                                        document.getElementById('bargainMoney1').value = '#{auctionTask.assetDtoList.get(auctionController.assetId).currentPrice}';
+                                        document.getElementById('bargainPriceRoundId1').value = '#{task.priceRoundCurrent.priceRoundId}';
+                                        //]]>
+                                    </script>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                            <!-- Button refuse the win -->
+                            <h:panelGroup rendered="#{auctionController.renderAreaWinner()}">
+                                <!-- button accept / refuse -->
+                                <p:remoteCommand name="cmdAcceptWinner" global="false" update="#{Constant.AREA_BUTTON} #{Constant.ERROR_FE_GROWL_ID}"
+                                                 action="#{auctionController.onAcceptWinner()}"/>
+                                <p:remoteCommand name="cmdRefuseWinner" global="false" update="#{Constant.AREA_BUTTON} #{Constant.ERROR_FE_GROWL_ID}"
+                                                 action="#{auctionController.onRefuseWinner()}"/>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:panelGroup>
+
+                <!-- Modal cancelAssetPopup -->
+                <h:panelGroup rendered="#{auctionController.renderButtonCancel()}">
+                    <!-- Button view cancel reason -->
+                    <button type="button" class="btn-deposited" data-toggle="modal" data-target="#cancelAssetPopup"
+                            title="Xem quy chế">Xem lý do tạm dừng đấu giá</button>
+                </h:panelGroup>
+
+                <!--Button rejected register-->
+                <h:panelGroup rendered="#{auctionController.auctionRegister.status eq DbConstant.AUCTION_REGISTER_STATUS_REJECTED}">
+                    <h:commandButton type="button" action="#{auctionController.getReasonDeposit()}"
+                                     class="btn-deposited" value="Xem lý do bị từ chối">
+                        <f:ajax execute="@form" render="#{Constant.ERROR_FE_GROWL_ID}"/>
+                    </h:commandButton>
+                </h:panelGroup>
+
+                <h:outputScript rendered="#{asset.status eq DbConstant.ASSET_STATUS_ENDED}">
+                    if (typeof bootbox !== 'undefined') {
+                        bootbox.hideAll();
+                    }
+                </h:outputScript>
+
+                <!-- Button payment option -->
+                <h:panelGroup rendered="#{commonFEController.renderButtonPayment(asset) and auctionRegister.statusRefund ne DbConstant.AUCTION_REGISTER_STATUS_REFUND_FOUR}">
+                    <h:commandButton type="button" class="btn btn-custom btn-success" value="Thanh toán"
+                                     actionListener="#{assetFEController.takePaymentOption(asset)}">
+                        <f:ajax execute="@this" render="#{Constant.ERROR_FE_GROWL_ID} :pay-offline-form"/>
+                    </h:commandButton>
+                </h:panelGroup>
+
+                <!-- Button register join -->
+                <h:panelGroup rendered="#{authorizationFEController.hasLogged() and auctionController.showButtonRegister()}">
+                    <h:commandButton type="button" class="btn btn-custom main-color l-float" value="Đăng ký đấu giá"
+                                     actionListener="#{regulationIsInFinishController.signUpToJoin(asset)}">
+                        <f:ajax execute="@this" render="@form #{Constant.ERROR_FE_GROWL_ID} :auction_register_form_register"/>
+                    </h:commandButton>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{auctionController.renderButtonDeposited()}">
+                    <button type="button" class="btn-deposited" id="depositShow" data-toggle="modal" data-target="#depositPopup">Bạn đã bị truất quyền #{task.hasDepositionBySystem(accountId) ? 'trả giá' : ''}</button>
+                </h:panelGroup>
+
+                <!-- Button view regulation file -->
+                <a class="btn btn-default btn-custom reset no-processing" href="#" data-toggle="modal" data-target="#regulationPopup" title="Xem quy chế">Xem quy chế</a>
+
+                <h:panelGroup rendered="#{!authorizationFEController.hasLogged() and auctionController.showButtonRegister()}">
+                    <div class="login-now">
+                        <a href="#" data-toggle="modal"
+                           data-target="#loginPopup"><span>Đăng nhập ngay</span><br/>để đăng ký đấu giá</a>
+                    </div>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
+
+        <div class="clearfix" style="padding: 5px;"></div>
+        <p class="note">
+            <h:panelGroup rendered="#{auctionController.renderMoreInfo()}">
+                <b>Lưu ý:</b>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{auctionController.renderMoreInfoPoll()}">
+                <br/>
+                - Mỗi vòng chỉ có thể trả giá một lần
+                <br/>
+                - Bạn sẽ bị truất quyền trả giá nếu không trả giá một vòng bất kỳ (ngoại trừ vòng cuối)
+            </h:panelGroup>
+            <h:panelGroup rendered="#{auctionController.renderMoreInfoDirectUp()}">
+                <br/>
+                - Nếu rút lại giá đã trả, bạn sẽ bị truất quyền và không được trả lại tiền đặt trước
+            </h:panelGroup>
+            <h:panelGroup rendered="#{auctionController.renderMoreInfoPayment()}">
+                <br/>
+                - Bạn đã nộp đơn đăng ký thành công, vui lòng nộp tiền đặt trước để hoàn thành đăng ký
+            </h:panelGroup>
+            <h:panelGroup rendered="#{auctionController.renderMoreInfoSuccess()}">
+                <br/>
+                - Bạn đã đăng ký thành công
+            </h:panelGroup>
+        </p>
+    </div>
+
+    <!-- Area modal -->
+    <h:panelGroup id="#{Constant.AREA_INCLUDE}">
+        <h:panelGroup rendered="#{authorizationFEController.hasLogged() and auctionController.assetDto.status eq DbConstant.ASSET_STATUS_PLAYING}">
+            <!-- Modal opportunity d0 -->
+            <ui:include src="../modal/modal_auction_opportunity_d0.xhtml"/>
+
+            <!-- Modal opportunity d1 -->
+            <ui:include src="../modal/modal_auction_opportunity_d1.xhtml"/>
+
+            <!-- Modal opportunity 1 -->
+            <ui:include src="../modal/modal_auction_opportunity1.xhtml"/>
+
+            <!-- Modal opportunity 2 -->
+            <ui:include src="../modal/modal_auction_opportunity2.xhtml"/>
+
+            <!-- Modal winner -->
+            <ui:include src="../modal/modal_auction_winner.xhtml"/>
+
+            <!-- Modal winner finish -->
+            <ui:include src="../modal/modal_auction_winner_finish.xhtml"/>
+
+            <!-- Modal refuse winner -->
+            <ui:include src="../modal/modal_auction_refuse_winner.xhtml"/>
+
+            <!-- Modal random -->
+            <ui:include src="../modal/modal_auction_random.xhtml"/>
+
+            <!-- Modal lost -->
+            <ui:include src="../modal/modal_auction_lost.xhtml"/>
+
+            <!-- Modal change round -->
+            <ui:include src="../modal/modal_change_round.xhtml"/>
+
+        </h:panelGroup>
+    </h:panelGroup>
+
+    <!-- Modal payment -->
+    <ui:include src="../modal/modal_payment_option.xhtml">
+        <ui:param name="controller" value="#{assetFEController}"/>
+    </ui:include>
+
+    <!-- Modal deposit -->
+    <ui:include src="../modal/modal_auction_deposit.xhtml"/>
+
+    <!-- Modal cancel asset -->
+    <ui:include src="../modal/modal_cancel_asset.xhtml"/>
+
+    <!-- Modal deposit -->
+    <ui:include src="../modal/modal_reject_asset_detail.xhtml">
+        <ui:param name="controller" value="#{auctionController}"/>
+    </ui:include>
+
+    <!-- remote -->
+    <p:remoteCommand name="cmdRefreshIncludeModal" update="#{Constant.AREA_INCLUDE}"/>
+
+</ui:composition>

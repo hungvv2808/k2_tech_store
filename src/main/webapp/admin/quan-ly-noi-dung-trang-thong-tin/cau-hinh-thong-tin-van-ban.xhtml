@@ -1,0 +1,231 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{decisionNewsController.initData(true)}"/>
+    </f:metadata>
+
+    <ui:define name="title">Quản lý thông tin văn bản</ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/quan-ly-noi-dung-trang-thong-tin/cau-hinh-thong-tin-van-ban">Quản lý nội dung trang thông tin / Quản lý thông tin văn bản</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+        <script>
+            var editorMode = 'document-editor';
+        </script>
+        <style>
+            .ui-dialog .ui-dialog-content {
+                position: initial;
+            }
+        </style>
+
+        <p:outputPanel styleClass="ui-g" rendered="#{decisionNewsController.getActions().canCreate()}">
+            <div class="ui-g-12" style="padding-top:0">
+                <div class="card no-margin">
+                    <p:commandButton value="Thêm mới" icon="fa fa-plus"
+                                     actionListener="#{decisionNewsController.resetDialog}"
+                                     oncomplete="PF('dialogInsertUpdate').show();" update="dlForm"/>
+                </div>
+            </div>
+        </p:outputPanel>
+
+        <p:dialog id="dialogInsertUpdate" header="Thông tin văn bản" modal="true" width="1000" resizable="true"
+                  widgetVar="dialogInsertUpdate" position="center center"
+                  style="max-height: 90vh; max-width: 90vw"
+                  onShow="try{PF('dialogInsertUpdate').initPosition();editorInit();document.getElementById('dialogInsertUpdate').style.top='10vh';showDialog();}catch(e){}"
+                  onHide="editorHide();hideDialog();"
+                  rendered="#{decisionNewsController.getActions().hasAction(EAction.CREATE, EAction.UPDATE)}">
+            <h:form id="dlForm" enctype="multipart/form-data" prependId="false">
+                <p:scrollPanel mode="native" style="width: 100%; border: none; max-height: 70vh; overflow-x: hidden">
+                    <div class="ui-fluid">
+                        <p:focus id="focus"/>
+                        <p:panelGrid id="basicPanel1" columns="2"
+                                     columnClasses="ui-grid-col-2,ui-grid-col-10"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+
+                            <p:outputLabel value="Tiêu đề văn bản:" for="title"/>
+                            <p:outputPanel>
+                                <p:inputText id="title" placeholder="Nhập tiêu đề văn bản" required="true"
+                                             requiredMessage="Bạn vui lòng nhập tiêu đề"
+                                             onchange="this.value= this.value.trim()"
+                                             value="#{decisionNewsController.decisionNews.title}" maxlength="300"/>
+                                <p:message id="id1" for="title" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Tóm tắt nội dung:" for="tomtat"/>
+                            <p:outputPanel>
+                                <p:inputTextarea id="tomtat" placeholder="Nhập vào nội dung tóm tắt"
+                                                 required="true"
+                                                 requiredMessage="Bạn vui lòng nhập nội dung tóm tắt"
+                                                 onchange="this.value = this.value.trim()"
+                                                 value="#{decisionNewsController.decisionNews.decisionSummary}"/>
+                                <p:message id="idtomtat" for="tomtat" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Nội dung văn bản:" for="editor"/>
+                            <p:outputPanel>
+                                <p:inputTextarea id="editor" styleClass="editor"
+                                                 placeholder="Nhập nội dung văn bản" required="true"
+                                                 requiredMessage="Bạn vui lòng nhập nội dung"
+                                                 onchange="this.value = this.value.trim()" height="300"
+                                                 value="#{decisionNewsController.decisionNews.content}"/>
+                                <p:message id="id2" for="editor" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Trạng thái hiển thị:" for="status"/>
+                            <p:selectBooleanCheckbox id="status"
+                                                     value="#{decisionNewsController.decisionNews.status}"
+                                                     itemLabel="Cho phép hiển thị trên trang thông tin"
+                                                     style="width: 100%" tabindex="17">
+                            </p:selectBooleanCheckbox>
+
+                        </p:panelGrid>
+                    </div>
+                </p:scrollPanel>
+                <p:panelGrid columns="3"
+                             columnClasses="ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5"
+                             layout="grid" styleClass="ui-panelgrid-blank">
+                    <p:commandButton value="Lưu"
+                                     actionListener="#{decisionNewsController.onSaveDataDecision}"
+                                     icon="fa fa-save" style="width: 80px"
+                                     update="id1 id2 focus idtomtat"/>
+                    <p:commandButton value="Ðóng" styleClass="close"
+                                     global="false"
+                                     actionListener="#{decisionNewsController.resetDialog}"
+                                     oncomplete="PF('dialogInsertUpdate').hide()" icon="fa fa-close"
+                                     style="width: 80px"/>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="dlg1" header="Nội dung thông tin văn bản" widgetVar="dialogContent" modal="true" width="800" height="600">
+            <h:form id="dlForm1">
+                <p:scrollPanel mode="native" style="width: 100%; border: none; height: 100%">
+                    <p:outputLabel value="#{decisionNewsController.contentDecision}" escape="false"/>
+                </p:scrollPanel>
+            </h:form>
+        </p:dialog>
+
+        <h:form id="searchForm">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" style="padding-top:0">
+                        <div class="card no-margin">
+                            <p:panel id="searchCode" header="Tìm kiếm" style="margin-bottom:5px"
+                                     rendered="#{decisionNewsController.getActions().canSearch()}">
+                                <p:panelGrid id="searchPanel" columns="4"
+                                             columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:outputLabel value="Thông tin tìm kiếm:" for="search"/>
+                                    <p:inputText id="search" placeholder="Nhập tiêu đề, nội dung thông tin văn bản"
+                                                 value="#{decisionNewsController.decisionNewsSearchDto.keyword}"/>
+                                    <p:outputLabel value="Trạng thái hiển thị:" for="sStatus"/>
+                                    <p:selectOneMenu id="sStatus"
+                                                     value="#{decisionNewsController.decisionNewsSearchDto.status}">
+                                        <f:selectItem itemLabel="Tất cả" itemValue=""/>
+                                        <f:selectItem itemLabel="Hiển thị" itemValue="true"/>
+                                        <f:selectItem itemLabel="Không hiển thị" itemValue="false"/>
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                                <p:panelGrid columns="3"
+                                             columnClasses="ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:commandButton value="Tìm kiếm"
+                                                     actionListener="#{decisionNewsController.onSearch()}"
+                                                     update="searchForm tblSearchResult" icon="fa fa-search"
+                                                     style="width: auto"/>
+                                    <p:commandButton value="Làm mới"
+                                                     actionListener="#{decisionNewsController.resetAll()}"
+                                                     update="searchForm tblSearchResult" icon="fa fa-refresh"
+                                                     styleClass="orange-btn" style="width: auto"/>
+                                    <p:commandButton value="Xuất dữ liệu" icon="fa fa-copy" update="growl" ajax="false" rendered="#{decisionNewsController.lazyDataModel.rowCount gt 0}">
+                                        <p:dataExporter type="xlsxstream" target="tblSearchResult" fileName="Danh sách thông tin văn bản" />
+                                    </p:commandButton>
+                                </p:panelGrid>
+
+                            </p:panel>
+
+                            <p:panel id="searchResult" header="Kết quả tìm kiếm" style="margin-bottom:5px">
+                                <p:dataTable id="tblSearchResult" tableStyle="table-layout: auto;"
+                                             widgetVar="wdgNhomQuyen" resizableColumns="true" paginator="true"
+                                             rows="10"
+                                             value="#{decisionNewsController.lazyDataModel}"
+                                             lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
+                                             paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{decisionNewsController.lazyDataModel.rowCount}"
+                                             emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                             rowKey="#{resultDto.decisionNewsId}">
+
+                                    <p:column headerText="STT" width="30" style="text-align: center">
+                                        <h:outputText value="#{rowIndex + 1}"/>
+                                    </p:column>
+                                    <p:column headerText="Tiêu đề" sortBy="#{resultDto.title}">
+                                        <h:outputText value="#{commonController.abbreviate(resultDto.title, DbConstant.LIMITCHARACTER)}" />
+                                    </p:column>
+
+                                    <p:column headerText="Tóm tắt" sortBy="#{resultDto.decisionSummary}" width="30%">
+                                        <h:outputText value="#{commonController.abbreviate(resultDto.decisionSummary, DbConstant.LIMITCHARACTER_HOME)}" escape="false" />
+                                    </p:column>
+
+                                    <p:column headerText="Nội dung" style="text-align: center" exportable="false"
+                                              width="10%">
+                                        <p:commandButton value="Xem chi tiết" icon="fa fa-eye" style="width: auto"
+                                                         oncomplete="PF('dialogContent').show();"
+                                                         update="dlForm1 growl"
+                                                         actionListener="#{decisionNewsController.onShowContentDecision(resultDto.decisionNewsId)}">
+                                        </p:commandButton>
+                                    </p:column>
+
+                                    <p:column headerText="Ngày cập nhật" style="text-align: center;" sortBy="#{resultDto.updateDate}" width="10%">
+                                        <h:outputText value="#{resultDto.updateDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Trạng thái " sortBy="#{resultDto.status}" width="10%">
+                                        <h:outputText value="Hiển thị" rendered="#{resultDto.status}"/>
+                                        <h:outputText value="Không hiển thị" rendered="#{!resultDto.status}"/>
+                                    </p:column>
+                                    <p:column headerText="Sửa"
+                                              rendered="#{decisionNewsController.getActions().canUpdate()}"
+                                              exportable="false" width="40">
+                                        <div class="my-data-table">
+                                            <p:commandLink styleClass="edit"
+                                                           oncomplete="PF('dialogInsertUpdate').show();"
+                                                           update="dlForm growl"
+                                                           actionListener="#{decisionNewsController.showUpdateDecisionPopup(resultDto)}">
+                                                <i class="fa fa-edit"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </p:column>
+                                    <p:column headerText="Xóa" style="width: 40px" exportable="false"
+                                              rendered="#{decisionNewsController.getActions().canDelete()}">
+                                        <div class="my-data-table">
+                                            <p:commandLink styleClass="delete"
+                                                           actionListener="#{decisionNewsController.onDelete(resultDto)}"
+                                                           update="searchForm tblSearchResult growl">
+                                                <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
+                                                           icon="fa fa-question-circle"/>
+                                                <i class="fa fa-remove"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>

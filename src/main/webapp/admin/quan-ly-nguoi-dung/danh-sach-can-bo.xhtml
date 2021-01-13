@@ -1,0 +1,429 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{administratorsCentralStaffController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Danh sách cán bộ</ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/quan-ly-nguoi-dung/danh-sach-can-bo">Quản trị hệ thống / Danh sách cán bộ</p:link>
+        </li>
+    </ui:define>
+
+    <style>
+        .ui-paginator .ui-paginator-current {
+            margin: 0 !important;
+        }
+    </style>
+
+    <ui:define name="content">
+        <p:outputPanel styleClass="ui-g" rendered="#{administratorsCentralStaffController.getActions().canCreate()}">
+            <div class="ui-g-12" style="padding-top:0">
+                <div class="card no-margin">
+                    <p:commandButton value="Thêm mới" icon="fa fa-plus"
+                                     actionListener="#{administratorsCentralStaffController.resetDialog}"
+                                     oncomplete="PF('dialogInsertMember').show();" update="dlForm"/>
+                </div>
+            </div>
+        </p:outputPanel>
+
+        <p:dialog id="dlg" header="Thông tin cán bộ" widgetVar="dialogInsertMember" modal="true" width="800"
+                  style="max-height: 90vh; max-width: 90vw"
+                  rendered="#{administratorsCentralStaffController.getActions().hasAction(EAction.CREATE,EAction.UPDATE)}">
+            <h:form id="dlForm" enctype="multipart/form-data">
+                <p:focus id="focus"/>
+                <div class="ui-fluid">
+                    <p:scrollPanel mode="native" style="width: 100%; border: none; max-height: 80vh; overflow-x: hidden">
+                        <p:panelGrid id="basicPanel1" columns="4"
+                                     columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+
+                            <p:outputLabel value="Họ và tên:" for="fullname"/>
+                            <p:inputText id="fullname" placeholder="Nhập họ và tên"
+                                         autofocus=""
+                                         required="true" requiredMessage="Bạn vui lòng nhập họ tên"
+                                         onchange="this.value = this.value.trim()"
+                                         value="#{administratorsCentralStaffController.accountDto.fullName}"
+                                         maxlength="50">
+                            </p:inputText>
+
+                            <p:outputLabel value="Điện thoại:" for="phone"/>
+                            <p:inputText id="phone" value="#{administratorsCentralStaffController.accountDto.phone}"
+                                         maxlength="11" minlength="10"
+                                         placeholder="Nhập số điện thoại" thousandSeparator="" decimalPlaces="0"
+                                         autoWidth="false" effect="fade" leadingZero="false" tabindex="11"
+                                         validatorMessage="Số điện thoại không đúng định dạng">
+                                <f:validateRegex pattern="^0[1-9]{1}[0-9]{8,9}$"/>
+                            </p:inputText>
+
+                            <div></div>
+                            <p:message id="id1" for="fullname" styleClass="focus-input-text" display="text"/>
+
+                            <div></div>
+                            <p:message id="id2" for="phone" styleClass="focus-input-text" display="text"/>
+
+                            <p:outputLabel value="Tên đăng nhập:" for="username"/>
+                            <p:inputText id="username" placeholder="Nhập tên đăng nhập"
+                                         required="true"
+                                         disabled="#{not empty administratorsCentralStaffController.accountDto.accountId}"
+                                         requiredMessage="Bạn vui lòng nhập tên đăng nhập"
+                                         onchange="this.value = this.value.trim()"
+                                         onkeyup="this.value = this.value.replace(/ /g,'')"
+                                         value="#{administratorsCentralStaffController.accountDto.username}"
+                                         validatorMessage="Tên đăng nhập phải có ít nhất 6 ký tự, được phép bao gồm ký tự '_' và '-' "
+                                         maxlength="50">
+                                <p:tooltip style="width: 250px;"
+                                           value="Tên đăng nhập phải có ít nhất 6 ký tự, được phép bao gồm ký tự '_' và '-' "
+                                           for="username" showEvent="focus" hideEvent="blur"/>
+                                <f:validateRegex pattern="^[\w\.\-\_]{6,50}$"/>
+                            </p:inputText>
+
+                            <p:outputLabel value="Chức danh:" for="position"/>
+                            <p:inputText id="position" placeholder="Nhập chức danh"
+                                         value="#{administratorsCentralStaffController.accountDto.position}"
+                                         maxlength="50"/>
+
+                            <div></div>
+                            <p:message id="id3" for="username" styleClass="focus-input-text" display="text"/>
+
+                            <div></div>
+                            <p:message id="id4" for="position" styleClass="focus-input-text" display="text"/>
+
+                            <p:outputLabel value="Giới tính:" for="gender"/>
+                            <p:selectOneMenu id="gender"
+                                             value="#{administratorsCentralStaffController.accountDto.sex}">
+                                <f:selectItem itemLabel="Chọn giới tính" itemValue="-1"/>
+                                <f:selectItem itemLabel="Nam" itemValue="0"/>
+                                <f:selectItem itemLabel="Nữ" itemValue="1"/>
+                                <f:selectItem itemLabel="Không xác định" itemValue="2"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Địa chỉ email:" for="email"/>
+                            <p:inputText id="email" placeholder="Nhập địa chỉ email" maxlength="50"
+                                         requiredMessage="Bạn vui lòng nhập địa chỉ email."
+                                         required="true"
+                                         onchange="this.value = this.value.trim()"
+                                         value="#{administratorsCentralStaffController.accountDto.email}"
+                                         validatorMessage=" Email không đúng định dạng">
+                                <f:validateRegex
+                                        pattern="^\s*[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})\s*$"/>
+                            </p:inputText>
+
+                            <div></div>
+                            <p:message id="id5" for="gender" styleClass="focus-input-text" display="text"/>
+
+                            <div></div>
+                            <p:message id="id6" for="email" styleClass="focus-input-text" display="text"/>
+
+                            <p:outputLabel value="Ngày sinh:" for="dateOfBirth"/>
+                            <p:calendar id="dateOfBirth" styleClass="calendar"
+                                        navigator="true" mode="popup" autocomplete="off"
+                                        yearRange="c-50:c" placeholder="Chọn ngày sinh"
+                                        value="#{administratorsCentralStaffController.accountDto.dateOfBirth}"
+                                        validatorMessage=" Ngày sinh không hợp lệ"
+                                        maxdate="#{administratorsCentralStaffController.now}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:calendar>
+
+                            <p:outputLabel value="Nhóm quyền:" for="permission"/>
+                            <p:selectOneMenu id="permission"
+                                             value="#{administratorsCentralStaffController.accountDto.roleId}"
+                                             autoWidth="false" effect="fade" required="true"
+                                             requiredMessage="Bạn vui lòng chọn nhóm quyền"
+                                             label="Chọn quyền thành viên">
+                                <f:selectItem itemLabel="Chọn quyền thành viên" itemValue=""/>
+                                <f:selectItems value="#{administratorsCentralStaffController.permissionList}"
+                                               var="permission" itemLabel="#{permission.name}"
+                                               itemValue="#{permission.roleId}"/>
+                            </p:selectOneMenu>
+
+                            <div></div>
+                            <p:message id="id7" for="dateOfBirth" styleClass="focus-input-text" display="text"/>
+
+                            <div></div>
+                            <p:message id="id8" for="permission" styleClass="focus-input-text" display="text"/>
+
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank"
+                                     columnClasses="ui-grid-col-2, ui-grid-col-10">
+                            <p:outputLabel value="Địa chỉ:"/>
+                            <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank"
+                                         columnClasses="ui-grid-col-4 ui-no-margin-padding, ui-grid-col-4 ui-no-margin-padding, ui-grid-col-4 ui-no-margin-padding">
+                                <ui:include src="/common/tinh-quan-phuong.xhtml"/>
+                            </p:panelGrid>
+                            <p:outputLabel value="Địa chỉ nhà:"/>
+                            <p:inputText id="address" placeholder="Nhập địa chỉ nhà" maxlength="100" value="#{administratorsCentralStaffController.accountDto.address}"/>
+                        </p:panelGrid>
+
+                        <h:panelGroup layout="block" style="margin-bottom: 5px;">
+                            <p:commandButton value="Lưu"
+                                             actionListener="#{administratorsCentralStaffController.onSaveData()}"
+                                             icon="fa fa-save" style="width: 90px; margin-top: 10px;"
+                                             update="searchForm id1 id2 id3 id4 id5 id6 id7 id8 focus"/>
+                            <p:commandButton value="Đóng" styleClass="close"
+                                             global="false"
+                                             actionListener="#{administratorsCentralStaffController.resetDialog}"
+                                             oncomplete="PF('dialogInsertMember').hide()" icon="fa fa-close"
+                                             style="width: 80px; margin-top: 10px; margin-left: 5px;"/>
+                        </h:panelGroup>
+                    </p:scrollPanel>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <h:form id="searchForm">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" style="padding-top:0">
+                        <div class="card no-margin">
+                            <p:panel id="searchCode" header="Tìm kiếm cán bộ" style="margin-bottom:5px"
+                                     rendered="#{administratorsCentralStaffController.getActions().canSearch()}">
+                                <p:panelGrid id="searchPanel" columns="4"
+                                             columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:outputLabel value="Họ và tên:"/>
+                                    <p:inputText placeholder="Nhập họ và tên"
+                                                 autofocus=""
+                                                 value="#{administratorsCentralStaffController.adminSearchDto.fullName}"/>
+
+                                    <p:outputLabel value="Địa chỉ email:"/>
+                                    <p:inputText placeholder="Nhập địa chỉ email"
+                                                 value="#{administratorsCentralStaffController.adminSearchDto.email}"/>
+
+                                    <p:outputLabel value="Tên đăng nhập:"/>
+                                    <p:inputText placeholder="Nhập tên đăng nhập"
+                                                 value="#{administratorsCentralStaffController.adminSearchDto.username}"/>
+
+                                    <p:outputLabel value="Trạng thái:"/>
+                                    <p:selectOneMenu
+                                            value="#{administratorsCentralStaffController.adminSearchDto.status}">
+                                        <f:selectItem itemLabel="Tất cả" itemValue="-1"/>
+                                        <f:selectItem itemLabel="Hoạt động"
+                                                      itemValue="#{DbConstant.ACCOUNT_ACTIVE_STATUS}"/>
+                                        <f:selectItem itemLabel="Đã bị khóa"
+                                                      itemValue="#{DbConstant.ACCOUNT_LOCK_STATUS}"/>
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                                <p:panelGrid columns="3"
+                                             columnClasses="ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:commandButton value="Tìm kiếm"
+                                                     actionListener="#{administratorsCentralStaffController.onSearch()}"
+                                                     update="searchForm tblSearchResult" icon="fa fa-search"
+                                                     style="width: auto"/>
+                                    <p:commandButton value="Làm mới"
+                                                     actionListener="#{administratorsCentralStaffController.resetAll()}"
+                                                     update="searchForm tblSearchResult" icon="fa fa-refresh"
+                                                     styleClass="orange-btn" style="width: auto"/>
+                                    <p:commandButton value="Xuất dữ liệu" icon="fa fa-copy" update="growl" ajax="false" rendered="#{administratorsCentralStaffController.lazyDataModel.rowCount gt 0}">
+                                        <p:dataExporter type="xlsxstream" target="tblSearchResult" fileName="Danh sách thông tin cán bộ" />
+                                    </p:commandButton>
+                                </p:panelGrid>
+                            </p:panel>
+                            <p:dataTable id="tblSearchResult" tableStyle="table-layout: auto;"
+                                         widgetVar="wdgaccountDtoDto" resizableColumns="true" paginator="true"
+                                         rows="10"
+                                         value="#{administratorsCentralStaffController.lazyDataModel}"
+                                         lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
+                                         paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         currentPageReportTemplate="#{t['lbl.recordTotal']}: #{administratorsCentralStaffController.lazyDataModel.rowCount}"
+                                         emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                         rowKey="#{resultDto.accountId}">
+                                <p:column headerText="Chi tiết" width="20" exportable="false"
+                                          rendered="#{administratorsCentralStaffController.getActions().hasAction(EAction.DETAIL)}">
+                                    <p:rowToggler/>
+                                </p:column>
+
+                                <p:rowExpansion>
+                                    <p:panelGrid id="detail-content" columns="4" layout="grid"
+                                                 styleClass="ui-panelgrid-blank"
+                                                 columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+                                        <p:outputLabel value="Họ và tên: "/>
+                                        <h:outputText value="#{resultDto.fullName}"/>
+
+                                        <p:outputLabel value="Số điện thoại: "/>
+                                        <h:outputText value="#{resultDto.phone}"/>
+
+                                        <p:outputLabel value="Tên đăng nhập: "/>
+                                        <h:outputText value="#{resultDto.username}"/>
+
+                                        <p:outputLabel value="Chức danh: "/>
+                                        <h:outputText value="#{resultDto.position}"
+                                                      rendered="#{not empty resultDto.position}"/>
+                                        <h:outputText value="" rendered="#{empty resultDto.position}"/>
+
+                                        <p:outputLabel value="Giới tính: "/>
+                                        <h:outputText value="Nam" rendered="#{DbConstant.MAN eq resultDto.sex}"/>
+                                        <h:outputText value="Nữ" rendered="#{DbConstant.WOMAN eq resultDto.sex}"/>
+                                        <h:outputText value="Giới tính khác"
+                                                      rendered="#{DbConstant.UNKNOW eq resultDto.sex}"/>
+                                        <h:outputLabel value="" rendered="#{DbConstant.NOGENDER eq resultDto.sex}"/>
+                                        <h:outputLabel value="" rendered="#{empty resultDto.sex}"/>
+
+                                        <p:outputLabel value="Địa chỉ email: "/>
+                                        <h:outputText value="#{resultDto.email}"/>
+
+                                        <p:outputLabel value="Ngày sinh: "/>
+                                        <h:outputText value="#{resultDto.dateOfBirth}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+
+                                        <p:outputLabel value="Nhóm quyền: "/>
+                                        <h:outputText value="#{resultDto.roleName}"/>
+
+                                        <p:outputLabel value="Địa chỉ: "/>
+                                        <h:outputText value="#{commonController.showAddress(resultDto.address, resultDto.nameCommune, resultDto.nameDistrict, resultDto.nameProvice)}" style="text-transform:capitalize;"/>
+
+                                        <p:outputLabel value="Ngày tạo: "/>
+                                        <p:outputLabel value="#{resultDto.createDate}">
+                                            <f:convertDateTime pattern="HH:mm:ss, dd/MM/yyyy"/>
+                                        </p:outputLabel>
+
+                                        <p:outputLabel value="Ngày cập nhật: "/>
+                                        <p:outputLabel value="#{resultDto.updateDate}">
+                                            <f:convertDateTime pattern="HH:mm:ss, dd/MM/yyyy"/>
+                                        </p:outputLabel>
+
+                                        <p:outputLabel value="Người cập nhật: "/>
+                                        <h:outputText value="#{resultDto.updateName}" rendered="#{not empty resultDto.updateName}"/>
+                                        <h:outputText value="&lt;i&gt;Hệ thống&lt;/i&gt;"
+                                                      escape="false"
+                                                      rendered="#{empty resultDto.updateName}"/>
+                                    </p:panelGrid>
+                                </p:rowExpansion>
+
+                                <p:column headerText="STT" style="text-align: center" width="30">
+                                    <h:outputText value="#{rowIndex + 1}"/>
+                                </p:column>
+
+                                <p:column headerText="Họ và tên" sortBy="#{resultDto.fullName}" width="15%">
+                                    <h:outputText value="#{resultDto.fullName}"/>
+                                </p:column>
+
+                                <p:column headerText="Email" sortBy="#{resultDto.email}">
+                                    <h:outputText value="#{resultDto.email}"/>
+                                </p:column>
+
+                                <p:column headerText="Số điện thoại" sortBy="#{resultDto.phone}" width="15%">
+                                    <h:outputText value="#{resultDto.phone}"/>
+                                </p:column>
+
+                                <p:column headerText="Tên đăng nhập" sortBy="#{resultDto.username}" width="15%">
+                                    <h:outputText value="#{resultDto.username}"/>
+                                </p:column>
+
+                                <p:column headerText="Trạng thái" sortBy="#{resultDto.accountStatus}" width="15%">
+                                    <h:outputText
+                                            value="#{administratorsCentralStaffController.convertStringStatusAccount(resultDto.accountStatus)}"/>
+                                </p:column>
+
+                                <p:column headerText="Quyền truy cập" sortBy="#{resultDto.roleId}" width="15%">
+                                    <h:outputText value="#{resultDto.roleName}"/>
+                                </p:column>
+
+                                <p:column headerText="Chức danh: " visible="hidden">
+                                    <h:outputText value="#{resultDto.position}"
+                                                  rendered="#{not empty resultDto.position}"/>
+                                    <h:outputText value="" rendered="#{empty resultDto.position}"/>
+                                </p:column>
+
+                                <p:column headerText="Giới tính: " visible="hidden">
+                                    <h:outputText value="Nam" rendered="#{DbConstant.MAN eq resultDto.sex}"/>
+                                    <h:outputText value="Nữ" rendered="#{DbConstant.WOMAN eq resultDto.sex}"/>
+                                    <h:outputText value="Giới tính khác"
+                                                  rendered="#{DbConstant.UNKNOW eq resultDto.sex}"/>
+                                    <h:outputText value="" rendered="#{DbConstant.NOGENDER eq resultDto.sex}"/>
+                                </p:column>
+
+                                <p:column headerText="Ngày sinh: " visible="hidden">
+                                    <h:outputText value="#{resultDto.dateOfBirth}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Nhóm quyền: " visible="hidden">
+                                    <h:outputText value="#{resultDto.roleName}"/>
+                                </p:column>
+
+                                <p:column headerText="Địa chỉ: " visible="hidden">
+                                    <h:outputText value="#{commonController.showAddress(resultDto.address, resultDto.nameCommune, resultDto.nameDistrict, resultDto.nameProvice)}" style="text-transform:capitalize;"/>
+                                </p:column>
+
+                                <p:column headerText="Ngày tạo:  " visible="hidden">
+                                    <p:outputLabel value="#{resultDto.createDate}">
+                                        <f:convertDateTime pattern="HH:mm:ss, dd/MM/yyyy"/>
+                                    </p:outputLabel>
+                                </p:column>
+
+                                <p:column headerText="Ngày cập nhật: " visible="hidden">
+                                    <p:outputLabel value="#{resultDto.updateDate}">
+                                        <f:convertDateTime pattern="HH:mm:ss, dd/MM/yyyy"/>
+                                    </p:outputLabel>
+                                </p:column>
+
+                                <p:column headerText="Người cập nhật: " visible="hidden">
+                                    <h:outputText value="#{resultDto.updateName}"/>
+                                </p:column>
+
+                                <p:column headerText="Thao tác" width="40" style="text-align: center" exportable="false">
+                                    <p:menuButton icon="fa fa-cogs">
+                                        <p:menuitem value="Khóa tài khoản"
+                                                    action="#{administratorsCentralStaffController.onLock(resultDto)}"
+                                                    update="searchForm #{Constant.ERROR_GROWL_ID}"
+                                                    icon="fa fa-check-circle"
+                                                    rendered="#{administratorsCentralStaffController.getActions().hasAction(EAction.ACTIVE_BLOCK) and resultDto.accountStatus eq DbConstant.ACCOUNT_ACTIVE_STATUS}">
+                                            <p:confirm header="Xác nhận khóa tài khoản"
+                                                       message="Bạn có chắc chắn muốn khóa tài khoản &lt;b&gt;#{resultDto.username}&lt;/b&gt; hay không ?"
+                                                       icon="fa fa-question-circle" escape="false"/>
+                                        </p:menuitem>
+                                        <p:menuitem value="Kích hoạt tài khoản"
+                                                    action="#{administratorsCentralStaffController.onUnlock(resultDto)}"
+                                                    update="searchForm #{Constant.ERROR_GROWL_ID}"
+                                                    icon="fa fa-check-circle"
+                                                    rendered="#{administratorsCentralStaffController.getActions().hasAction(EAction.ACTIVE_BLOCK) and resultDto.accountStatus eq DbConstant.ACCOUNT_LOCK_STATUS}">
+                                            <p:confirm header="Xác nhận kích hoạt tài khoản"
+                                                       message="Bạn có chắc chắn muốn kích hoạt tài khoản &lt;b&gt;#{resultDto.username}&lt;/b&gt; hay không ?"
+                                                       icon="fa fa-question-circle" escape="false"/>
+                                        </p:menuitem>
+                                        <p:menuitem value="Cấp lại mật khẩu"
+                                                    action="#{administratorsCentralStaffController.onResetPassword(resultDto)}"
+                                                    update="searchForm #{Constant.ERROR_GROWL_ID}" icon="fa fa-refresh"
+                                                    rendered="#{administratorsCentralStaffController.getActions().hasAction(EAction.RESET_PASSWORD) and !resultDto.loginFromSso}">
+                                            <p:confirm header="Xác nhận cấp lại mật khẩu"
+                                                       message="Bạn chắc chắn muốn cấp lại mật khẩu tài khoản &lt;b&gt;#{resultDto.username}&lt;/b&gt; hay không ?"
+                                                       icon="fa fa-question-circle" escape="false"/>
+                                        </p:menuitem>
+                                        <p:menuitem value="Sửa thông tin"
+                                                    action="#{administratorsCentralStaffController.showPopup(resultDto)}"
+                                                    oncomplete="PF('dialogInsertMember').show();"
+                                                    update="dlForm #{Constant.ERROR_GROWL_ID}" icon="fa fa-edit"
+                                                    rendered="#{administratorsCentralStaffController.getActions().canUpdate()}"/>
+                                        <p:menuitem value="Xoá thông tin"
+                                                    action="#{administratorsCentralStaffController.onDelete(resultDto)}"
+                                                    update="searchForm #{Constant.ERROR_GROWL_ID}" icon="fa fa-remove"
+                                                    rendered="#{administratorsCentralStaffController.getActions().canDelete()}">
+                                            <p:confirm header="Xác nhận xóa"
+                                                       message=" Bạn có chắc chắn xóa tài khoản &lt;span style='font-size :15px;'&gt;&lt;b&gt;#{resultDto.username}&lt;/b&gt;&lt;/span&gt; hay không?&lt;br/&gt;&lt;br/&gt; Nếu xóa hệ thống sẽ không cho phép tạo lại tên tài khoản giống như tên tài khoản hiện tại."
+                                                       icon="fa fa-question-circle" escape="false"/>
+                                        </p:menuitem>
+                                    </p:menuButton>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>

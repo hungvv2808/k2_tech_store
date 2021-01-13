@@ -1,0 +1,287 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/frontend/template/template_detail.xhtml">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{assetFEController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Danh sách tài sản</ui:define>
+    <ui:param name="bodyStyleClass" value="about"/>
+    <ui:param name="headerStyleClass" value="is-sticky fixed-header"/>
+
+    <ui:define name="breadcrumb">
+        <li>Danh sách tài sản</li>
+    </ui:define>
+
+    <ui:define name="screenTitle">
+        <h2>Danh sách tài sản</h2>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="row">
+            <div class="col-md-3 col-sm-12 col-xs-12 sidebar mb-f-r asset-sidebar">
+                <aside class="widget widget_search_filter">
+                    <div class="title-widget">
+                        <h3 class="title-sidebar"><span>Tìm kiếm</span></h3>
+                    </div>
+                    <div class="form-area">
+                        <h:form prependId="false" role="form">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label class="control-label">Trạng thái</label>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <h:selectOneMenu styleClass="form-control" placeholder="Chọn trạng thái"
+                                                     value="#{assetFEController.assetSearchDto.assetStatus}">
+                                        <f:selectItem itemLabel="Chọn tất cả" itemValue=""/>
+                                        <f:selectItem itemLabel="Sắp diễn ra" itemValue="1"/>
+                                        <f:selectItem itemLabel="Đang diễn ra" itemValue="2"/>
+                                        <f:selectItem itemLabel="Đã kết thúc" itemValue="3"/>
+                                        <f:selectItem itemLabel="Tạm dừng" itemValue="5"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label>Thời gian đấu giá</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-6 pad-right-5">
+                                    <div class='input-group date'>
+                                        <h:inputText type='text' id="fromDate" styleClass="form-control datetimepicker1 fromDate"
+                                                     placeholder="Từ ngày"
+                                                     autocomplete="off" onfocus="focusRemoveReadOnly(this);"
+                                                     value="#{assetFEController.assetSearchDto.fromTime}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:inputText>
+                                        <span class="input-group-addon"
+                                              onclick="document.getElementById('fromDate').focus()">
+                                            <i class="custom-icon calendar" style="margin: 0;"/>
+                                                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-6 pad-left-5">
+                                    <div class='input-group date'>
+                                        <h:inputText type='text' id="toDate" class="form-control datetimepicker1 toDate"
+                                                     placeholder="Đến ngày"
+                                                     autocomplete="off" onfocus="focusRemoveReadOnly(this);"
+                                                     value="#{assetFEController.assetSearchDto.toTime}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:inputText>
+                                        <span class="input-group-addon"
+                                              onclick="document.getElementById('toDate').focus()"><i
+                                                class="custom-icon calendar" style="margin: 0;"/>
+                                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label class="control-label ">Tên tài sản</label>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <h:inputText styleClass="form-control" placeholder="Nhập tên tài sản"
+                                                 value="#{assetFEController.assetSearchDto.keyword}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label class="control-label">Loại tài sản</label>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <h:selectOneMenu styleClass="form-control" placeholder="Nhập tên tài sản"
+                                                     value="#{assetFEController.assetSearchDto.typeAssetId}">
+                                        <f:selectItem itemLabel="Chọn loại tài sản" itemValue=""/>
+                                        <f:selectItems value="#{assetFEController.typeAssetList}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label class="control-label">Giá khởi điểm</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-6 pad-right-5">
+                                    <h:inputText placeholder="Từ"
+                                                 styleClass="form-control autonumber"
+                                                 value="#{assetFEController.fromPrice}" type="text" id="toPrice">
+                                    </h:inputText>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-6 pad-left-5">
+                                    <h:inputText placeholder="Đến"
+                                                 styleClass="form-control autonumber" id="fromPrice"
+                                                 value="#{assetFEController.toPrice}"
+                                                 type="text">
+                                    </h:inputText>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 button-area">
+                                    <h:commandButton value="Tìm kiếm"
+                                                     actionListener="#{assetFEController.onSearchQuery()}"
+                                                     styleClass="btn btn-warning growl search"
+                                                     style="margin-right: 5px"/>
+                                    <h:commandButton value="Nhập lại"
+                                                     actionListener="#{assetFEController.resetDialog()}"
+                                                     styleClass="btn btn-default reset" style="margin-left: 5px"/>
+                                </div>
+                            </div>
+                        </h:form>
+                    </div>
+                </aside>
+            </div>
+            <h:panelGroup id="assetList">
+                <div class="col-md-9 col-sm-12 col-xs-12 list-category-news">
+                    <h:panelGroup rendered="#{assetFEController.pagination.data.size() eq 0}">
+                        <h3 style="margin-top: 20px;">Không có bản ghi nào</h3>
+                    </h:panelGroup>
+                    <ui:repeat value="#{assetFEController.pagination.data}" var="assetVar">
+                        <div class="col-lg-4 col-md-6 col-xs-12 col-sm-6">
+                            <div class="product-one-columns mt-10">
+                                <h:panelGroup rendered="#{assetVar.status eq DbConstant.ASSET_STATUS_WAITING}">
+                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 no-padding">
+                                        <div class="product-image future-product">
+                                            <h:link outcome="/frontend/asset/asset_detail.xhtml?id=#{assetVar.assetId}">
+                                                <img src="#{resource[assetVar.filePaths.get(0)]}"/>
+                                                <div class="middle">
+                                                    <div class="text"><i class="fa fa-eye"
+                                                                         aria-hidden="true"/>Xem chi tiết
+                                                    </div>
+                                                </div>
+                                            </h:link>
+                                            <div class="countdown-wrapper">
+                                                <p>Thời gian bắt đầu đấu giá còn</p>
+                                                <div class="pts-countdown clearfix"
+                                                     data-countdown="countdown"
+                                                     data-date="#{assetFEController.formatDate(assetVar.startTime)}"
+                                                     data-countup="false">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{assetVar.status eq DbConstant.ASSET_STATUS_PLAYING}">
+                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 no-padding">
+                                        <div class="product-image now-product">
+                                            <h:link outcome="/frontend/asset/asset_detail.xhtml?id=#{assetVar.assetId}">
+                                                <img src="#{resource[assetVar.filePaths.get(0)]}"/>
+                                                <div class="middle">
+                                                    <div class="text"><i class="fa fa-eye" aria-hidden="true"/>Xem chi tiết
+                                                    </div>
+                                                </div>
+                                            </h:link>
+                                            <div class="countdown-wrapper">
+                                                <p>Thời gian kết thúc còn</p>
+                                                <div class="pts-countdown clearfix"
+                                                     data-countdown="countdown"
+                                                     data-countup="true"
+                                                     data-date="#{assetFEController.formatDate(assetVar.startTime)}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{assetVar.status eq DbConstant.ASSET_STATUS_ENDED or assetVar.status eq DbConstant.ASSET_STATUS_NOT_SUCCESS}">
+                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 no-padding">
+                                        <div class="product-image">
+                                        <h:link outcome="/frontend/asset/asset_detail.xhtml?id=#{assetVar.assetId}">
+                                            <img src="#{resource[assetVar.filePaths.get(0)]}"/>
+                                            <div class="middle">
+                                                <div class="text"><i class="fa fa-eye" aria-hidden="true"/>Xem chi tiết
+                                                </div>
+                                            </div>
+                                        </h:link>
+                                        <h:panelGroup rendered="#{assetVar.assetManagementEnding eq DbConstant.ASSET_MANAGEMENT_ENDING_GOOD}">
+                                            <div class="ended-product">
+                                                <div class="countdown-wrapper"
+                                                     style="padding-top: 9px; padding-bottom:  9px;">
+                                                    <p>Giá thắng cuộc</p>
+                                                    <div class="pts-countdown clearfix">
+                                                        <h:outputText value="#{assetVar.money}">
+                                                            <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                             maxFractionDigits="6"
+                                                                             minFractionDigits="0" locale="vi_VN"/>
+                                                        </h:outputText>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </h:panelGroup>
+                                        <h:panelGroup
+                                                rendered="#{assetVar.assetManagementEnding eq DbConstant.ASSET_MANAGEMENT_ENDING_BAD}">
+                                            <div class="stoped-product">
+                                                <div class="countdown-wrapper">
+                                                    <p>
+                                                        <h:outputText value="Đấu giá không thành"/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </h:panelGroup>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{assetVar.status eq DbConstant.ASSET_STATUS_CANCELED}">
+                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 no-padding">
+                                        <div class="product-image stoped-product">
+                                            <h:link outcome="/frontend/asset/asset_detail.xhtml?id=#{assetVar.assetId}">
+                                                <img src="#{resource[assetVar.filePaths.get(0)]}"/>
+                                                <div class="middle">
+                                                    <div class="text"><i class="fa fa-eye"
+                                                                         aria-hidden="true"/>Xem chi tiết
+                                                    </div>
+                                                </div>
+                                            </h:link>
+                                            <div class="countdown-wrapper">
+                                                <p>Đã tạm dừng đấu giá</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 no-padding">
+                                    <div class="product-info">
+                                        <h:link outcome="/frontend/asset/asset_detail.xhtml?id=#{assetVar.assetId}"
+                                                style="text-align: justify">
+                                            <h5 class="product-title" title="#{assetVar.name}">#{assetVar.name}</h5>
+                                        </h:link>
+                                        <p>
+                                            <span>Giá khởi điểm</span>
+                                            <ins>
+                                                <h:outputText value="#{assetVar.startingPrice}">
+                                                    <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                     maxFractionDigits="6" minFractionDigits="0"
+                                                                     locale="vi_VN"/>
+                                                </h:outputText></ins>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                    <ui:include src="../template/paginate/pagination.xhtml">
+                        <ui:param name="pagination" value="#{assetFEController.pagination}"/>
+                    </ui:include>
+                </div>
+            </h:panelGroup>
+        </div>
+
+        <!-- update scope -->
+        <p:remoteCommand name="cmdRefreshData" update="assetList #{Constant.ID_COUNTDOWN_LIBRARY}"
+                         global="false"
+                         actionListener="#{assetFEController.pagination.loadData()}"/>
+        <script>
+            var myAuction = false;
+            jQuery(".datetimepicker1").mask('99/99/9999');
+
+            function focusRemoveReadOnly(e) {
+                if (e.getAttribute('readonly') !== null) {
+                    e.removeAttribute('readonly');
+                    e.blur();
+                    setTimeout(function() {
+                        e.focus();
+                    }, 10)
+                }
+            }
+        </script>
+    </ui:define>
+</ui:composition>

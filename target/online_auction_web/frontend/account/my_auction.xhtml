@@ -1,0 +1,578 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/frontend/template/template_detail.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{auctionHistoryController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Đấu giá đã đăng ký</ui:define>
+    <ui:param name="bodyStyleClass" value=""/>
+    <ui:param name="headerStyleClass" value="is-sticky fixed-header"/>
+
+    <ui:define name="breadcrumb">
+        <li>Đấu giá đã đăng ký</li>
+    </ui:define>
+
+    <ui:define name="screenTitle">
+        <h2>Đấu giá đã đăng ký</h2>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="row">
+            <div class="filter">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <h:form role="form" novalidate="novalidate">
+                        <div class="form-wrap">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-2 col-sm-2 col-xs-12 ">
+                                        <label class="custom-label" style="width: auto;">Hiển thị:</label>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-12 ">
+                                        <h:selectOneMenu value="#{auctionHistoryController.auctionRegisterSearchDto.regulationStatus}" class="form-control br-5 text-dark">
+                                            <f:ajax event="change" listener="#{auctionHistoryController.onSearch()}" render="dataMyAuction pagination"/>
+                                            <f:selectItem itemValue="" itemLabel="Tất cả các quy chế"/>
+                                            <f:selectItem itemValue="#{DbConstant.REGULATION_AUCTION_STATUS_WAITING}" itemLabel="Quy chế có tài sản chưa diễn ra" />
+                                            <f:selectItem itemValue="#{DbConstant.REGULATION_AUCTION_STATUS_PLAYING}" itemLabel="Quy chế có tài sản đang diễn ra" />
+                                        </h:selectOneMenu>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </h:form>
+                    <p class="note" style="margin-bottom: 10px;"><i class="fa fa-info-circle" aria-hidden="true"/> Nhấn vào tên quy chế hoặc tên tài sản để xem thông tin chi tiết</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 col-xs-12 col-sm-12">
+                <h:panelGroup id="myAuctionPanel">
+                    <table id="myAuction" class="display auction-table-content" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th/>
+                            <th>STT</th>
+                            <th>Mã quy chế</th>
+                            <th>Số vòng</th>
+                            <th>Hình thức đấu giá</th>
+                            <th>Phương thức đấu giá</th>
+                            <th>Thời gian bắt đầu</th>
+                            <th>Thời gian còn lại</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </h:panelGroup>
+                <ui:include src="../template/paginate/pagination-ajax.xhtml">
+                    <ui:param name="pagination" value="#{auctionHistoryController.pagination}"/>
+                    <ui:param name="update" value="dataMyAuction"/>
+                </ui:include>
+            </div>
+        </div>
+
+        <h:form id="bargainForm" prependId="false" style="display: none !important;">
+            <h:inputHidden id="bargainAssetId" value="#{auctionHistoryController.assetId}"/>
+            <h:inputHidden id="bargainMoney" value="#{auctionHistoryController.money}"/>
+            <h:inputHidden id="bargainPriceRoundId" value="#{auctionHistoryController.priceRoundId}"/>
+            <!--button bargain-->
+            <h:commandButton id="bargainSubmit" action="#{auctionHistoryController.onBargain()}">
+                <f:ajax execute="@form" render="#{Constant.ERROR_FE_GROWL_ID}"/>
+            </h:commandButton>
+            <!--button accept price-->
+            <h:commandButton id="bargainSubmitAccept" action="#{auctionHistoryController.onPriceAccept()}">
+                <f:ajax execute="@form" render="#{Constant.ERROR_FE_GROWL_ID}"/>
+            </h:commandButton>
+            <!--button retract price-->
+            <h:commandButton id="retractPriceSubmit" action="#{auctionHistoryController.onRetractPrice()}">
+                <f:ajax execute="@form" render="#{Constant.ERROR_FE_GROWL_ID}"/>
+            </h:commandButton>
+            <!--button refuse win-->
+            <h:commandButton id="refuseWinner" action="#{auctionHistoryController.onRefuseWinner()}">
+                <f:ajax execute="@form" render="#{Constant.ERROR_FE_GROWL_ID}"/>
+            </h:commandButton>
+        </h:form>
+
+        <h:form id="paymentOptionForm" prependId="false" style="display: none !important;">
+            <h:inputHidden id="paymentAuctionRegisterId" value="#{auctionHistoryController.paymentAuctionRegisterId}"/>
+            <h:commandButton id="paymentSubmitOption" action="#{auctionHistoryController.takePaymentOption()}">
+                <f:ajax execute="@form" render=":pay-offline-form #{Constant.ERROR_FE_GROWL_ID}"/>
+            </h:commandButton>
+        </h:form>
+
+        <h:form id="cancelForm" prependId="false" style="display: none !important;">
+            <h:inputHidden id="cancelAuctionRegisterId" value="#{auctionHistoryController.cancelAuctionRegisterId}"/>
+            <h:commandButton id="cancelSubmit" action="#{auctionHistoryController.cancelAuctionRegisterAsset()}">
+                <f:ajax execute="@form" render="dataMyAuction #{Constant.ERROR_FE_GROWL_ID}"/>
+            </h:commandButton>
+        </h:form>
+
+        <h:form id="depositReasonShow" prependId="false" style="display: none !important;">
+            <h:inputHidden id="depositReasonShowId" value="#{auctionHistoryController.depositReasonShowId}"/>
+            <h:commandButton id="depositReasonShowSubmit" action="#{auctionHistoryController.getReasonDepositByRegulationId()}">
+                <f:ajax execute="@form" render="#{Constant.AREA_MODAL_REJECTED} #{Constant.ERROR_FE_GROWL_ID} notification"/>
+            </h:commandButton>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="jslibrary">
+        <script>
+            function cmdRefuseWinner() {
+                jQuery('#refuseWinner').click();
+            }
+        </script>
+        <script>
+            //<![CDATA[
+            var expander = [];
+            var myAuction = true;
+            var timerData = [];
+            var formatter = new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+            });
+            /* Formatting function for row details - modify as you need */
+            function format(d) {
+                // `d` is the original data object for the row
+                return '<table id="myAuction' + d.id + '" class="display subtable-content" style="width:100%">' +
+                    '<thead>' +
+                    '<tr class="table-head">' +
+                    '<th>Tên tài sản</th>' +
+                    '<th style = "text-align: center;">Vòng hiện tại</th>' +
+                    '<th>Giá khởi điểm/Giá hiện tại</th>' +
+                    '<th>Bước giá/Mức giảm giá</th>' +
+                    '<th>Trả giá</th>' +
+                    '<th>Trạng thái</th>' +
+                    '<th style="min-width: 120px;text-align: center">Hành động</th>' +
+                    '</tr>' +
+                    ' </thead>' +
+                    '</table>';
+            }
+            var data = "";
+            var table = jQuery('#myAuction').DataTable({
+                data: data,
+                searching: false,
+                ordering: false,
+                info: false,
+                autoWidth: true,
+                scrollX: true,
+                aaSorting: [],
+                "sScrollX": "100%",
+                "scrollCollapse": true,
+                "sScrollXInner": "100%",
+                "bScrollCollapse": true,
+                "bPaginate": false,
+                dom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+                language: {
+                    'paginate': {
+                        'next': '<i class="fa fa-angle-right" aria-hidden="true"/>',
+                        'previous': '<i class="fa fa-angle-left" aria-hidden="true"/>'
+                    },
+                    "lengthMenu": "Hiển thị _MENU_ ",
+                    "emptyTable": "Không tồn tại dữ liệu"
+                },
+                "columns": [{
+                    "className": 'details-control stt-column ',
+                    "orderable": false,
+                    "data": null,
+                    "defaultContent": '',
+                    "render": function(data, type, full, meta) {
+                        return '<div id="regulation-' + data.id + '"></div>';
+                    }
+                }, {
+                    "className": 'stt-column text-center',
+                    "orderable": false,
+                    "data": null,
+                    "render": function(data, type, full, meta) {
+                        return data.serial_number;
+                    }
+                }, {
+                    "className": '',
+                    "data": null,
+                    "render": function(data, type, full, meta) {
+                        return '<a style="color: #F19B40" href="' + urlContext + '/frontend/regulation/regulation_detail.xhtml?id=' + data.id + '">' + data.code + '</a>';
+                    },
+                }, {
+                    "className": 'text-right',
+                    "data": null,
+                    "render": function(data, type, full, meta) {
+                        if (data.auction_formality_id === '#{DbConstant.AUCTION_FORMALITY_ID_DIRECT}') {
+                            return '';
+                        } else {
+                            return data.count;
+                        }
+                    }
+                }, {
+                    "data": "auction_formality"
+                }, {
+                    "data": "auction_method"
+                }, {
+                    "data": "time_start"
+                }, {
+                    "data": null,
+                    "render": function(data, type, full, meta) {
+                        return '<span id="regulation-timer-' + data.id + '" class="countdown-time" data-time="' + data.time_remaining + '" data-id="' + data.id + '">' + data.time_remaining_string + '</span>';
+                    },
+                }],
+            });
+
+            // Add event listener for opening and closing details
+            jQuery('#myAuction tbody').on('click', 'td.details-control', function() {
+                var tr = jQuery(this).closest('tr');
+                var row = table.row(tr);
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    var index = expander.indexOf(row.data().id);
+                    if (index > -1) {
+                        expander.splice(index, 1);
+                    }
+                } else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+                    if (!expander.includes(row.data().id)) {
+                        expander.push(row.data().id);
+                    }
+                    jQuery(this).addClass('regulation-' + row.data().id);
+                    var subtable = jQuery('#myAuction' + row.data().id).DataTable({
+                        data: row.data().asset,
+                        searching: false,
+                        ordering: false,
+                        info: false,
+                        autoWidth: false,
+                        lengthChange: false,
+                        paging: false,
+                        scrollX: true,
+                        "scrollCollapse": true,
+                        "sScrollX": "98%",
+                        "sScrollXInner": "98%",
+                        bScrollCollapse: true,
+                        "columns": [{
+                            "orderable": false,
+                            "defaultContent": '',
+                            "className": 'hide-icon asset_name1',
+                            "data": null,
+                            "render": function(data, type, full, meta) {
+                                return '<a href="' + urlContext + '/frontend/asset/asset_detail.xhtml?id=' + data.id + '" title="' + data.name + '">' + data.name + '</a>';
+                            },
+                        }, {
+                            "className": 'text-center',
+                            "data": null,
+                            "render": function(data, type, full, meta) {
+                                if (data.count_now == null || data.auction_register_status === '#{DbConstant.AUCTION_REGISTER_STATUS_REFUND_THREE}') {
+                                    return "";
+                                }
+                                if (data.status === '#{auctionHistoryController.STATUS_SUCCESS}') {
+                                    return 'Đã kết thúc';
+                                }
+                                if(data.status === '#{auctionHistoryController.STATUS_NOT_SUCCESS}' || (data.status === '#{auctionHistoryController.STATUS_SUCCESS}' && !data.is_winner)){
+                                    return 'Cuộc đấu giá không thành công';
+                                }
+                                if (data.auction_method_id === '#{DbConstant.AUCTION_METHOD_ID_DOWN}') {
+                                    return '';
+                                }
+                                if (data.status === '#{auctionHistoryController.STATUS_CANCEL}') {
+                                    return null;
+                                }
+
+                                var str = "";
+                                if (data.auction_formality_id === "#{DbConstant.AUCTION_FORMALITY_ID_POLL}" && data.asset_playing != null && !data.asset_playing.in_time_confirm) {
+                                    str += 'Vòng ' + data.count_now + '<br/>';
+                                }
+                                if (data.asset_playing !== null) {
+                                    try {
+                                        str += 'Còn lại <span id="asset-timer-' + data.id + '" class="countdown-time" data-time="' + data.asset_playing.end_time_round + '" data-id="' + data.id + '">' + data.asset_playing.end_time_round_string + '</span>';
+                                    } catch (e) {
+                                        console.error(e);
+                                        str += 'Còn lại 00:00:00';
+                                    }
+                                }
+                                return str;
+                            },
+                        }, {
+                            "data": null,
+                            "render": function(data, type, full, meta) {
+                                var price = data.start_price;
+
+                                if (data.asset_playing != null && data.status === '#{auctionHistoryController.STATUS_CANCEL}') {
+                                    if (data.asset_playing.in_time_confirm) {
+                                        price = data.asset_playing.price_winner;
+                                    } else {
+                                        price = data.asset_playing.current_price;
+                                    }
+                                }
+                                return formatter.format(price).replace('₫', 'VNĐ')
+                            }
+                        }, {
+                            "data": null,
+                            "render": function(data, type, full, meta) {
+                                return formatter.format(data.step_price).replace('₫', 'VNĐ')
+                            }
+                        }, {
+                            "data": null,
+                            "className": 'price-column',
+                            "orderable": false,
+                            "render": function(data, type, full, meta) {
+                                var asset = data.asset_playing;
+
+                                // not accept
+                                if (data.auction_register_status !== '#{DbConstant.AUCTION_REGISTER_STATUS_ACCEPTED}') {
+                                    return '';
+                                }
+
+                                if (asset != null && data.status !== '#{auctionHistoryController.STATUS_SUCCESS}') {
+
+                                    // deposit
+                                    if (asset.is_deposit) {
+                                        return 'Bạn đã bị truất quyền';
+                                    }
+
+                                    if (data.status === '#{auctionHistoryController.STATUS_CANCEL}') {
+                                        return null;
+                                    }
+
+                                    // winner
+                                    if (asset.in_time_confirm) {
+                                        if (asset.is_winner) {
+                                            return (asset.round_confirm == 2 ? 'Người trả giá cao nhất đã từ chối kết quả.<br/>' : '') +
+                                                (data.auction_method_id == '#{DbConstant.AUCTION_METHOD_ID_DOWN}' ? 'Bạn đã chấp nhận mức giá ' : 'Bạn đã thắng với giá ') + formatter.format(asset.price_winner).replace('₫', 'VNĐ') +
+                                                '<br/><button type="button" class="btn btn-danger" onclick="preBargain(' + data.id + ', ' + data.count_now_id + ');onRefuseWinner(' + data.auction_method_id + ' == \'#{DbConstant.AUCTION_METHOD_ID_DOWN}\');">Từ chối kết quả</button>';
+                                        }
+                                        if (asset.round_confirm == 1 && data.auction_method_id == '#{DbConstant.AUCTION_METHOD_ID_DOWN}') {
+                                            return 'Đang chờ người chấp nhận giá xác nhận kết quả';
+                                        }
+                                        if (asset.round_confirm == 1) {
+                                            return 'Đang chờ người trả giá cao nhất xác nhận kết quả';
+                                        }
+                                        return 'Người trả giá cao nhất đã từ chối kết quả.<br/>Đang chờ người cao thứ 2 xác nhận kết quả';
+                                    }
+
+                                    // bargained
+                                    if (!asset.show_bargain) {
+                                        return 'Bạn đã trả giá ' + formatter.format(asset.price_bargained).replace('₫', 'VNĐ') +
+                                            (data.auction_formality_id == "#{DbConstant.AUCTION_FORMALITY_ID_DIRECT}" && data.auction_method_id == "#{DbConstant.AUCTION_METHOD_ID_UP}" && data.retract_price ?
+                                                '<br/><button type="button" class="btn btn-danger" onclick="preBargain(' + data.id + ', ' + data.count_now_id + ');onRetractPrice();">Rút lại giá</button>' : '');
+                                    }
+
+                                    //
+                                    if (data.auction_method_id === '#{DbConstant.AUCTION_METHOD_ID_DOWN}') {
+                                        return '<button type="button" class="btn btn-custom main-color" onclick="preBargain(' + data.id + ', ' + data.count_now_id + ');onBargainConfirm(\'price_accept\', ' + (data.asset_playing.current_price*1 + data.step_price*1) + ', ' + data.step_price + ', false);">Chấp nhận mức giá <span id="price_accept">' + formatter.format(data.asset_playing.current_price).replace('₫', 'VNĐ') + '</span></button>';
+                                    }
+
+                                    // show winner ended
+                                    if (asset.ended && asset.is_winner) {
+                                        return 'Bạn đã trúng đấu giá với mức giá ' + formatter.format(asset.price_winner).replace('₫', 'VNĐ');
+                                    }
+
+                                    var priceCurrent = data.asset_playing.current_price * 1;
+                                    if (!data.asset_playing.is_start && data.auction_formality_id == "#{DbConstant.AUCTION_FORMALITY_ID_DIRECT}" && data.auction_method_id == "#{DbConstant.AUCTION_METHOD_ID_UP}") {
+                                        priceCurrent += data.step_price * 1;
+                                    }
+                                    // show bargain
+                                    if (priceCurrent !== 0) {
+                                        return '<form style="display: flex" onload="" class="form-inline" action="#" onsubmit="preBargain(' + data.id + ', ' + data.count_now_id + ');onBargainConfirm(\'price_set\', ' + (data.asset_playing.current_price*1) + ', ' + data.step_price + ', true);return false;">' +
+                                            '<div class="form-group">' +
+                                            '<input type="text" id="price_set" class="form-control price-bargain autonumber" autocomplete="off" ' +
+                                            'data-step="' + data.step_price + '" data-min="' + data.start_price + '" ' +
+                                            'value="' + priceCurrent + '">' +
+                                            '</div>' +
+                                            '<input type="submit" class="btn btn-default btn-custom" value="Trả giá">' +
+                                            '</form>';
+                                    }
+                                    return null;
+                                } else {
+                                    if (data.is_winner) {
+                                        return 'Bạn đã trúng đấu giá với mức giá ' + formatter.format(data.highest_price).replace('₫', 'VNĐ');
+                                    }
+                                    return null;
+                                    //return '<form class="form-inline" action="#"><div class="form-group"> <input type="text" class="form-control" id="price" disabled></div><input type="submit" class="btn btn-default btn-custom" value="Trả giá" disabled></form>';
+                                }
+                            },
+                        }, {
+                            "data": null,
+                            "orderable": false,
+                            "render": function(data, type, full, meta) {
+                                if (data.auction_register_status === '#{DbConstant.AUCTION_REGISTER_STATUS_REJECTED_JOIN}') {
+                                    return '<a class="btn btn-custom status-button not-paid disabled">Đã hủy tham gia</a>';
+                                }
+                                if (data.auction_register_status === '#{DbConstant.AUCTION_REGISTER_STATUS_REJECTED}') {
+                                    return '<a class="btn btn-custom status-button canceled" onclick="jQuery(\'#depositReasonShowId\').val(\''+data.auction_register_id+'\'); jQuery(\'#depositReasonShowSubmit\').click();">Đã bị từ chối</a>';
+                                }
+                                if (data.status === '#{auctionHistoryController.STATUS_WAITING}') {
+                                    if (data.status_refund === '#{auctionHistoryController.STATUS_WAIT_FOR_CONTROL}') {
+                                        return '<a class="btn btn-custom status-button not-paid disabled">Chờ đối soát</a>';
+                                    }
+                                    if (data.auction_register_status === '#{auctionHistoryController.STATUS_PENDING}') {
+                                        return '<a class="btn btn-custom status-button not-paid disabled">Chưa nộp tiền đặt trước</a>';
+                                    }
+                                    if (data.auction_register_status === '#{auctionHistoryController.STATUS_APPROVED}') {
+                                        return '<a class="btn btn-custom status-button registed disabled">Đăng ký thành công</a>';
+                                    }
+                                }
+
+                                if (data.asset_playing != null && !data.asset_playing.ended) {
+                                    if (data.asset_playing.in_time_confirm) {
+                                        return '<a class="btn btn-custom status-button not-paid disabled">Đang chờ xác nhận</a>';
+                                    }
+                                    return '<a class="btn btn-custom status-button registed disabled">Đang diễn ra</a>'
+                                }
+
+                                if(data.status === '#{auctionHistoryController.STATUS_NOT_SUCCESS}' || (data.status === '#{auctionHistoryController.STATUS_SUCCESS}' && !data.status_ending)) {
+                                    return '<a class="btn btn-custom status-button canceled disabled">Đấu giá không thành</a>'
+                                }
+                                if (data.status === '#{auctionHistoryController.STATUS_SUCCESS}' || data.status_ending) {
+                                    return '<a class="btn btn-custom status-button registed disabled">Đấu giá thành công</a>'
+                                }
+                                if (data.status === '#{auctionHistoryController.STATUS_CANCEL}') {
+                                    return '<a class="btn btn-custom status-button canceled disabled">Tạm dừng đấu giá</a>'
+                                }
+                                return null;
+                            },
+                        }, {
+                            "orderable": false,
+                            "defaultContent": '',
+                            "className": 'text-center',
+                            "data": null,
+                            "render": function(data, type, full, meta) {
+                                var paymentBtn = '<a href="#" data-toggle="tooltip" title="Thanh toán" onclick="jQuery(\'#paymentAuctionRegisterId\').val(\''+data.auction_register_id+'\'); jQuery(\'#paymentSubmitOption\').click();">' +
+                                    '<i class="fa fa-credit-card" aria-hidden="true"></i><br/>Thanh toán' +
+                                    '</a>';
+                                var cancelBtn = '<a href="#" data-toggle="tooltip" title="Từ chối tham gia" onclick="jQuery(\'#cancelAuctionRegisterId\').val(\''+data.auction_register_id+'\'); auctionCancelConfirm();">' +
+                                    '<i class="fa fa-times" aria-hidden="true"></i><br/>Từ chối tham gia' +
+                                    '</a>';
+
+                                if (data.status === '#{auctionHistoryController.STATUS_WAITING}') {
+                                    if (data.auction_register_status === '#{auctionHistoryController.STATUS_PENDING}') {
+                                        if (data.check_time) {
+                                            return '<div class="text-center action-button">' + paymentBtn + cancelBtn + '</div>';
+                                        } else {
+                                            return '<div class="text-center action-button">' + cancelBtn + '</div>';
+                                        }
+                                    }
+
+                                    if (data.auction_register_status === '#{auctionHistoryController.STATUS_APPROVED}') {
+                                        return '<div class="text-center action-button">' + cancelBtn + '</div>';
+                                    }
+                                }
+
+                                // if (data.status === '#{auctionHistoryController.STATUS_SUCCESS}') {
+                                //     return '<a href="#" onclick="jQuery(\'#cancelAuctionRegisterId\').val(\''+data.auction_register_id+'\'); auctionCancelConfirm();">' +
+                                //             '<i class="fa fa-times" aria-hidden="true"></i> &nbsp;&nbsp;Huỷ bỏ' +
+                                //         '</a>';
+                                // }
+
+                                return null;
+                            },
+                        }],
+                    });
+                    tr.addClass('shown');
+                    tr.next('tr').addClass('shownchild');
+                    jQuery(document).ready(function () {
+                        jQuery('.autonumber').autoNumeric('init', {mDec: '0'});
+                    });
+                    countdownMA();
+                }
+            });
+            function preBargain(bargainAssetId, bargainPriceRoundId) {
+                jQuery('#bargainAssetId').val(bargainAssetId);
+                jQuery('#bargainPriceRoundId').val(bargainPriceRoundId);
+            }
+            //]]>
+        </script>
+
+        <h:panelGroup id="dataMyAuction">
+            <h:outputScript>
+                //<![CDATA[
+                var data = #{auctionHistoryController.pagination.dataString};
+                table.clear();
+                table.rows.add(data).draw();
+                expander.forEach(function (e) {
+                    jQuery('#regulation-' + e).click();
+                });
+                jQuery(document).ready(function () {
+                    jQuery('.autonumber').autoNumeric('init', {mDec: '0'});
+                });
+
+                function countdownMA() {
+                    jQuery('.countdown-time').each(function (i, e) {
+                        $this = jQuery(e);
+                        var id = $this.attr('id');
+                        if (window.timerData[$this.data('id')]) {
+                            clearInterval(window.timerData[$this.data('id')]);
+                        }
+                        if ($this.data('time') <= 0) {
+                            jQuery('#' + id).html("Đang diễn ra");
+                            return;
+                        }
+                        window.timerData[$this.data('id')] = setInterval(function () {
+                            jQuery('#' + id).html(countDown(jQuery('#' + id).data('time') * 1 - 1));
+                            jQuery('#' + id).data('time', jQuery('#' + id).data('time') * 1 - 1);
+                        }, 1000);
+                    });
+                }
+
+                countdownMA();
+                //]]>
+            </h:outputScript>
+        </h:panelGroup>
+
+        <style>
+            .dataTables_wrapper.no-footer .dataTables_scrollBody {
+                border-bottom: 1px solid #ECECEC;
+                overflow-x: hidden !important;
+            }
+            table.dataTable table.dataTable {
+                border-bottom: none !important;
+            }
+            .asset_name1 {
+                max-width: 200px;
+            }
+            .asset_name1 a {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 3;
+                white-space: nowrap;
+                -webkit-box-orient: vertical;
+            }
+            .subtable-content {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            #myAuction > th {
+                text-align: center !important;
+            }
+            table.dataTable table.dataTable thead th {
+                padding-left: 8px;
+            }
+        </style>
+
+        <h:outputScript name="bootbox-confirm.js" library="myjs"/>
+
+        <!-- Modal reject -->
+        <ui:include src="modal/modal_reject.xhtml">
+            <ui:param name="controller" value="#{auctionHistoryController}"/>
+        </ui:include>
+
+        <!-- Modal payment -->
+        <ui:include src="../asset/common/modal/modal_payment_option.xhtml">
+            <ui:param name="controller" value="#{auctionHistoryController}"/>
+        </ui:include>
+
+        <!-- update scope -->
+        <p:remoteCommand name="cmdRefreshData" update="dataMyAuction" global="false"
+                         actionListener="#{auctionHistoryController.onSearch()}"/>
+
+        <!--Update button register-->
+        <h:panelGroup rendered="#{auctionHistoryController.countdown ne -1}">
+            <script>
+                setTimeout(function () {
+                    cmdRefreshData();
+                }, #{auctionHistoryController.countdown});
+            </script>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>

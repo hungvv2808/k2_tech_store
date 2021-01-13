@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html">
+
+    <style type="text/css">
+        th {
+            text-align: center !important;
+        }
+    </style>
+
+    <h:panelGroup rendered="#{auctionController.checkRenderAuction()}">
+        <div class="row auction-info">
+            <h:panelGroup id="paginate-history" rendered="#{auctionController.checkRenderHistoryBargainPoll()}">
+                <div class="col-md-6 col-sm-12 col-xs-12">
+                    <div class="title-heading text-left">
+                        <h2>Lịch sử đấu giá</h2>
+                    </div>
+                    <table id="auction_history" class="display table-custom cell-border">
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Vòng trả giá</th>
+                            <th>Mức giá cao nhất (VNĐ)</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <ui:include src="../../../template/paginate/pagination-ajax.xhtml">
+                        <ui:param name="formId" value="paginationPriceRound"/>
+                        <ui:param name="pagination" value="#{auctionController.paginationPriceRound}"/>
+                        <ui:param name="update" value="dataAuctionHistory"/>
+                    </ui:include>
+                </div>
+            </h:panelGroup>
+
+            <h:panelGroup id="paginate-history-formality-driect-up" rendered="#{auctionController.checkRenderedHistoryBargainDirect()}">
+                <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="title-heading text-left">
+                    <h2>Lịch sử đấu giá</h2>
+                </div>
+                <table id="auction_history_formality_driect_up" class="display table-custom cell-border">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Thời gian</th>
+                        <th>Mã định danh</th>
+                        <th>Giá đã trả (VNĐ)</th>
+                    </tr>
+                    </thead>
+                </table>
+                <ui:include src="../../../template/paginate/pagination-ajax.xhtml">
+                    <ui:param name="formId" value="paginationHistoryBargainFormalityDirectUp"/>
+                    <ui:param name="pagination" value="#{auctionController.paginationHistoryBargainFormalityDirectUp}"/>
+                    <ui:param name="update" value="dataAuctionHistoryDirect"/>
+                </ui:include>
+                </div>
+            </h:panelGroup>
+
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <h:panelGroup id="paginate-register">
+                    <div class="title-heading text-left">
+                        <h2>Người tham gia đấu giá </h2>
+                    </div>
+                    <table id="joined_history" class="display table-custom cell-border">
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã định danh</th>
+                            <th>Vai trò</th>
+                            <th>Ghi chú</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <ui:include src="../../../template/paginate/pagination-ajax.xhtml">
+                        <ui:param name="formId" value="paginationAccountList"/>
+                        <ui:param name="pagination" value="#{auctionController.paginationRegisterList}"/>
+                        <ui:param name="update" value="dataJoinedHistory"/>
+                    </ui:include>
+                </h:panelGroup>
+            </div>
+        </div>
+    </h:panelGroup>
+
+    <div class="row detail-product">
+        <div class="col-md-12 col-xs-12 col-sm-12">
+            <div class="title-heading text-left">
+                <h2 style="text-align: justify; text-transform: none">#{auctionController.assetDto.name}</h2>
+            </div>
+            <div class="content">
+                <h:outputText style="text-align: justify" value="#{auctionController.assetDto.description}" escape="false"/>
+            </div>
+        </div>
+    </div>
+</ui:composition>

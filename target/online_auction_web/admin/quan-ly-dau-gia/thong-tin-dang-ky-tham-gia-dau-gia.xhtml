@@ -1,0 +1,550 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{auctionRegisterController.initData()}"/>
+    </f:metadata>
+
+    <ui:define name="title">Thông tin đăng ký tham gia đấu giá</ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/quan-ly-dau-gia/thong-tin-dang-ky-tham-gia-dau-gia.xhtml">Thông tin đăng ký tham gia đấu giá</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-fluid">
+            <p:dialog id="dlg" header="Hủy thông tin đăng ký tham gia đấu giá" widgetVar="dialoglido" modal="true" width="800"
+                      rendered="#{auctionRegisterController.getActions().hasAction(EAction.REFUSE_JOIN)}">
+                <h:form id="dlForm" enctype="multipart/form-data">
+                    <p:scrollPanel mode="native" style="width: 100%; max-height: 400px; border: none">
+                        <p:panelGrid id="basicPanel1" columns="2"
+                                     columnClasses="ui-grid-col-2,ui-grid-col-10"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+                            <p:outputLabel styleClass="requireLabel" value="Lý do hủy đăng ký:" for="lido"/>
+                            <p:inputTextarea id="lido" placeholder="Nhập lý do hủy đăng ký tham gia" rows="6" cols="33"
+                                             value="#{auctionRegisterController.auctionRegisterDto.reasonRefuse}"
+                                             maxlength="300"/>
+                        </p:panelGrid>
+                        <p:panelGrid columns="3"
+                                     columnClasses="ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5"
+                                     layout="grid" styleClass="ui-panelgrid-blank">
+                            <p:commandButton value="Gửi" actionListener="#{auctionRegisterController.onSend}"
+                                             icon="fa fa-save" style="width: 80px"
+                                             update="#{Constant.ERROR_GROWL_ID}"/>
+                            <p:commandButton value="Đóng" styleClass="close"
+                                             global="false"
+                                             actionListener="#{auctionRegisterController.resetDialog}"
+                                             oncomplete="PF('dialoglido').hide()" icon="fa fa-close"
+                                             style="width: 80px"/>
+                        </p:panelGrid>
+                    </p:scrollPanel>
+                </h:form>
+            </p:dialog>
+        </div>
+
+        <p:dialog id="detailInfoDialog" header="Quy chế đấu giá" widgetVar="detailInfoDialog"
+                  styleClass="text-center"
+                  modal="true" position="top center" showEffect="clip" hideEffect="clip"
+                  width="800" height="600">
+            <p:scrollPanel mode="native"
+                           style="width: 100%; height: 100%; border: none; overflow-y: hidden;">
+                <p:media value="/resources#{auctionRegisterController.regulationFilePath}" player="pdf" width="100%" height="100%">
+                    Không thể hiển thị được file tải lên, <h:outputLink value="#{request.contextPath}/resources#{auctionRegisterController.regulationFilePath}">bấm vào đây</h:outputLink> để tải file về
+                </p:media>
+            </p:scrollPanel>
+        </p:dialog>
+
+        <div class="ui-fluid">
+            <p:dialog id="dlg1" header="Thông tin giao dịch"
+                      style="max-height: 90vh; max-width: 90vw"
+                      rendered="#{paymentController.getActions().hasAction(EAction.CREATE, EAction.UPDATE)}"
+                      widgetVar="dialogInsertUpdate" modal="true" width="800">
+                <h:form id="dlForm1" enctype="multipart/form-data">
+                    <p:scrollPanel mode="native" style="width: 100%; max-height: 500px; border: none">
+                        <p:panelGrid id="basicPanel" columns="2"
+                                     columnClasses="ui-grid-col-3,ui-grid-col-9"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+
+                            <p:outputLabel value="Tài sản thanh toán:" for="asset"/>
+                            <p:outputPanel>
+                                <p:selectOneMenu id="asset" autoWidth="false" effect="fade" required="true"
+                                                 requiredMessage="Bạn vui lòng chọn tài sản thanh toán"
+                                                 value="#{paymentController.assetId}" filter="true"
+                                                 disabled="#{paymentController.disable}"
+                                                 filterMatchMode="contains">
+                                    <f:selectItem itemLabel="Chọn tài sản thanh toán" itemValue=""/>
+                                    <f:selectItems value="#{paymentController.assetList}"/>
+                                    <p:ajax event="change"
+                                            global="false"
+                                            listener="#{paymentController.onChangeAsset(paymentController.assetId)}"
+                                            update="money code time"/>
+                                </p:selectOneMenu>
+                                <p:message id="id2" for="asset" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Người giao dịch:" for="code"/>
+                            <p:outputPanel>
+                                <p:selectOneMenu id="code" autoWidth="false" effect="fade" required="true"
+                                                 requiredMessage="Bạn vui lòng chọn người giao dịch"
+                                                 value="#{paymentController.accountId}" filter="true"
+                                                 disabled="#{paymentController.disable}"
+                                                 filterMatchMode="contains">
+                                    <f:selectItem itemLabel="Chọn người giao dịch" itemValue=""/>
+                                    <f:selectItems value="#{paymentController.accountList}"/>
+                                </p:selectOneMenu>
+                                <p:message id="id1" for="code" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel styleClass="requireLabel" value="Số tiền giao dịch: " for="money"/>
+                            <p:inputNumber id="money" placeholder="Số tiền giao dịch" disabled="true"
+                                           value="#{paymentController.payment.money}"/>
+
+                            <p:outputLabel value="Hình thức thanh toán:" for="formality"/>
+                            <p:outputPanel>
+                                <p:selectOneMenu id="formality" autoWidth="false" effect="fade" required="true"
+                                                 requiredMessage="Bạn vui lòng chọn hình thức thanh toán"
+                                                 value="#{paymentController.payment.paymentFormality}"
+                                                 filterMatchMode="contains">
+                                    <f:selectItem itemLabel="Chọn hình thức thanh toán" itemValue=""/>
+                                    <f:selectItem itemLabel="Thanh toán trực tiếp trên hệ thống" itemValue="1"/>
+                                    <f:selectItem itemLabel="Thanh toán ngoài hệ thống" itemValue="2"/>
+                                </p:selectOneMenu>
+                                <p:message id="id3" for="formality" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel styleClass="requireLabel" value="Thời gian giao dịch:"/>
+                            <p:outputPanel>
+                                <p:datePicker styleClass="calendar" id="time" locale="vi_VN"
+                                              monthNavigator="true" yearNavigator="true" yearRange="#{commonController.yearNow}:2100"
+                                              label="Chọn thời gian giao dịch" showTime="true"
+                                              placeholder="Chọn thời gian giao dịch"
+                                              converterMessage="Thời gian giao dịch không đúng định dạng dd/MM/yyyy HH:mm"
+                                              validatorMessage="Vui lòng nhập thời gian giao dịch nhỏ hơn hoặc bằng thời gian hiện tại"
+                                              requiredMessage="Bạn vui lòng nhập thời gian giao dịch"
+                                              required="true" autocomplete="off"
+                                              defaultHour="#{paymentController.convertDatetimeToHour(paymentController.payment.createDate)}"
+                                              defaultMinute="#{paymentController.convertDatetimeToMinute(paymentController.payment.createDate)}"
+                                              value="#{paymentController.payment.createDate}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                </p:datePicker>
+                                <p:message id="id4" for="time" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Trạng thái giao dịch:" for="status"/>
+                            <p:outputPanel>
+                                <p:selectOneMenu id="status" autoWidth="false" effect="fade" required="true"
+                                                 requiredMessage="Bạn vui lòng chọn trạng thái giao dịch"
+                                                 value="#{paymentController.payment.status}"
+                                                 disabled="#{paymentController.disable}"
+                                                 filterMatchMode="contains">
+                                    <f:selectItem itemLabel="Chọn trạng thái giao dịch" itemValue=""/>
+                                    <f:selectItem itemLabel="Đã nhận được tiền" itemValue="1"/>
+                                    <f:selectItem itemLabel="Đã trả lại tiền đặt trước" itemValue="2"/>
+                                </p:selectOneMenu>
+                                <p:message id="id5" for="status" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Ghi chú giao dịch:" for="note"/>
+                            <p:inputTextarea id="note" placeholder="Nhập ghi chú cho giao dịch"
+                                             value="#{paymentController.payment.note}"/>
+
+                            <p:outputLabel value="File đính kèm:"/>
+                            <p:panelGrid columns="1" columnClasses="ui-grid-col-12 ui-no-margin-padding"
+                                         styleClass="ui-panelgrid-blank" layout="grid">
+                                <ui:include src="/common/upload-single-file-disable-download.xhtml"/>
+                                <p:outputLabel>(Vui lòng chọn tài liệu định dạng PDF, DOCX, JPG, JPEG, PNG dung lượng ảnh nhỏ hơn 5MB)</p:outputLabel>
+                            </p:panelGrid>
+
+                        </p:panelGrid>
+
+                    </p:scrollPanel>
+
+                    <p:panelGrid columns="3"
+                                 columnClasses="ui-grid-col-1.5,ui-grid-col-1.5"
+                                 layout="grid" styleClass="ui-panelgrid-blank">
+                        <p:commandButton value="Lưu" actionListener="#{paymentController.onSaveData}"
+                                         icon="fa fa-save" style="width: 80px" update="id1 id2 id3 id4 id5 "/>
+                        <p:commandButton value="Ðóng" styleClass="close"
+                                         actionListener="#{paymentController.resetDialog}"
+                                         oncomplete="PF('dialogInsertUpdate').hide()" icon="fa fa-close"
+                                         style="width: 80px"/>
+                    </p:panelGrid>
+                </h:form>
+            </p:dialog>
+        </div>
+        <div class="ui-fluid">
+            <p:dialog id="dlgsee" header="Lý do hủy yêu cầu tham gia đấu giá" widgetVar="dialogSee" modal="true" width="600"
+                      rendered="#{auctionRegisterController.getActions().hasAction(EAction.VIEW_REASON_JOIN_FAIL)}">
+                <h:form id="dlFormSee" enctype="multipart/form-data">
+                    <p:scrollPanel mode="native" style="width: 100%; max-height: 400px; border: none">
+                        <p:outputLabel value="#{auctionRegisterController.auctionRegisterDto.reasonRefuse}"/>
+                        <br/>
+                        <p:commandButton value="Đóng" styleClass="close"
+                                         global="false"
+                                         oncomplete="PF('dialogSee').hide()" icon="fa fa-close"
+                                         style="width: 80px; margin-top: 10px;"/>
+                    </p:scrollPanel>
+                </h:form>
+            </p:dialog>
+        </div>
+
+        <h:form id="searchForm">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" style="padding-top:0">
+                        <div class="card no-margin">
+                            <p:panel id="searchCode" header="Tìm kiếm thông tin đăng ký tham gia đấu giá#{not empty request.getParameter('status') ? ': Chưa trả lại tiền đặt trước' : ''}"
+                                     style="margin-bottom:5px"
+                                     rendered="#{auctionRegisterController.getActions().canSearch()}">
+
+                                <p:panelGrid id="searchPanel" columns="4"
+                                             columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:outputLabel value="Tên CN/TC:" for="fullName"/>
+                                    <p:inputText id="fullName" maxlength="50" placeholder="Nhập tên CN/TC"
+                                                 value="#{auctionRegisterController.auctionRegisterSearchDto.fullName}"/>
+
+                                    <p:outputLabel value="Số điện thoại:" for="phone"/>
+                                    <p:inputText id="phone" placeholder="Nhập số điện thoại"
+                                                 value="#{auctionRegisterController.auctionRegisterSearchDto.phone}"
+                                                 maxlength="11">
+                                    </p:inputText>
+
+                                    <p:outputLabel value="Thời gian đăng ký:"/>
+                                    <p:panelGrid id="searchPanelDate" columns="3"
+                                                 columnClasses="ui-grid-col-5 ui-no-margin-padding, ui-grid-col-2 ui-no-margin-padding, ui-grid-col-5 ui-no-margin-padding"
+                                                 styleClass="ui-panelgrid-blank" layout="grid">
+                                        <p:calendar id="ctbhStartTime" styleClass="calendar"
+                                                    navigator="true"
+                                                    mode="popup" placeholder="Từ ngày"
+                                                    label="Thời gian"
+                                                    validatorMessage="Nhập thời gian đăng ký từ ngày phải nhỏ hơn đến ngày"
+                                                    value="#{auctionRegisterController.auctionRegisterSearchDto.fromDate}"
+                                                    maxdate="#{auctionRegisterController.auctionRegisterSearchDto.toDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            <p:ajax event="dateSelect"
+                                                    listener="#{auctionRegisterController.onDateSelect}"
+                                                    update="ctbhValidDate"/>
+                                        </p:calendar>
+                                        <p:outputLabel value=""/>
+                                        <p:calendar id="ctbhValidDate" styleClass="calendar"
+                                                     mode="popup" placeholder="Đến ngày"
+                                                    label="Thời gian"
+                                                    validatorMessage="Nhập thời gian đăng ký đến ngày phải lớn hơn từ ngày"
+                                                    value="#{auctionRegisterController.auctionRegisterSearchDto.toDate}"
+                                                    mindate="#{auctionRegisterController.auctionRegisterSearchDto.fromDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            <p:ajax event="dateSelect"
+                                                    listener="#{auctionRegisterController.onDateSelect}"
+                                                    update="ctbhStartTime"/>
+                                        </p:calendar>
+                                    </p:panelGrid>
+
+                                    <p:outputLabel value="Mã định danh:" for="keyword"/>
+                                    <p:inputText id="keyword"
+                                                 value="#{auctionRegisterController.auctionRegisterSearchDto.keyword}"
+                                                 placeholder="Nhập mã định danh"/>
+
+                                    <p:outputLabel value="Mã quy chế:" for="regulationCode"/>
+                                    <p:inputText id="regulationCode"
+                                                 value="#{auctionRegisterController.auctionRegisterSearchDto.regulationCode}"
+                                                 placeholder="Nhập mã quy chế"/>
+
+                                    <p:outputLabel value="Tên tài sản:" for="name"/>
+                                    <p:inputText id="name"
+                                                 value="#{auctionRegisterController.auctionRegisterSearchDto.name}"
+                                                 maxlength="50" placeholder="Nhập tên tài sản"/>
+
+                                    <p:outputLabel value="Trạng thái đăng ký:"/>
+                                    <p:selectOneMenu id="sloai"
+                                                     filterMatchMode="contains"
+                                                     autoWidth="false" effect="fade"
+                                                     value="#{auctionRegisterController.auctionRegisterSearchDto.status}">
+                                        <f:selectItem itemLabel="Tất cả" itemValue=""/>/frontend/asset/asset_detail.xhtml
+                                        <f:selectItem itemLabel="Đã nộp hồ sơ"
+                                                      itemValue="#{DbConstant.AUCTION_REGISTER_STATUS_WAITING}"/>
+                                        <f:selectItem itemLabel="Đăng ký thành công"
+                                                      itemValue="#{DbConstant.AUCTION_REGISTER_STATUS_ACCEPTED }"/>
+                                        <f:selectItem itemLabel="Đăng ký không hợp lệ"
+                                                      itemValue="#{DbConstant.AUCTION_REGISTER_STATUS_REJECTED}"/>
+                                        <f:selectItem itemLabel="Từ chối tham gia"
+                                                      itemValue="#{DbConstant.AUCTION_REGISTER_STATUS_REJECTED_JOIN }"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Trạng thái tiền đặt trước:"/>
+                                    <p:selectOneMenu id="sStatus"
+                                                     filterMatchMode="contains"
+                                                     autoWidth="false" effect="fade"
+                                                     value="#{auctionRegisterController.auctionRegisterSearchDto.statusRefund}">
+                                        <f:selectItem itemLabel="Tất cả" itemValue=""/>
+                                        <f:selectItem itemLabel="Chưa nộp tiền đặt trước"
+                                                      itemValue="#{DbConstant.AUCTION_REGISTER_STATUS_REFUND_ZERO}"/>
+                                        <f:selectItem itemLabel="Đang chờ đối soát"
+                                                      itemValue="#{DbConstant.AUCTION_REGISTER_STATUS_REFUND_FOUR}"/>
+                                        <f:selectItem itemLabel="Đã nộp tiền đặt trước"
+                                                      itemValue="#{DbConstant.AUCTION_REGISTER_STATUS_REFUND_THREE}"/>
+                                        <f:selectItem itemLabel="Đã hoàn tiền đặt trước"
+                                                      itemValue="#{DbConstant.AUCTION_REGISTER_STATUS_REFUND_TWO}"/>
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+
+                                <p:panelGrid id="searchPanel1" columns="3"
+                                             columnClasses="ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:commandButton value="Tìm kiếm"
+                                                     actionListener="#{auctionRegisterController.onSearch()}"
+                                                     update="searchForm tblSearchResult growl" icon="fa fa-search"/>
+                                    <p:commandButton value="Làm mới" process="@parent"
+                                                     actionListener="#{auctionRegisterController.resetAll()}"
+                                                     update="searchForm tblSearchResult searchPanelDate" icon="fa fa-refresh"
+                                                     styleClass="orange-btn">
+                                        <p:resetInput target="searchForm"/>
+                                    </p:commandButton>
+                                    <p:commandButton value="Xuất dữ liệu" icon="fa fa-copy" update="growl" ajax="false" rendered="#{auctionRegisterController.lazyDataModel.rowCount gt 0}">
+                                        <p:dataExporter type="xlsxstream" target="tblSearchResult" fileName="Danh sách thông tin người đăng ký tham gia đấu giá" />
+                                    </p:commandButton>
+                                </p:panelGrid>
+                            </p:panel>
+
+                            <p:panel id="searchResult" header="Kết quả tìm kiếm" style="margin-bottom:5px">
+                                <p:dataTable id="tblSearchResult" tableStyle="table-layout: auto;"
+                                             widgetVar="wdgNhomQuyen" resizableColumns="true" paginator="true"
+                                             rows="10"
+                                             value="#{auctionRegisterController.lazyDataModel}"
+                                             lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
+                                             paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{auctionRegisterController.lazyDataModel.rowCount}"
+                                             emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                             rowKey="#{resultDto.auctionRegisterId}">
+
+                                    <p:column headerText="Chi tiết" style="width: 20px;" exportable="false">
+                                        <p:rowToggler/>
+                                    </p:column>
+
+                                    <p:column headerText="STT" width="30" style="text-align: center">
+                                        <h:outputText value="#{rowIndex + 1}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên CN/TC" width="10%">
+                                        <h:outputText value="#{resultDto.fullNameNguoiDangKy}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Ngày đăng ký" width="10%" sortBy="#{resultDto.createDate}" style="text-align: center;">
+                                        <h:outputText value="#{resultDto.createDate}">
+                                            <f:convertDateTime pattern="HH:mm, dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Mã định danh" width="10%" sortBy="#{resultDto.code}" style="text-align: center;">
+                                        <h:outputText value="#{resultDto.code}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Mã quy chế" width="10%" sortBy="#{resultDto.regulationCode}" visible="false" style="text-align: center;">
+                                        <h:outputText value="#{resultDto.regulationCode}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Mã quy chế" width="10%" sortBy="#{resultDto.regulationCode}" exportable="false" style="text-align: center;">
+                                        <p:commandLink value="#{resultDto.regulationCode}" style="text-decoration: underline"
+                                                       actionListener="#{auctionRegisterController.onShowRegulationFile(resultDto.regulationFilePath)}"
+                                                       update="detailInfoDialog"
+                                                       oncomplete="PF('detailInfoDialog').show();"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên tài sản" exportable="false">
+                                        <h:outputText value="#{commonController.abbreviate(resultDto.name, DbConstant.LIMITCHARACTER)}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên tài sản" visible="false">
+                                        <h:outputText value="#{resultDto.name}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Trạng thái đấu giá" width="10%">
+                                        <h:outputText value="Sắp diễn ra"
+                                                      rendered="#{resultDto.assetStatus eq DbConstant.ASSET_STATUS_WAITING}"/>
+                                        <h:outputText value="Đang diễn ra"
+                                                      rendered="#{resultDto.assetStatus eq DbConstant.ASSET_STATUS_PLAYING}"/>
+                                        <h:outputText value="Đã kết thúc"
+                                                      rendered="#{resultDto.assetStatus eq DbConstant.ASSET_STATUS_ENDED and resultDto.assetManagementEndingFinal}"/>
+                                        <h:outputText value="Đấu giá không thành công"
+                                                      rendered="#{resultDto.assetStatus eq DbConstant.ASSET_STATUS_NOT_SUCCESS or (resultDto.assetStatus eq DbConstant.ASSET_STATUS_ENDED and !resultDto.assetManagementEndingFinal)}"/>
+                                        <h:outputText value="Đã tạm dừng"
+                                                      rendered="#{resultDto.assetStatus eq DbConstant.ASSET_STATUS_CANCELED}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Trạng thái đăng ký" width="10%">
+                                        <h:outputText value="Đã nộp hồ sơ"
+                                                      rendered="#{resultDto.status eq DbConstant.AUCTION_REGISTER_STATUS_WAITING}"/>
+                                        <h:outputText value="Đăng ký thành công"
+                                                      rendered="#{resultDto.status eq DbConstant.AUCTION_REGISTER_STATUS_ACCEPTED }"/>
+                                        <h:outputText value="Đăng ký không hợp lệ"
+                                                      rendered="#{resultDto.status eq DbConstant.AUCTION_REGISTER_STATUS_REJECTED}"/>
+                                        <h:outputText value="Từ chối tham gia"
+                                                      rendered="#{resultDto.status eq DbConstant.AUCTION_REGISTER_STATUS_REJECTED_JOIN }"/>
+                                    </p:column>
+
+                                    <p:column headerText="Trạng thái tiền đặt trước" width="10%">
+                                        <h:outputText value="Chưa nộp tiền đặt trước"
+                                                      rendered="#{resultDto.statusRefund eq DbConstant.AUCTION_REGISTER_STATUS_REFUND_ZERO}"/>
+                                        <h:outputText value="Đã nộp tiền đặt trước"
+                                                      rendered="#{resultDto.statusRefund eq DbConstant.AUCTION_REGISTER_STATUS_REFUND_THREE}"/>
+                                        <h:outputText value="Đã hoàn tiền đặt trước"
+                                                      rendered="#{resultDto.statusRefund eq DbConstant.AUCTION_REGISTER_STATUS_REFUND_TWO}"/>
+                                        <h:outputText value="Chờ đối soát thông tin"
+                                                      rendered="#{resultDto.statusRefund eq DbConstant.AUCTION_REGISTER_STATUS_REFUND_FOUR}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Ghi chú" width="10%">
+                                        <h:outputText value="#{auctionRegisterController.renderValueNotes(resultDto)}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Email:" visible="hidden">
+                                        <h:outputText value="#{resultDto.email}"/>
+                                    </p:column>
+                                    <p:column headerText="Số điện thoại:" visible="hidden">
+                                        <h:outputText value="#{resultDto.phone}"/>
+                                    </p:column>
+
+                                    <p:rowExpansion>
+                                        <p:panelGrid columns="4" layout="grid" rendered="#{auctionRegisterController.renderCountString(resultDto.name)}"
+                                                     styleClass="ui-panelgrid-blank"
+                                                     columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+                                            <p:outputLabel value="Mã quy chế:"/>
+                                            <h:outputText value="#{resultDto.regulationCode}"/>
+                                            <p:outputLabel value="Tên tài sản:"/>
+                                            <h:outputText value="#{resultDto.name}" />
+                                        </p:panelGrid>
+
+                                        <p:panelGrid columns="2" rendered="#{!auctionRegisterController.renderCountString(resultDto.name)}" columnClasses="ui-grid-col-2 ,ui-grid-col-10" styleClass="ui-panelgrid-blank" layout="grid">
+                                            <p:outputLabel value="Mã quy chế:"/>
+                                            <h:outputText value="#{resultDto.regulationCode}"/>
+                                        </p:panelGrid>
+
+                                        <p:panelGrid columns="2" rendered="#{!auctionRegisterController.renderCountString(resultDto.name)}" columnClasses="ui-grid-col-2 ,ui-grid-col-10 text-limit-width" styleClass="ui-panelgrid-blank" layout="grid">
+                                            <p:outputLabel value="Tên tài sản:"/>
+                                            <h:outputText value="#{resultDto.name}" />
+                                        </p:panelGrid>
+
+                                        <p:panelGrid id="detail-content" columns="4" layout="grid"
+                                                     styleClass="ui-panelgrid-blank"
+                                                     columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+                                            <p:outputLabel value="Họ và tên:"/>
+                                            <h:outputText value="#{resultDto.fullNameNguoiDangKy}"/>
+
+                                            <p:outputLabel value="Số điện thoại cá nhân:" rendered="#{!resultDto.org}"/>
+                                            <p:outputLabel value="Số điện thoại người đại diện:" rendered="#{resultDto.org}"/>
+                                            <h:outputText value="#{resultDto.phone}"/>
+
+                                            <p:outputLabel value="Ngày đăng ký:"/>
+                                            <h:outputText value="#{resultDto.createDate}">
+                                                <f:convertDateTime pattern="HH:mm, dd/MM/yyyy"/>
+                                            </h:outputText>
+
+                                            <p:outputLabel value="Mã định danh:"/>
+                                            <h:outputText value="#{resultDto.code}"/>
+
+                                            <p:outputLabel value="Email:"/>
+                                            <h:outputText value="#{resultDto.email}"/>
+
+                                            <p:outputLabel value="Số điện thoại tổ chức:" rendered="#{resultDto.org}"/>
+                                            <h:outputText value="#{resultDto.orgPhone}" rendered="#{resultDto.org}"/>
+
+                                            <ui:include src="/common/accuracy.xhtml">
+                                                <ui:param name="resultDto" value="#{resultDto}"/>
+                                            </ui:include>
+
+                                            <p:outputLabel value="File đính kèm tham gia:" rendered="#{not empty resultDto.auctionRegisterFileList}"/>
+                                            <p:commandLink id="filesButton" value="Xem #{resultDto.auctionRegisterFileList.size()} file đính kèm"
+                                                           global="false" rendered="#{not empty resultDto.auctionRegisterFileList}"/>
+
+                                            <p:outputLabel value="Số tiền đối soát:" rendered="#{resultDto.statusRefund eq DbConstant.AUCTION_REGISTER_STATUS_REFUND_FOUR}"/>
+                                            <p:outputLabel value="#{resultDto.amountReserve}" rendered="#{resultDto.statusRefund eq DbConstant.AUCTION_REGISTER_STATUS_REFUND_FOUR}">
+                                                <f:convertNumber type="currency"
+                                                                 currencySymbol="VNĐ"
+                                                                 maxFractionDigits="6"
+                                                                 minFractionDigits="0"
+                                                                 locale="vi_VN"/>
+                                            </p:outputLabel>
+
+                                            <p:outputLabel value="File đính kèm đối soát:" rendered="#{resultDto.statusRefund eq DbConstant.AUCTION_REGISTER_STATUS_REFUND_FOUR}"/>
+                                            <p:commandLink id="btnSeeFile" value="Xem file đính kèm"
+                                                           global="false" rendered="#{resultDto.statusRefund eq DbConstant.AUCTION_REGISTER_STATUS_REFUND_FOUR}">
+                                            </p:commandLink>
+
+                                            <p:overlayPanel for="btnSeeFile" hideEffect="fade">
+                                                <h:commandLink ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);">
+                                                    <i class="fa fa-download"/><p:fileDownload value="#{commonController.getFileDownload(resultDto.filePathReserve)}"/></h:commandLink>
+                                                <a href="#{request.contextPath}/resources#{resultDto.filePathReserve}"
+                                                   style="display: flex; padding: 3px 0; width: 300px">
+                                                    <span style="margin-left: 5px;word-break: break-word">#{resultDto.fileNameReserve}</span>
+                                                </a>
+                                            </p:overlayPanel>
+
+                                            <p:overlayPanel for="filesButton" hideEffect="fade">
+                                                <p:scrollPanel mode="native" style="max-height: 500px">
+                                                    <p:dataList value="#{resultDto.auctionRegisterFileList}" var="tabItem" type="ordered" style="width: 300px">
+                                                        <h:panelGroup rendered="#{!auctionRegisterController.checkFileImage(tabItem.filePath)}">
+                                                            <p:commandLink value="#{tabItem.fileName}" immediate="true" ajax="false" style="text-overflow: ellipsis; width: 80%; word-break: break-word">
+                                                                <p:fileDownload value="#{auctionRegisterController.getFileDownload(tabItem.filePath, tabItem.fileName)}" />
+                                                            </p:commandLink>
+                                                        </h:panelGroup>
+                                                        <h:panelGroup rendered="#{auctionRegisterController.checkFileImage(tabItem.filePath)}">
+                                                            <a data-fancybox=""
+                                                               data-options='{animationEffect: "zoom"}'
+                                                               href="#{resource[tabItem.filePath]}">
+                                                                <i class="fa fa-download"/>
+                                                                <span style="margin-left: 5px;word-break: break-word">#{tabItem.fileName}</span>
+                                                                <div class="image-single-bg" style="background-image: url('#{resource[tabItem.filePath]}');"></div>
+                                                            </a>
+                                                        </h:panelGroup>
+                                                    </p:dataList>
+                                                </p:scrollPanel>
+                                            </p:overlayPanel>
+
+                                        </p:panelGrid>
+                                    </p:rowExpansion>
+
+                                    <p:column headerText="Thao tác" width="40" style="text-align: center" exportable="false">
+                                        <p:menuButton icon="fa fa-cogs" rendered="#{resultDto.auctionStatus ne DbConstant.REGULATION_AUCTION_STATUS_PLAYING}">
+                                            <p:menuitem value="Hủy bỏ đăng ký đấu giá" icon="fa fa-remove"
+                                                        rendered="#{auctionRegisterController.getActions().hasAction(EAction.REFUSE_JOIN) and (resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING and resultDto.status eq DbConstant.AUCTION_REGISTER_STATUS_WAITING or resultDto.status eq DbConstant.AUCTION_REGISTER_STATUS_ACCEPTED and resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING)}"
+                                                        actionListener="#{auctionRegisterController.onShow(resultDto)}"
+                                                        oncomplete="PF('dialoglido').show();" update="dlForm">
+                                            </p:menuitem>
+
+                                            <p:menuitem value="Tạo mới giao dịch" icon="fa fa-plus"
+                                                        rendered="#{authorizationController.hasRole(EScope.PAYMENT) and auctionRegisterController.showButtonCreatePayment(resultDto)}"
+                                                        actionListener="#{auctionRegisterController.createPayment(resultDto)}" update="dlForm1">
+                                            </p:menuitem>
+
+                                            <p:menuitem value="Xử lý lại yêu cầu đấu giá" icon="fa fa-refresh"
+                                                        actionListener="#{auctionRegisterController.refresh(resultDto)}"
+                                                        rendered="#{auctionRegisterController.getActions().hasAction(EAction.CHANGE_STATUS) and auctionRegisterController.showButtonReprocessing(resultDto)}"
+                                                        update="dlForm growl">
+                                                <p:confirm header="Thông báo"
+                                                           message="Bạn chắc chắn muốn xử lý lại yêu cầu tham gia đấu giá này ?"
+                                                           icon="fa fa-exclamation-triangle"/>
+                                            </p:menuitem>
+
+                                            <p:menuitem value="Xem lý do hủy đăng ký" icon="fa fa-eye"
+                                                        rendered="#{auctionRegisterController.getActions().hasAction(EAction.VIEW_REASON_JOIN_FAIL) and auctionRegisterController.showButtonCancelRegister(resultDto) eq true}"
+                                                        actionListener="#{auctionRegisterController.onShow(resultDto)}"
+                                                        oncomplete="PF('dialogSee').show();" update="dlFormSee">
+                                            </p:menuitem>
+                                        </p:menuButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

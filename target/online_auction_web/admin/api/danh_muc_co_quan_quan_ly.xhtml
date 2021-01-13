@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{apiRegulatoryAgencyController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Danh mục cơ quan quản lý </ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/api/danh_muc_co_quan_quan_ly">Danh mục API / Danh mục cơ quan quản lý</p:link>
+        </li>
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="searchForm">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" style="padding-top:0">
+                        <div class="card no-margin">
+                            <p:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid"
+                                         columnClasses="ui-grid-col-1.5 ui-no-margin-padding, ui-grid-col-1.5 ui-no-margin-padding">
+                                    <p:commandButton value="Đồng bộ dữ liệu" style="width: auto; margin-bottom: 10px;"
+                                                     actionListener="#{apiRegulatoryAgencyController.api}"
+                                                     rendered="#{apiRegulatoryAgencyController.getActions().hasAction(EAction.SYNC)}"
+                                                     update="searchForm tblSearchResult growl" icon="fa fa-refresh"/>
+                            <p:commandButton value="Xuất dữ liệu" style="width: auto; margin-bottom: 10px;left :10px" icon="fa fa-copy" update="growl" ajax="false" rendered="#{apiRegulatoryAgencyController.lazyDataModel.rowCount gt 0}">
+                                <p:dataExporter type="xlsxstream" target="tblSearchResult" fileName="Danh sách thông tin danh mục cơ quan quản lý" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                            <p:panel id="searchResult" header="Kết quả tìm kiếm" style="margin-bottom:5px">
+                                <p:dataTable id="tblSearchResult" tableStyle="table-layout: auto;"
+                                             widgetVar="wdgNhomQuyen" resizableColumns="true" paginator="true"
+                                             rows="10"
+                                             value="#{apiRegulatoryAgencyController.lazyDataModel}"
+                                             lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
+                                             paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{apiRegulatoryAgencyController.lazyDataModel.rowCount}"
+                                             emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                             rowKey="#{resultDto.regulatoryAgencyId}">
+                                    <p:column headerText="STT" width="30" style="text-align: center">
+                                        <h:outputText value="#{rowIndex + 1}"/>
+                                    </p:column>
+                                    <p:column headerText="Cơ quan quản lý" sortBy="#{resultDto.name}">
+                                        <h:outputText value="#{resultDto.name}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

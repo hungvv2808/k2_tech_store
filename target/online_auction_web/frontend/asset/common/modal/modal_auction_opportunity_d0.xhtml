@@ -1,0 +1,36 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui">
+
+    <!-- Modal Confirm Auction-->
+    <div class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" id="modalAuctionOpportunityD0">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&#xd7;</span>
+                    </button>
+                    <h5 class="modal-title">Thông báo</h5>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <h:outputText value="Có người đã chấp nhận mức giá. Phiên đấu giá sẽ tiếp tục diễn ra nếu người chấp nhận mức giá từ chối kết quả. "/>
+                        <h:outputText value="Bạn vui lòng chờ người chấp nhận mức giá xác nhận trong "/>
+                        <h:panelGroup id="countdownOpportunityD0">
+                            <span class="countTheWinD0" data-countdown="#{auctionController.formatDate(task.endTimeAcceptPrice())}">00:00</span>
+                        </h:panelGroup>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary no-processing" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p:remoteCommand name="cmdRefreshOpportunityD0"
+                     update="countdownOpportunityD0"
+                     oncomplete="countDownTheWin('countTheWinD0');jQuery('#modalAuctionOpportunityD0').modal('show');"/>
+</ui:composition>

@@ -1,0 +1,1405 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{roleController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Quản lý nhóm quyền</ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/quan-ly-chung/nhom-quyen">Quản trị hệ thống / Quản lý nhóm quyền</p:link>
+        </li>
+        <style type="text/css">
+            .ui-selectmanycheckbox.ui-widget td, .ui-selectoneradio.ui-widget td {
+                display: inline-flex;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <p:outputPanel styleClass="ui-g" rendered="#{roleController.getActions().canCreate()}">
+            <div class="ui-g-12" style="padding-top:0">
+                <div class="card no-margin">
+                    <p:commandButton value="Thêm mới" icon="fa fa-plus"
+                                     actionListener="#{roleController.resetDialog()}"
+                                     oncomplete="PF('dialogInsertUpdate').show();" update="dlForm"/>
+                </div>
+            </div>
+        </p:outputPanel>
+
+        <h:form id="searchForm">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" style="padding-top:0">
+                        <div class="card no-margin">
+                            <p:panel id="searchCode" header="Tìm kiếm nhóm quyền" style="margin-bottom:5px"
+                                     rendered="#{roleController.getActions().canSearch()}">
+                                <p:panelGrid id="searchPanel" columns="4"
+                                             columnClasses="ui-grid-col-4,ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:outputPanel>
+                                        <p:focus for="smanhomquyen"/>
+                                        <p:inputText id="smanhomquyen" placeholder="Nhập mã nhóm quyền, tên nhóm quyền"
+                                                     value="#{roleController.roleSearchDto.keyword}"/>
+                                    </p:outputPanel>
+
+                                    <p:commandButton value="Tìm kiếm"
+                                                     actionListener="#{roleController.onSearch()}"
+                                                     update="searchForm tblSearchResult" icon="fa fa-search"
+                                                     style="width: auto"/>
+                                    <p:commandButton value="Làm mới"
+                                                     actionListener="#{roleController.resetAll()}"
+                                                     update="searchForm tblSearchResult" icon="fa fa-refresh"
+                                                     styleClass="orange-btn" style="width: auto"/>
+                                    <p:commandButton value="Xuất dữ liệu" icon="fa fa-copy" update="growl" ajax="false" rendered="#{roleController.lazyDataModel.rowCount gt 0}">
+                                        <p:dataExporter type="xlsxstream" target="tblSearchResult" fileName="Danh sách thông tin nhóm quyền" />
+                                    </p:commandButton>
+                                </p:panelGrid>
+                            </p:panel>
+
+                            <p:panel id="searchResult" header="Kết quả tìm kiếm" style="margin-bottom:5px">
+                                <p:dataTable id="tblSearchResult" tableStyle="table-layout: auto;"
+                                             widgetVar="wdgNhomQuyen" resizableColumns="true" paginator="true"
+                                             rows="10"
+                                             value="#{roleController.lazyDataModel}"
+                                             lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
+                                             paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{roleController.lazyDataModel.rowCount}"
+                                             emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                             rowKey="#{resultDto.roleId}">
+
+                                    <p:column headerText="Chi tiết" style="width: 20px;" exportable="false"
+                                              rendered="#{roleController.getActions().hasAction(EAction.DETAIL)}">
+                                        <p:rowToggler/>
+                                    </p:column>
+
+                                    <p:column headerText="STT" width="30" style="text-align: center">
+                                        <h:outputText value="#{rowIndex + 1}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Mã nhóm quyền" sortBy="#{resultDto.code}" width="15%">
+                                        <h:outputText value="#{resultDto.code}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên nhóm quyền " sortBy="#{resultDto.name}" width="15%">
+                                        <h:outputText value="#{resultDto.name}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Mô tả thông tin" sortBy="#{resultDto.description}">
+                                        <h:outputText value="#{resultDto.description}" style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp:1;-webkit-box-orient: vertical;"/>
+                                    </p:column>
+
+                                    <p:column headerText="Ngày cập nhật" style="text-align: center" width="15%"
+                                              sortBy="#{resultDto.updateDate}">
+                                        <h:outputText value="#{resultDto.updateDate}">
+                                            <f:convertDateTime pattern="HH:mm, dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Trạng thái " sortBy="#{resultDto.status}" width="15%">
+                                        <h:outputText value="Hoạt động"
+                                                      rendered="#{resultDto.status eq DbConstant.ROLE_STATUS_ACTIVE}"/>
+                                        <h:outputText value="Không hoạt động"
+                                                      rendered="#{resultDto.status eq DbConstant.ROLE_STATUS_INACTIVE}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Sửa" rendered="#{roleController.getActions().canUpdate()}"
+                                              exportable="false" width="40" style="text-align: center">
+                                        <div class="my-data-table">
+                                            <p:commandLink styleClass="edit"
+                                                           oncomplete="PF('dialogInsertUpdate').show();"
+                                                           update="dlForm growl"
+                                                           actionListener="#{roleController.showUpdatePopup(resultDto)}">
+                                                <i class="fa fa-edit"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </p:column>
+
+                                    <p:column headerText="Xóa" style="width: 40px; text-align: center"
+                                              exportable="false"
+                                              rendered="#{roleController.getActions().canDelete()}">
+                                        <div class="my-data-table">
+                                            <p:commandLink styleClass="delete"
+                                                           actionListener="#{roleController.onDelete(resultDto)}"
+                                                           update="searchForm tblSearchResult growl">
+                                                <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
+                                                           icon="fa fa-question-circle"/>
+                                                <i class="fa fa-remove"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </p:column>
+
+                                    <p:column headerText="Mô tả: " visible="hidden">
+                                        <h:outputText value="#{resultDto.description}" />
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panelGrid id="detail-content" columns="4" layout="grid"
+                                                     styleClass="ui-panelgrid-blank"
+                                                     columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+                                            <p:outputLabel value="Mã nhóm quyền: "/>
+                                            <h:outputText value="#{resultDto.code}"/>
+                                            <p:outputLabel value="Tên nhóm quyền: "/>
+                                            <h:outputText value="#{resultDto.name}"/>
+                                            <p:outputLabel value="Ngày cập nhật: "/>
+                                            <h:outputText value="#{resultDto.updateDate}">
+                                                <f:convertDateTime pattern="HH:mm, dd/MM/yyyy"/>
+                                            </h:outputText>
+                                            <p:outputLabel value="Trạng thái: "/>
+                                            <h:outputText value="Hoạt động"
+                                                          rendered="#{resultDto.status eq DbConstant.ROLE_STATUS_ACTIVE}"/>
+                                            <h:outputText value="Không hoạt động"
+                                                          rendered="#{resultDto.status eq DbConstant.ROLE_STATUS_INACTIVE}"/>
+                                            <p:outputLabel value="Mô tả: "/>
+                                            <h:outputText value="#{resultDto.description}"/>
+                                            <p:outputLabel value="Danh sách tài khoản: "/>
+                                            <p:commandButton value="Xem chi tiết" icon="fa fa-eye" style="width: auto"
+                                                             oncomplete="PF('dialogAccountList').show();"
+                                                             update="dlForm1 #{Constant.ERROR_GROWL_ID}"
+                                                             actionListener="#{roleController.loadAccountList(resultDto.roleId)}">
+                                            </p:commandButton>
+                                        </p:panelGrid>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </p:panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+        <p:dialog id="dlg1" header="Danh sách tài khoản" widgetVar="dialogAccountList" modal="true" width="800"
+                  style="max-height: 90vh; max-width: 90vw">
+            <div class="ui-fluid">
+                <h:form id="dlForm1" enctype="multipart/form-data">
+                    <p:scrollPanel mode="native" style="width: 100%; max-height: 500px; border: none">
+                        <p:dataTable id="tblSearchResult1" tableStyle="table-layout: auto;"
+                                     widgetVar="wdgAccount" resizableColumns="true" paginator="true"
+                                     rows="10"
+                                     value="#{roleController.lazyDataModelAccount}"
+                                     lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
+                                     paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="#{t['lbl.recordTotal']}: #{roleController.lazyDataModelAccount.rowCount}"
+                                     emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                     rowKey="#{resultDto.accountId}">
+
+                            <p:column headerText="STT" width="30" style="text-align: center">
+                                <h:outputText value="#{rowIndex + 1}"/>
+                            </p:column>
+
+                            <p:column headerText="Họ và tên" sortBy="#{resultDto.fullName}">
+                                <h:outputText value="#{resultDto.fullName}"/>
+                            </p:column>
+
+                            <p:column headerText="Tên đăng nhập" sortBy="#{resultDto.username}">
+                                <h:outputText value="#{resultDto.username}"/>
+                            </p:column>
+
+                            <p:column headerText="Ngày cập nhật" sortBy="#{resultDto.updateDate}"
+                                      style="text-align: center">
+                                <h:outputText value="#{resultDto.updateDate}">
+                                    <f:convertDateTime pattern="HH:mm, dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </p:scrollPanel>
+                </h:form>
+            </div>
+
+            <p:commandButton value="Ðóng" styleClass="close"
+                             oncomplete="PF('dialogAccountList').hide()" icon="fa fa-close"
+                             style="width: 80px; margin-top: 5px;"/>
+        </p:dialog>
+
+        <p:dialog id="dlg" header="Thông tin nhóm quyền" styleClass="disable-scroll" widgetVar="dialogInsertUpdate"
+                  position="center center"
+                  onShow="try{PF('dialogInsertAsset').initPosition();}catch(e){}"
+                  modal="true" width="80%" style="max-height: 90vh; max-width: 90vw" showEffect="clip" hideEffect="clip"
+                  rendered="#{roleController.getActions().hasAction(EAction.CREATE, EAction.UPDATE)}">
+            <style type="text/css">
+                .disable-scroll .ui-dialog-content {
+                    overflow: hidden !important;
+                }
+            </style>
+            <h:form id="dlForm" enctype="multipart/form-data">
+                <div class="ui-fluid">
+                    <p:scrollPanel mode="native" style="width: 100%; border: none; max-height: 80vh; overflow-x: hidden">
+                        <p:panelGrid id="basicPanel1" columns="2"
+                                     columnClasses="ui-grid-col-3,ui-grid-col-9"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+
+                            <p:outputLabel value="Mã nhóm quyền:" for="code"/>
+                            <p:outputPanel>
+                                <p:focus id="focus-1" for="code"/>
+                                <p:inputText id="code" placeholder="Nhập mã nhóm quyền"
+                                             requiredMessage="Bạn vui lòng nhập mã nhóm quyền"
+                                             required="true"
+                                             value="#{roleController.role.code}"
+                                             onblur="value=value.replace(/[^\w-]/g, '').toUpperCase()"
+                                             maxlength="15"/>
+                                <p:message id="id1" for="code" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Tên nhóm quyền:" for="name"/>
+                            <p:outputPanel>
+                                <p:focus id="focus-2" for="name"/>
+                                <p:inputText id="name" placeholder="Nhập tên nhóm quyền"
+                                             requiredMessage="Bạn vui lòng nhập tên nhóm quyền"
+                                             required="true"
+                                             onchange="this.value = this.value.trim()"
+                                             value="#{roleController.role.name}"
+                                             maxlength="100"/>
+                                <p:message id="id2" for="name" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Mô tả thông tin:" for="description"/>
+                            <p:outputPanel>
+                                <p:focus id="focus-3" for="description"/>
+                                <p:inputTextarea id="description" autoWidth="false" effect="fade"
+                                                 requiredMessage="Bạn vui lòng nhập mô tả thông tin"
+                                                 required="true"
+                                                 placeholder="Nhập thông tin mô tả"
+                                                 onchange="this.value = this.value.trim()"
+                                                 maxlength="200"
+                                                 value="#{roleController.role.description}"/>
+                                <p:message id="id3" for="description" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel styleClass="requireLabel" value="Trạng thái nhóm quyền:" for="status"/>
+                            <p:outputPanel>
+                                <p:focus id="focus-4" for="status"/>
+                                <p:selectOneMenu id="status" autoWidth="false" effect="fade" requiredMessage="Bạn vui lòng chọn trạng thái nhóm quyền"
+                                                 value="#{roleController.role.status}"
+                                                 filterMatchMode="contains">
+                                    <f:selectItem itemLabel="Hoạt động" itemValue="1"/>
+                                    <f:selectItem itemLabel="Không hoạt động" itemValue="0"/>
+                                </p:selectOneMenu>
+                            </p:outputPanel>
+
+                            <p:outputLabel styleClass="requireLabel" value="Chọn quyền truy cập:"/>
+                            <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Chọn tất cả"
+                                                     value="#{roleController.checkboxSelectAll}"
+                                                     disabled="#{!roleController.role.canModify}">
+                                <p:ajax event="change" global="false" update="basicPanel3" listener="#{roleController.selectAll()}"/>
+                            </p:selectBooleanCheckbox>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank" layout="grid">
+                            <p:outputLabel
+                                    value="* Đây là nhóm quyền mặc định, vì thế không thể chỉnh sửa. Vui lòng tạo nhóm quyền mới để chỉnh sửa."
+                                    style="color: red;"
+                                    rendered="#{!roleController.role.canModify}"/>
+                        </p:panelGrid>
+
+                        <p:scrollPanel mode="native" style="width: auto; max-height: 300px; border: none" >
+                            <p:panelGrid id="basicPanel3" columns="3"
+                                         columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+                                         styleClass="ui-panelgrid-blank" layout="grid">
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý tỉnh thành"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.PROVINCE]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="province"
+                                                listener="#{roleController.selectAllByScope(EScope.PROVINCE)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="province"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.PROVINCE]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu" itemValue="#{EAction.SYNC}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý quận/huyện"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.DISTRICT]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="district"
+                                                listener="#{roleController.selectAllByScope(EScope.DISTRICT)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="district"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.DISTRICT]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu" itemValue="#{EAction.SYNC}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý phường/xã"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.COMMUNE]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="commune"
+                                                listener="#{roleController.selectAllByScope(EScope.COMMUNE)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="commune"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.COMMUNE]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu" itemValue="#{EAction.SYNC}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý quy chế đấu giá"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.REGULATION]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="regulation"
+                                                listener="#{roleController.selectAllByScope(EScope.REGULATION)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="regulation"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.REGULATION]}">
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Xem chi tiết" itemValue="#{EAction.DETAIL}"/>
+                                        <f:selectItem itemLabel="Đăng tải quy chế" itemValue="#{EAction.PIN}"/>
+                                        <f:selectItem itemLabel="Xem quy chế" itemValue="#{EAction.VIEW_REGULATION}"/>
+                                        <f:selectItem itemLabel="Gỡ bỏ quy chế" itemValue="#{EAction.UNPIN}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý loại tài sản"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.TYPE_ASSET]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="typeasset"
+                                                listener="#{roleController.selectAllByScope(EScope.TYPE_ASSET)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="typeasset"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.TYPE_ASSET]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý phương thức đấu giá"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.AUCTION_METHOD]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="method"
+                                                listener="#{roleController.selectAllByScope(EScope.AUCTION_METHOD)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="method"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.AUCTION_METHOD]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý hình thức đấu giá"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.AUCTION_FORMALITY]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="formality"
+                                                listener="#{roleController.selectAllByScope(EScope.AUCTION_FORMALITY)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="formality"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.AUCTION_FORMALITY]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý nhóm quyền"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.ROLE]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="role"
+                                                listener="#{roleController.selectAllByScope(EScope.ROLE)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="role"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.ROLE]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Xem chi tiết" itemValue="#{EAction.DETAIL}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Thông tin ĐK tham gia đấu giá"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.AUCTION_REGISTER]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="auctionRegister"
+                                                listener="#{roleController.selectAllByScope(EScope.AUCTION_REGISTER)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="auctionRegister"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.AUCTION_REGISTER]}">
+
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Hủy bỏ đăng ký" itemValue="#{EAction.REFUSE_JOIN}"/>
+                                        <f:selectItem itemLabel="Phê duyệt đăng ký" itemValue="#{EAction.ACCEPT_JOIN}"/>
+                                        <f:selectItem itemLabel="Xem lý do tạm dừng bỏ đăng ký"
+                                                      itemValue="#{EAction.VIEW_REASON_JOIN_FAIL}"/>
+                                        <f:selectItem itemLabel="Cập nhật trạng thái hoàn tiền"
+                                                      itemValue="#{EAction.UPDATE_REASON_REFUND}"/>
+                                        <f:selectItem itemLabel="Xử lý lại yêu cầu đấu giá"
+                                                      itemValue="#{EAction.CHANGE_STATUS}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Cấu hình thông tin văn bản"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.DECISION]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="decisionText"
+                                                listener="#{roleController.selectAllByScope(EScope.DECISION)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="decisionText"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.DECISION]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Cấu hình tin tức"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.NEWS]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="news"
+                                                listener="#{roleController.selectAllByScope(EScope.NEWS)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="news"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.NEWS]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Cấu hình hướng dẫn thủ tục"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.PROCEDURE_GUIDE]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="procedureGuide"
+                                                listener="#{roleController.selectAllByScope(EScope.PROCEDURE_GUIDE)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="procedureGuide"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.PROCEDURE_GUIDE]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Cấu hình thông tin giới thiệu"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.ABOUT_INFO]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="contactInfo"
+                                                listener="#{roleController.selectAllByScope(EScope.ABOUT_INFO)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="contactInfo"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.ABOUT_INFO]}">
+                                        <f:selectItem itemLabel="Lưu cấu hình" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Trạng thái ban đầu" itemValue="#{EAction.RESET}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Cấu hình thông tin liên hệ"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.CONTACT_INFO_LH]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="contact"
+                                                listener="#{roleController.selectAllByScope(EScope.CONTACT_INFO_LH)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="contact"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.CONTACT_INFO_LH]}">
+                                        <f:selectItem itemLabel="Lưu cấu hình" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Trạng thái ban đầu" itemValue="#{EAction.RESET}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý liên kết"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.LINK]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="link"
+                                                listener="#{roleController.selectAllByScope(EScope.LINK)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="link"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.LINK]}">
+                                        <f:selectItem itemLabel="Lưu" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Thêm liên kết" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Xóa liên kết" itemValue="#{EAction.DELETE}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý banner"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.BANNER]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="banner"
+                                                listener="#{roleController.selectAllByScope(EScope.BANNER)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="banner"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.BANNER]}">
+                                        <f:selectItem itemLabel="Lưu" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Thêm banner" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Xóa banner" itemValue="#{EAction.DELETE}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="QLTK đấu giá/người có tài sản"
+                                                             value="#{roleController.stateScope[EScope.ACCOUNT_USER]}"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="userAccount"
+                                                listener="#{roleController.selectAllByScope(EScope.ACCOUNT_USER)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="userAccount"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.ACCOUNT_USER]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Xem chi tiết" itemValue="#{EAction.DETAIL}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Khóa/mở khóa tài khoản"
+                                                      itemValue="#{EAction.ACTIVE_BLOCK}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh sách cán bộ"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.ACCOUNT_OFFICIALS]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="officialsAccount"
+                                                listener="#{roleController.selectAllByScope(EScope.ACCOUNT_OFFICIALS)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="officialsAccount"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.ACCOUNT_OFFICIALS]}">
+
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xóa" itemValue="#{EAction.DELETE}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Xem chi tiết" itemValue="#{EAction.DETAIL}"/>
+                                        <f:selectItem itemLabel="Khóa/mở khóa tài khoản"
+                                                      itemValue="#{EAction.ACTIVE_BLOCK}"/>
+                                        <f:selectItem itemLabel="Cấp lại mật khẩu" itemValue="#{EAction.RESET_PASSWORD}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Thông tin đăng ký bán tài sản"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.AUCTION_REQ]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="auctionReq"
+                                                listener="#{roleController.selectAllByScope(EScope.AUCTION_REQ)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="auctionReq"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.AUCTION_REQ]}">
+                                        <f:selectItem itemLabel="Thêm mới" itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xem quy chế đã tạo"
+                                                      itemValue="#{EAction.VIEW_REGULATION}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Thay đổi trạng thái" itemValue="#{EAction.CHANGE_STATUS}"/>
+                                        <f:selectItem itemLabel="Tạo mới quy chế" itemValue="#{EAction.CREATE_REGULATION}"/>
+                                        <f:selectItem itemLabel="Xem chi tiết thông tin"
+                                                      itemValue="#{EAction.DETAIL}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Cuộc đấu giá được phân công"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.AUCTION_MANAGE]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="auctionManage"
+                                                listener="#{roleController.selectAllByScope(EScope.AUCTION_MANAGE)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="auctionManage"
+                                                          columns="1" style="display: inline-flex"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.AUCTION_MANAGE]}">
+                                        <f:selectItem itemLabel="Xem chi tiết file quy chế"
+                                                      itemValue="#{EAction.VIEW_FILE}"/>
+                                        <f:selectItem itemLabel="Tạm dừng phiên đấu giá" itemValue="#{EAction.CANCEL}"/>
+                                        <f:selectItem itemLabel="Xem chi tiết phiên đấu giá" itemValue="#{EAction.DETAIL}"/>
+                                        <f:selectItem itemLabel="Xem lý do tạm dừng phiên "
+                                                      itemValue="#{EAction.VIEW_REASON_CANCEL}"/>
+                                        <f:selectItem itemLabel="Xuất biên bản cuộc đấu giá" itemValue="#{EAction.EXPORT}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Truất quyền" itemValue="#{EAction.DEPOSITION}"/>
+                                        <f:selectItem itemLabel="Tạm dừng tài sản" itemValue="#{EAction.REMOVE_ASSET}"/>
+                                        <f:selectItem itemLabel="Cập nhật kết quả đấu giá"
+                                                      itemValue="#{EAction.UPDATE_RESULT_FINAL}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Phân công điều hành đấu giá"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.ASSIGN_AUCTIONEER]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="controlAuction"
+                                                listener="#{roleController.selectAllByScope(EScope.ASSIGN_AUCTIONEER)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="controlAuction"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.ASSIGN_AUCTIONEER]}">
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới" itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Phân công đấu giá viên"
+                                                      itemValue="#{EAction.CHANGE_AUCTIONEER}"/>
+                                        <f:selectItem itemLabel="Xem thông tin chi tiết"
+                                                      itemValue="#{EAction.DETAIL}"/>
+                                        <f:selectItem itemLabel="Xem file quy chế"
+                                                      itemValue="#{EAction.VIEW_FILE}"/>
+                                        <f:selectItem itemLabel="Xem chi tiết cuộc đấu giá"
+                                                      itemValue="#{EAction.VIEW_ASSET}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Cấu hình tham số hệ thống"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.SYSTEM_CONFIG]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="systemConfig"
+                                                listener="#{roleController.selectAllByScope(EScope.SYSTEM_CONFIG)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="systemConfig"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.SYSTEM_CONFIG]}">
+                                        <f:selectItem itemLabel="Lưu cấu hình" itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Trạng thái ban đầu" itemValue="#{EAction.RESET}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý giao dịch"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.PAYMENT]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="payment"
+                                                listener="#{roleController.selectAllByScope(EScope.PAYMENT)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="payment"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.PAYMENT]}">
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Thêm mới"
+                                                      itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa"
+                                                      itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Xuất dữ liệu"
+                                                      itemValue="#{EAction.EXPORT}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Quản lý biên lai"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.RECEIPT_MANAGEMENT]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="receipt"
+                                                listener="#{roleController.selectAllByScope(EScope.RECEIPT_MANAGEMENT)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="receipt"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.RECEIPT_MANAGEMENT]}">
+                                        <f:selectItem itemLabel="Tìm kiếm, làm mới"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                        <f:selectItem itemLabel="Thêm mới"
+                                                      itemValue="#{EAction.CREATE}"/>
+                                        <f:selectItem itemLabel="Sửa"
+                                                      itemValue="#{EAction.UPDATE}"/>
+                                        <f:selectItem itemLabel="Gửi biên lai"
+                                                      itemValue="#{EAction.SEND_RECEIPT}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Xem lịch sử thao tác hệ thống"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.HISTORY_SYSTEM]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="historySystem"
+                                                listener="#{roleController.selectAllByScope(EScope.HISTORY_SYSTEM)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="historySystem"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.HISTORY_SYSTEM]}">
+                                        <f:selectItem itemLabel="Xem lịch sử thao tác hệ thống"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Kiểm tra chữ kí số"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.CHECK_DIGITAL_SIGN]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="checkDigitalSign"
+                                                listener="#{roleController.selectAllByScope(EScope.CHECK_DIGITAL_SIGN)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="checkDigitalSign"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.CHECK_DIGITAL_SIGN]}">
+                                        <f:selectItem itemLabel="Kiểm tra chữ kí số"
+                                                      itemValue="#{EAction.DETAIL}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Thống kê, báo cáo"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.STATS_REPORT]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="historySystem"
+                                                listener="#{roleController.selectAllByScope(EScope.STATS_REPORT)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="statsReport"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.STATS_REPORT]}">
+                                        <f:selectItem itemLabel="Thống kê, báo cáo"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API tôn giáo"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_RELIGION]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_RELIGION"
+                                                listener="#{roleController.selectAllByScope(EScope.API_RELIGION)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_RELIGION"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_RELIGION]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API quốc gia"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_NATION]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_NATION"
+                                                listener="#{roleController.selectAllByScope(EScope.API_NATION)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_NATION"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_NATION]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API quan hệ gia đình"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_RELATIONSHIP]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_RELATIONSHIP"
+                                                listener="#{roleController.selectAllByScope(EScope.API_RELATIONSHIP)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_RELATIONSHIP"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_RELATIONSHIP]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API nhóm ngành nghề"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_CAREER_GROUP]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_CAREER_GROUP"
+                                                listener="#{roleController.selectAllByScope(EScope.API_CAREER_GROUP)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_CAREER_GROUP"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_CAREER_GROUP]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API ngoại tệ"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_CURRENCY]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_CURRENCY"
+                                                listener="#{roleController.selectAllByScope(EScope.API_CURRENCY)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_CURRENCY"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_CURRENCY]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API giới tính"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_SEX]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_SEX"
+                                                listener="#{roleController.selectAllByScope(EScope.API_SEX)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_SEX"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_SEX]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API chức vụ"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_POSITION]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_POSITION"
+                                                listener="#{roleController.selectAllByScope(EScope.API_POSITION)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_POSITION"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_POSITION]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API cấp cơ quan quản lý"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_MANAGEMENT_LEVEL]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_MANAGEMENT_LEVEL"
+                                                listener="#{roleController.selectAllByScope(EScope.API_MANAGEMENT_LEVEL)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_MANAGEMENT_LEVEL"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_MANAGEMENT_LEVEL]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API cơ quan quản lý"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_MANAGEMENT_AGENCY]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_MANAGEMENT_AGENCY"
+                                                listener="#{roleController.selectAllByScope(EScope.API_MANAGEMENT_AGENCY)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_MANAGEMENT_AGENCY"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_MANAGEMENT_AGENCY]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API dân tộc"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_FOLK]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_FOLK"
+                                                listener="#{roleController.selectAllByScope(EScope.API_FOLK)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_FOLK"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_FOLK]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API nghề nghiệp"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_JOB]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_JOB"
+                                                listener="#{roleController.selectAllByScope(EScope.API_JOB)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_JOB"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_JOB]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API ngành nghề kinh doanh"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_BUSINESS]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_BUSINESS"
+                                                listener="#{roleController.selectAllByScope(EScope.API_BUSINESS)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_BUSINESS"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_BUSINESS]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API giấy tờ"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_PAPER]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_PAPER"
+                                                listener="#{roleController.selectAllByScope(EScope.API_PAPER)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_PAPER"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_PAPER]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API chuyên môn"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_REGULAR]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_REGULAR"
+                                                listener="#{roleController.selectAllByScope(EScope.API_REGULAR)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_REGULAR"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_REGULAR]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API học vấn"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_EDUCATION]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_EDUCATION"
+                                                listener="#{roleController.selectAllByScope(EScope.API_EDUCATION)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_EDUCATION"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_EDUCATION]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:selectBooleanCheckbox style="display: inline-flex" itemLabel="Danh mục API công chức"
+                                                             disabled="#{!roleController.role.canModify}"
+                                                             value="#{roleController.stateScope[EScope.API_OFFICIALS]}"
+                                                             styleClass="font-bold">
+                                        <p:ajax event="change" global="false" update="API_OFFICIALS"
+                                                listener="#{roleController.selectAllByScope(EScope.API_OFFICIALS)}"/>
+                                    </p:selectBooleanCheckbox>
+                                    <p:selectManyCheckbox id="API_OFFICIALS"
+                                                          columns="1"
+                                                          styleClass="margin-left-role"
+                                                          style="display: none !important;"
+                                                          layout="pageDirection"
+                                                          converter="roleCheckboxConverter"
+                                                          disabled="#{!roleController.role.canModify}"
+                                                          value="#{roleController.scopeActions[EScope.API_OFFICIALS]}">
+                                        <f:selectItem itemLabel="Đồng bộ dữ liệu"
+                                                      itemValue="#{EAction.SYNC}"/>
+                                        <f:selectItem itemLabel="Tìm kiếm"
+                                                      itemValue="#{EAction.SEARCH}"/>
+                                    </p:selectManyCheckbox>
+                                </p:panelGrid>
+
+                            </p:panelGrid>
+                        </p:scrollPanel>
+
+                        <h:panelGroup layout="block" style="margin: 5px 0;">
+                            <p:commandButton value="Lưu" actionListener="#{roleController.onSaveData(roleController.role.roleId)}"
+                                             icon="fa fa-save" style="width: 80px"
+                                             update="focus-1 focus-2 focus-3 focus-4 id1 id2 id3"/>
+                            <p:commandButton value="Ðóng" styleClass="close"
+                                             process="@this" style="width: 80px;margin-left: 5px;"
+                                             oncomplete="PF('dialogInsertUpdate').hide()"
+                                             icon="fa fa-close"/>
+                        </h:panelGroup>
+                    </p:scrollPanel>
+                </div>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>

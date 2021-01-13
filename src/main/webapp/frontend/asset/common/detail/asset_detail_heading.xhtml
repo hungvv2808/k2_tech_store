@@ -1,0 +1,230 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <c:set var="task" value="#{auctionTask.getAssetDtoList().get(auctionController.assetId)}"/>
+    <c:set var="asset" value="#{auctionController.assetDto}"/>
+
+    <style>
+        .detail-asset .heading-product .product-circle {
+            width: inherit !important;
+        }
+        .countdown-wrapper {
+            padding-left: 20px;
+            padding-right: 20px;
+            text-align: center;
+        }
+        .asset-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            height: 77px;
+            text-align: justify;
+            padding-bottom: 0 !important;
+            padding-top: 0 !important;
+        }
+        #area-button-bargain {
+            display: inline-flex;
+        }
+    </style>
+
+    <h:panelGroup>
+        <div class="heading-product">
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-4 news-title">
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-right: 10px; padding-left: 0">
+                        <h3 class="asset-title" title="#{auctionController.assetDto.name}">
+                            #{auctionController.assetDto.name}
+                        </h3>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3 current-parent">
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-right: 10px;">
+                        <h:panelGroup id="#{Constant.AREA_DESCRIPTION}">
+                            <h:panelGroup rendered="#{auctionController.checkRenderAuction() and not empty task and !task.ended and !task.inTimeConfirm}">
+                                <h:panelGroup rendered="#{asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT}">
+                                    <div class="product-meta" style="height: 65px">
+                                        <span class="price-title" style="margin-top: 27px">Giá hiện tại</span>
+                                        <span class="money-current">
+                                            <h:outputText value="#{task.currentPrice}">
+                                                <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                                 minFractionDigits="0" locale="vi_VN"/>
+                                            </h:outputText>
+                                        </span>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL}">
+                                    <div class="product-meta">
+                                        <span style="font-size: 14px">Vòng hiện tại:</span>
+                                        <span style="font-size: 14px" class="round-current">Vòng #{task.currentRound}</span>
+                                    </div>
+                                    <div class="product-meta">
+                                        <span style="font-size: 14px;">Giá khởi điểm:</span>
+                                        <span class="money-current" style="font-size: 14px">
+                                            <h:outputText value="#{task.priceRoundCurrent.startingPrice}">
+                                                <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                                 minFractionDigits="0" locale="vi_VN"/>
+                                            </h:outputText>
+                                        </span>
+                                    </div>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </div>
+                </div>
+                <div class="col-md-5 col-sm-5 col-xs-5 count-down" id="testParent">
+                    <div class="col-md-12 col-sm-12 col-xs-12" id="test" style="padding: 0">
+                        <h:panelGroup rendered="#{(not empty task and !task.ended and task.inProcessing) or auctionController.assetDto.status eq DbConstant.ASSET_STATUS_PLAYING}">
+                            <h:panelGroup rendered="#{auctionController.assetDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL}">
+                                <div class="product-circle primary-product playing-product">
+                                    <div class="countdown-wrapper">
+                                        <p>
+                                            <h:outputText value="Thời gian vòng hiện tại còn" rendered="#{!task.inTimeConfirm}"/>
+                                            <h:outputText value="Thời gian xác nhận còn" rendered="#{task.inTimeConfirm}"/>
+                                        </p>
+                                        <div class="pts-countdown clearfix" data-countdown="countdown" data-countup="false"
+                                             data-date="#{auctionController.formatDate(task.endTimeRound)}"></div>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{auctionController.assetDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT}">
+                                <h:panelGroup rendered="#{auctionController.assetDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP}">
+                                    <div class="product-circle now-product playing-product">
+                                        <div class="countdown-wrapper">
+                                            <p>
+                                                <h:outputText value="Thời gian kết thúc còn" rendered="#{!task.inTimeConfirm}"/>
+                                                <h:outputText value="Thời gian xác nhận còn" rendered="#{task.inTimeConfirm}"/>
+                                            </p>
+                                            <div class="pts-countdown clearfix" data-countdown="countdown" data-countup="false"
+                                                 data-date="#{auctionController.formatDate(task.endTimeRound)}"></div>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{auctionController.assetDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN}">
+                                    <div class="product-circle now-product playing-product">
+                                        <div class="countdown-wrapper">
+                                            <p>
+                                                <h:outputText value="Thời gian giảm giá còn" rendered="#{!task.inTimeConfirm}"/>
+                                                <h:outputText value="Thời gian xác nhận còn" rendered="#{task.inTimeConfirm}"/>
+                                            </p>
+                                            <div class="pts-countdown clearfix" data-countdown="countdown" data-countup="false"
+                                                 data-date="#{task.inTimeConfirm ? auctionController.formatDate(task.endTimeAcceptPrice()) : auctionController.formatDate(task.endTimeRound)}"></div>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{empty task or task.ended or !task.inProcessing}">
+                            <h:panelGroup
+                                    rendered="#{auctionController.assetDto.status eq DbConstant.ASSET_STATUS_WAITING}">
+                                <div class="product-circle future-product">
+                                    <div class="countdown-wrapper">
+                                        <p>Thời gian bắt đầu đấu giá còn</p>
+                                        <div class="pts-countdown clearfix" data-countdown="countdown"
+                                             data-countup="false"
+                                             data-callback="#{auctionController.checkCallback(auctionController.assetDto.startTime)}"
+                                             data-date="#{auctionController.formatDate(auctionController.assetDto.startTime)}"></div>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{auctionController.assetDto.status eq DbConstant.ASSET_STATUS_ENDED or auctionController.assetDto.status eq DbConstant.ASSET_STATUS_NOT_SUCCESS}">
+                                <h:panelGroup rendered="#{auctionController.assetManagement.ending eq DbConstant.ASSET_MANAGEMENT_ENDING_GOOD}">
+                                    <div class="product-circle ended-product" style="width: 100%">
+                                        <div class="countdown-wrapper">
+                                            <p>Giá trúng đấu giá</p>
+                                            <h3><h:outputText value="#{auctionController.assetManagement.money}">
+                                                <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                 maxFractionDigits="6"
+                                                                 minFractionDigits="0" locale="vi_VN"/>
+                                            </h:outputText></h3>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{auctionController.assetManagement.ending eq DbConstant.ASSET_MANAGEMENT_ENDING_BAD}">
+                                    <div class="product-circle stoped-product" style="width: 100%">
+                                        <div class="countdown-wrapper">
+                                            <p>Đấu giá không thành</p>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                            <h:panelGroup
+                                    rendered="#{auctionController.assetDto.status eq DbConstant.ASSET_STATUS_CANCELED}">
+                                <div class="product-circle stoped-product">
+                                    <div class="countdown-wrapper">
+                                        <p style="text-align: center">Đã tạm dừng</p>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            //<![CDATA[
+            jQuery(function () {
+                let check = #{asset.status eq DbConstant.ASSET_STATUS_PLAYING};
+                let type = #{asset.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL};
+                const title = jQuery('.news-title');
+                const current = jQuery('.current-parent');
+                const typeCurrentRound = jQuery('.count-down');
+                const description = current.find('span');
+                if(description.is(':empty')) {
+                    current.css({"background-color":"white"});
+                }
+
+                if (check === true) {
+                    // delete all column title
+                    title.removeClass('col-md-7');
+                    title.removeClass('col-sm-7');
+                    title.removeClass('col-xs-7');
+
+                    // add column for title
+                    title.addClass('col-md-4');
+                    title.addClass('col-sm-4');
+                    title.addClass('col-xs-4');
+
+                    jQuery('.asset-title').css('font-size', '18px');
+                    current.addClass('current-price');
+                    current.addClass('poll-type');
+                } else {
+                    // delete all column title
+                    title.removeClass('col-md-4');
+                    title.removeClass('col-sm-4');
+                    title.removeClass('col-xs-4');
+
+                    // set new column current
+                    title.addClass('col-md-7');
+                    title.addClass('col-sm-7');
+                    title.addClass('col-xs-7');
+
+                    if (current.hasClass('current-price')) {
+                        current.removeClass('current-price');
+                        current.removeClass('poll-type');
+                    }
+
+                    jQuery('.asset-title').css('font-size', '22px');
+                    current.css('display', 'none');
+                }
+
+                if (type === false) {
+                    typeCurrentRound.addClass('poll-count-type');
+                    if (current.hasClass('poll-type')) {
+                        current.removeClass('poll-type');
+                    }
+                } else {
+                    if (typeCurrentRound.hasClass('poll-count-type')) {
+                        typeCurrentRound.removeClass('poll-count-type')
+                    }
+                }
+            })
+            //]]>
+        </script>
+    </h:panelGroup>
+
+</ui:composition>

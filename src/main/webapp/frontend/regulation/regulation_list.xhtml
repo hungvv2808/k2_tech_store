@@ -1,0 +1,246 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+                template="/frontend/template/template_detail.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{regulationFEController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Danh sách quy chế</ui:define>
+    <ui:param name="bodyStyleClass" value="about"/>
+    <ui:param name="headerStyleClass" value="is-sticky fixed-header"/>
+
+    <ui:define name="breadcrumb">
+        <li>Danh sách quy chế</li>
+    </ui:define>
+
+    <ui:define name="screenTitle">
+        <h2>Danh sách quy chế</h2>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="row">
+            <div class="col-md-3 col-sm-12 col-xs-12 sidebar mb-f-r asset-sidebar">
+                <aside class="widget widget_search_filter">
+                    <div class="title-widget">
+                        <h3 class="title-sidebar"><span>Tìm kiếm</span></h3>
+                    </div>
+                    <div class="form-area">
+                        <h:form prependId="false" role="form">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <label class="control-label">Trạng thái</label>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <h:selectOneMenu styleClass="form-control" placeholder="Chọn trạng thái"
+                                                         value="#{regulationFEController.regulationSearchDto.auctionStatus}">
+                                            <f:selectItem itemLabel="Chọn tất cả" itemValue=""/>
+                                            <f:selectItem itemLabel="Sắp diễn ra" itemValue="1"/>
+                                            <f:selectItem itemLabel="Đang diễn ra" itemValue="2"/>
+                                            <f:selectItem itemLabel="Đã kết thúc" itemValue="3"/>
+                                            <f:selectItem itemLabel="Tạm dừng" itemValue="4"/>
+                                        </h:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <label>Thời gian đấu giá</label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6 pad-right-5">
+                                        <div class='input-group date'>
+                                            <h:inputText styleClass="form-control datetimepicker1 fromDate" id="fromdate"
+                                                         placeholder="Từ ngày" onchange="" autocomplete="off" onfocus="focusRemoveReadOnly(this);"
+                                                         value="#{regulationFEController.regulationSearchDto.fromDate}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:inputText>
+                                            <span class="input-group-addon"
+                                                  onclick="document.getElementById('fromdate').focus()"><i
+                                                    class="custom-icon calendar" style="margin: 0;"/>
+                                                        </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-6 col-xs-6 pad-left-5">
+                                        <div class='input-group date'>
+                                            <h:inputText styleClass="form-control datetimepicker1 toDate" id="todate"
+                                                         placeholder="Đến ngày" autocomplete="off" onfocus="focusRemoveReadOnly(this);"
+                                                         value="#{regulationFEController.regulationSearchDto.toDate}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:inputText>
+                                            <span class="input-group-addon"
+                                                  onclick="document.getElementById('todate').focus()"><i
+                                                    class="custom-icon calendar" style="margin: 0;"/>
+                                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <label class="control-label ">Mã quy chế</label>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <h:inputText styleClass="form-control" placeholder="Nhập mã quy chế"
+                                                     value="#{regulationFEController.regulationSearchDto.code}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 button-area">
+                                        <h:commandButton value="Tìm kiếm"
+                                                         actionListener="#{regulationFEController.onSearchQuery()}"
+                                                         styleClass="btn btn-warning search" style="margin-right: 5px"/>
+                                        <h:commandButton value="Nhập lại"
+                                                         actionListener="#{regulationFEController.resetDialog()}"
+                                                         styleClass="btn btn-default reset" style="margin-left: 5px"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:form>
+                    </div>
+                </aside>
+            </div>
+            <h:panelGroup id="regulationList">
+                <div class="col-md-9 col-sm-12 col-xs-12 list-category-news">
+                    <div class="list-area">
+                        <h:panelGroup rendered="#{regulationFEController.pagination.data.size() eq 0}">
+                            <h3 style="margin-top: 20px;">Không có bản ghi nào</h3>
+                        </h:panelGroup>
+                        <ui:repeat value="#{regulationFEController.pagination.data}" var="regulationVar">
+                            <div class="product-item col-md-6 col-sm-6 col-xs-6 pt-10">
+                                <div class="product-two-columns current-product">
+                                    <div class="row">
+                                        <div class="col-lg-5 col-md-5 col-xs-12 col-sm-6 no-padding">
+                                            <h:panelGroup
+                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING and regulationVar.status eq DbConstant.REGULATION_STATUS_PUBLIC}">
+                                                <div class="product-image future-product">
+                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
+                                                        <img src="#{resource['frontend-layout:images/book1.svg']}"/>
+                                                        <div class="middle">
+                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
+                                                            </div>
+                                                        </div>
+                                                    </h:link>
+                                                    <div class="countdown-wrapper">
+                                                        <p>Thời gian bắt đầu đấu giá còn</p>
+                                                        <div class="pts-countdown clearfix"
+                                                             data-countdown="countdown"
+                                                             data-countup="false"
+                                                             data-date="#{regulationFEController.formatDate(regulationVar.startTime)}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                            <h:panelGroup
+                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_PLAYING and regulationVar.status eq DbConstant.REGULATION_STATUS_PUBLIC}">
+                                                <div class="product-image now-product">
+                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
+                                                        <img src="#{resource['frontend-layout:images/book1.svg']}"/>
+                                                        <div class="middle">
+                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
+                                                            </div>
+                                                        </div>
+                                                    </h:link>
+                                                    <div class="countdown-wrapper">
+                                                        <p>Thời gian kết thúc còn</p>
+                                                        <div class="pts-countdown clearfix"
+                                                             data-countdown="countdown"
+                                                             data-countup="true"
+                                                             data-date="#{regulationFEController.formatDate(regulationVar.startTime)}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                            <h:panelGroup
+                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_ENDED and regulationVar.status eq DbConstant.REGULATION_STATUS_PUBLIC}">
+                                                <div class="product-image ended-product">
+                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
+                                                        <img src="#{resource['frontend-layout:images/book1.svg']}"/>
+                                                        <div class="middle">
+                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
+                                                            </div>
+                                                        </div>
+                                                    </h:link>
+                                                    <div class="countdown-wrapper">
+                                                        <p>Đấu giá đã kết thúc</p>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                            <h:panelGroup
+                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_CANCELLED or regulationVar.status eq DbConstant.REGULATION_STATUS_CANCELED}">
+                                                <div class="product-image stoped-product">
+                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
+                                                        <img src="#{resource['frontend-layout:images/book1.svg']}"/>
+                                                        <div class="middle">
+                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
+                                                            </div>
+                                                        </div>
+                                                    </h:link>
+                                                    <div class="countdown-wrapper">
+                                                        <p>Tạm dừng đấu giá</p>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                        </div>
+                                        <div class="col-lg-7 col-md-7 col-xs-12 col-sm-6">
+                                            <div class="product-info regulation-item">
+                                                <h5 class="product-title" style="text-align: left">
+                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}"
+                                                            value="#{regulationVar.code}"
+                                                            style="color: #F19B40"/>
+                                                </h5>
+                                                <div class="product-detail"
+                                                     title="#{regulationVar.nameAsset}">
+                                                    #{regulationVar.nameAsset}
+                                                </div>
+                                                <div class="time-start">
+                                                    <div class="icon-product">
+                                                        <img src="#{resource['frontend-layout:images/clock.svg']}"/>
+                                                    </div>
+                                                    <div class="info">
+                                                        <p>Thời gian diễn ra</p>
+                                                        <p><b><h:outputText
+                                                                value="#{regulationVar.startTime}"><f:convertDateTime
+                                                                pattern="HH:mm, dd/MM/yyyy"/></h:outputText></b>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ui:repeat>
+                    </div>
+                    <ui:include src="../template/paginate/pagination.xhtml">
+                        <ui:param name="pagination" value="#{regulationFEController.pagination}"/>
+                    </ui:include>
+                </div>
+            </h:panelGroup>
+        </div>
+
+        <!--Update area-->
+        <p:remoteCommand name="cmdRefreshData" update="regulationList #{Constant.ID_COUNTDOWN_LIBRARY}"
+                         global="false"
+                         actionListener="#{regulationFEController.pagination.loadData()}"/>
+        <script>
+            var myAuction = false;
+            jQuery(".datetimepicker1").mask('99/99/9999');
+            function focusRemoveReadOnly(e) {
+                if (e.getAttribute('readonly') !== null) {
+                    e.removeAttribute('readonly');
+                    e.blur();
+                    setTimeout(function() {
+                        e.focus();
+                    }, 10)
+                }
+            }
+        </script>
+    </ui:define>
+
+</ui:composition>

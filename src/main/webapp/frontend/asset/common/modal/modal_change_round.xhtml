@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <div class="modal fade" id="changeRoundPopup">
+        <div class="modal-dialog modal-login" style="min-width: inherit">
+            <div class="modal-content">
+                <button id="close_changeRoundPopup" type="button" class="close" data-dismiss="modal">&#xd7;</button>
+                <div style="padding: 20px 20px 20px;">
+                    <h3>Thông báo</h3>
+                    <h:panelGroup id="#{Constant.AREA_MODAL_CHANGE_ROUND}">
+                        <p style="margin-top: 15px;">
+                            Kết thúc đấu giá vòng:
+                            <h:outputText style="color: #F19B40;" value="#{task.currentRound - 1}"/>
+                        </p>
+
+                        <p style="margin-top: 15px;">
+                            Giá cao nhất được ghi nhận:
+                            <h:outputText style="color: #F19B40;" value="#{task.getWinner().money}">
+                                <f:convertNumber type="currency"
+                                                 currencySymbol="VNĐ"
+                                                 maxFractionDigits="6"
+                                                 minFractionDigits="0"
+                                                 locale="vi_VN"/>
+                            </h:outputText>
+                        </p>
+
+                        <p style="margin-top: 15px;">
+                            Giá khởi điểm vòng tiếp theo:
+                            <h:outputText style="color: #F19B40;" value="#{task.getWinner().money + task.priceStep}">
+                                <f:convertNumber type="currency"
+                                                 currencySymbol="VNĐ"
+                                                 maxFractionDigits="6"
+                                                 minFractionDigits="0"
+                                                 locale="vi_VN"/>
+                            </h:outputText>
+                        </p>
+
+                        <p style="margin-top: 15px;">Cuộc đấu giá chuyển sang vòng đấu giá tiếp theo</p>
+
+                        <div style="text-align: right; margin-top: 15px;">
+                            <a type="button" style="color: white; background:#f87211;" class="btn btn-custom main-color"
+                               data-dismiss="modal">Tiếp tục</a>
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p:remoteCommand name="cmdRefreshChangeRound" update="#{Constant.AREA_MODAL_CHANGE_ROUND}" oncomplete="jQuery('#changeRoundPopup').modal('show');"/>
+
+</ui:composition>

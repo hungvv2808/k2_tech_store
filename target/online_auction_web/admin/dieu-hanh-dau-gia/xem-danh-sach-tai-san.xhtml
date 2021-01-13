@@ -1,0 +1,141 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/admin/template/template.xhtml">
+
+    <ui:define
+            name="title">Chi tiết danh sách tài sản trong quy chế #{assignAuctionController.auctionManageController.regulation.code}
+    </ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/dieu-hanh-dau-gia/chi-tiet-dieu-hanh-phien-dau-gia">Chi tiết danh sách tài sản trong quy chế #{assignAuctionController.auctionManageController.regulation.code}</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+        <style type="text/css">
+            .detail td {
+                font-size: 24px;
+            }
+            .v-top td {
+                text-align: left;
+                vertical-align: top;
+            }
+        </style>
+        <h:form id="form">
+            <div class="card no-margin v-top">
+                <p:dataTable id="tblSearchResult"
+                             widgetVar="wdgNhomQuyen" resizableColumns="false" paginator="true"
+                             rows="10"
+                             value="#{assignAuctionController.auctionManageController.assetDtoList}"
+                             lazy="true" pageLinks="5" paginatorPosition="top" var="asset"
+                             paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{assignAuctionController.auctionManageController.assetDtoList.rowCount}"
+                             emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                             rowKey="#{asset.assetId}">
+
+                    <p:column headerText="TÀI SẢN"
+                              styleClass="ui-noborder">
+                        <h:panelGrid columns="2" style="width:100%" styleClass="ui-noborder table-no-border">
+                            <h:outputText value="TÀI SẢN #{rowIndex + 1}"/>
+                            <p:outputLabel/>
+
+                            <p:outputPanel>
+                                <p:carousel value="#{asset.filePaths}"
+                                            numVisible="1"
+                                            var="albumPhoto"
+                                            autoPlayInterval="3000" style="border: 0">
+                                    <p:graphicImage name="#{albumPhoto}" height="220"
+                                                    rendered="#{not empty albumPhoto}"/>
+                                    <p:graphicImage name="/images/kawasaki-z1000-2018-7-1.jpg" height="220"
+                                                    rendered="#{empty albumPhoto}"/>
+                                </p:carousel>
+                            </p:outputPanel>
+
+                            <p:outputPanel>
+                                <h:panelGrid columns="2" cellpadding="5" columnClasses="label,value">
+                                    <h:outputText value="Tên tài sản:"/>
+                                    <h:outputText value="#{asset.name}"/>
+
+                                    <h:outputText value="Giá khởi điểm:"/>
+                                    <h:outputText value="#{asset.startingPrice}">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6" minFractionDigits="0" locale="vi_VN"/>
+                                    </h:outputText>
+
+                                    <h:outputText value="Thời điểm đấu giá:"/>
+                                    <h:outputText value="#{asset.startTime}">
+                                        <f:convertDateTime pattern="HH:mm, dd/MM/yyyy"/>
+                                    </h:outputText>
+
+                                    <h:outputText value="Số vòng đấu giá:"/>
+                                    <h:outputText value="#{asset.numberOfRounds}"/>
+
+                                    <h:outputText value="Bước giá:"/>
+                                    <h:outputText value="#{asset.priceStep}">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6" minFractionDigits="0" locale="vi_VN"/>
+                                    </h:outputText>
+
+                                    <h:outputText value="Trạng thái:"/>
+                                    <h:outputText value="Đã kết thúc" style="color: red"
+                                                  rendered="#{asset.status eq DbConstant.ASSET_STATUS_ENDED}"/>
+                                    <h:outputText value="Đã tạm dừng" style="color: red"
+                                                  rendered="#{asset.status eq DbConstant.ASSET_STATUS_CANCELED}"/>
+                                    <p:outputPanel rendered="#{asset.status eq DbConstant.ASSET_STATUS_PLAYING}">
+                                        <h:outputText value="Vòng #{asset.currentRound}, " style="color: red"
+                                                      rendered="#{asset.status eq DbConstant.ASSET_STATUS_PLAYING}"/>
+                                        <h:outputText value="Còn lại: " style="color: green"
+                                                      rendered="#{asset.status eq DbConstant.ASSET_STATUS_PLAYING}"/>
+                                        <pe:timer
+                                                timeout="#{(asset.startTime.getTime() - assignAuctionController.auctionManageController.nowday.getTime())/1000}"
+                                                format="DD ngày HH:mm:ss"
+                                                style="padding: 0; font-weight: normal; color: green; border: none; background: transparent;"/>
+                                    </p:outputPanel>
+                                    <p:outputPanel rendered="#{asset.status eq DbConstant.ASSET_STATUS_WAITING}">
+                                        <h:outputText value="Còn lại: "/>
+                                        <pe:timer
+                                                timeout="#{(asset.startTime.getTime() - assignAuctionController.auctionManageController.nowday.getTime())/1000}"
+                                                format="DD ngày HH:mm:ss"
+                                                style="padding: 0; font-weight: normal; color: green; border: none; background: transparent;"/>
+                                    </p:outputPanel>
+                                </h:panelGrid>
+
+                            </p:outputPanel>
+                        </h:panelGrid>
+                    </p:column>
+
+                    <p:column headerText="DANH SÁCH NGƯỜI THAM GIA ĐẤU GIÁ">
+                        <h:outputText value="LỊCH SỬ TRẢ GIÁ "
+                                      rendered="#{asset.status eq DbConstant.ASSET_STATUS_ENDED}"
+                                      style="font-weight: bold"/>
+
+                        <p:panelGrid columns="5" cellpadding="5" columnClasses="value"
+                                     style="font-weight: bold; text-align: center" id="formDS">
+                            <h:outputText value="STT" style="height: 20px"/>
+                            <h:outputText value="Tên người tham gia "/>
+                            <h:outputText value="Vai trò"/>
+                            <h:outputText value="Giá đã trả"
+                                          rendered="#{asset.status eq DbConstant.ASSET_STATUS_ENDED or asset.status eq DbConstant.ASSET_STATUS_PLAYING}"/>
+                        </p:panelGrid>
+                        <p:repeat value="#{asset.bidDtoList}" var="bid" varStatus="bidStatus">
+                            <p:panelGrid columns="5" cellpadding="5" columnClasses="value">
+                                <h:outputText value="#{bidStatus.index + 1}"/>
+                                <h:outputText value="#{bid.fullName}"/>
+                                <h:outputText value="Người đấu giá"/>
+                                <h:outputText value="#{bid.money}"
+                                              rendered="#{asset.status eq DbConstant.ASSET_STATUS_ENDED or asset.status eq DbConstant.ASSET_STATUS_PLAYING}"/>
+                            </p:panelGrid>
+                        </p:repeat>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+
+

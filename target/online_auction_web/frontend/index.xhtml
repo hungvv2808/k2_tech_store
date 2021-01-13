@@ -1,0 +1,417 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                template="/frontend/template/template.xhtml">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{homeFEController.initData}"/>
+    </f:metadata>
+    <ui:define name="title">Trang chủ</ui:define>
+    <ui:param name="bodyStyleClass" value="home"/>
+
+    <ui:define name="main-slide">
+        <div class="main-slide">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="slide">
+                            <div class="content-slide">
+                                <h2>Chào mừng bạn! </h2>
+                                <p>đến với </p>
+                                <h2>Trung tâm dịch vụ đấu giá tài sản <span>thành phố Đà Nẵng</span></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="search-form">
+                <div class="container search-area">
+                    <div class="row">
+                        <h:form prependId="false" a:onSubmit="return false;">
+                            <div class="form-group col-lg-7 col-md-7 col-xs-12 col-sm-12">
+                                <h:inputText class="form-control" type="text" maxlength="255"
+                                             onkeypress="if (event.keyCode === 13) { document.getElementById('searchButton').click(); }"
+                                             placeholder="Nhập từ khoá tìm kiếm (trạng thái, tên)"
+                                             value="#{homeFEController.keyword}"/>
+                            </div>
+                            <div class="form-group col-lg-3 col-md-3 col-xs-12 col-sm-12">
+                                <h:selectOneMenu class="form-control" value="#{homeFEController.itemValue}">
+                                    <f:selectItem itemValue="2" itemLabel="Tài sản"/>
+                                    <f:selectItem itemValue="1" itemLabel="Quy chế"/>
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group col-lg-2 col-md-2 col-xs-12 col-sm-12">
+                                <h:commandLink id="searchButton"
+                                               type="submit"
+                                               class="btn btn-primary search-btn"
+                                               action="#{homeFEController.onSearch()}">
+                                    <i class="fa fa-search" aria-hidden="true" style="padding-top: 5px"/>Tìm kiếm
+                                    <f:ajax execute="@form"/>
+                                </h:commandLink>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+    <ui:define name="main">
+
+        <h:panelGroup rendered="#{authorizationFEController.hasLogged() and homeFEController.auctionRegisterDtoList.size() ne 0}">
+            <ui:include src="index-logged.xhtml"/>
+        </h:panelGroup>
+
+        <div class="asset-list">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="title-heading text-left">
+                            <h2>Tài sản đấu giá </h2>
+                            <div class="view-more">
+                                <h:link outcome="/frontend/asset/asset_list.xhtml">
+                                    Xem tất cả<i class="fa fa-angle-double-right" aria-hidden="true"/>
+                                </h:link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="navbar-link active" role="presentation">
+                            <a data-toggle="tab" role="tab"
+                               aria-controls="tab6"
+                               href="#tab6">Tất cả</a>
+                        </li>
+                        <li class="navbar-link" role="presentation">
+                            <a data-toggle="tab" role="tab"
+                               aria-controls="tab7"
+                               href="#tab7">Sắp diễn ra</a>
+                        </li>
+                        <li class="navbar-link" role="presentation">
+                            <a data-toggle="tab" role="tab" aria-controls="tab8"
+                               data-target="#tab8" href="#tab8">Đang diễn ra</a>
+                        </li>
+                        <li class="navbar-link" role="presentation">
+                            <a data-toggle="tab" role="tab"
+                               aria-controls="tab9"
+                               href="#tab9">Đã kết thúc</a>
+                        </li>
+                    </ul>
+
+                    <h:panelGroup id="assetList">
+                        <div class="tab-content">
+                            <div id="tab6" class="tab-pane fade in active" role="tabpanel">
+                                <div class="row">
+                                    <h:panelGroup rendered="#{homeFEController.allAssetDtoList.size() eq 0}">
+                                        <h3 style="margin-top: 20px;">Chưa có bản ghi nào</h3>
+                                    </h:panelGroup>
+                                    <ui:repeat value="#{homeFEController.allAssetDtoList}" var="allAsset">
+                                        <h:panelGroup rendered="#{allAsset.status eq DbConstant.ASSET_STATUS_WAITING}">
+                                            <ui:include src="common/asset/grid-asset-waiting.xhtml">
+                                                <ui:param name="asset" value="#{allAsset}"/>
+                                            </ui:include>
+                                        </h:panelGroup>
+                                        <h:panelGroup rendered="#{allAsset.status eq DbConstant.ASSET_STATUS_PLAYING}">
+                                            <ui:include src="common/asset/grid-asset-playing.xhtml">
+                                                <ui:param name="asset" value="#{allAsset}"/>
+                                            </ui:include>
+                                        </h:panelGroup>
+                                        <h:panelGroup rendered="#{homeFEController.hasEnded(allAsset.status)}">
+                                            <ui:include src="common/asset/grid-asset-ended.xhtml">
+                                                <ui:param name="asset" value="#{allAsset}"/>
+                                            </ui:include>
+                                        </h:panelGroup>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+
+                            <div id="tab7" class="tab-pane fade in" role="tabpanel">
+                                <div class="row">
+                                    <h:panelGroup rendered="#{homeFEController.comingAssetDtoList.size() eq 0}">
+                                        <h3 style="margin-top: 20px;">Không có bản ghi nào</h3>
+                                    </h:panelGroup>
+                                    <ui:repeat value="#{homeFEController.comingAssetDtoList}" var="comingAsset">
+                                        <ui:include src="common/asset/grid-asset-waiting.xhtml">
+                                            <ui:param name="asset" value="#{comingAsset}"/>
+                                        </ui:include>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+
+                            <div id="tab8" class="tab-pane fade" role="tabpanel">
+                                <div class="row">
+                                    <h:panelGroup rendered="#{homeFEController.doingAssetDtoList.size() eq 0}">
+                                        <h3 style="margin-top: 20px;">Không có bản ghi nào</h3>
+                                    </h:panelGroup>
+                                    <ui:repeat value="#{homeFEController.doingAssetDtoList}" var="doingAsset">
+                                        <ui:include src="common/asset/grid-asset-playing.xhtml">
+                                            <ui:param name="asset" value="#{doingAsset}"/>
+                                        </ui:include>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+
+                            <div id="tab9" class="tab-pane fade " role="tabpanel">
+                                <div class="row">
+                                    <h:panelGroup rendered="#{homeFEController.expiredAssetDtoList.size() eq 0}">
+                                        <h3 style="margin-top: 20px;">Không có bản ghi nào</h3>
+                                    </h:panelGroup>
+                                    <ui:repeat value="#{homeFEController.expiredAssetDtoList}" var="expiredAsset">
+                                        <ui:include src="common/asset/grid-asset-ended.xhtml">
+                                            <ui:param name="asset" value="#{expiredAsset}"/>
+                                        </ui:include>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </div>
+        <div class="product-list">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                        <div class="title-heading text-left">
+                            <h2>Thông tin quy chế </h2>
+                            <div class="view-more">
+                                <h:link outcome="/frontend/regulation/regulation_list.xhtml">
+                                    Xem tất cả<i class="fa fa-angle-double-right" aria-hidden="true"/>
+                                </h:link>
+                            </div>
+                        </div>
+                        <div class="toolbar">
+                            <p><i class="fa fa-circle green-color" aria-hidden="true"/>Sắp diễn ra</p>
+                            <p><i class="fa fa-circle blue-color" aria-hidden="true"/>Đang diễn ra</p>
+                            <p><i class="fa fa-circle orange-color" aria-hidden="true"/>Đã kết thúc</p>
+                            <p><i class="fa fa-circle black-color" aria-hidden="true"/>Đã tạm dừng</p>
+                        </div>
+                        <h:panelGroup id="regulationList">
+                            <div class="row">
+                                <div class="product grid">
+                                    <h:panelGroup rendered="#{homeFEController.regulationDtoList.size() eq 0}">
+                                        <h3>Chưa có bản ghi nào</h3>
+                                    </h:panelGroup>
+
+                                    <ui:repeat value="#{homeFEController.regulationDtoList}" var="regulationVar"
+                                               varStatus="varStatus">
+                                        <div class="child child-#{varStatus.index + 1}">
+                                            <div class="product-item">
+                                                <div class="product-two-columns current-product">
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-5 col-xs-12 col-sm-6 no-padding">
+                                                            <h:panelGroup
+                                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING}">
+                                                                <div class="product-image future-product">
+                                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
+                                                                        <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
+                                                                        <div class="middle">
+                                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </h:link>
+                                                                    <div class="countdown-wrapper">
+                                                                        <p>Thời gian bắt đầu đấu giá còn</p>
+                                                                        <div class="pts-countdown clearfix"
+                                                                             data-countdown="countdown"
+                                                                             data-countup="false"
+                                                                             data-date="#{homeFEController.formatDate(regulationVar.startTime)}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </h:panelGroup>
+                                                            <h:panelGroup
+                                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_PLAYING}">
+                                                                <div class="product-image now-product">
+                                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
+                                                                        <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
+                                                                        <div class="middle">
+                                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </h:link>
+                                                                    <div class="countdown-wrapper">
+                                                                        <p>Thời gian kết thúc còn</p>
+                                                                        <div class="pts-countdown clearfix"
+                                                                             data-countdown="countdown"
+                                                                             data-countup="true"
+                                                                             data-date="#{homeFEController.formatDate(regulationVar.startTime)}"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </h:panelGroup>
+                                                            <h:panelGroup
+                                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_ENDED}">
+                                                                <div class="product-image ended-product">
+                                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
+                                                                        <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
+                                                                        <div class="middle">
+                                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </h:link>
+                                                                    <div class="countdown-wrapper">
+                                                                        <p>Đấu giá đã kết thúc</p>
+                                                                    </div>
+                                                                </div>
+                                                            </h:panelGroup>
+                                                            <h:panelGroup
+                                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_CANCELLED}">
+                                                                <div class="product-image stoped-product">
+                                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
+                                                                        <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
+                                                                        <div class="middle">
+                                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </h:link>
+                                                                    <div class="countdown-wrapper">
+                                                                        <p>Tạm dừng đấu giá</p>
+                                                                    </div>
+                                                                </div>
+                                                            </h:panelGroup>
+                                                        </div>
+
+                                                        <div class="col-lg-7 col-md-7 col-xs-12 col-sm-6">
+                                                            <div class="product-info">
+                                                                <h5 class="product-title" style="text-align: left">
+                                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}"
+                                                                            value="#{regulationVar.code}">
+                                                                    </h:link>
+                                                                </h5>
+                                                                <div class="product-detail"
+                                                                     title="#{regulationVar.nameAsset}">
+                                                                    #{regulationVar.nameAsset}
+                                                                </div>
+                                                                <div class="time-start">
+                                                                    <div class="icon-product">
+                                                                        <img src="#{resource['frontend-layout:images/clock.svg']}" alt=""/>
+                                                                    </div>
+                                                                    <div class="info">
+                                                                        <p>Thời gian diễn ra</p>
+                                                                        <p><b><h:outputText
+                                                                                value="#{regulationVar.startTime}"><f:convertDateTime
+                                                                                pattern="HH:mm, dd/MM/yyyy"/></h:outputText></b>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="news-list">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="title-heading text-left">
+                            <h2>Tin tức mới nhất</h2>
+                            <div class="view-more">
+                                <h:link outcome="/frontend/news/category_news.xhtml">
+                                    Xem tất cả<i class="fa fa-angle-double-right" aria-hidden="true"/>
+                                </h:link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <h:panelGroup rendered="#{homeFEController.decisionNewsDtoList.size() eq 0}">
+                            <h3>Chưa có bản ghi nào</h3>
+                        </h:panelGroup>
+                        <div class="text-left sidebar">
+                            <div class="news-item">
+                                <h:panelGroup layout="block" styleClass="row" id="news-layout">
+                                    <p:repeat value="#{homeFEController.decisionNewsDtoList}" var="news">
+                                        <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12 news-detail">
+                                            <div class="row">
+                                                <h:link outcome="/frontend/news/detail.xhtml?id=#{news.decisionNewsId}">
+                                                    <div class="img-sidebar">
+                                                        <div class="image-news">
+                                                            <h:graphicImage name="images/tintuc.png"
+                                                                            library="apollo-layout"
+                                                                            rendered="#{empty news.imagePath}"/>
+                                                            <h:graphicImage name="#{news.imagePath}"
+                                                                            rendered="#{not empty news.imagePath}"/>
+                                                            <div class="middle">
+                                                                <div class="text">
+                                                                    <i class="fa fa-eye" aria-hidden="true"/> Xem chi tiết
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="time-news">
+                                                            <span>
+                                                                <i class="custom-icon calendar"/>
+                                                                <h:outputText value="#{news.createDate}">
+                                                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                                                </h:outputText>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </h:link>
+                                            </div>
+                                            <div class="row">
+                                                <div class="title-news">
+                                                    <div style="height: 60px">
+                                                        <h:link outcome="/frontend/news/detail.xhtml?id=#{news.decisionNewsId}" value="#{commonController.abbreviate(news.title, DbConstant.LIMITCHARACTER_TITLE)}"/>
+                                                    </div>
+                                                    <div style="margin-top: 10px" class="product-detail">
+                                                        <h:outputText value="#{news.decisionSummary}" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </p:repeat>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row connect-slider">
+            <div class="col-lg-12 col-sm-12 col-xs-12">
+                <div class="connect">
+                    <ui:repeat value="#{homeFEController.bannerList}" var="bannerVar">
+                        <div class="item">
+                            <a href="#{bannerVar.bannerLink}">
+                                <img src="#{resource[bannerVar.imagePath]}" alt=""/>
+                            </a>
+                        </div>
+                    </ui:repeat>
+                </div>
+            </div>
+        </div>
+
+        <!-- update scope -->
+        <p:remoteCommand name="cmdRefreshData" update="regulationList assetList myAssetList #{Constant.ID_COUNTDOWN_LIBRARY}"
+                         global="false"
+                         actionListener="#{homeFEController.resetAll()}"/>
+        <style>
+            .product-one-columns .end-product .countdown-wrapper {
+                padding: 5px;
+                word-break: break-all;
+            }
+
+            .product-one-columns .product-image .countdown-wrapper {
+                width: auto;
+                min-width: 60%;
+                padding: 5px;
+            }
+        </style>
+        <script>
+            var myAuction = false;
+        </script>
+    </ui:define>
+</ui:composition>

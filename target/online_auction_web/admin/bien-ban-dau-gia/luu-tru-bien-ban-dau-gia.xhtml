@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{reportAuctionController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Lưu trữ biên bản đấu giá</ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/bien-ban-dau-gia/luu-tru-bien-ban-dau-gia">Lưu trữ biên bản đấu giá</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12" style="padding-top:0">
+                    <div class="card no-margin">
+                        <h:form id="searchForm" prependId="false">
+
+                            <p:panel header="Tìm kiếm thông tin" style="margin-bottom: 10px;">
+                                <p:panelGrid id="searchPanel" columns="4" styleClass="ui-panelgrid-blank" layout="grid"
+                                             columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+
+                                    <p:outputLabel value="Mã quy chế:" for="code"/>
+                                    <p:selectOneMenu id="code" value="#{reportAuctionController.searchDto.regulationId}"
+                                                    filter="true" filterMatchMode="contains" effect="fade">
+                                        <f:selectItem itemLabel="Tất cả" itemValue=""/>
+                                        <f:selectItems value="#{reportAuctionController.regulationSelectItemList}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Hình thức đấu giá:" for="formality"/>
+                                    <p:selectOneMenu id="formality" value="#{reportAuctionController.searchDto.auctionFormalityId}">
+                                        <f:selectItem itemLabel="Tất cả" itemValue=""/>
+                                        <f:selectItem itemLabel="Trả giá xác định vòng" itemValue="#{DbConstant.AUCTION_FORMALITY_ID_POLL}"/>
+                                        <f:selectItem itemLabel="Trả giá không xác định vòng" itemValue="#{DbConstant.AUCTION_FORMALITY_ID_DIRECT}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Phương thức đấu giá:" for="method"/>
+                                    <p:selectOneMenu id="method" value="#{reportAuctionController.searchDto.auctionMethodId}">
+                                        <f:selectItem itemLabel="Tất cả" itemValue=""/>
+                                        <f:selectItem itemLabel="Trả giá lên" itemValue="#{DbConstant.AUCTION_METHOD_ID_UP}"/>
+                                        <f:selectItem itemLabel="Đặt giá xuống" itemValue="#{DbConstant.AUCTION_METHOD_ID_DOWN}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Trạng thái đấu giá:" for="status"/>
+                                    <p:selectOneMenu id="status" value="#{reportAuctionController.searchDto.auctionStatus}">
+                                        <f:selectItem itemLabel="Tất cả" itemValue=""/>
+                                        <f:selectItem itemLabel="Đã kết thúc" itemValue="#{DbConstant.REGULATION_AUCTION_STATUS_ENDED}"/>
+                                        <f:selectItem itemLabel="Đã tạm dừng đấu giá" itemValue="#{DbConstant.REGULATION_AUCTION_STATUS_CANCELLED}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Thời gian tổ chức đấu giá:"/>
+                                    <p:panelGrid columns="3" styleClass="ui-panelgrid-blank" layout="grid"
+                                                 columnClasses="ui-grid-col-5 ui-no-margin-padding, ui-grid-col-2 ui-no-margin-padding, ui-grid-col-5 ui-no-margin-padding">
+                                        <p:calendar styleClass="calendar" id="startTime"
+                                                    mask="true" navigator="true" mode="popup" placeholder="Từ ngày"
+                                                    label="Thời gian"
+                                                    readonlyInput="true"
+                                                    pattern="dd/MM/yyyy"
+                                                    value="#{reportAuctionController.searchDto.fromDate}"
+                                                    maxdate="#{reportAuctionController.searchDto.toDate}">
+                                            <p:ajax event="dateSelect"
+                                                    listener="#{reportAuctionController.onDateSelect}"
+                                                    update="endTime"/>
+                                        </p:calendar>
+                                        <p:outputLabel value=""/>
+                                        <p:calendar styleClass="calendar" mask="true"
+                                                    navigator="true" mode="popup" placeholder="Đến ngày"
+                                                    id="endTime" label="Thời gian"
+                                                    readonlyInput="true"
+                                                    pattern="dd/MM/yyyy"
+                                                    value="#{reportAuctionController.searchDto.toDate}"
+                                                    mindate="#{reportAuctionController.searchDto.fromDate}">
+                                            <p:ajax event="dateSelect"
+                                                    listener="#{reportAuctionController.onDateSelect}"
+                                                    update="startTime"/>
+                                        </p:calendar>
+                                    </p:panelGrid>
+
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="3" styleClass="ui-panelgrid-blank" layout="grid"
+                                             columnClasses="ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5">
+                                    <p:commandButton value="Tìm kiếm" style="width: 100px"
+                                                     actionListener="#{reportAuctionController.onSearch}"
+                                                     update="tblSearchResult" icon="fa fa-search"/>
+                                    <p:commandButton value="Làm mới"
+                                                     actionListener="#{reportAuctionController.resetAll}"
+                                                     update="searchForm tblSearchResult" icon="fa fa-refresh"
+                                                     styleClass="orange-btn" style="width: 100px"/>
+                                </p:panelGrid>
+                            </p:panel>
+
+                            <p:panel id="searchResult" header="Kết quả tìm kiếm" style="margin-bottom:5px">
+                                <p:dataTable id="tblSearchResult" rows="10"
+                                             widgetVar="wdgNhomQuyen" resizableColumns="true" paginator="true"
+                                             value="#{reportAuctionController.lazyDataModel}"
+                                             lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
+                                             paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{reportAuctionController.lazyDataModel.rowCount}"
+                                             emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                             rowKey="#{resultDto.paymentId}">
+
+                                    <p:column headerText="STT" width="30" style="text-align: center">
+                                        <p:outputLabel value="#{rowIndex + 1}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Mã quy chế" style="text-align: center" width="12%" sortBy="#{resultDto.code}">
+                                        <p:outputLabel value="#{resultDto.code}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên danh mục tài sản">
+                                        <p:outputLabel value="#{commonController.abbreviate(resultDto.nameAsset, DbConstant.LIMITCHARACTER_ASSET)}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Hình thức đấu giá" width="12%">
+                                        <p:outputLabel value="#{resultDto.auctionFormalityName}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Phương thức đấu giá" width="12%">
+                                        <p:outputLabel value="#{resultDto.auctionMethodName}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Thời gian đấu giá" width="12%" style="text-align: center">
+                                        <p:outputLabel value="#{resultDto.startTime}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </p:outputLabel>
+                                    </p:column>
+
+                                    <p:column headerText="Trạng thái đấu giá" width="12%">
+                                        <p:outputLabel value="Đã kết thúc" rendered="#{resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_ENDED}"/>
+                                        <p:outputLabel value="Đã tạm dừng đấu giá" rendered="#{resultDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_CANCELLED}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Trạng thái ký số" width="12%">
+                                        <p:outputLabel value="Chưa có biên bản" rendered="#{resultDto.regulationReportFileStatus eq DbConstant.REGULATION_REPORT_FILE_STATUS_NOT_YET}"/>
+                                        <p:outputLabel value="Đang xử lý" rendered="#{resultDto.regulationReportFileStatus eq DbConstant.REGULATION_REPORT_FILE_STATUS_PROCESSING}"/>
+                                        <p:outputLabel value="Đã hoàn tất" rendered="#{resultDto.regulationReportFileStatus eq DbConstant.REGULATION_REPORT_FILE_STATUS_FINISH}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Xem chi tiết" width="40">
+                                        <div class="my-data-table">
+                                            <p:commandLink styleClass="edit" update="growl"
+                                                           actionListener="#{reportAuctionController.viewDetailReportAuction(resultDto)}">
+                                                <i class="fa fa-sign-in"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </p:column>
+                                </p:dataTable>
+
+                            </p:panel>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,216 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <script>
+        var formatter = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        });
+        var stateReload;
+    </script>
+
+    <!--data lịch sử trả giá hình thức bỏ phiếu-->
+    <h:outputScript rendered="#{auctionController.checkRenderHistoryBargainPoll()}">
+        //<![CDATA[
+        var dataAuctionHistory = "";
+        var tableAuctionHistory = jQuery('#auction_history').DataTable({
+            data: dataAuctionHistory,
+            searching: false,
+            ordering: false,
+            info: false,
+            autoWidth: true,
+            scrollX: false,
+            bPaginate: false,
+            dom: "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            language: {
+                'paginate': {
+                'next': '<i class="fa fa-angle-right" aria-hidden="true"/>',
+                'previous': '<i class="fa fa-angle-left" aria-hidden="true"/>'
+            },
+            "lengthMenu": "Hiển thị _MENU_ ",
+            "emptyTable": "Chưa có dữ liệu để hiển thị."
+            },
+            "columns": [{
+                "width": "30px",
+                "className": 'stt-column text-center',
+                "data": null,
+                "render": function(data, type, full, meta) {
+                    return meta.row + 1;
+                }
+            }, {
+                "width": "120px",
+                "className": 'text-center',
+                "data": null,
+                "render": function(data, type, full, meta) {
+                    return "Vòng " + data.current_round;
+                }
+            }, {
+                "className": 'text-center',
+                "data": null,
+                "render": function(data, type, full, meta) {
+                return formatter.format(data.highest_price).replace('₫', 'VNĐ');
+                }
+            }],
+        });
+        //]]>
+    </h:outputScript>
+
+    <!--data lịch sử trả giá hình thức trả giá trực tiếp phương thức trả giá lên-->
+    <h:outputScript rendered="#{auctionController.checkRenderedHistoryBargainDirect()}">
+        //<![CDATA[
+        var dataAuctionHistoryDirect = "";
+        var tableAuctionHistoryDirect = jQuery('#auction_history_formality_driect_up').DataTable({
+            data: dataAuctionHistoryDirect,
+            searching: false,
+            ordering: false,
+            info: false,
+            autoWidth: true,
+            scrollX: false,
+            bPaginate: false,
+            dom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            language: {
+                'paginate': {
+                    'next': '<i class="fa fa-angle-right" aria-hidden="true"/>',
+                    'previous': '<i class="fa fa-angle-left" aria-hidden="true"/>'
+                },
+                "lengthMenu": "Hiển thị _MENU_ ",
+                "emptyTable": "Chưa có dữ liệu để hiển thị."
+            },
+            "columns": [
+                {
+                    "width": "30px",
+                    "className": 'stt-column text-center',
+                    "data": null,
+                    "render": function (data, type, full, meta) {
+                        return meta.row + 1;
+                    }
+                }, {
+                    "className": 'text-center',
+                    "data": "time",
+                }, {
+                    "width": "100px",
+                    "className": 'text-center',
+                    "data": "code",
+                }, {
+                    "className": 'text-center',
+                    "data": null,
+                    "render": function(data, type, full, meta) {
+                        return formatter.format(data.money).replace('₫', 'VNĐ');
+                    }
+                }],
+        });
+        //]]>
+    </h:outputScript>
+
+    <h:outputScript>
+        //<![CDATA[
+            var stateOnline = [];
+            var dataJoinedHistory = "";
+            var tableJoinedHistory = jQuery('#joined_history').DataTable({
+                data: dataJoinedHistory,
+                searching: false,
+                ordering: false,
+                info: false,
+                autoWidth: true,
+                bPaginate: false,
+                dom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+                language: {
+                    'paginate': {
+                        'next': '<i class="fa fa-angle-right" aria-hidden="true"></i>',
+                        'previous': '<i class="fa fa-angle-left" aria-hidden="true"></i>'
+                    },
+                    "lengthMenu": "Hiển thị _MENU_ ",
+                    "emptyTable": "Không tồn tại dữ liệu"
+                },
+                "columns": [{
+                    "width": "30px",
+                    "className": 'stt-column text-center',
+                    "orderable": false,
+                    "data": null,
+                    "render": function(data, type, full, meta) {
+                        return meta.row + 1;
+                    }
+                }, {
+                    "className": 'text-left',
+                    "data": null,
+                    "render": function (data) {
+                        return '<i id="state-online-' + data.auction_register_id + '" data-id="' + data.auction_register_id + '" class="custom-icon state-active offline"></i> ' + data.code + (data.code === '#{auctionController.auctionRegister == null ? 0 : auctionController.auctionRegister.code}' ? ' (Bạn)' : '');
+                    }
+                }, {
+                    "className": 'text-center',
+                    "data": null,
+                    "render": function(data) {
+                        return data.role_id !== '#{DbConstant.ROLE_ID_USER}' ? "Đấu giá viên" : "Người đấu giá";
+                    }
+                }, {
+                    "data": "notes",
+                }],
+            });
+        //]]>
+    </h:outputScript>
+
+    <h:panelGroup id="dataMyAuction">
+        <h:panelGroup id="dataAuctionHistory">
+            <h:outputScript rendered="#{auctionController.checkRenderHistoryBargainPoll()}">
+                dataAuctionHistory = #{paginationPriceRound.dataString};
+                tableAuctionHistory.clear();
+                tableAuctionHistory.rows.add(dataAuctionHistory).draw();
+            </h:outputScript>
+        </h:panelGroup>
+
+        <h:panelGroup id="dataAuctionHistoryDirect">
+            <h:outputScript rendered="#{auctionController.checkRenderedHistoryBargainDirect()}">
+                dataAuctionHistoryDirect = #{paginationHistoryBargainFormalityDirectUp.dataString};
+                tableAuctionHistoryDirect.clear();
+                tableAuctionHistoryDirect.rows.add(dataAuctionHistoryDirect).draw();
+            </h:outputScript>
+        </h:panelGroup>
+
+        <h:panelGroup id="dataJoinedHistory">
+            <h:outputScript>
+                dataJoinedHistory = #{paginationAccountList.dataString};
+                tableJoinedHistory.clear();
+                tableJoinedHistory.rows.add(dataJoinedHistory).draw();
+            </h:outputScript>
+        </h:panelGroup>
+    </h:panelGroup>
+
+    <script>
+        if (stateReload) {
+            clearInterval(stateReload);
+        }
+        function stateOn() {
+            jQuery('.state-active').each(function() {
+                var $this = jQuery(this);
+                if (stateOnline.indexOf($this.data('id') + "") > -1) {
+                    $this.removeClass('offline');
+                    $this.addClass('online');
+                } else {
+                    $this.removeClass('online');
+                    $this.addClass('offline');
+                }
+            });
+        }
+        stateReload = setInterval(function(){
+            if (typeof cmdRefreshState !== "undefined") {
+                cmdRefreshState();
+            } else {
+                clearInterval(stateReload);
+            }
+        }, 3000);
+    </script>
+
+    <h:panelGroup id="refreshStateOnline">
+        <script>
+            stateOnline = #{auctionController.stateOnline()};
+            stateOn();
+        </script>
+    </h:panelGroup>
+
+    <p:remoteCommand name="cmdRefreshState" update="refreshStateOnline"/>
+
+</ui:composition>

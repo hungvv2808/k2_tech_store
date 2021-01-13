@@ -1,0 +1,1055 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{regulationController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Thông tin quy chế</ui:define>
+
+    <ui:define name="head">
+        <style type="text/css">
+            body .ui-datatable .ui-datatable-data > tr td {
+                border-color: #d8d8d8;
+                padding: 6px 12px;
+            }
+            .top-contain-image {
+                height: 380px !important;
+                text-align: center !important;
+            }
+            .radio-display td label {
+                display: inline;
+            }
+            .ui-tooltip {
+                max-width: 200px;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/quan-ly-dau-gia/thong-tin-quy-che">Thông tin quy chế</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-fluid">
+            <div class="card no-margin">
+                <p:panelGrid columns="2"
+                             columnClasses="ui-grid-col-2 ui-no-margin-padding, ui-grid-col-10 ui-no-margin-padding"
+                             styleClass="ui-panelgrid-blank" layout="grid">
+                    <p:commandButton value="Quay lại"
+                                     style="width: auto;"
+                                     actionListener="#{regulationController.resetRegulation}"
+                                     process="@this" icon="fa fa-arrow-left">
+                        <p:confirm header="Thông báo"
+                                   message="Bạn có chắc chắn muốn thoát khỏi chức năng này hay không?"
+                                   icon="fa fa-question-circle"/>
+                    </p:commandButton>
+                </p:panelGrid>
+            </div>
+        </div>
+
+        <p:confirmDialog global="true" showEffect="fade" icon="fa fa-question-circle" hideEffect="fade" widgetVar="confirm" header="Xác nhận tạm dừng quy chế" id="confirmDialog">
+            <f:facet name="message">
+                <p:outputLabel value="Bạn có chắc chắn tạm dừng quy chế &lt;b&gt;#{regulationController.regulationDto.code}&lt;/b&gt; hay không? Nếu tạm dừng, lý do và văn bản tạm dừng sẽ được cập nhật công khai trên Trang đấu giá?" escape="false"/>
+            </f:facet>
+            <p:commandButton value="Đồng ý" id="checkbutton" actionListener="#{regulationController.onSend}" update="#{Constant.ERROR_GROWL_ID}" process="@this" oncomplete="PF('confirm').hide()"/>
+            <p:commandButton value="Hủy bỏ" oncomplete="PF('confirm').hide()"/>
+        </p:confirmDialog>
+
+        <p:dialog id="dlg" header="Cập nhật lý do tạm dừng quy chế"
+                  style="max-height: 90vh; max-width: 90vw"
+                  rendered="#{regulationController.getActions().hasAction(EAction.UNPIN)}"
+                  widgetVar="dialoglidohuybo" modal="true" width="800">
+            <h:form id="dlFormlydo" enctype="multipart/form-data">
+                <div class="ui-fluid">
+                    <p:panelGrid id="basicPanel1" columns="2"
+                                 columnClasses="ui-grid-col-2,ui-grid-col-10"
+                                 styleClass="ui-panelgrid-blank" layout="grid">
+
+                        <p:outputLabel styleClass="requireLabel" value="Lý do tạm dừng:" for="lido"/>
+                        <p:outputPanel>
+                            <p:inputTextarea id="lido" placeholder="Nhập lý do tạm dừng cuộc đấu giá" rows="6" cols="33"
+                                             disabled="#{regulationController.statusDisable}"
+                                             value="#{regulationController.regulationDto.reasonCancel}"
+                                             maxlength="1000"/>
+                        </p:outputPanel>
+
+                        <p:outputLabel styleClass="requireLabel" value="Tải file văn bản:"/>
+                        <p:outputPanel rendered="#{!regulationController.statusDisable}">
+                            <ui:include src="/common/upload-single-file.xhtml"/>
+                            <p:outputLabel
+                                    value="(Vui lòng chọn tài liệu định dạng PDF, DOCX, JPG, JPEG, PNG dung lượng ảnh nhỏ hơn 5MB)"/>
+                        </p:outputPanel>
+
+                        <p:outputPanel rendered="#{regulationController.statusDisable}">
+                            <p:commandButton value="Tải về" style="width:80px;" ajax="false" immediate="true"
+                                             icon="fa fa-fw fa-download">
+                                <p:fileDownload value="#{regulationController.downloadDepositionReasonFile()}"/>
+                            </p:commandButton>
+                        </p:outputPanel>
+
+                    </p:panelGrid>
+                    <p:panelGrid columns="3"
+                                 columnClasses="ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5"
+                                 layout="grid" styleClass="ui-panelgrid-blank">
+                        <p:commandButton value="Xác nhận" actionListener="#{regulationController.checkConfirm}"
+                                         rendered="#{!regulationController.statusDisable}" id="check"
+                                         icon="fa fa-save" style="width: auto"
+                                         update="dlFormlydo confirmDialog #{Constant.ERROR_GROWL_ID}"/>
+                        <p:commandButton value="Đóng" styleClass="close"
+                                         global="false"
+                                         actionListener="#{regulationController.resetDialog}"
+                                         oncomplete="PF('dialoglidohuybo').hide()" icon="fa fa-close"
+                                         style="width: auto;"/>
+
+                    </p:panelGrid>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <h:form id="dlForm2" prependId="false">
+            <p:focus id="focus"/>
+            <div class="ui-fluid" style="margin-top: 5px;">
+                <div class="card no-margin">
+                    <p:panel id="searchCode"
+                             header="Thông tin quy chế #{regulationController.regulationDto.code}"
+                             style="margin-bottom:5px">
+                        <p:panelGrid id="searchPanel" columns="2"
+                                     columnClasses="ui-grid-col-6 ui-no-margin-padding, ui-grid-col-6 ui-no-margin-padding"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+
+                            <p:outputPanel id="columnLeft">
+                                <p:panelGrid columns="2"
+                                             columnClasses="ui-grid-col-4,ui-grid-col-8"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:outputLabel value="Cá nhân/tổ chức có tài sản:" for="canhan"
+                                                   rendered="#{!regulationController.account.org}"/>
+                                    <p:outputLabel value="#{regulationController.regulationDto.nameAccount}"
+                                                   rendered="#{!regulationController.account.org}"
+                                                   id="canhan"/>
+
+                                    <p:outputLabel value="Cá nhân/tổ chức có tài sản:" for="tochuc"
+                                                   rendered="#{regulationController.account.org}"/>
+                                    <p:outputLabel value="#{regulationController.regulationDto.orgName}"
+                                                   rendered="#{regulationController.account.org}"
+                                                   id="tochuc"/>
+
+                                    <p:outputLabel value="Thời gian đăng ký tham gia đấu giá:"
+                                                   for="startRegistrationDate"/>
+                                    <p:outputPanel>
+                                        <p:datePicker styleClass="calendar startRegistrationDate" id="startRegistrationDate" locale="vi_VN"
+                                                      monthNavigator="true" yearNavigator="true" yearRange="#{commonController.yearNow}:2100" showTime="true"
+                                                      label="Thời gian bắt đầu đăng ký"
+                                                      placeholder="Thời gian bắt đầu đăng ký"
+                                                      converterMessage="Thời gian không đúng hoặc sai định dạng dd/MM/yyyy HH:mm"
+                                                      validatorMessage="Ngày và giờ thời gian bắt đầu đăng ký tham gia đấu giá phải lớn hơn ngày giờ thời gian hiện tại"
+                                                      requiredMessage="Bạn vui lòng nhập thời gian đăng ký tham gia đấu giá"
+                                                      onkeyup="resetValueNull(this.value, 'resetRegisterStart')"
+                                                      required="true" autocomplete="off"
+                                                      mindate="#{regulationController.dateNow}"
+                                                      disabled="#{regulationController.disableCRUD}"
+                                                      defaultHour="#{regulationController.convertDatetimeToHour(regulationController.regulationDto.startRegistrationDate)}"
+                                                      defaultMinute="#{regulationController.convertDatetimeToMinute(regulationController.regulationDto.startRegistrationDate)}"
+                                                      value="#{regulationController.regulationDto.startRegistrationDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                            <p:ajax event="dateSelect" global="false" update="#{Constant.ERROR_GROWL_ID} maskInput"/>
+                                            <p:tooltip for="@(.startRegistrationDate :input)" showEvent="focus" hideEvent="blur" style="width: 220px"
+                                                       value="Ngày và giờ thời gian bắt đầu đăng ký tham gia đấu giá phải lớn hơn ngày giờ thời gian hiện tại"/>
+                                        </p:datePicker>
+                                        <p:message id="startRegis" for="startRegistrationDate" styleClass="focus-input-text" display="text"/>
+                                    </p:outputPanel>
+
+                                    <p:outputLabel/>
+                                    <p:outputPanel>
+                                        <p:datePicker styleClass="calendar endRegistrationDate" id="endRegistrationDate" locale="vi_VN"
+                                                      monthNavigator="true" yearNavigator="true" yearRange="#{commonController.yearNow}:2100" showTime="true"
+                                                      label="Thời gian kết thúc đăng ký"
+                                                      placeholder="Thời gian kết thúc đăng ký"
+                                                      converterMessage="Thời gian không đúng hoặc sai định dạng dd/MM/yyyy HH:mm"
+                                                      validatorMessage="Ngày và giờ thời gian kết thúc đăng ký tham gia đấu giá phải lớn hơn thời gian bắt đầu đăng ký tham gia đấu giá và nhỏ hơn thời gian bắt đầu tổ chức đấu giá"
+                                                      requiredMessage="Bạn vui lòng nhập thời gian kết thúc đăng ký tham gia đấu giá"
+                                                      onkeyup="resetValueNull(this.value, 'resetRegisterEnd')"
+                                                      required="true" autocomplete="off"
+                                                      mindate="#{regulationController.dateNow}"
+                                                      disabled="#{regulationController.disableCRUD}"
+                                                      defaultHour="#{regulationController.convertDatetimeToHour(regulationController.regulationDto.endRegistrationDate)}"
+                                                      defaultMinute="#{regulationController.convertDatetimeToMinute(regulationController.regulationDto.endRegistrationDate)}"
+                                                      value="#{regulationController.regulationDto.endRegistrationDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                            <p:ajax event="dateSelect" global="false" update="#{Constant.ERROR_GROWL_ID} maskInput"/>
+                                            <p:tooltip for="@(.endRegistrationDate :input)" showEvent="focus" hideEvent="blur" style="width: 220px"
+                                                       value="Ngày và giờ thời gian kết thúc đăng ký tham gia đấu giá phải lớn hơn thời gian bắt đầu đăng ký tham gia đấu giá và nhỏ hơn thời gian bắt đầu tổ chức đấu giá"/>
+                                        </p:datePicker>
+                                        <p:message id="endRegis" for="endRegistrationDate" styleClass="focus-input-text" display="text"/>
+                                    </p:outputPanel>
+
+                                    <p:outputLabel value="Thời gian nộp tiền đặt trước:" for="paymentStartTime"/>
+                                    <p:outputPanel>
+                                    <p:datePicker styleClass="calendar paymentStartTime" id="paymentStartTime" locale="vi_VN"
+                                                  monthNavigator="true" yearNavigator="true" yearRange="#{commonController.yearNow}:2100" showTime="true"
+                                                  placeholder="Thời gian bắt đầu nộp tiền đặt trước"
+                                                  converterMessage="Thời gian không đúng hoặc sai định dạng dd/MM/yyyy HH:mm"
+                                                  validatorMessage="Ngày và giờ thời gian bắt đầu nộp tiền đặt trước phải lớn hơn hoặc bằng thời gian bắt đầu đăng ký tham gia đấu giá"
+                                                  onkeyup="resetValueNull(this.value, 'resetPaymentStart')"
+                                                  disabled="#{regulationController.disableCRUD}" autocomplete="off"
+                                                  mindate="#{regulationController.regulationDto.startRegistrationDate}"
+                                                  defaultHour="#{regulationController.convertDatetimeToHour(regulationController.regulationDto.paymentStartTime)}"
+                                                  defaultMinute="#{regulationController.convertDatetimeToMinute(regulationController.regulationDto.paymentStartTime)}"
+                                                  value="#{regulationController.regulationDto.paymentStartTime}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                        <p:ajax event="dateSelect" global="false" update="#{Constant.ERROR_GROWL_ID} maskInput"/>
+                                        <p:tooltip for="@(.paymentStartTime :input)" showEvent="focus" hideEvent="blur" style="width: 220px"
+                                                   value="Phục vụ cho chức năng Thanh toán trực tuyến. Ngày và giờ thời gian bắt đầu nộp tiền đặt trước phải lớn hơn thời gian bắt đầu đăng ký tham gia đấu giá, và có định dạng dd/mm/yyyy HH:mm"/>
+                                    </p:datePicker>
+                                        <p:message id="paymentStart" for="paymentStartTime" styleClass="focus-input-text" display="text"/>
+                                    </p:outputPanel>
+
+                                    <p:outputLabel/>
+                                    <p:outputPanel>
+                                    <p:datePicker id="paymentEndTime" styleClass="calendar paymentEndTime" locale="vi_VN"
+                                                  monthNavigator="true" yearNavigator="true" yearRange="#{commonController.yearNow}:2100" showTime="true"
+                                                  label="Thời gian kết thúc nộp tiền đặt trước" autocomplete="off"
+                                                  placeholder="Thời gian kết thúc nộp tiền đặt trước"
+                                                  onkeyup="resetValueNull(this.value, 'resetPaymentEnd')"
+                                                  converterMessage="Thời gian không đúng hoặc sai định dạng dd/MM/yyyy HH:mm"
+                                                  validatorMessage="Ngày và giờ thời gian kết thúc nộp tiền đặt trước phải lớn hơn thời gian bắt đầu nộp tiền đặt trước"
+                                                  mindate="#{regulationController.regulationDto.paymentStartTime}"
+                                                  defaultHour="#{regulationController.convertDatetimeToHour(regulationController.regulationDto.paymentEndTime)}"
+                                                  defaultMinute="#{regulationController.convertDatetimeToMinute(regulationController.regulationDto.paymentEndTime)}"
+                                                  disabled="#{regulationController.disableCRUD}"
+                                                  value="#{regulationController.regulationDto.paymentEndTime}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                        <p:ajax event="dateSelect" global="false" update="#{Constant.ERROR_GROWL_ID} maskInput"/>
+                                        <p:tooltip for="@(.paymentEndTime :input)" showEvent="focus" hideEvent="blur" style="width: 220px"
+                                                   value="Phục vụ cho chức năng Thanh toán trực tuyến. Ngày và giờ thời gian kết thúc nộp tiền đặt trước phải lớn hơn thời gian bắt đầu nộp tiền đặt trước, và có định dạng dd/mm/yyyy HH:mm"/>
+                                    </p:datePicker>
+                                        <p:message id="paymentEnd" for="paymentEndTime" styleClass="focus-input-text" display="text"/>
+                                    </p:outputPanel>
+
+                                    <p:outputLabel value="Thời gian bắt đầu tổ chức đấu giá:" for="startTime"/>
+                                    <p:outputPanel>
+                                        <p:datePicker styleClass="calendar startTime" id="startTime" locale="vi_VN"
+                                                      monthNavigator="true" yearNavigator="true" yearRange="#{commonController.yearNow}:2100" showTime="true"
+                                                      label="Thời gian bắt đầu tổ chức đấu giá"
+                                                      placeholder="Thời gian bắt đầu tổ chức đấu giá"
+                                                      converterMessage="Thời gian không đúng hoặc sai định dạng dd/MM/yyyy HH:mm"
+                                                      requiredMessage="Bạn vui lòng nhập thời gian bắt đầu tổ chức đấu giá"
+                                                      validatorMessage="Ngày và giờ thời gian bắt đầu tổ chức đấu giá phải lớn hơn thời gian kết thúc đăng ký tham gia"
+                                                      onkeyup="resetValueNull(this.value, 'resetStartTime')"
+                                                      disabled="#{regulationController.disableCRUD}"
+                                                      autocomplete="off" required="true"
+                                                      mindate="#{regulationController.dateNow}"
+                                                      defaultHour="#{regulationController.convertDatetimeToHour(regulationController.regulationDto.startTime)}"
+                                                      defaultMinute="#{regulationController.convertDatetimeToMinute(regulationController.regulationDto.startTime)}"
+                                                      value="#{regulationController.regulationDto.startTime}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                            <p:ajax event="dateSelect" global="false" update="#{Constant.ERROR_GROWL_ID} maskInput"/>
+                                            <p:tooltip for="@(.startTime :input)" showEvent="focus" hideEvent="blur" style="width: 220px"
+                                                       value="Ngày và giờ thời gian bắt đầu tổ chức đấu giá phải lớn hơn thời gian kết thúc đăng ký tham gia đấu giá"/>
+                                        </p:datePicker>
+                                        <p:message id="startTimeMsg" for="startTime" styleClass="focus-input-text" display="text"/>
+                                    </p:outputPanel>
+
+                                    <p:outputLabel value="Trạng thái đấu giá:" rendered="#{regulationController.disableCRUD}" style="margin-top: 10px"/>
+                                    <p:outputLabel rendered="#{regulationController.disableCRUD}" style="margin-top: 10px">
+                                        <p:outputLabel value="Sắp diễn ra"
+                                                       rendered="#{regulationController.regulationDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING}"/>
+                                        <p:outputLabel value="Đang diễn ra" style="margin-top: 10px"
+                                                       rendered="#{regulationController.regulationDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_PLAYING}"/>
+                                        <p:outputLabel value="Đã kết thúc" style="margin-top: 10px"
+                                                       rendered="#{regulationController.regulationDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_ENDED}"/>
+                                        <p:outputLabel value="Đã tạm dừng đấu giá" style="margin-top: 10px"
+                                                       rendered="#{regulationController.regulationDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_CANCELLED}"/>
+                                        <p:outputLabel value="Không diễn ra" style="margin-top: 10px"
+                                                       rendered="#{regulationController.regulationDto.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_NOT_HAPPEN}"/>
+                                    </p:outputLabel>
+
+                                    <p:outputLabel value="Trạng thái đăng tải:" rendered="#{regulationController.disableCRUD}" style="margin-top: 10px"/>
+                                    <p:outputLabel rendered="#{regulationController.disableCRUD}" style="margin-top: 10px">
+                                        <h:outputText value="Chưa đăng tải"
+                                                      rendered="#{regulationController.regulationDto.status eq DbConstant.CHUA_DANG_TAI}"/>
+                                        <h:outputText value="Đã đăng tải"
+                                                      rendered="#{regulationController.regulationDto.status eq DbConstant.DA_DANG_TAI}"/>
+                                        <h:outputText value="Đã tạm dừng quy chế"
+                                                      rendered="#{regulationController.regulationDto.status eq DbConstant.DA_HUY_QUY_CHE}"/>
+                                    </p:outputLabel>
+                                </p:panelGrid>
+                            </p:outputPanel>
+
+                            <p:outputPanel id="columnRight">
+                                <p:panelGrid columns="2"
+                                             columnClasses="ui-grid-col-4,ui-grid-col-8"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:outputLabel value="Hình thức đấu giá trực tuyến:" for="auctionFormality"/>
+                                    <p:selectOneRadio id="auctionFormality" unselectable="true"
+                                                      disabled="#{regulationController.disableCRUD}"
+                                                      required="true" styleClass="radio-display"
+                                                      value="#{regulationController.regulationDto.auctionFormalityId}">
+                                        <f:selectItem itemLabel="Trả giá xác định vòng"
+                                                      itemValue="#{DbConstant.AUCTION_FORMALITY_ID_POLL}"/>
+                                        <f:selectItem itemLabel="Trả giá không xác định vòng"
+                                                      itemValue="#{DbConstant.AUCTION_FORMALITY_ID_DIRECT}"/>
+                                        <p:ajax event="change" listener="#{regulationController.changeAution()}"
+                                                update="columnRight"/>
+                                    </p:selectOneRadio>
+
+                                    <p:outputLabel value="Phương thức đấu giá:" for="auctionMethodId"/>
+                                    <p:selectOneMenu id="auctionMethodId" filterMatchMode="contains" autoWidth="false"
+                                                     effect="fade"
+                                                     required="true"
+                                                     disabled="#{regulationController.regulationDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL || regulationController.disableCRUD }"
+                                                     value="#{regulationController.regulationDto.auctionMethodId}">
+                                        <f:selectItem itemLabel="Phương thức trả giá lên"
+                                                      itemValue="#{DbConstant.AUCTION_METHOD_ID_UP}"/>
+                                        <f:selectItem itemLabel="Phương thức trả giá xuống"
+                                                      itemValue="#{DbConstant.AUCTION_METHOD_ID_DOWN}"/>
+                                        <p:ajax event="change" listener="#{regulationController.changeAuctionMethod()}"
+                                                update="columnRight"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Thời gian đặt giá xuống (phút):" for="timePerRound1"
+                                                   rendered="#{regulationController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN and regulationController.regulationDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT}"/>
+                                    <p:outputPanel
+                                            rendered="#{regulationController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN and regulationController.regulationDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT}">
+                                        <p:inputNumber placeholder="Nhập vào thời gian đặt giá xuống" id="timePerRound1"
+                                                       maxlength="4" decimalPlaces="0" thousandSeparator="."
+                                                       required="true"
+                                                       label="Thời gian"
+                                                       minValue="0"
+                                                       requiredMessage="Bạn vui lòng nhập thời gian đặt giá xuống"
+                                                       validatorMessage="Thời gian phải lớn hơn 0"
+                                                       disabled="#{regulationController.disableCRUD}"
+                                                       symbolPosition="s" autoWidth="false" effect="fade"
+                                                       maxValue="9999"
+                                                       value="#{regulationController.regulationDto.timePerRound}">
+                                            <f:validateLongRange minimum="1"/>
+                                        </p:inputNumber>
+                                        <p:message id="idxuong" for="timePerRound1" styleClass="focus-input-text"
+                                                   display="text"/>
+                                    </p:outputPanel>
+
+                                    <p:outputLabel value="Thời gian mỗi vòng (phút):" for="timePerRound2"
+                                                   rendered="#{regulationController.regulationDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL}"/>
+                                    <p:outputPanel
+                                            rendered="#{regulationController.regulationDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL}">
+                                        <p:inputNumber placeholder="Nhập vào thời gian mỗi vòng" id="timePerRound2"
+                                                       maxlength="4" decimalPlaces="0" thousandSeparator="."
+                                                       required="true"
+                                                       label="Thời gian"
+                                                       minValue="0"
+                                                       requiredMessage="Bạn vui lòng nhập thời gian mỗi vòng"
+                                                       validatorMessage="Thời gian phải lớn hơn 0"
+                                                       disabled="#{regulationController.disableCRUD}"
+                                                       symbolPosition="s" autoWidth="false" effect="fade"
+                                                       maxValue="9999"
+                                                       value="#{regulationController.regulationDto.timePerRound}">
+                                            <f:validateLongRange minimum="1"/>
+                                        </p:inputNumber>
+                                        <p:message id="idvong" for="timePerRound2" styleClass="focus-input-text"
+                                                   display="text"/>
+                                    </p:outputPanel>
+
+                                    <p:outputLabel value="Thời gian đấu giá mỗi tài sản (phút):" for="timePerRound"
+                                                   rendered="#{regulationController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP and regulationController.regulationDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT}"/>
+                                    <p:outputPanel
+                                            rendered="#{regulationController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP and regulationController.regulationDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT}">
+                                        <p:inputNumber placeholder="Nhập vào thời gian đấu giá mỗi tài sản"
+                                                       id="timePerRound"
+                                                       maxlength="4" decimalPlaces="0" thousandSeparator="."
+                                                       required="true"
+                                                       label="Thời gian"
+                                                       minValue="0"
+                                                       requiredMessage="Bạn vui lòng nhập thời gian đấu giá mỗi tài sản"
+                                                       validatorMessage="Thời gian phải lớn hơn 0"
+                                                       disabled="#{regulationController.disableCRUD}"
+                                                       symbolPosition="s" autoWidth="false" effect="fade"
+                                                       maxValue="9999"
+                                                       value="#{regulationController.regulationDto.timePerRound}">
+                                            <f:validateLongRange minimum="1"/>
+                                        </p:inputNumber>
+                                        <p:message id="tmrStartTime" for="timePerRound" styleClass="focus-input-text"
+                                                   display="text"/>
+                                    </p:outputPanel>
+
+                                    <p:outputLabel value="Số vòng đấu giá: " for="minMax1"
+                                                   rendered="#{regulationController.regulationDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL}"/>
+                                    <p:outputPanel
+                                            rendered="#{regulationController.regulationDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL}">
+                                        <p:inputNumber id="minMax1" required="true" minValue="0"
+                                                       disabled="#{regulationController.disableCRUD}"
+                                                       maxlength="4" decimalPlaces="0" thousandSeparator="."
+                                                       label="Số vòng đấu giá"
+                                                       symbolPosition="s" autoWidth="false" effect="fade"
+                                                       placeholder="Nhập số vòng đấu giá"
+                                                       maxValue="999"
+                                                       validatorMessage="Số vòng phải lớn hơn 0"
+                                                       requiredMessage="Bạn vui lòng nhập số vòng đấu giá"
+                                                       value="#{regulationController.regulationDto.numberOfRounds}">
+                                            <f:validateLongRange minimum="1"/>
+                                        </p:inputNumber>
+                                        <p:message id="tmrArounds" for="minMax1" styleClass="focus-input-text" display="text"/>
+                                    </p:outputPanel>
+
+                                    <p:outputLabel value="Tùy chọn hiển thị:" for="historystatus"/>
+                                    <p:selectBooleanCheckbox id="historystatus"
+                                                             disabled="#{regulationController.disableCRUD}"
+                                                             value="#{regulationController.regulationDto.historyStatus}"
+                                                             itemLabel="Hiển thị công khai diễn biến cuộc đấu giá">
+                                        <p:ajax event="change" global="false"/>
+                                    </p:selectBooleanCheckbox>
+
+                                    <p:outputLabel value="Cho phép rút lại giá đã trả:" for="retracttheprice"
+                                                   rendered="#{regulationController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP and regulationController.regulationDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT}"/>
+                                    <p:selectBooleanCheckbox id="retracttheprice"
+                                                             rendered="#{regulationController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP and regulationController.regulationDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_DIRECT}"
+                                                             disabled="#{regulationController.disableCRUD}"
+                                                             value="#{regulationController.regulationDto.retractPrice}"
+                                                             itemLabel="Cho phép người dùng rút lại giá đã trả ">
+                                        <p:ajax event="change" global="false"/>
+                                    </p:selectBooleanCheckbox>
+
+                                    <p:outputLabel value="Tải file quy chế:" styleClass="requireLabel"/>
+                                    <p:outputPanel>
+                                        <p:fileUpload id="fileUpload" mode="advanced"
+                                                      auto="true" label="Tải file"
+                                                      required="true"
+                                                      onstart="PF('statusDialog').show();"
+                                                      oncomplete="PF('statusDialog').hide();"
+                                                      rendered="#{!regulationController.disableCRUD}"
+                                                      fileUploadListener="#{uploadSingleFileRegulationController.onUploadFilePDF}"
+                                                      update="singleFile #{Constant.ERROR_GROWL_ID}"/>
+
+                                        <p:outputPanel id="singleFile" style="margin-top: 5px; margin-bottom: 5px;">
+                                            <p:panelGrid columns="3" columnClasses="ui-g-1, ui-g-8, ui-g-1"
+                                                         style="width: 100%"
+                                                         rendered="#{not empty uploadSingleFileRegulationController.filePath}">
+                                                <i class="fa fa-fw fa-file"/>
+                                                <p:commandLink id="v_taiLieuDinhKem" update="showRegulationFile"
+                                                               style="width: 80%; word-break: break-word"
+                                                               global="false"
+                                                               value="#{uploadSingleFileRegulationController.fileName}"
+                                                               type="button" oncomplete="PF('dlgShowFileRegulation').show();"
+                                                               actionListener="#{regulationController.setRegulationFileDialogForShow(uploadSingleFileRegulationController.filePath)}"/>
+                                                <p:commandLink styleClass="delete"
+                                                               actionListener="#{uploadSingleFileRegulationController.onRemoveFile()}"
+                                                               update="dlForm2:singleFile"
+                                                               process="@this"
+                                                               style="width: auto"
+                                                               rendered="#{!regulationController.disableCRUD}">
+                                                    <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
+                                                               icon="fa fa-question-circle"/>
+                                                    <i class="fa fa-remove"/>
+                                                </p:commandLink>
+                                            </p:panelGrid>
+                                        </p:outputPanel>
+                                        <p:outputLabel value="(Chỉ cho phép tải file PDF. Dung lượng tối đa 50MB)"
+                                                       styleClass="ui-no-margin-padding" style="font-size: 12px;"/>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:panelGrid>
+                    </p:panel>
+
+                    <p:panel id="searchResult" header="Thông tin tài sản trong quy chế"
+                             style="margin-bottom:5px">
+                        <p:dataTable id="tblSearchResult" tableStyle="table-layout: auto;"
+                                     var="resultDto1"
+                                     emptyMessage="#{t['lbl.emptyTable']}"
+                                     rowIndexVar="rowIndex"
+                                     value="#{regulationController.assetDtoList}">
+                            <p:column rendered="#{regulationController.disableCRUD}" headerText="Chi tiết"
+                                      style="width: 20px" exportable="false">
+                                <p:rowToggler/>
+                            </p:column>
+                            <p:column headerText="STT" width="30" style="text-align: center">
+                                <h:outputText value="#{rowIndex + 1}"/>
+                            </p:column>
+                            <p:column headerText="Tên tài sản">
+                                <h:outputText value="#{commonController.abbreviate(resultDto1.name, DbConstant.LIMITCHARACTER_HOME)}"/>
+                            </p:column>
+
+                            <p:column headerText="Tiền đặt trước (VNĐ)" width="15%">
+                                <div style="text-align: right">
+                                    <h:outputText value="#{resultDto1.deposit}">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                         maxFractionDigits="6" minFractionDigits="0"
+                                                         locale="vi_VN"/>
+                                    </h:outputText>
+                                </div>
+                            </p:column>
+
+                            <p:column headerText="Giá khởi điểm (VNĐ)" width="15%">
+                                <div style="text-align: right">
+                                    <h:outputText value="#{resultDto1.startingPrice}">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                         maxFractionDigits="6" minFractionDigits="0"
+                                                         locale="vi_VN"/>
+                                    </h:outputText>
+                                </div>
+                            </p:column>
+
+                            <p:column headerText="Bước giá (VNĐ)" width="15%"
+                                      rendered="#{regulationController.regulationDto.auctionMethodId ne DbConstant.AUCTION_METHOD_ID_DOWN}">
+                                <div style="text-align: right">
+                                    <h:outputText value="#{resultDto1.priceStep}"
+                                                  rendered="#{regulationController.regulationDto.auctionMethodId ne DbConstant.AUCTION_METHOD_ID_DOWN}">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                         maxFractionDigits="6" minFractionDigits="0"
+                                                         locale="vi_VN"/>
+                                    </h:outputText>
+                                </div>
+                            </p:column>
+                            <p:column headerText="Mức giảm giá (VNĐ)" width="15%"
+                                      rendered="#{regulationController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN}">
+                                <div style="text-align: right">
+                                    <h:outputText value="#{resultDto1.priceStep}"
+                                                  rendered="#{regulationController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN}">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                         maxFractionDigits="6" minFractionDigits="0"
+                                                         locale="vi_VN"/>
+                                    </h:outputText>
+                                </div>
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:panelGrid columns="2" layout="grid"
+                                             styleClass="ui-panelgrid-blank "
+                                             columnClasses="ui-grid-col-2, ui-grid-col-10 text-limit-width">
+                                    <p:outputLabel value="Tên tài sản: "/>
+                                    <h:outputText value="#{resultDto1.name}"/>
+                                </p:panelGrid>
+
+                                <p:panelGrid id="detail-content" columns="4" layout="grid"
+                                             styleClass="ui-panelgrid-blank"
+                                             columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+                                    <p:outputLabel value="Giá khởi điểm (VNĐ):"/>
+                                    <h:outputText value="#{resultDto1.startingPrice}">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                         maxFractionDigits="6" minFractionDigits="0"
+                                                         locale="vi_VN"/>
+                                    </h:outputText>
+
+                                    <p:outputLabel value="Tiền đặt trước (VNĐ): "/>
+                                    <h:outputText value="#{resultDto1.deposit}">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                         maxFractionDigits="6" minFractionDigits="0"
+                                                         locale="vi_VN"/>
+                                    </h:outputText>
+
+                                    <p:outputLabel value="Bước giá (VNĐ): "
+                                                   rendered="#{regulationController.regulationDto.auctionMethodId ne DbConstant.AUCTION_METHOD_ID_DOWN}"/>
+                                    <p:outputLabel value="Mức giảm giá (VNĐ): "
+                                                   rendered="#{regulationController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN}"/>
+                                    <h:outputText value="#{resultDto1.priceStep}">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                         maxFractionDigits="6" minFractionDigits="0"
+                                                         locale="vi_VN"/>
+                                    </h:outputText>
+
+                                    <p:outputLabel value="Mức giá tối thiểu (VNĐ):"
+                                                   rendered="#{regulationController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN}"/>
+                                    <h:outputText value="#{resultDto1.minPrice}"
+                                                  rendered="#{regulationController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN}">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                         maxFractionDigits="6" minFractionDigits="0"
+                                                         locale="vi_VN"/>
+                                    </h:outputText>
+
+                                    <p:outputLabel value="Loại tài sản: "/>
+                                    <h:outputText value="#{resultDto1.typeAssetName}"/>
+
+                                    <p:outputLabel value="Danh sách file: "/>
+                                    <p:commandButton value="Xem chi tiết" style="width: auto" icon="fa fa-eye"
+                                                     actionListener="#{regulationController.getListFileByAssetId(resultDto1)}"
+                                                     update="dlFormFile" oncomplete="PF('fileDialog').show();"/>
+
+                                    <p:outputLabel value="Danh sách ảnh:"/>
+                                    <p:commandButton value="Xem chi tiết" style="width: auto" icon="fa fa-eye"
+                                                     actionListener="#{regulationController.getListImageByAssetId(resultDto1)}"
+                                                     update="dlFormHinhAnh"
+                                                     oncomplete="PF('imageDialog').show();"/>
+                                </p:panelGrid>
+                            </p:rowExpansion>
+
+                            <p:column headerText="Sửa" visible="#{!regulationController.disableCRUD}" exportable="false"
+                                      width="40">
+                                <div class="my-data-table">
+                                    <p:commandLink styleClass="edit" process="@this"
+                                                   actionListener="#{regulationController.showUpdatePopupAsset(resultDto1)}"
+                                                   oncomplete="PF('dialogInsertAsset').show();"
+                                                   update="dlForm">
+                                        <i class="fa fa-edit"/>
+                                    </p:commandLink>
+                                </div>
+                            </p:column>
+
+                            <p:column headerText="Xóa" style="width: 40px"
+                                      visible="#{!regulationController.disableCRUD}"
+                                      exportable="false">
+                                <div class="my-data-table">
+                                    <p:commandLink styleClass="delete" process="@this"
+                                                   actionListener="#{regulationController.onDeleteAsset(resultDto1)}"
+                                                   update="tblSearchResult growl">
+                                        <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
+                                                   icon="fa fa-question-circle"/>
+                                        <i class="fa fa-remove"/>
+                                    </p:commandLink>
+                                </div>
+                            </p:column>
+                        </p:dataTable>
+
+                        <p:commandButton value="Thêm tài sản" style="width: auto; margin-top: 10px;"
+                                         icon="fa fa-plus" update="dlForm" process="@this"
+                                         rendered="#{!regulationController.disableCRUD}"
+                                         actionListener="#{regulationController.initAsset()}"
+                                         oncomplete="PF('dialogInsertAsset').show();"/>
+                    </p:panel>
+
+                    <h:panelGroup layout="block" style="margin: 5px 0;">
+                        <p:commandButton value="Lưu" actionListener="#{regulationController.onSaveData()}"
+                                         rendered="#{!regulationController.disableCRUD}" icon="fa fa-save"
+                                         style="width: auto; margin: 5px 5px 0 0;"
+                                         update="startRegis endRegis paymentStart paymentEnd tmrStartTime tmrArounds startTimeMsg idxuong idvong focus"/>
+                        <p:commandButton value="Đóng" style="width: auto; margin: 5px 5px 0 0;" styleClass="close"
+                                         rendered="#{!regulationController.disableCRUD}"
+                                         global="false"
+                                         actionListener="#{regulationController.resetRegulation}"
+                                         process="@this" icon="fa fa-close"/>
+
+                        <p:panelGrid columns="4"
+                                     columnClasses="ui-grid-col-1.5 ui-no-margin-padding, ui-grid-col-1.5 ui-no-margin-padding, ui-grid-col-1.5 ui-no-margin-padding"
+                                     layout="grid" styleClass="ui-panelgrid-blank">
+
+                            <p:commandButton value="Đăng tải"
+                                             rendered="#{regulationController.disableCRUD and regulationController.regulation.status eq DbConstant.CHUA_DANG_TAI  and !regulationController.checkStarttimeWithActions(regulationController.regulationDto)}"
+                                             actionListener="#{regulationController.onUpload(regulationController.regulationDto)}"
+                                             process="@this" icon="fa fa-upload">
+                                <p:confirm header="Xác nhận đăng tải quy chế"
+                                           message="Bạn có chắc chắn đăng tải quy chế &lt;b&gt;#{regulationController.regulation.code}&lt;/b&gt; lên trang đấu giá hay không?&lt;br/&gt;&lt;br/&gt; Nếu đăng tải hệ thống sẽ không cho phép chỉnh sửa lại thông tin quy chế"
+                                           icon="fa fa-question-circle" escape="false"/>
+                            </p:commandButton>
+
+                            <p:commandButton value="Sửa" style="margin-left: 10px;"
+                                             rendered="#{regulationController.disableCRUD and regulationController.regulation.status eq DbConstant.CHUA_DANG_TAI  and !regulationController.checkStarttimeWithActions(regulationController.regulationDto)}"
+                                             actionListener="#{regulationController.editRegulation}"
+                                             process="@this" icon="fa fa-edit"/>
+
+                            <p:commandButton value="Xóa" style="background: #F44336; margin-left: 20px;"
+                                             rendered="#{regulationController.disableCRUD and regulationController.regulation.status eq DbConstant.CHUA_DANG_TAI}"
+                                             actionListener="#{regulationController.onDeleteRegulation(regulationController.regulationDto)}"
+                                             process="@this" icon="fa fa-close">
+                                <p:confirm header="Xác nhận xóa" message="Bạn có chắc chắn xóa quy chế hay không ?"
+                                           icon="fa fa-question-circle"/>
+                            </p:commandButton>
+
+                            <p:commandButton rendered="#{regulationController.regulation.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING and regulationController.regulation.status ne DbConstant.REGULATION_STATUS_NOT_PUBLIC}"
+                                             actionListener="#{regulationController.onShow(regulationController.regulationDto)}"
+                                             update="dlFormlydo"
+                                             value="Tạm dừng quy chế"
+                                             icon="fa fa-times"/>
+
+                        </p:panelGrid>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </h:form>
+
+        <p:dialog id="dlgl" header="Tải file tài liệu" widgetVar="dialogInsertUpdate" modal="true" width="800"
+                  style="max-height: 90vh; max-width: 90vw">
+            <h:form id="dlForm1">
+                <div class="ui-fluid">
+                    <p:panelGrid id="searchPanelGrid" columns="2"
+                                 columnClasses="ui-grid-col-2,ui-grid-col-10"
+                                 styleClass="ui-panelgrid-blank" layout="grid">
+
+                        <p:outputLabel value="Tên file tài liệu:" for="tailieu" styleClass="requireLabel"/>
+                        <p:inputText placeholder="Nhập tên file" id="tailieu" maxlength="50"
+                                     value="#{regulationController.assetFile.fileName}"/>
+
+                        <p:outputLabel value="File đính kèm:" styleClass="requireLabel"/>
+                        <p:outputPanel>
+                            <ui:include src="/common/upload-single-file-has-filename.xhtml"/>
+                            <p:outputLabel
+                                    value="(Vui lòng chọn tài liệu định dạng PDF, DOCX, JPG, JPEG, PNG dung lượng ảnh nhỏ hơn 5MB)"/>
+                        </p:outputPanel>
+                    </p:panelGrid>
+
+                    <h:panelGroup layout="block" style="margin: 5px 0">
+                        <p:commandButton value="Lưu" actionListener="#{regulationController.addAssetFile()}"
+                                         update="#{Constant.ERROR_GROWL_ID} tblSearchResult1"
+                                         style="width: auto; margin: 5px 5px 0 0;"
+                                         icon="fa fa-save"/>
+                        <p:commandButton value="Đóng" styleClass="close" style="width: 80px;"
+                                         global="false"
+                                         oncomplete="PF('dialogInsertUpdate').hide()"
+                                         icon="fa fa-close"/>
+                    </h:panelGroup>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <div class="ui-fluid">
+            <p:dialog header="Danh sách hình ảnh " widgetVar="imageDialog" modal="true" width="900"
+                      style="max-height: 90vh; max-width: 90vw">
+                <h:form id="dlFormHinhAnh">
+                    <p:repeat value="#{regulationController.assetImageList}" var="itemVar">
+                        <div class="ui-fluid">
+                            <p:graphicImage name="#{itemVar.filePath}" style="height: 150px;" styleClass="ui-g-3"/>
+                        </div>
+                    </p:repeat>
+                </h:form>
+            </p:dialog>
+        </div>
+
+        <div class="ui-fluid">
+            <p:dialog header="Danh sách file " widgetVar="fileDialog" modal="true" width="800"
+                      style="max-height: 90vh; max-width: 90vw">
+                <h:form id="dlFormFile">
+                    <p:dataTable value="#{regulationController.assetFileList}" var="fileVar"
+                                 emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="index">
+                        <p:column headerText="STT" style="text-align: center" width="30">
+                            <p:outputLabel value="#{index+1}"/>
+                        </p:column>
+                        <p:column headerText="Tên file">
+                            <p:outputLabel value="#{fileVar.fileName}"/>
+                        </p:column>
+
+                        <p:column headerText="Xem tài liệu" exportable="false" style="text-align: center" width="15%">
+                            <p:commandLink id="v_taiLieuDinhKemFile1" value="Xem chi tiết" type="button" update="dlgShowFileAsset"
+                                           oncomplete="PF('dlgFile').show();" actionListener="#{regulationController.setAssetFileShowForDialog(fileVar)}"/>
+                        </p:column>
+
+                        <p:column headerText="Thao tác" style="text-align: center; width: 100px;">
+                            <p:commandButton value="Tải về" style="width:80px;" ajax="false" immediate="true"
+                                             icon="fa fa-fw fa-download">
+                                <p:fileDownload
+                                        value="#{uploadSingleFileController.getFileDownload(fileVar.filePath)}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+        </div>
+
+        <p:dialog id="dialogInsertAsset" header="Thông tin tài sản" widgetVar="dialogInsertAsset"
+                  position="center center"
+                  onShow="try{PF('dialogInsertAsset').initPosition();showDialog();document.getElementById('dialogInsertAsset').style.top='10vh';}catch(e){}"
+                  onHide="editorHide();hideDialog();"
+                  style="max-height: 90vh; max-width: 90vw"
+                  modal="true" width="1000">
+            <h:form id="dlForm" prependId="false">
+                <p:scrollPanel mode="native" style="width: 100%; border: none; max-height: 70vh; overflow-x: hidden">
+                    <p:focus id="focus1" for="dlForm"/>
+                    <div class="ui-fluid">
+                        <p:panelGrid id="basic" columns="2"
+                                     columnClasses="ui-grid-col-2,ui-grid-col-10"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+                            <p:outputLabel value="Tên tài sản:" for="assetName1"/>
+                            <p:outputPanel>
+                                <p:inputTextarea placeholder="Nhập vào tên tài sản " id="assetName1"
+                                                 maxlength="1000"
+                                                 required="true"
+                                                 onchange="this.value = this.value.trim()"
+                                                 requiredMessage="Bạn vui lòng nhập tên tài sản"
+                                                 value="#{regulationController.assetDto.name}"/>
+                                <p:message id="id6" for="assetName1" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+                        </p:panelGrid>
+
+                        <p:panelGrid id="basicPanelAsset" columns="4"
+                                     columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+
+                            <p:outputLabel value="Giá khởi điểm (VNĐ):" for="giakhoidiem"/>
+                            <p:outputPanel>
+                                <p:inputNumber placeholder="Nhập vào giá khởi điểm " id="giakhoidiem" decimalPlaces="0"
+                                               thousandSeparator="."
+                                               required="true"
+                                               minValue="0"
+                                               maxValue="99999999999999999999"
+                                               autocomplete="off"
+                                               style="display: contents"
+                                               validatorMessage="Giá khởi điểm phải lớn hơn 0"
+                                               requiredMessage="Bạn vui lòng nhập giá khởi điểm"
+                                               symbolPosition="s" autoWidth="false" effect="fade"
+                                               value="#{regulationController.assetDto.startingPrice}">
+                                    <p:ajax event="change" global="false" process="@this"
+                                            listener="#{regulationController.onChangeStartPrice(regulationController.assetDto.startingPrice)}"/>
+                                    <f:validateLongRange minimum="1"/>
+                                </p:inputNumber>
+                                <p:message id="id7" for="giakhoidiem" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Tiền đặt trước (VNĐ):" for="tienDT"/>
+                            <p:outputPanel>
+                                <p:inputNumber placeholder="Nhập số tiền đặt trước" id="tienDT" decimalPlaces="0"
+                                               thousandSeparator="."
+                                               required="true"
+                                               styleClass="inputNumber"
+                                               minValue="0"
+                                               maxValue="9999999999999999999"
+                                               autocomplete="off"
+                                               style="display: contents"
+                                               validatorMessage="Tiền đặt trước phải nằm trong khoảng từ 5% - 20% giá khởi điểm"
+                                               requiredMessage="Bạn vui lòng nhập tiền đặt trước"
+                                               symbolPosition="s" autoWidth="false" effect="fade"
+                                               value="#{regulationController.assetDto.deposit}">
+                                    <f:validateLongRange minimum="#{regulationController.range * 0.05}"
+                                                         maximum="#{regulationController.range * 0.20}"/>
+                                </p:inputNumber>
+                                <p:tooltip for="@(.inputNumber :input)" style="width: 200px" showEvent="focus"
+                                           hideEvent="blur"
+                                           value="Mức tiền đặt trước trong khoảng từ 5% đến 20% so với giá khởi điểm"/>
+                                <p:message id="id8" for="tienDT" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Bước giá (VNĐ):" for="buocGia"
+                                           rendered="#{regulationController.regulationDto.auctionMethodId != DbConstant.AUCTION_METHOD_ID_DOWN}"/>
+                            <p:outputPanel
+                                    rendered="#{regulationController.regulationDto.auctionMethodId != DbConstant.AUCTION_METHOD_ID_DOWN}">
+                                <p:inputNumber placeholder="Nhập vào bước giá" id="buocGia" decimalPlaces="0"
+                                               thousandSeparator="."
+                                               required="true"
+                                               maxValue="9999999999999999999"
+                                               autocomplete="off"
+                                               minValue="0" style="display: contents"
+                                               symbolPosition="s" autoWidth="false" effect="fade"
+                                               value="#{regulationController.assetDto.priceStep}"
+                                               requiredMessage="Bạn vui lòng nhập bước giá"
+                                               validatorMessage="Bước giá phải lớn hơn 0">
+                                    <f:validateLongRange minimum="1"/>
+                                </p:inputNumber>
+                                <p:message id="id9" for="buocGia" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Mức giảm giá (VNĐ):" for="buocGia1"
+                                           rendered="#{regulationController.regulationDto.auctionMethodId == DbConstant.AUCTION_METHOD_ID_DOWN}"/>
+                            <p:outputPanel
+                                    rendered="#{regulationController.regulationDto.auctionMethodId == DbConstant.AUCTION_METHOD_ID_DOWN}">
+                                <p:inputNumber placeholder="Nhập vào mức giảm giá" id="buocGia1" decimalPlaces="0"
+                                               thousandSeparator="."
+                                               minValue="0"
+                                               required="true"
+                                               maxValue="9999999999999999999"
+                                               autocomplete="off"
+                                               style="display: contents"
+                                               requiredMessage="Bạn vui lòng nhập mức giảm giá"
+                                               validatorMessage="Mức giảm giá phải lớn hơn 0 và là ước của giá khởi điểm và mức giá tối thiểu"
+                                               symbolPosition="s" autoWidth="false" effect="fade"
+                                               value="#{regulationController.assetDto.priceStep}">
+                                    <f:validateLongRange minimum="1"/>
+                                </p:inputNumber>
+                                <p:message id="id11" for="buocGia1" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Mức giá tối thiểu (VNĐ):" for="giaGiam"
+                                           rendered="#{regulationController.regulationDto.auctionMethodId == DbConstant.AUCTION_METHOD_ID_DOWN}"/>
+                            <p:outputPanel
+                                    rendered="#{regulationController.regulationDto.auctionMethodId == DbConstant.AUCTION_METHOD_ID_DOWN}">
+                                <p:inputNumber placeholder="Nhập mức giá tổi thiểu " id="giaGiam" decimalPlaces="0"
+                                               thousandSeparator="."
+                                               required="true"
+                                               minValue="0"
+                                               maxValue="9999999999999999999"
+                                               autocomplete="off"
+                                               validatorMessage="Mức giá tối thiểu phải lớn hơn 0 và phải nhỏ hơn giá khởi điểm"
+                                               requiredMessage="Bạn vui lòng nhập mức giá tối thiểu"
+                                               symbolPosition="s" autoWidth="false" effect="fade"
+                                               value="#{regulationController.assetDto.minPrice}">
+                                    <f:validateLongRange minimum="1"/>
+                                </p:inputNumber>
+                                <p:message id="id10" for="giaGiam" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Loại tài sản:" for="typeAsset"/>
+                            <p:outputPanel id="typeAssetPanel">
+                                <p:selectOneMenu id="typeAsset" filter="true" filterMatchMode="contains" effect="fade"
+                                                 styleClass="typeAsset"
+                                                 required="true" requiredMessage="Bạn vui lòng chọn loại tài sản"
+                                                 onchange="resetValueNull(this.value, 'resetTypeAssetId')"
+                                                 value="#{regulationController.assetDto.typeAssetId}">
+                                    <f:selectItem itemLabel="Chọn loại tài sản" itemValue=""/>
+                                    <f:selectItems value="#{regulationController.typeAssetList}"/>
+                                </p:selectOneMenu>
+                                <p:message id="idtye" for="typeAsset" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                        </p:panelGrid>
+
+                        <p:panelGrid id="basicPanelAsset1" columns="2"
+                                     columnClasses="ui-grid-col-2,ui-grid-col-10"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+
+                            <p:outputLabel value="Mô tả tài sản:" for="editor"/>
+                            <p:inputTextarea id="editor" styleClass="editor" widgetVar="editor1"
+                                             value="#{regulationController.assetDto.description}"
+                                             height="150"/>
+                            <script>if(typeof editorInit !== "undefined"){editorInit();}</script>
+                        </p:panelGrid>
+
+                        <p:panelGrid id="basicPanel2" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+                            <p:outputLabel value="Hình ảnh khác:" styleClass="requireLabel"/>
+                            <p:outputPanel>
+                                <ui:include src="/common/upload-multiple-image.xhtml">
+                                    <ui:param name="formId" value=""/>
+                                </ui:include>
+                            </p:outputPanel>
+                            <p:outputLabel/>
+                            <p:outputLabel
+                                    value="(Vui lòng chọn hình ảnh có định dạng jpg, JPG, jpeg, JPEG, png, PNG có dung lượng nhỏ hơn 5 MB)"/>
+                        </p:panelGrid>
+
+                        <p:panelGrid id="basicPanelAsset2" columns="2"
+                                     columnClasses="ui-grid-col-2,ui-grid-col-10"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+                            <p:outputLabel value="File đính kèm:"/>
+                            <p:commandButton value="Tải file" icon="fa fa-plus" style="width: 96px"
+                                             actionListener="#{regulationController.initAssetFile()}"
+                                             process="@this"
+                                             oncomplete="PF('dialogInsertUpdate').show();"/>
+                        </p:panelGrid>
+
+                        <p:panelGrid id="basicPanelAsset4" styleClass="ui-panelgrid-blank" columns="2"
+                                     columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid">
+                            <p:outputLabel/>
+                            <p:dataTable id="tblSearchResult1" tableStyle="table-layout: auto;"
+                                         var="resultDto" emptyMessage="#{t['lbl.emptyTable']}"
+                                         style="margin-bottom:5px"
+                                         rowIndexVar="rowIndex"
+                                         value="#{regulationController.assetFileList}">
+
+                                <p:column headerText="STT" width="30" style="text-align: center">
+                                    <h:outputText value="#{rowIndex + 1}"/>
+                                </p:column>
+
+                                <p:column headerText="Tên hiển thị">
+                                    <h:outputText value="#{resultDto.fileName}"/>
+                                </p:column>
+
+                                <p:column headerText="File">
+                                    <h:outputText value="#{resultDto.filePathName}"/>
+                                </p:column>
+
+                                <p:column headerText="Thao tác" width="40" style="text-align: center">
+                                    <p:commandLink actionListener="#{regulationController.onDeleteFile(resultDto)}"
+                                                   update="tblSearchResult1 #{Constant.ERROR_GROWL_ID}">
+                                        <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
+                                                   icon="fa fa-question-circle"/>
+                                        <i class="fa fa-remove" style="color: red"/>
+                                    </p:commandLink>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panelGrid>
+                    </div>
+                </p:scrollPanel>
+
+                <h:panelGroup layout="block" style="margin: 5px 0;">
+                    <p:commandButton value="Lưu"
+                                     id="saveAsset"
+                                     actionListener="#{regulationController.addAsset}"
+                                     update="tblSearchResult focus1 id6 id7 id8 id9 id10 id11 idtye dlForm"
+                                     icon="fa fa-save" style="width: 90px;margin: 5px 5px 0 0;"/>
+                    <p:commandButton value="Lưu và làm mới" rendered="#{regulationController.checkButtonEdit}"
+                                     actionListener="#{regulationController.addAssetAndRefresh}"
+                                     update="tblSearchResult focus1 id6 id7 id8 id9 id10 id11 idtye dlForm"
+                                     style="margin: 5px 5px 0 0;"
+                                     icon="fa fa-refresh"/>
+                    <p:commandButton value="Lưu và sao chép" rendered="#{regulationController.checkButtonEdit}"
+                                     actionListener="#{regulationController.addAssetAndCopy}"
+                                     update="tblSearchResult focus1 id6 id7 id8 id9 id10 id11 idtye dlForm"
+                                     icon="fa fa-copy" style="width: auto;margin: 5px 5px 0 0;"/>
+                    <p:commandButton value="Đóng" styleClass="close" style="width: 80px;margin: 5px 5px 0 0;"
+                                     oncomplete="PF('dialogInsertAsset').hide()"
+                                     global="false"
+                                     icon="fa fa-close"/>
+                    <p:defaultCommand target="saveAsset" />
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Chi tiết file tải lên" modal="true" id="showRegulationFile"
+                  styleClass="text-center"
+                  style="max-height: 90vh; max-width: 90vw"
+                  widgetVar="dlgShowFileRegulation" minHeight="40" showEffect="clip" width="800" height="600"
+                  hideEffect="clip" position="center center" onShow="try{PF('dlgShowFileRegulation').initPosition();}catch(e){}">
+            <h:form>
+                <p:media id="vMedia" value="/resources#{regulationController.regulationFileDialog}" width="800" height="600" player="pdf">
+                    Không thể hiển thị được file tải lên, <h:outputLink value="#{request.contextPath}/resources#{regulationController.regulationFileDialog}">bấm vào đây</h:outputLink> để tải file về
+                </p:media>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Chi tiết file" modal="true" widgetVar="dlgFile" id="dlgShowFileAsset"  width="800" height="600"
+                  styleClass="text-center"
+                  style="max-height: 90vh; max-width: 90vw"
+                  showEffect="clip" hideEffect="clip" position="center center" onShow="try{PF('dlgShowFileAsset').initPosition();}catch(e){}">
+            <h:form>
+                <p:media id="vMediaFile1" value="/resources#{regulationController.assetFileShowDialog.filePath}"
+                         width="800" height="600"
+                         player="pdf"
+                         rendered="#{commonController.isPdfFile(regulationController.assetFileShowDialog.filePath)}">
+                    Không thể hiển thị được file tải lên, <h:outputLink value="#{request.contextPath}/resources#{regulationController.assetFileShowDialog.filePath}">bấm vào đây</h:outputLink> để tải file về
+                </p:media>
+
+                <p:outputLabel
+                        rendered="#{!commonController.isPdfFile(regulationController.assetFileShowDialog.filePath)}">
+                    Không thể hiển thị được file tải lên
+                    <p:commandLink value="Bấm vào đây"
+                                   style="width:auto;"
+                                   ajax="false"
+                                   immediate="true">
+                        <p:fileDownload
+                                value="#{uploadSingleFileController.getFileDownload(regulationController.assetFileShowDialog.filePath)}"/>
+                    </p:commandLink>
+                    để tải file về
+                </p:outputLabel>
+            </h:form>
+        </p:dialog>
+
+        <!--reset value null-->
+        <div style="display: none !important;">
+            <h:form prependId="false">
+                <p:commandButton styleClass="resetRegisterStart" global="false"
+                                 actionListener="#{regulationController.resetDateRegisterStart()}"
+                                 process="@this"/>
+                <p:commandButton styleClass="resetRegisterEnd" global="false"
+                                 actionListener="#{regulationController.resetDateRegisterEnd()}"
+                                 process="@this"/>
+                <p:commandButton styleClass="resetStartTime" global="false"
+                                 actionListener="#{regulationController.resetDateStartTime()}"
+                                 process="@this"/>
+                <p:commandButton styleClass="resetPaymentStart" global="false"
+                                 actionListener="#{regulationController.resetDatePaymentStart()}"
+                                 process="@this"/>
+                <p:commandButton styleClass="resetPaymentEnd" global="false"
+                                 actionListener="#{regulationController.resetDatePaymentEnd()}"
+                                 process="@this"/>
+                <p:commandButton styleClass="resetTypeAssetId" global="false"
+                                 actionListener="#{regulationController.resetTypeAssetId()}"
+                                 update="typeAssetPanel"
+                                 process="@this"/>
+            </h:form>
+        </div>
+
+        <script type="text/javascript">
+            function resetValueNull(value, id) {
+                if (value === '') {
+                    document.getElementsByClassName(id)[0].click();
+                }
+            }
+        </script>
+        <h:panelGroup id="maskInput">
+            <script>
+                $('.calendar input').mask("99/99/9999 99:99");
+            </script>
+        </h:panelGroup>
+    </ui:define>
+
+</ui:composition>

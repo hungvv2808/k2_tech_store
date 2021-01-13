@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/frontend/template/template_detail.xhtml">
+
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{decisionNewsFEController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Văn bản</ui:define>
+    <ui:param name="bodyStyleClass" value="about" />
+    <ui:param name="headerStyleClass" value="is-sticky fixed-header" />
+    <ui:param name="mainContentStyle" value="detail-news" />
+
+    <ui:define name="breadcrumb">
+        <li><h:link styleClass="home" value="Văn bản" outcome="/frontend/document/document.xhtml"/></li>
+        <li style="margin-left: 5px;">Chi tiết văn bản</li>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <style type="text/css">
+            .detail-news h4 {
+                text-transform: none;
+                font-family: "Roboto Condensed";
+                font-style: normal;
+                font-weight: bold;
+                font-size: 18px;
+                line-height: 26px;
+                margin-bottom: 10px;
+            }
+        </style>
+
+        <div class="row">
+            <div class="col-md-9 col-md-9 col-sm-12 col-xs-12" style="text-align: justify">
+                <h2>#{decisionNewsFEController.decisionNews.title}</h2>
+                <p><i class="custom-icon calendar"/><h:outputText value="#{decisionNewsFEController.decisionNews.updateDate}"><f:convertDateTime pattern="dd/MM/yyyy"/></h:outputText></p>
+                <h4><h:outputText value="#{decisionNewsFEController.decisionNews.decisionSummary}" escape="false"/></h4>
+                <h:outputText value="#{decisionNewsFEController.decisionNews.content}" escape="false"/>
+            </div>
+            <div class="col-md-3 col-sm-12 col-xs-12 sidebar mb-f-r ">
+                <aside class="widget widget_newdocument ">
+                    <div class="title-widget has-divider ">
+                        <h3 class="title-sidebar "><span>Văn bản mới nhất</span></h3>
+                    </div>
+                    <ui:include src="/frontend/news/new-decision-text.xhtml"/>
+                </aside>
+                <aside class="widget widget_worktime ">
+                    <div class="title-widget has-divider ">
+                        <h3 class="title-sidebar "><span>Tin mới nhất</span></h3>
+                    </div>
+                    <ui:include src="/frontend/news/new-news.xhtml"/>
+                </aside>
+
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

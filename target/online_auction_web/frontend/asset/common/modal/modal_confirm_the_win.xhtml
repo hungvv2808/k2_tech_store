@@ -1,0 +1,31 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- Modal Confirm Auction-->
+    <div class="modal hide-at-update fade" data-backdrop="static" data-keyboard="false" id="auctionConfirmPopupTheFirst">
+        <div class="modal-dialog modal-login">
+            <div class="modal-content pt-10" style="text-align: center;">
+                <p style="margin-top: 50px;font-size: 40px; line-height: 40px;">
+                    <h:outputText value="Đang chờ người chấp nhận giá xác nhận" rendered="#{task.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN}"/>
+                    <h:outputText value="Đang chờ người trả giá cao nhất xác nhận" rendered="#{task.auctionMethodId ne DbConstant.AUCTION_METHOD_ID_DOWN}"/>
+                </p>
+                <br/>
+                <p style="font-size: 30px">Thời gian xác nhận còn</p>
+                <br/>
+                <p class="text-danger mt-5" id="countTheWin" data-countdown="#{auctionController.formatDate(task.auctionMethodId ne DbConstant.AUCTION_METHOD_ID_DOWN ? task.endTimeRound : task.endTimeAcceptPrice())}" style="margin-bottom: 50px;margin-top: 15px;font-size: 50px;">00:00</p>
+            </div>
+        </div>
+    </div>
+    <a id="showPopupConfirmTheWin" href="#" data-toggle="modal" data-target="#auctionConfirmPopupTheFirst" style="display: none !important;"> </a>
+    <script>
+        if (typeof bootbox !== "undefined") {
+            bootbox.hideAll();
+        }
+        countDownTheWin("countTheWin");
+        document.getElementById('close_depositPopup').click();
+        document.getElementById('close_regulationPopup').click();
+        document.getElementById('showPopupConfirmTheWin').click();
+    </script>
+</ui:composition>

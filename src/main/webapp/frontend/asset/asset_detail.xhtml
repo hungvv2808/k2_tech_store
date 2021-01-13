@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/frontend/template/template_detail.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{auctionController.initData}" />
+    </f:metadata>
+
+    <ui:define name="title">Chi tiết tài sản #{auctionController.assetDto.name.toLowerCase()}</ui:define>
+    <ui:param name="bodyStyleClass" value=""/>
+    <ui:param name="headerStyleClass" value="is-sticky fixed-header"/>
+
+    <ui:define name="breadcrumb">
+        <li><h:link outcome="/frontend/asset/asset_list.xhtml">Tài sản đấu giá</h:link></li>
+        <li>Chi tiết tài sản</li>
+    </ui:define>
+
+    <ui:define name="content">
+        <style>
+            hr {
+                margin-top: 15px;
+                margin-bottom: 10px;
+            }
+        </style>
+        <div class="row detail-asset">
+            <div class="col-md-5 col-sm-12 col-xs-12">
+                <div class="slider slider-single">
+                    <p:repeat value="#{auctionController.assetDto.assetImageList}" var="image">
+                        <a data-fancybox="gallery"
+                           data-options='{animationEffect: "zoom"}'
+                           href="#{resource[image.filePath]}">
+                            <div class="image-single-bg" style="background-image: url('#{resource[image.filePath]}');"></div>
+                        </a>
+                    </p:repeat>
+                </div>
+                <div class="slider slider-nav slider-thumb">
+                    <p:repeat value="#{auctionController.assetDto.assetImageList}" var="image">
+                        <div class="image-single-list-bg" style="background-image: url('#{resource[image.filePath]}');"></div>
+                    </p:repeat>
+                </div>
+            </div>
+
+            <div class="col-md-7 col-sm-12 col-xs-12">
+                <h:panelGroup id="#{Constant.AREA_COUNTDOWN}">
+                    <ui:include src="common/detail/asset_detail_heading.xhtml"/>
+                    <hr/>
+                    <ui:include src="common/detail/asset_detail_description.xhtml"/>
+                </h:panelGroup>
+                <ui:include src="common/detail/asset_detail_button.xhtml"/>
+            </div>
+        </div>
+
+        <h:panelGroup id="#{Constant.AREA_TABLE}">
+            <ui:include src="common/detail/asset_detail_content.xhtml"/>
+            <ui:include src="common/detail/asset_detail_list.xhtml"/>
+        </h:panelGroup>
+    </ui:define>
+
+    <ui:define name="jslibrary">
+        <script>var assetDetail = getUrlParameter('id');</script>
+
+        <h:panelGroup id="#{Constant.AREA_TABLE_LIBRARY}">
+            <h:panelGroup rendered="#{auctionController.checkRenderAuction()}">
+                <ui:include src="asset_detail_js.xhtml">
+                    <ui:param name="paginationPriceRound" value="#{auctionController.paginationPriceRound}"/>
+                    <ui:param name="paginationHistoryBargainFormalityDirectUp" value="#{auctionController.paginationHistoryBargainFormalityDirectUp}"/>
+                    <ui:param name="paginationAccountList" value="#{auctionController.paginationRegisterList}"/>
+                </ui:include>
+            </h:panelGroup>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{authorizationFEController.hasLogged()}">
+            <ui:include src="common/modal/modal_register_auction.xhtml"/>
+        </h:panelGroup>
+
+        <ui:include src="common/modal/modal_regulation_file.xhtml"/>
+
+        <!-- Update scope -->
+        <p:remoteCommand name="cmdRefreshData" update="countdownScript #{Constant.AREA_COUNTDOWN} #{Constant.AREA_BUTTON} #{Constant.AREA_BUTTON}1 #{Constant.ID_COUNTDOWN_LIBRARY} #{Constant.AREA_TABLE} #{Constant.AREA_TABLE_LIBRARY} #{Constant.AREA_WINNER} scriptResetListener"
+                         actionListener="#{auctionController.loadAssetDto()}"/>
+        <p:remoteCommand name="cmdRefreshDataStart" update="#{Constant.AREA_INCLUDE}"/>
+        <p:remoteCommand name="cmdChangeRound" update="#{Constant.AREA_MODAL_CHANGE_ROUND}"
+                         actionListener="#{auctionController.loadAuctionRegister()}"/>
+
+        <!--Update button register-->
+        <h:panelGroup id="countdownScript">
+            <c:set var="countdown" value="#{auctionController.countdownShowButton()}"/>
+            <h:outputScript rendered="#{countdown ne -1}">
+                setTimeout(function() {
+                    cmdRefreshData([{name: 'id', value: getUrlParameter('id')}]);
+                }, #{countdown});
+            </h:outputScript>
+        </h:panelGroup>
+
+        <h:outputScript name="bootbox-confirm.js" library="myjs"/>
+    </ui:define>
+</ui:composition>

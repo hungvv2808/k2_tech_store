@@ -1,0 +1,7 @@
+#sass < v3.4
+sass --update src/main/webapp/resources/frontend-layout/css/scss/style.scss src/main/webapp/resources/frontend-layout/css/style.css --no-source-map
+sass --update src/main/webapp/resources/apollo-layout --no-source-map
+
+#sass >= v3.4
+sass --update src/main/webapp/resources/frontend-layout/css/scss/style.scss:src/main/webapp/resources/frontend-layout/css/style.css --sourcemap=none
+sass --update src/main/webapp/resources/apollo-layout --no-source-map

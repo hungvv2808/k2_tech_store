@@ -1,0 +1,687 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{detailAuctionManageController.initData()}"/>
+    </f:metadata>
+
+    <ui:define name="title">Chi tiết phiên đấu giá quy chế #{detailAuctionManageController.regulation.code}</ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/dieu-hanh-dau-gia/chi-tiet-phien-dau-gia">Chi tiết điều hành phiên đấu giá quy chế #{detailAuctionManageController.regulation.code}</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+        <style type="text/css">
+            .detail td {
+                font-size: 24px;
+            }
+            .v-top td {
+                text-align: left;
+                vertical-align: top;
+            }
+            .ui-dialog {
+                z-index: 10000 !important;
+            }
+            .ui-grid .ui-grid-row {
+                padding: 5px 0;
+            }
+            .padding-right-5 label {
+                padding-right: 5px;
+            }
+        </style>
+
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12" style="padding-top:0">
+
+                    <p:panel style="margin-bottom: 5px">
+                        <p:panelGrid columns="2"
+                                     columnClasses="ui-grid-col-2 ui-no-margin-padding, ui-grid-col-10 ui-no-margin-padding"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+                            <p:linkButton outcome="/admin/dieu-hanh-dau-gia/phan-cong-dieu-hanh-dau-gia.xhtml"
+                                          style="width: auto;"
+                                          value="Quay lại" icon="fa fa-arrow-left"/>
+                        </p:panelGrid>
+                    </p:panel>
+
+                    <p:panel header="Thông tin chung" style="margin-bottom:5px">
+                        <p:panelGrid
+                                columns="4"
+                                columnClasses="ui-grid-col-2, ui-grid-col-6,ui-grid-col-2, ui-grid-col-6"
+                                styleClass="ui-panelgrid-blank" layout="grid">
+
+                            <p:outputLabel value="Mã quy chế:" style="border-bottom: 10px"/>
+                            <p:outputLabel value="#{detailAuctionManageController.regulation.code}"/>
+
+                            <p:outputLabel value="Hình thức đấu giá:"/>
+                            <p:outputLabel value="#{detailAuctionManageController.regulationDto.auctionFormalityName}"/>
+
+
+                            <p:outputLabel value="Phương thức đấu giá:"/>
+                            <p:outputLabel value="#{detailAuctionManageController.regulationDto.auctionMethodName}"/>
+
+                            <p:outputLabel value="Thời gian bắt đầu:"/>
+                            <p:outputLabel value="#{detailAuctionManageController.regulation.startTime}">
+                                <f:convertDateTime pattern="HH:mm, dd/MM/yyyy"/>
+                            </p:outputLabel>
+                        </p:panelGrid>
+                    </p:panel>
+
+                    <h:form id="form">
+                        <div class="card no-margin" style="margin-bottom:5px">
+                            <p:panel id="searchCode" header="Tìm kiếm theo tên tài sản" style="margin-bottom:5px">
+                                <p:panelGrid id="searchPanel" columns="4"
+                                             columnClasses="ui-grid-col-4,ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:inputText id="smanhomquyen" placeholder="Nhập tên tài sản"
+                                                 value="#{detailAuctionManageController.name}"/>
+
+                                    <p:commandButton value="Tìm kiếm"
+                                                     actionListener="#{detailAuctionManageController.onSearch()}"
+                                                     update="tblSearchResult formAssetDetail" icon="fa fa-search"
+                                                     style="width: auto"/>
+                                    <p:commandButton value="Xuất dữ liệu" icon="fa fa-copy" update="growl" ajax="false" rendered="#{detailAuctionManageController.assetDtoList.rowCount gt 0}">
+                                        <p:dataExporter type="xlsxstream" target="tblSearchResult" fileName="Danh sách thông tin chi tiết phiên đấu giá" />
+                                    </p:commandButton>
+                                </p:panelGrid>
+                            </p:panel>
+                            <p:panel header="Chi tiết cuộc đấu giá" style="margin-bottom:5px">
+                                <p:dataTable id="tblSearchResult"
+                                             widgetVar="wdgDetail" resizableColumns="false" paginator="true"
+                                             rows="10"
+                                             value="#{detailAuctionManageController.assetDtoList}"
+                                             lazy="true" pageLinks="5" paginatorPosition="top" var="asset"
+                                             paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{detailAuctionManageController.assetDtoList.rowCount}"
+                                             emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                             rowKey="#{asset.assetId}">
+
+                                    <p:column headerText="STT" width="30" styleClass="text-center">
+                                        <p:outputLabel value="#{rowIndex + 1}"/>
+                                    </p:column>
+                                    <p:column headerText="Xem" width="65" styleClass="text-center" exportable="false">
+                                        <p:commandButton
+                                                style="width: 50px;"
+                                                icon="fa fa-chevron-circle-down"
+                                                actionListener="#{detailAuctionManageController.showDetailAssetInfoPanel(asset.assetId)}"
+                                                update="formAssetDetail"/>
+                                    </p:column>
+                                    <p:column headerText="Tạm dừng" width="65" styleClass="text-center" exportable="false">
+                                        <p:commandButton oncomplete="PF('dialogReasonCancelAsset').show();"
+                                                         icon="fa fa-eye"
+                                                         style="width: 50px;"
+                                                         update="dlForm1 dlgShowFile #{Constant.ERROR_GROWL_ID}"
+                                                         rendered="#{detailAuctionManageController.getActions().hasAction(EAction.REMOVE_ASSET) and ((asset.status eq DbConstant.ASSET_STATUS_CANCELED and asset.auctionStatus ne DbConstant.REGULATION_AUCTION_STATUS_CANCELLED) or detailAuctionManageController.showReasonCancel(asset))}"
+                                                         actionListener="#{detailAuctionManageController.showReasonCancelAsset(asset.assetId)}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên tài sản" exportable="false">
+                                        <p:outputLabel value="#{commonController.abbreviate(asset.name,DbConstant.LIMITCHARACTER_ASSET)}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên tài sản" visible="false">
+                                        <p:outputLabel value="#{asset.name}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Giá khởi điểm">
+                                        <p:outputLabel value="#{asset.startingPrice}">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </p:outputLabel>
+                                    </p:column>
+
+                                    <p:column headerText="Bước giá">
+                                        <p:outputLabel value="#{asset.priceStep}">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </p:outputLabel>
+                                    </p:column>
+
+                                    <p:column headerText="Trạng thái">
+                                        <p:outputLabel value="Sắp diễn ra"
+                                                       rendered="#{asset.status eq DbConstant.ASSET_STATUS_WAITING}"/>
+                                        <p:outputLabel value="Đang diễn ra"
+                                                       rendered="#{asset.status eq DbConstant.ASSET_STATUS_PLAYING}"/>
+                                        <p:outputLabel value="Đã kết thúc" style="color: green"
+                                                       rendered="#{asset.status eq DbConstant.ASSET_STATUS_ENDED and asset.assetManagementEnding ne DbConstant.ASSET_MANAGEMENT_ENDING_BAD}"/>
+                                        <p:outputLabel value="Đã tạm dừng đấu giá" style="color: red"
+                                                       rendered="#{asset.status eq DbConstant.ASSET_STATUS_CANCELED}"/>
+                                        <p:outputLabel value="Cuộc đấu giá không thành" style="color: red"
+                                                       rendered="#{asset.status eq DbConstant.ASSET_STATUS_NOT_SUCCESS or (asset.status eq DbConstant.ASSET_STATUS_ENDED and asset.assetManagementEnding eq DbConstant.ASSET_MANAGEMENT_ENDING_BAD)}"/>
+                                    </p:column>
+                                    <p:column headerText="Thời gian bắt đầu" style="text-align: center">
+                                        <p:outputLabel value="#{asset.startTime}">
+                                            <f:convertDateTime pattern="HH:mm, dd/MM/yyyy"/>
+                                        </p:outputLabel>
+                                    </p:column>
+
+                                    <p:column value="Trạng thái kết thúc: " visible="hidden">
+                                        <p:outputLabel value="Đấu giá thành công"
+                                                       rendered="#{detailAuctionManageController.assetManagement.ending eq DbConstant.ASSET_MANAGEMENT_ENDING_GOOD and detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_ENDED}"/>
+                                        <p:outputLabel value="Đấu giá không thành"
+                                                       rendered="#{detailAuctionManageController.assetManagement.ending eq DbConstant.ASSET_MANAGEMENT_ENDING_BAD and detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_ENDED}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                        </div>
+                    </h:form>
+
+                    <h:panelGroup id="formAssetDetail">
+                        <c:set var="task" value="#{auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId)}"/>
+                        <div class="card no-margin">
+                            <p:panel header="Thông tin chi tiết tài sản">
+                                <div class="ui-fluid">
+                                    <div class="ui-g">
+                                        <p:outputPanel class="ui-g-12" styleClass="ui-no-margin-padding ui-panelgrid-blank">
+                                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2, ui-grid-col-10 text-limit-width ui-no-margin-padding" styleClass="ui-panelgrid-blank" layout="grid">
+                                                <p:outputLabel value="Tên tài sản:"/>
+                                                <p:outputLabel value="#{detailAuctionManageController.assetDto.name}"/>
+                                            </p:panelGrid>
+
+                                            <p:panelGrid id="basicDetailInfoAssetPanel" columns="2"
+                                                         styleClass="ui-panelgrid-blank" layout="grid"
+                                                         columnClasses="ui-grid-col-6, ui-grid-col-6">
+
+                                                <p:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid"
+                                                             columnClasses="ui-grid-col-4 ui-no-margin-padding, ui-grid-col-8 ui-no-margin-padding">
+
+                                                    <p:outputLabel value="Thời gian bắt đầu tổ chức đấu giá:"/>
+                                                    <p:outputLabel
+                                                            value="#{detailAuctionManageController.assetDto.startTime}">
+                                                        <f:convertDateTime pattern="HH:mm, dd/MM/yyyy"/>
+                                                    </p:outputLabel>
+
+                                                    <p:outputLabel value="Giá khởi điểm:"/>
+                                                    <p:outputLabel
+                                                            value="#{detailAuctionManageController.assetDto.startingPrice}">
+                                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                         maxFractionDigits="6"
+                                                                         minFractionDigits="0" locale="vi_VN"/>
+                                                    </p:outputLabel>
+
+                                                    <p:outputLabel value="Mức giá tối thiểu:" rendered="#{detailAuctionManageController.assetDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN}"/>
+                                                    <p:outputLabel value="#{detailAuctionManageController.assetDto.minPrice}"
+                                                                   rendered="#{detailAuctionManageController.assetDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN}">
+                                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                         maxFractionDigits="6"
+                                                                         minFractionDigits="0" locale="vi_VN"/>
+                                                    </p:outputLabel>
+
+                                                    <p:outputLabel value="Bước giá:"/>
+                                                    <p:outputLabel
+                                                            value="#{detailAuctionManageController.assetDto.priceStep}">
+                                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                         maxFractionDigits="6"
+                                                                         minFractionDigits="0" locale="vi_VN"/>
+                                                    </p:outputLabel>
+
+                                                </p:panelGrid>
+
+                                                <p:panelGrid columns="1" styleClass="ui-panelgrid-blank"
+                                                             layout="grid"
+                                                             columnClasses="ui-grid-col-12 ui-no-margin-padding">
+
+                                                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank"
+                                                                 layout="grid"
+                                                                 columnClasses="ui-grid-col-4 ui-no-margin-padding, ui-grid-col-8 ui-no-margin-padding">
+
+                                                        <p:outputLabel value="Trạng thái:"/>
+                                                        <p:outputLabel value="Đã tạm dừng đấu giá" style="color: red"
+                                                                       rendered="#{detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_CANCELED}"/>
+                                                        <p:outputLabel value="Đang diễn ra"
+                                                                       rendered="#{detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_PLAYING}"/>
+                                                        <p:outputLabel
+                                                                rendered="#{detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_WAITING}"
+                                                                value="Sắp diễn ra"/>
+                                                        <p:outputLabel value="Đã kết thúc" style="color: green"
+                                                                       rendered="#{detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_ENDED and detailAuctionManageController.assetManagement.ending ne DbConstant.ASSET_MANAGEMENT_ENDING_BAD}"/>
+                                                        <p:outputLabel value="Cuộc đấu giá không thành"
+                                                                       style="color: red"
+                                                                       rendered="#{detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_NOT_SUCCESS or (detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_ENDED and detailAuctionManageController.assetManagement.ending eq DbConstant.ASSET_MANAGEMENT_ENDING_BAD)}"/>
+
+                                                        <p:outputLabel value="Trạng thái kết thúc: "
+                                                                       rendered="#{detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_ENDED}"/>
+                                                        <p:outputLabel value="Đấu giá thành công"
+                                                                       rendered="#{detailAuctionManageController.assetManagement.ending eq DbConstant.ASSET_MANAGEMENT_ENDING_GOOD and detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_ENDED}"/>
+                                                        <p:outputLabel value="Đấu giá không thành"
+                                                                       rendered="#{detailAuctionManageController.assetManagement.ending eq DbConstant.ASSET_MANAGEMENT_ENDING_BAD and detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_ENDED}"/>
+
+                                                        <p:outputLabel value="Giá hiện tại:"
+                                                                       rendered="#{detailAuctionManageController.assetDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN and not empty auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId) and !auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).ended}"/>
+                                                        <p:outputLabel
+                                                                value="#{auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).currentPrice}"
+                                                                rendered="#{detailAuctionManageController.assetDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN and not empty auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId) and !auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).ended}">
+                                                            <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                             maxFractionDigits="6"
+                                                                             minFractionDigits="0" locale="vi_VN"/>
+                                                        </p:outputLabel>
+
+                                                        <p:outputLabel value="Lượt xác nhận hiện tại: "
+                                                                       rendered="#{not empty auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId) and !auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).ended and detailAuctionManageController.assetDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP and auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).inTimeConfirm}"/>
+                                                        <p:outputLabel
+                                                                value="#{auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).roundConfirm}"
+                                                                rendered="#{not empty auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId) and !auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).ended and detailAuctionManageController.assetDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP and auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).inTimeConfirm}"/>
+
+                                                        <p:outputLabel value="Vòng hiện tại: "
+                                                                       rendered="#{not empty auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId) and !auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).ended and detailAuctionManageController.assetDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL and detailAuctionManageController.assetDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP and !auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).inTimeConfirm}"/>
+                                                        <p:outputLabel
+                                                                value="#{auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).currentRound}/#{detailAuctionManageController.assetDto.numberOfRounds}"
+                                                                rendered="#{not empty auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId) and !auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).ended and detailAuctionManageController.assetDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL and detailAuctionManageController.assetDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_UP and !auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).inTimeConfirm}"/>
+
+                                                        <p:outputLabel
+                                                                value="Thời gian bắt đầu tổ chức đấu giá còn:"
+                                                                rendered="#{detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_WAITING}"/>
+                                                        <h:form prependId="false"
+                                                                rendered="#{!auctionTask.getAssetDtoList().get(detailAuctionManageController.assetDto.assetId).ended and detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_WAITING}">
+                                                            <pe:timer widgetVar="timeCountdown"
+                                                                      global="false"
+                                                                      timeout="#{(detailAuctionManageController.assetDto.startTime.getTime() - detailAuctionManageController.now.getTime()) / 1000}"
+                                                                      formatFunction="return countDown(value);"
+                                                                      style="padding: 0; color: green; border: none; background: transparent;"/>
+                                                        </h:form>
+
+                                                        <p:outputLabel value="Thời gian còn lại:"
+                                                                       rendered="#{detailAuctionManageController.renderCountdownPlaying()}"/>
+                                                        <h:form prependId="false"
+                                                                rendered="#{detailAuctionManageController.renderCountdownPlaying()}">
+                                                            <pe:timer widgetVar="timeCountdown"
+                                                                      timeout="#{detailAuctionManageController.valueCountdownPlaying()}"
+                                                                      formatFunction="return countDown(value);"
+                                                                      global="false"
+                                                                      style="padding: 0; color: green; border: none; background: transparent;"/>
+                                                        </h:form>
+
+                                                        <p:outputLabel
+                                                                value="Đang lấy ngẫu nhiên người chiến thắng:"
+                                                                rendered="#{detailAuctionManageController.renderInTimeRandom()}"/>
+                                                        <h:form prependId="false"
+                                                                rendered="#{detailAuctionManageController.renderInTimeRandom()}">
+                                                            <pe:timer widgetVar="timeCountdown"
+                                                                      timeout="#{detailAuctionManageController.valueCountdownRandom()}"
+                                                                      formatFunction="return countDown(value);"
+                                                                      global="false"
+                                                                      style="padding: 0; color: green; border: none; background: transparent;"/>
+                                                        </h:form>
+                                                    </p:panelGrid>
+
+                                                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank"
+                                                                 layout="grid"
+                                                                 rendered="#{detailAuctionManageController.renderInTimeConfirm()}"
+                                                                 columnClasses="ui-grid-col-4 ui-no-margin-padding, ui-grid-col-8 ui-no-margin-padding">
+                                                        <p:outputLabel value="Người đang xác nhận:"
+                                                                       rendered="#{detailAuctionManageController.renderRegisterConfirming()}"/>
+                                                        <p:outputLabel
+                                                                value="#{detailAuctionManageController.valueRegisterConfirming()}"
+                                                                rendered="#{detailAuctionManageController.renderRegisterConfirming()}"/>
+
+                                                        <p:outputLabel value="Giá trúng đấu giá:"
+                                                                       rendered="#{detailAuctionManageController.renderPriceWinner()}"/>
+                                                        <p:outputLabel
+                                                                value="#{detailAuctionManageController.assetDtoQueue.winner.money}"
+                                                                rendered="#{detailAuctionManageController.renderPriceWinner()}">
+                                                            <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                             maxFractionDigits="6"
+                                                                             minFractionDigits="0"
+                                                                             locale="vi_VN"/>
+                                                        </p:outputLabel>
+
+                                                        <p:outputLabel value="Thời gian xác nhận còn lại:"
+                                                                       rendered="#{detailAuctionManageController.renderLblCountdownConfirm()}"/>
+                                                        <h:form prependId="false"
+                                                                rendered="#{detailAuctionManageController.renderLblCountdownConfirm()}">
+                                                            <pe:timer widgetVar="timeCountdown"
+                                                                      timeout="#{detailAuctionManageController.valueCountdownConfirm()}"
+                                                                      formatFunction="return countDown(value);"
+                                                                      global="false"
+                                                                      style="padding: 0; color: green; border: none; background: transparent;"/>
+                                                        </h:form>
+                                                    </p:panelGrid>
+
+                                                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank"
+                                                                 layout="grid"
+                                                                 rendered="#{detailAuctionManageController.renderWinner()}"
+                                                                 columnClasses="ui-grid-col-4 ui-no-margin-padding, ui-grid-col-8 ui-no-margin-padding">
+                                                        <p:outputLabel value="Giá trúng đấu giá:"
+                                                                       rendered="#{detailAuctionManageController.renderWinner()}"/>
+                                                        <p:outputLabel value="#{detailAuctionManageController.assetManagement.money}">
+                                                            <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                             maxFractionDigits="6"
+                                                                             minFractionDigits="0"
+                                                                             locale="vi_VN"/>
+                                                        </p:outputLabel>
+
+                                                        <p:outputLabel value="Người trúng đấu giá:"/>
+                                                        <p:outputLabel value="#{detailAuctionManageController.valueWinner()}"/>
+                                                    </p:panelGrid>
+                                                </p:panelGrid>
+                                            </p:panelGrid>
+
+                                            <p:panelGrid columns="2" columnClasses="ui-grid-col-7, ui-grid-col-5" styleClass="ui-panelgrid-blank">
+                                                <h:form prependId="false">
+                                                    <p:panel id="search" header="Tìm kiếm "
+                                                             style="margin-bottom:5px">
+                                                        <p:panelGrid id="searchPanel1" columns="3"
+                                                                     columnClasses="ui-grid-col-6,ui-grid-col-2,ui-grid-col-2"
+                                                                     styleClass="ui-panelgrid-blank" layout="grid">
+                                                            <p:inputText id="sma"
+                                                                         placeholder="Nhập tên, mã định danh"
+                                                                         value="#{detailAuctionManageController.auctionRegisterSearchDto.keyword}"/>
+                                                            <p:commandButton value="Tìm kiếm"
+                                                                             actionListener="#{detailAuctionManageController.searchAuctionRegister()}"
+                                                                             update="tblSearchResult1"
+                                                                             icon="fa fa-search"
+                                                                             style="width: auto"/>
+                                                            <p:commandButton value="Xuất dữ liệu" icon="fa fa-copy" update="growl" ajax="false" rendered="#{detailAuctionManageController.auctionRegisterList.rowCount gt 0}">
+                                                                <p:dataExporter type="xlsxstream" target="tblSearchResult1" fileName="Danh sách thông tin người tham gia đấu giá" />
+                                                            </p:commandButton>
+                                                        </p:panelGrid>
+                                                    </p:panel>
+
+                                                    <p:panel header="Danh sách người tham gia đấu giá"
+                                                             style="margin-bottom:5px">
+                                                        <p:dataTable id="tblSearchResult1"
+                                                                     widgetVar="wdgRegisterTable"
+                                                                     resizableColumns="false"
+                                                                     paginator="true"
+                                                                     rows="10"
+                                                                     value="#{detailAuctionManageController.auctionRegisterList}"
+                                                                     lazy="true" pageLinks="5"
+                                                                     paginatorPosition="top"
+                                                                     var="ar"
+                                                                     paginatorAlwaysVisible="true"
+                                                                     rowsPerPageTemplate="10,20,50,100"
+                                                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                                                     currentPageReportTemplate="#{t['lbl.recordTotal']}: #{detailAuctionManageController.auctionRegisterList.rowCount}"
+                                                                     emptyMessage="#{t['lbl.emptyTable']}"
+                                                                     rowIndexVar="rowIndex"
+                                                                     rowKey="#{ar.auctionRegisterId}">
+
+                                                            <p:column headerText="STT"
+                                                                      style="width: 20px; text-align: center">
+                                                                <p:outputLabel value="#{rowIndex + 1}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Mã định danh"
+                                                                      style="width: auto ;">
+                                                                <p:outputLabel value="#{ar.code}"
+                                                                               style="text-align: left"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Họ tên" exportable="false">
+                                                                <i class="online-state custom-icon #{ar.onlineStatus ? 'online' : 'offline'}" data-id="#{ar.auctionRegisterId}"/>
+                                                                <p:outputLabel value="#{ar.fullNameNguoiDangKy}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Họ tên" visible="hidden">
+                                                                <p:outputLabel value="#{ar.fullNameNguoiDangKy}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Truất quyền"
+                                                                      id="columnDeposit"
+                                                                      style="text-align: center">
+                                                                <p:outputLabel value="Đã bị truất quyền#{commonController.statusDeposit(not empty ar.filePath, ar.statusRetract)}"
+                                                                               style="color: red"
+                                                                               rendered="#{detailAuctionManageController.renderDepositColumn(ar)}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Ghi chú"
+                                                                      style="text-align: center">
+                                                                <p:outputLabel value="#{ar.notes}" rendered="#{not empty ar.notes}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Lý do" style="text-align: center"
+                                                                      width="auto" exportable="false">
+                                                                <p:commandButton
+                                                                        icon="fa fa-eye"
+                                                                        style="width: auto; min-width: 30px"
+                                                                        oncomplete="PF('dialogReasonDeposition').show();"
+                                                                        update="dlForm #{Constant.ERROR_GROWL_ID}"
+                                                                        rendered="#{detailAuctionManageController.renderDepositColumn(ar)}"
+                                                                        actionListener="#{detailAuctionManageController.showDepositionReasonPopup(ar.auctionRegisterId)}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Vai trò" visible="false">
+                                                                <p:outputLabel value="Người tham gia đấu giá"/>
+                                                            </p:column>
+                                                        </p:dataTable>
+                                                    </p:panel>
+                                                </h:form>
+
+                                                <h:form prependId="false" styleClass="ui-no-margin-padding">
+                                                    <p:panel id="searchBid" header="Tìm kiếm "
+                                                             style="margin-bottom:5px">
+                                                        <p:panelGrid id="searchPanelBid" columns="3"
+                                                                     columnClasses="ui-grid-col-6,ui-grid-col-3,ui-grid-col-3"
+                                                                     styleClass="ui-panelgrid-blank" layout="grid">
+                                                            <p:inputText id="sbid"
+                                                                         placeholder="Nhập tên, mã định danh"
+                                                                         value="#{detailAuctionManageController.bidSearchDto.keyword}"/>
+
+                                                            <p:commandButton value="Tìm kiếm"
+                                                                             actionListener="#{detailAuctionManageController.searchBid()}"
+                                                                             update="tblSearchResult2"
+                                                                             icon="fa fa-search"
+                                                                             style="width: auto"/>
+
+                                                            <h:commandLink
+                                                                    rendered="#{detailAuctionManageController.assetDto.status eq DbConstant.ASSET_STATUS_ENDED and detailAuctionManageController.bidDtoList.rowCount > 0}">
+                                                                <p:commandButton value="Xuất lịch sử"
+                                                                                 icon="fa fa-copy"
+                                                                                 type="button"/>
+                                                                <p:dataExporter type="xlsx"
+                                                                                target="tblSearchResult2"
+                                                                                fileName="Lich_su_tra_gia"/>
+                                                            </h:commandLink>
+                                                        </p:panelGrid>
+                                                    </p:panel>
+                                                    <p:panel header="Lịch sử trả giá"
+                                                             style="margin-bottom:5px">
+                                                        <p:dataTable id="tblSearchResult2"
+                                                                     widgetVar="wdgBidTable"
+                                                                     resizableColumns="false"
+                                                                     paginator="true" rows="10"
+                                                                     value="#{detailAuctionManageController.bidDtoList}"
+                                                                     lazy="true" pageLinks="5"
+                                                                     paginatorPosition="top"
+                                                                     paginatorAlwaysVisible="true" var="bid"
+                                                                     rowsPerPageTemplate="10,20,50,100"
+                                                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                                                     currentPageReportTemplate="#{t['lbl.recordTotal']}: #{detailAuctionManageController.bidDtoList.rowCount}"
+                                                                     emptyMessage="#{t['lbl.emptyTable']}"
+                                                                     rowIndexVar="rowIndex"
+                                                                     rowKey="#{bid.bidId}"
+                                                                     sortBy="#{bid.numberOfRound}"
+                                                                     expandableRowGroups="true">
+                                                            <p:headerRow
+                                                                    rendered="#{detailAuctionManageController.assetDto.auctionFormalityId eq DbConstant.AUCTION_FORMALITY_ID_POLL }">
+                                                                <p:column colspan="4">
+                                                                    <p:outputLabel value="Vòng #{bid.numberOfRound}"/>
+                                                                </p:column>
+                                                            </p:headerRow>
+                                                            <p:column style="width: 20px; text-align: center">
+                                                                <p:outputLabel value="#{rowIndex + 1}"/>
+                                                            </p:column>
+                                                            <p:column headerText="Họ tên" style="text-align: center">
+                                                                <p:outputLabel value="#{bid.fullName} (#{bid.code})"/>
+                                                            </p:column>
+                                                            <p:column headerText="#{detailAuctionManageController.regulationDto.auctionMethodId eq DbConstant.AUCTION_METHOD_ID_DOWN ? 'Mức giá chấp nhận (VNĐ)' : 'Mức trả giá (VNĐ)'}"
+                                                                      style="text-align: center">
+                                                                <p:outputLabel value="#{bid.money}">
+                                                                    <f:convertNumber maxFractionDigits="6"
+                                                                                     minFractionDigits="0"/>
+                                                                </p:outputLabel>
+                                                            </p:column>
+                                                            <p:column headerText="Thời gian ghi nhận" style="text-align: center">
+                                                                <p:outputLabel value="#{bid.time}">
+                                                                    <f:convertDateTime pattern="HH:mm:ss, dd/MM/yyyy"/>
+                                                                </p:outputLabel>
+                                                            </p:column>
+                                                        </p:dataTable>
+                                                    </p:panel>
+                                                </h:form>
+                                            </p:panelGrid>
+                                        </p:outputPanel>
+                                    </div>
+                                </div>
+                            </p:panel>
+                            <script>
+                                // for update
+                                var assetDetail = '#{detailAuctionManageController.assetDto.assetId}';
+                            </script>
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </div>
+
+        <p:dialog header="Lý do truất quyền" widgetVar="dialogReasonDeposition" modal="true" width="800"
+                  style="max-height: 90vh; max-width: 90vw">
+            <h:form id="dlForm">
+                <div class="ui-fluid">
+                    <p:panel mode="native" style="border: none">
+                        <p:panelGrid id="basicPanel1" columns="2"
+                                     columnClasses="ui-grid-col-2 ui-no-margin-padding, ui-grid-col-10 ui-no-margin-padding"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+                            <p:outputLabel value="Lý do truất quyền:" styleClass="requireLabel" for="reason"/>
+                            <p:inputTextarea id="reason" placeholder="Nhập lý do truất quyền"
+                                             value="#{detailAuctionManageController.auctionRegister.reasonDeposition}"
+                                             maxlength="200" disabled="#{detailAuctionManageController.auctionRegister.statusDeposit eq DbConstant.AUCTION_REGISTER_STATUS_DEPOSIT_REFUSE}"/>
+                            <p:outputLabel styleClass="requireLabel" value="File văn bản:" rendered="#{!(not empty detailAuctionManageController.auctionRegister.reasonDeposition and empty detailAuctionManageController.auctionRegister.filePath)}"/>
+                            <p:outputPanel rendered="#{detailAuctionManageController.auctionRegister.statusDeposit eq DbConstant.AUCTION_REGISTER_STATUS_DEPOSIT_NORMAL}">
+                                <ui:include src="/common/upload-single-file.xhtml"/>
+                            </p:outputPanel>
+                            <p:outputPanel rendered="#{detailAuctionManageController.auctionRegister.statusDeposit eq DbConstant.AUCTION_REGISTER_STATUS_DEPOSIT_REFUSE}">
+                                <p:commandLink value="Xem file đính kèm" style="width:auto;"
+                                                 onclick="PF('dlg#{index}').show();"
+                                                 icon="fa fa-eye"
+                                                 rendered="#{not empty detailAuctionManageController.auctionRegister.filePath}">
+                                    <p:dialog header="Chi tiết file tải lên" modal="true" widgetVar="dlg#{index}"
+                                              styleClass="text-center"
+                                              style="max-height: 90vh; max-width: 90vw"
+                                              minHeight="40" showEffect="clip" hideEffect="clip">
+                                        <p:media id="vMedia"
+                                                 value="/resources#{detailAuctionManageController.auctionRegister.filePath}"
+                                                 width="900px" height="700px" player="pdf">
+                                            Không thể hiển thị được file tải lên, <h:outputLink value="/resources#{detailAuctionManageController.auctionRegister.filePath}">bấm vào đây</h:outputLink> để tải file về
+                                        </p:media>
+                                    </p:dialog>
+                                </p:commandLink>
+                            </p:outputPanel>
+                        </p:panelGrid>
+                        <p:panelGrid columns="2"
+                                     columnClasses="ui-grid-col-1.5 ui-no-margin-padding, ui-grid-col-1.5 ui-no-margin-padding"
+                                     layout="grid" styleClass="ui-panelgrid-blank">
+                            <p:commandButton value="Đóng" styleClass="close" icon="fa fa-remove"
+                                             global="false"
+                                             oncomplete="PF('dialogReasonDeposition').hide()"
+                                             style="width: 80px;"/>
+                        </p:panelGrid>
+                    </p:panel>
+
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Lý do tạm dừng đấu giá tài sản" widgetVar="dialogReasonCancelAsset" modal="true" width="800"
+                  style="max-height: 90vh; max-width: 90vw">
+            <h:form id="dlForm1">
+                <div class="ui-fluid">
+                    <p:panel mode="native" style="border: none">
+                        <p:panelGrid id="basicPanel" columns="2"
+                                     columnClasses="ui-grid-col-2 ui-no-margin-padding, ui-grid-col-10 ui-no-margin-padding"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+                            <p:outputLabel value="Lý do tạm dừng đấu giá:" styleClass="requireLabel" for="reason1"/>
+                            <p:inputTextarea id="reason1" placeholder=""
+                                             value="#{detailAuctionManageController.assetFile.reasonCancelAsset}"
+                                             disabled="true"
+                                             maxlength="200"/>
+                            <p:outputLabel styleClass="requireLabel" value="File văn bản:"/>
+                            <p:outputPanel>
+                                <p:commandLink value="Xem chi tiết" type="button" update="dlgShowFile"
+                                               oncomplete="PF('dlgFile').show();"
+                                               global="false"/>
+                            </p:outputPanel>
+                        </p:panelGrid>
+                        <p:panelGrid columns="2"
+                                     columnClasses="ui-grid-col-1.5 ui-no-margin-padding, ui-grid-col-1.5 ui-no-margin-padding"
+                                     layout="grid" styleClass="ui-panelgrid-blank">
+                            <p:outputLabel value="" rendered="#{detailAuctionManageController.reasonCancelAssetStatus}"/>
+                            <p:commandButton value="Đóng" styleClass="close" icon="fa fa-remove"
+                                             global="false"
+                                             oncomplete="PF('dialogReasonCancelAsset').hide()"
+                                             style="width: 80px;"/>
+                        </p:panelGrid>
+                    </p:panel>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Chi tiết file" modal="true" widgetVar="dlgFile" id="dlgShowFile" width="800" height="600"
+                  styleClass="text-center"
+                  style="max-height: 90vh; max-width: 90vw"
+                  showEffect="clip" hideEffect="clip" position="center center"
+                  onShow="try{PF('dlgShowFile').initPosition();}catch(e){}">
+            <h:form>
+                <p:media id="vMediaFile1" value="/resources#{detailAuctionManageController.cancelFilePath}"
+                         width="800" height="600"
+                         player="pdf"
+                         rendered="#{commonController.isPdfFile(detailAuctionManageController.cancelFilePath)}">
+                    Không thể hiển thị được file tải lên, <h:outputLink
+                        value="#{request.contextPath}/resources#{detailAuctionManageController.cancelFilePath}">bấm vào đây</h:outputLink> để tải file về
+                </p:media>
+
+                <p:outputLabel rendered="#{!commonController.isPdfFile(detailAuctionManageController.cancelFilePath)}">
+                    Không thể hiển thị được file tải lên
+                    <p:commandLink value="bấm vào đây"
+                                   style="width:auto;"
+                                   ajax="false"
+                                   immediate="true">
+                        <p:fileDownload
+                                value="#{uploadSingleFileController.getFileDownload(detailAuctionManageController.cancelFilePath)}"/>
+                    </p:commandLink>
+                    để tải file về
+                </p:outputLabel>
+            </h:form>
+        </p:dialog>
+
+        <!-- update scope -->
+        <p:remoteCommand name="cmdRefreshData" update="form formAssetDetail" global="false"
+                         oncomplete="try{PF('timeCountdown').restart()}catch(e){}"
+                         actionListener="#{detailAuctionManageController.reloadAssetDetail}"/>
+        <p:remoteCommand name="cmdUpdateStateOnline" update="reloadOnline" global="false"
+                         actionListener="#{detailAuctionManageController.reloadStateOnline()}"/>
+
+        <h:panelGroup id="reloadOnline">
+            <script>
+                var arr = #{detailAuctionManageController.onlineStateString};
+                $('.online-state').each(function () {
+                    if (arr.indexOf($(this).data('id') + "") > -1) {
+                        $(this).removeClass("offline");
+                        $(this).addClass("online");
+                    } else {
+                        $(this).removeClass("online");
+                        $(this).addClass("offline");
+                    }
+                });
+            </script>
+        </h:panelGroup>
+        <script>
+            setInterval(function () {
+                cmdUpdateStateOnline();
+            }, 3000);
+        </script>
+    </ui:define>
+</ui:composition>
+
+
+

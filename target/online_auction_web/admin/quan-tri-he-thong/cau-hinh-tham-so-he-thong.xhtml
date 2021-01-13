@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:H="http://java.sun.com/jsf/html"
+                template="/admin/template/template.xhtml">
+
+    <ui:define name="title">Cấu hình tham số hệ thống</ui:define>
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{systemConfigController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="breadcrumb">
+        <li><p:link outcome="/admin/quan-tri-he-thong/cau-hinh-tham-so-he-thong">Quản trị hệ thống / Cấu hình tham số hệ thống</p:link></li>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="mainForm">
+            <div class="ui-fluid">
+                <p:panel header="Thông tin tham số hệ thống" style="margin-bottom:5px">
+                    <p:repeat id="ts" value="#{systemConfigController.systemConfigList}" var="itemVar" varStatus="itemVarStatus">
+                        <p:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-4">
+                            <p:outputLabel value="#{itemVar.title}:" styleClass="requireLabel"/>
+                            <p:inputNumber value="#{itemVar.value}" maxValue="100" minValue="0" rendered="#{itemVar.systemConfigId ne DbConstant.SYSTEM_CONFIG_ID_SHOW_CAPTCHA and itemVar.systemConfigId ne DbConstant.SYSTEM_CONFIG_ID_NUMBER_WRONG_SHOW_CAPTCHA}"/>
+                            <h:panelGroup id="input" rendered="#{itemVar.systemConfigId eq DbConstant.SYSTEM_CONFIG_ID_NUMBER_WRONG_SHOW_CAPTCHA}" >
+                                <p:inputNumber value="#{itemVar.value}" maxValue="100" minValue="0" disabled="#{!systemConfigController.value}"/>
+                            </h:panelGroup>
+                            <p:inputSwitch value="#{systemConfigController.value}" rendered="#{itemVar.systemConfigId eq DbConstant.SYSTEM_CONFIG_ID_SHOW_CAPTCHA}">
+                                <p:ajax listener="#{systemConfigController.change}" update="mainForm:ts:#{itemVarStatus.index+1}:input"/>
+                            </p:inputSwitch>
+                        </p:panelGrid>
+                    </p:repeat>
+
+                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank" layout="grid"
+                                 columnClasses="ui-grid-col-1.5,ui-grid-col-1.5">
+                        <p:commandButton value="Lưu cấu hình"
+                                         rendered="#{systemConfigController.getActions().canUpdate()}"
+                                         actionListener="#{systemConfigController.onSave()}"
+                                         update="growl"
+                                         style="width: auto;"
+                                         icon="fa fa-save"/>
+                        <p:commandButton value="Trạng thái ban đầu"
+                                         rendered="#{systemConfigController.getActions().hasAction(EAction.RESET)}"
+                                         actionListener="#{systemConfigController.refeshData()}"
+                                         update="mainForm growl"
+                                         icon="fa fa-refresh"
+                                         styleClass="orange-btn"
+                                         style="width: auto;">
+                            <p:confirm header="Xác nhận" message="Bạn chắc chắn muốn thiết lập các thông số về trạng thái ban đầu hay không ?"
+                                       icon="fa fa-refresh"/>
+                        </p:commandButton>
+                    </p:panelGrid>
+                </p:panel>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
