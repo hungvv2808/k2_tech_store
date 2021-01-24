@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>6564c65f-d76a-4e1f-9460-d7a5abe8ff94.SCHEMA:k2_tech_store</OriginalElement>
+  <nodes>
+    <node x="265.75" y="412.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.product</node>
+    <node x="349.3875" y="88.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.category</node>
+    <node x="735.3125" y="143.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.payment_type</node>
+    <node x="84.5" y="1203.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.news</node>
+    <node x="84.5" y="945.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.news_category</node>
+    <node x="626.725" y="758.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.order_detail</node>
+    <node x="367.0" y="769.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.size</node>
+    <node x="655.4749999999999" y="423.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.order</node>
+    <node x="166.3875" y="88.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.brand</node>
+    <node x="542.3125" y="0.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.account</node>
+    <node x="161.0" y="780.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.image_product</node>
+    <node x="0.0" y="769.0">6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.color</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.product" target="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.brand">
+      <point x="-40.75" y="-148.0" />
+      <point x="306.5" y="387.0" />
+      <point x="247.8875" y="387.0" />
+      <point x="0.0" y="93.0" />
+    </edge>
+    <edge source="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.order_detail" target="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.product">
+      <point x="-40.25" y="-71.0" />
+      <point x="666.975" y="728.0" />
+      <point x="408.375" y="728.0" />
+      <point x="61.125" y="148.0" />
+    </edge>
+    <edge source="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.order" target="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.account">
+      <point x="-46.0" y="-137.0" />
+      <point x="701.4749999999999" y="387.0" />
+      <point x="628.8125" y="387.0" />
+      <point x="0.0" y="181.0" />
+    </edge>
+    <edge source="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.size" target="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.product">
+      <point x="0.0" y="-60.0" />
+      <point x="440.5" y="738.0" />
+      <point x="367.625" y="738.0" />
+      <point x="20.375" y="148.0" />
+    </edge>
+    <edge source="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.product" target="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.category">
+      <point x="40.75" y="-148.0" />
+      <point x="388.0" y="387.0" />
+      <point x="430.8875" y="387.0" />
+      <point x="0.0" y="93.0" />
+    </edge>
+    <edge source="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.image_product" target="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.product">
+      <point x="0.0" y="-49.0" />
+      <point x="254.0" y="738.0" />
+      <point x="326.875" y="738.0" />
+      <point x="-20.375" y="148.0" />
+    </edge>
+    <edge source="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.order" target="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.payment_type">
+      <point x="46.0" y="-137.0" />
+      <point x="793.4749999999999" y="387.0" />
+      <point x="823.3125" y="387.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.news" target="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.news_category">
+      <point x="0.0" y="-115.0" />
+      <point x="0.0" y="104.0" />
+    </edge>
+    <edge source="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.order_detail" target="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.order">
+      <point x="40.25" y="-71.0" />
+      <point x="0.0" y="137.0" />
+    </edge>
+    <edge source="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.color" target="6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.product">
+      <point x="0.0" y="-60.0" />
+      <point x="70.5" y="728.0" />
+      <point x="286.125" y="728.0" />
+      <point x="-61.125" y="148.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.5313145216792843" x="498.0" y="716.5" />
+  <SelectedNodes>
+    <node>6564c65f-d76a-4e1f-9460-d7a5abe8ff94.TABLE:k2_tech_store.product</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+  </Categories>
+</Diagram>
+
