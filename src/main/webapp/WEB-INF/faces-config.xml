@@ -20,7 +20,7 @@
         <renderer>
             <component-family>javax.faces.Input</component-family>
             <renderer-type>javax.faces.Text</renderer-type>
-            <renderer-class>vn.compedia.website.auction.jsf.InputRender</renderer-class>
+            <renderer-class>vn.tech.website.store.jsf.InputRender</renderer-class>
         </renderer>
     </render-kit>
 
@@ -61,7 +61,7 @@
         <phase-listener>org.omnifaces.eventlistener.ResetInputAjaxActionListener</phase-listener>
     </lifecycle>
 <!--    <lifecycle>-->
-<!--        <phase-listener id="nocache">vn.compedia.website.auction.jsf.CacheControlPhaseListener</phase-listener>-->
+<!--        <phase-listener id="nocache">CacheControlPhaseListener</phase-listener>-->
 <!--    </lifecycle>-->
 
 </faces-config>

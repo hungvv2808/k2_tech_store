@@ -28,8 +28,8 @@ function showPopupCancelAsset(data) {
 }
 
 // Trang điều hành -> Màn hình điều hành
-function updateAuctionRegDataTable(data) {
-    jQuery('#updateAuctionRegDataTable').click();
+function updateStoreRegDataTable(data) {
+    jQuery('#updateStoreRegDataTable').click();
 }
 
 // Trang tỉnh

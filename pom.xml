@@ -2,12 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>vn.compedia.website</groupId>
-    <artifactId>auction</artifactId>
+    <groupId>vn.tech.website</groupId>
+    <artifactId>store</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
 
-    <name>auction</name>
+    <name>store</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -461,7 +461,7 @@
 
         <!--import library MOMO-->
         <dependency>
-            <groupId>vn.compedia.momo-wallet</groupId>
+            <groupId>vn.tech.momo-wallet</groupId>
             <artifactId>momopayment</artifactId>
             <version>1.0</version>
         </dependency>
@@ -516,7 +516,7 @@
         </profile>
     </profiles>
     <build>
-        <finalName>online_auction_web</finalName>
+        <finalName>online_store_web</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -103,7 +103,7 @@ function validateForm() {
             jQuery("#getCode").click();
         }
     });
-    jQuery("#auction_form_register").validate({
+    jQuery("#store_form_register").validate({
         rules: {
             asset_description: {
                 required: true,
@@ -141,7 +141,7 @@ function validateForm() {
             jQuery(element).parents(".col-md-10").addClass("has-success").removeClass("has-error");
         },
         submitHandler: function(form) {
-            jQuery("#saveAuctionReq").click();
+            jQuery("#saveStoreReq").click();
         }
     });
     jQuery("#company-form").validate({

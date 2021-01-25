@@ -270,17 +270,17 @@
     .main-slide .slide .content-slide {
         margin-left: 0px;
     }
-    .auction-table-content th {
+    .store-table-content th {
         min-width: 150px;
     }
-    .auction-table-content td {
+    .store-table-content td {
         min-width: 150px;
     }
-    .auction-table-content td.stt-column {
+    .store-table-content td.stt-column {
         min-width: 50px;
         width: 50px;
     }
-    .auction-table-content td.price-column {
+    .store-table-content td.price-column {
         min-width: 180px;
         width: 180px;
     }

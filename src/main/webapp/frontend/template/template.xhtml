@@ -11,17 +11,17 @@
 <!--<![endif]-->
 
 <f:view locale="#{languageController.currentLocale}">
-    <o:importConstants type="vn.compedia.website.auction.util.Constant"/>
-    <o:importConstants type="vn.compedia.website.auction.util.DbConstant"/>
+    <o:importConstants type="vn.tech.website.store.util.Constant"/>
+    <o:importConstants type="vn.tech.website.store.util.DbConstant"/>
 
     <h:head>
         <f:facet name="first">
             <meta charset="UTF-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
             <meta http-equiv="X-UA-Compatible" content="IE=11"/>
-            <meta name="author" content="Sở Tư Pháp Đà Nẵng"/>
-            <meta name="keywords" content="Dau gia truc tuyen"/>
-            <meta name="description" content="Đấu giá trực tuyến Sở Tư Pháp Đà Nẵng, Design by Compedia Software"/>
+            <meta name="author" content="K2"/>
+            <meta name="keywords" content="k2 tech store"/>
+            <meta name="description" content="K2 technology store, Design by K2 Software"/>
         </f:facet>
 
         <title><ui:insert name="title">Đấu giá trực tuyến</ui:insert></title>
@@ -70,7 +70,7 @@
         </c:if>
 
         <ui:include src="/frontend/common/change_password.xhtml"/>
-        <ui:include src="/frontend/common/modal_register_auction.xhtml"/>
+        <ui:include src="/frontend/common/modal_register_store.xhtml"/>
 
         <div class="loading style-2"></div>
 

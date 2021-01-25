@@ -135,7 +135,7 @@
                 $("#lostPass").validate().resetForm();
                 $("#register_form").validate().resetForm();
             }
-            $("#auction_form_register").validate().resetForm();
+            $("#store_form_register").validate().resetForm();
             var els = document.querySelectorAll('.has-error');
             for (var i = 0; i < els.length; i++) {
                 els[i].classList.remove('has-error')
@@ -162,7 +162,7 @@
                 $("#lostPass").validate().resetForm();
                 $("#register_form").validate().resetForm();
             }
-            $("#auction_form_register").validate().resetForm();
+            $("#store_form_register").validate().resetForm();
             var els = document.querySelectorAll('.has-error');
             for (var i = 0; i < els.length; i++) {
                 els[i].classList.remove('has-error')

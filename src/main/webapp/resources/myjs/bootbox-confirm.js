@@ -59,7 +59,7 @@ function onBargainConfirm(e, currentPrice, priceStep, isInput) {
             //<![CDATA[
             message: "Bạn có chắc chắn muốn " + bargain_text + " giá <span>" + (isInput ? price + " VNĐ" : price) + " </span> cho tài sản này?",
             //]]>
-            className: "confirmAuction modal-login",
+            className: "confirmStore modal-login",
             swapButtonOrder: true,
             buttons: {
                 confirm: {
@@ -102,7 +102,7 @@ function onAcceptWinner() {
         //<![CDATA[
         message: "Bạn có chắc chắn muốn chấp nhận kết quả thắng cuộc không?",
         //]]>
-        className: "confirmAuction modal-login",
+        className: "confirmStore modal-login",
         swapButtonOrder: true,
         buttons: {
             confirm: {
@@ -136,7 +136,7 @@ function onRefuseWinner(directDown) {
         //<![CDATA[
         message: warning_text + "Bạn có chắc chắn muốn từ chối kết quả không?",
         //]]>
-        className: "confirmAuction modal-login",
+        className: "confirmStore modal-login",
         swapButtonOrder: true,
         buttons: {
             confirm: {
@@ -167,7 +167,7 @@ function onRetractPrice() {
         //<![CDATA[
         message: "Nếu rút lại giá đã trả bạn sẽ bị truất quyền tham gia đấu giá và không được trả lại tiền đặt trước. Bạn có chắc chắn muốn rút lại giá đã trả không?",
         //]]>
-        className: "confirmAuction modal-login",
+        className: "confirmStore modal-login",
         swapButtonOrder: true,
         buttons: {
             confirm: {
@@ -187,13 +187,13 @@ function onRetractPrice() {
     });
 }
 
-function auctionRefuseWinner1th() {
+function storeRefuseWinner1th() {
     bootbox.confirm({
         title: "Thông báo",
         //<![CDATA[
         message: "Bạn đang thực hiện từ chối trúng đấu giá, bạn có chắc chắn từ chối hay không?<br/><br/><b style='color:red'>Chú ý:</b> nếu nhấn vào Đồng ý, bạn sẽ không được hoàn lại tiền đặt trước.",
         //]]>
-        className: "confirmAuction modal-login",
+        className: "confirmStore modal-login",
         swapButtonOrder: true,
         buttons: {
             confirm: {
@@ -208,8 +208,8 @@ function auctionRefuseWinner1th() {
         callback: function (result) {
             if (result) {
                 cmdRefuseWinner();
-                jQuery("#modalAuctionWinner").modal("hide");
-                jQuery("#modalAuctionRefuseWinner").modal("show");
+                jQuery("#modalStoreWinner").modal("hide");
+                jQuery("#modalStoreRefuseWinner").modal("show");
             }
         }
     });

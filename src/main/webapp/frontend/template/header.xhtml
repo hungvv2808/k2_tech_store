@@ -61,11 +61,11 @@
                                                 rendered="#{authorizationFEController.hasLogged() and !authorizationFEController.accountDto.org}"/>
                                         <h:link style="padding: 5px;" value="Tài khoản của tôi" outcome="/frontend/account/company_account.xhtml"
                                                 rendered="#{authorizationFEController.hasLogged() and authorizationFEController.accountDto.org}"/>
-                                        <h:link style="padding: 5px;" value="Đấu giá đã đăng ký" outcome="/frontend/account/my_auction.xhtml"
+                                        <h:link style="padding: 5px;" value="Đấu giá đã đăng ký" outcome="/frontend/account/my_store.xhtml"
                                                 rendered="#{authorizationFEController.hasLogged()}"/>
                                         <h:link style="padding: 5px;" value="Lịch sử giao dịch" outcome="/frontend/account/my_payment.xhtml"
                                                 rendered="#{authorizationFEController.hasLogged()}"/>
-                                        <h:link style="padding: 5px;" value="Lịch sử mua bán tài sản" outcome="/frontend/account/my_auction_history.xhtml"
+                                        <h:link style="padding: 5px;" value="Lịch sử mua bán tài sản" outcome="/frontend/account/my_store_history.xhtml"
                                                 rendered="#{authorizationFEController.hasLogged()}"/>
                                     </div>
                                 </li>

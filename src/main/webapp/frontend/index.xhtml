@@ -59,7 +59,7 @@
 
     <ui:define name="main">
 
-        <h:panelGroup rendered="#{authorizationFEController.hasLogged() and homeFEController.auctionRegisterDtoList.size() ne 0}">
+        <h:panelGroup rendered="#{authorizationFEController.hasLogged() and homeFEController.storeRegisterDtoList.size() ne 0}">
             <ui:include src="index-logged.xhtml"/>
         </h:panelGroup>
 
@@ -204,7 +204,7 @@
                                                     <div class="row">
                                                         <div class="col-lg-5 col-md-5 col-xs-12 col-sm-6 no-padding">
                                                             <h:panelGroup
-                                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING}">
+                                                                    rendered="#{regulationVar.storeStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING}">
                                                                 <div class="product-image future-product">
                                                                     <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
                                                                         <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
@@ -224,7 +224,7 @@
                                                                 </div>
                                                             </h:panelGroup>
                                                             <h:panelGroup
-                                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_PLAYING}">
+                                                                    rendered="#{regulationVar.storeStatus eq DbConstant.REGULATION_AUCTION_STATUS_PLAYING}">
                                                                 <div class="product-image now-product">
                                                                     <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
                                                                         <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
@@ -243,7 +243,7 @@
                                                                 </div>
                                                             </h:panelGroup>
                                                             <h:panelGroup
-                                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_ENDED}">
+                                                                    rendered="#{regulationVar.storeStatus eq DbConstant.REGULATION_AUCTION_STATUS_ENDED}">
                                                                 <div class="product-image ended-product">
                                                                     <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
                                                                         <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
@@ -258,7 +258,7 @@
                                                                 </div>
                                                             </h:panelGroup>
                                                             <h:panelGroup
-                                                                    rendered="#{regulationVar.auctionStatus eq DbConstant.REGULATION_AUCTION_STATUS_CANCELLED}">
+                                                                    rendered="#{regulationVar.storeStatus eq DbConstant.REGULATION_AUCTION_STATUS_CANCELLED}">
                                                                 <div class="product-image stoped-product">
                                                                     <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
                                                                         <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
@@ -411,7 +411,7 @@
             }
         </style>
         <script>
-            var myAuction = false;
+            var myStore = false;
         </script>
     </ui:define>
 </ui:composition>

@@ -6,18 +6,18 @@
         xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <f:metadata>
-        <f:event type="preRenderView" listener="#{auctionReqFEController.showInfo}"/>
+        <f:event type="preRenderView" listener="#{storeReqFEController.showInfo}"/>
     </f:metadata>
 
-    <!-- Modal Register Auction-->
-    <div class="modal fade" id="auctionPopup">
+    <!-- Modal Register Store-->
+    <div class="modal fade" id="storePopup">
         <div class="modal-dialog modal-login">
             <div class="modal-content">
                 <button type="button" class="close" data-dismiss="modal">&#xd7;</button>
-                <div class="register-area auction-form">
+                <div class="register-area store-form">
                     <div class="register-form">
                         <h3>Đăng ký bán tài sản</h3>
-                        <h:form role="form" id="auction_form_register" prependId="false">
+                        <h:form role="form" id="store_form_register" prependId="false">
                             <div class="row">
                                 <div class="warning-text col-md-12 col-xs-12 col-sm-12 mb-20">
                                     <p>Bạn vui lòng nhập đầy đủ các trường</p>
@@ -83,7 +83,7 @@
                                                     <div class="col-md-10 col-sm-8 col-xs-12">
                                                         <h:inputText styleClass="form-control asset_name" name="asset_name" id="asset_name"
                                                                      type="text" placeholder="Tên tài sản" maxlength="1000" onblur="this.value = this.value.trim()"
-                                                                     value="#{auctionReqFEController.auctionReq.assetName}"/>
+                                                                     value="#{storeReqFEController.storeReq.assetName}"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -97,7 +97,7 @@
                                                     <div class="col-md-10 col-sm-8 col-xs-12">
                                                         <h:inputTextarea styleClass="form-control text-left asset_description" type="text" id="asset_description" name="asset_description"
                                                                          rows="10" cols="50" placeholder="Nhập mô tả tài sản" onblur="this.value = this.value.trim()"
-                                                                         value="#{auctionReqFEController.auctionReq.assetDescription}"/>
+                                                                         value="#{storeReqFEController.storeReq.assetDescription}"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -114,13 +114,13 @@
                                                     <input type="submit" value="Đăng ký bán"
                                                            Class="btn btn-custom main-color"
                                                            onclick="validateForm()"/>
-                                                    <h:commandButton id="saveAuctionReq" style="display: none"
-                                                                     action="#{auctionReqFEController.saveAuctionReq}">
+                                                    <h:commandButton id="saveStoreReq" style="display: none"
+                                                                     action="#{storeReqFEController.saveStoreReq}">
                                                         <f:ajax execute="@form" render="@form #{Constant.ERROR_FE_GROWL_ID} :scriptResetListener"/>
                                                     </h:commandButton>
                                                 </div>
                                                 <div class="col-md-2 col-sm-2 col-xs-12">
-                                                    <input type="button" value="Hủy bỏ" class="btn btn-default btn-custom reset" onclick="closeModal('#auctionPopup');"/>
+                                                    <input type="button" value="Hủy bỏ" class="btn btn-default btn-custom reset" onclick="closeModal('#storePopup');"/>
                                                 </div>
                                             </div>
                                         </div>

@@ -508,10 +508,10 @@
                                                              disabled="#{!roleController.role.canModify}"
                                                              value="#{roleController.stateScope[EScope.AUCTION_REGISTER]}"
                                                              styleClass="font-bold">
-                                        <p:ajax event="change" global="false" update="auctionRegister"
+                                        <p:ajax event="change" global="false" update="storeRegister"
                                                 listener="#{roleController.selectAllByScope(EScope.AUCTION_REGISTER)}"/>
                                     </p:selectBooleanCheckbox>
-                                    <p:selectManyCheckbox id="auctionRegister"
+                                    <p:selectManyCheckbox id="storeRegister"
                                                           columns="1"
                                                           styleClass="margin-left-role"
                                                           layout="pageDirection"
@@ -756,10 +756,10 @@
                                                              disabled="#{!roleController.role.canModify}"
                                                              value="#{roleController.stateScope[EScope.AUCTION_REQ]}"
                                                              styleClass="font-bold">
-                                        <p:ajax event="change" global="false" update="auctionReq"
+                                        <p:ajax event="change" global="false" update="storeReq"
                                                 listener="#{roleController.selectAllByScope(EScope.AUCTION_REQ)}"/>
                                     </p:selectBooleanCheckbox>
-                                    <p:selectManyCheckbox id="auctionReq"
+                                    <p:selectManyCheckbox id="storeReq"
                                                           columns="1"
                                                           styleClass="margin-left-role"
                                                           layout="pageDirection"
@@ -785,10 +785,10 @@
                                                              disabled="#{!roleController.role.canModify}"
                                                              value="#{roleController.stateScope[EScope.AUCTION_MANAGE]}"
                                                              styleClass="font-bold">
-                                        <p:ajax event="change" global="false" update="auctionManage"
+                                        <p:ajax event="change" global="false" update="storeManage"
                                                 listener="#{roleController.selectAllByScope(EScope.AUCTION_MANAGE)}"/>
                                     </p:selectBooleanCheckbox>
-                                    <p:selectManyCheckbox id="auctionManage"
+                                    <p:selectManyCheckbox id="storeManage"
                                                           columns="1" style="display: inline-flex"
                                                           styleClass="margin-left-role"
                                                           layout="pageDirection"
@@ -817,10 +817,10 @@
                                                              disabled="#{!roleController.role.canModify}"
                                                              value="#{roleController.stateScope[EScope.ASSIGN_AUCTIONEER]}"
                                                              styleClass="font-bold">
-                                        <p:ajax event="change" global="false" update="controlAuction"
+                                        <p:ajax event="change" global="false" update="controlStore"
                                                 listener="#{roleController.selectAllByScope(EScope.ASSIGN_AUCTIONEER)}"/>
                                     </p:selectBooleanCheckbox>
-                                    <p:selectManyCheckbox id="controlAuction"
+                                    <p:selectManyCheckbox id="controlStore"
                                                           columns="1"
                                                           styleClass="margin-left-role"
                                                           layout="pageDirection"

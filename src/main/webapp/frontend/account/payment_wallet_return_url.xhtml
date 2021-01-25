@@ -23,7 +23,7 @@
     <ui:define name="content">
         <h:panelGroup rendered="#{paymentWalletReturnUrlController.checkErrorCode()}">
             <div class="container" style="text-align: center; margin: 5px">
-                <h:link outcome="/frontend/account/my_auction.xhtml">
+                <h:link outcome="/frontend/account/my_store.xhtml">
                     <div style="margin: 5px">
                         <i class="glyphicon glyphicon-ok-sign" style="font-size: 100px; color: #4CD964"/>
                     </div>
@@ -33,7 +33,7 @@
         </h:panelGroup>
         <h:panelGroup rendered="#{!paymentWalletReturnUrlController.checkErrorCode()}">
             <div class="container" style="text-align: center; margin: 5px">
-                <h:link outcome="/frontend/account/my_auction.xhtml">
+                <h:link outcome="/frontend/account/my_store.xhtml">
                     <div style="margin: 5px">
                         <i class="glyphicon glyphicon-exclamation-sign" style="font-size: 100px; color: #f5222d"/>
                     </div>
