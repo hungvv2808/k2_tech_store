@@ -9,17 +9,17 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
-import vn.compedia.website.auction.controller.admin.common.ActionSystemController;
 import vn.compedia.website.auction.controller.frontend.common.AddressFEController;
 import vn.compedia.website.auction.controller.frontend.common.FacesNoticeController;
-import vn.compedia.website.auction.crypto.AES;
 import vn.compedia.website.auction.dto.common.CityDistrictDto;
 import vn.compedia.website.auction.dto.user.AccountDto;
 import vn.compedia.website.auction.jsf.CookieHelper;
 import vn.compedia.website.auction.jsf.GoogleRecaptcha;
-import vn.compedia.website.auction.model.*;
-import vn.compedia.website.auction.model.api.ApiSex;
-import vn.compedia.website.auction.repository.*;
+import vn.compedia.website.auction.model.Account;
+import vn.compedia.website.auction.model.Role;
+import vn.compedia.website.auction.repository.AccountRepository;
+import vn.compedia.website.auction.repository.ProvinceRepository;
+import vn.compedia.website.auction.repository.RoleRepository;
 import vn.compedia.website.auction.util.*;
 
 import javax.annotation.PostConstruct;
@@ -42,8 +42,6 @@ public class AuthorizationFEController implements Serializable {
     @Inject
     HttpServletRequest request;
     @Inject
-    private ActionSystemController actionSystemController;
-    @Inject
     private FacesNoticeController facesNoticeController;
     @Inject
     private AddressFEController addressFEController;
@@ -53,16 +51,6 @@ public class AuthorizationFEController implements Serializable {
     private RoleRepository roleRepository;
     @Autowired
     private ProvinceRepository provinceRepository;
-    @Autowired
-    private AuctionRegisterRepository auctionRegisterRepository;
-    @Autowired
-    private SystemConfigRepository systemConfigRepository;
-    @Autowired
-    private ApiSexRepository apiSexRepository;
-    @Autowired
-    private PlacesOfIssueRepository placesOfIssueRepository;
-    @Autowired
-    private AccuracyRepository accuracyRepository;
 
     private List<String> myMenus;
     private int role = DbConstant.ROLE_ID_NOT_LOGIN;
@@ -70,15 +58,12 @@ public class AuthorizationFEController implements Serializable {
     private Account account;
 
     // upload image
-    private Accuracy accuracy;
-    private List<Accuracy> accuracyList;
     private Map<String, String> accuracyCompanyFilePathMap;
     private boolean onChangeAccountType;
 
     private boolean married;
     private List<SelectItem> listProvinceAccount;
     private Date now;
-    private List<PlacesOfIssue> placesOfIssueList;
 
     private String oldPassword;
     private String newPassword;
@@ -91,13 +76,10 @@ public class AuthorizationFEController implements Serializable {
     private String encodeEmail;
     private String link;
 
-    // check show captcha
-    private List<SystemConfig> systemConfig;
     private boolean showCaptcha;
     private Integer numberWrongShowCaptcha;
     private boolean requiredCaptcha;
     private int numberWrongPassword = 1;
-    private SystemConfig systemConfigLoginFailed;
     private Long regulationId;
     private Long assetId;
     private Long assId;
@@ -143,21 +125,6 @@ public class AuthorizationFEController implements Serializable {
         if (!accountDto.isOrg()) {
             if (!FacesContext.getCurrentInstance().isPostback()) {
                 resetMyAccount();
-
-                accuracyList = accuracyRepository.findByAccountIdAndType(account.getAccountId(), account.isOrg() ? DbConstant.ACCURACY_TYPE_COMPANY : DbConstant.ACCURACY_TYPE_PERSON);
-                if (accuracyList.isEmpty()) {
-                    accuracy = new Accuracy();
-                    accuracyList = new ArrayList<>();
-                    accuracyCompanyFilePathMap = new LinkedHashMap<>();
-                } else {
-                    if (!account.isOrg()) {
-                        accuracy = accuracyList.get(0);
-                    } else {
-                        for (Accuracy accuracy : accuracyList) {
-                            accuracyCompanyFilePathMap.put(accuracy.getAccuracyCompanyFileName(), accuracy.getAccuracyCompanyFilePath());
-                        }
-                    }
-                }
             }
         } else {
             FacesUtil.redirect("/frontend/account/company_account.xhtml");
@@ -167,7 +134,6 @@ public class AuthorizationFEController implements Serializable {
     public void resetMyAccount() {
         account = accountRepository.findByAccountId(accountDto.getAccountId());
         BeanUtils.copyProperties(account, accountDto);
-        actionSystemController.resetAll();
         married = false;
         if (StringUtils.isNotBlank(accountDto.getRelativeIdCardNumber()) && StringUtils.isNotBlank(accountDto.getRelativeName())) {
             married = true;
@@ -177,14 +143,9 @@ public class AuthorizationFEController implements Serializable {
         addressFEController.setCityDistrictDto(cityDistrictDto);
         addressFEController.loadData();
         listProvinceAccount = new ArrayList<>();
-        now = new Date();
-        placesOfIssueList = (List<PlacesOfIssue>) placesOfIssueRepository.findAll();
-        for (PlacesOfIssue dto : placesOfIssueList) {
-            listProvinceAccount.add(new SelectItem(dto.getPlacesOfIssueId(), upperCaseFirstChar(dto.getName())));
-        }
     }
 
-    private boolean validateField(AccountDto accountDto, Accuracy accuracy, Map<String, String> accuracyCompanyFilePathMap) {
+    private boolean validateField(AccountDto accountDto, Map<String, String> accuracyCompanyFilePathMap) {
         // org
         if (accountDto.isOrg()) {
             if (StringUtils.isBlank(accountDto.getOrgName())) {
@@ -280,18 +241,6 @@ public class AuthorizationFEController implements Serializable {
                     facesNoticeController.addErrorMessage("Ngày cấp phải lớn hơn ngày sinh");
                     return false;
                 }
-            }
-
-            if (StringUtils.isBlank(accuracy.getImageCardIdFront())) {
-                facesNoticeController.addErrorMessage("Ảnh CMND/CCCD mặt trước là trường bắt buộc");
-                FacesUtil.updateView(Constant.ERROR_FE_GROWL_ID);
-                return false;
-            }
-
-            if (StringUtils.isBlank(accuracy.getImageCardIdBack())) {
-                facesNoticeController.addErrorMessage("Ảnh CMND/CCCD mặt sau là trường bắt buộc");
-                FacesUtil.updateView(Constant.ERROR_FE_GROWL_ID);
-                return false;
             }
         }
 
@@ -437,7 +386,6 @@ public class AuthorizationFEController implements Serializable {
             if (!validateUploadFile(e)) {
                 return;
             }
-            accuracy.setImageCardIdFront(FileUtil.saveFile(e.getFile()));
         } catch (Exception ex) {
             log.error("Error", ex);
         }
@@ -448,7 +396,6 @@ public class AuthorizationFEController implements Serializable {
             if (!validateUploadFile(e)) {
                 return;
             }
-            accuracy.setImageCardIdBack(FileUtil.saveFile(e.getFile()));
         } catch (Exception ex) {
             log.error("Error", ex);
         }
@@ -482,7 +429,7 @@ public class AuthorizationFEController implements Serializable {
     }
 
     public void onSaveData() {
-        if (!validateField(accountDto, accuracy, accuracyCompanyFilePathMap)) {
+        if (!validateField(accountDto, accuracyCompanyFilePathMap)) {
             resetMyAccount();
             return;
         }
@@ -499,35 +446,7 @@ public class AuthorizationFEController implements Serializable {
         }
         accountRepository.save(account);
 
-        if (!account.isOrg()) {
-            accuracy.setAccountId(account.getAccountId());
-            accuracy.setType(DbConstant.ACCURACY_TYPE_PERSON);
-            if (accuracy == null) {
-                accuracy.setCreateBy(account.getAccountId());
-            } else {
-                accuracy.setUpdateBy(account.getAccountId());
-            }
-            accuracyRepository.save(accuracy);
-        } else {
-            if (!accuracyList.isEmpty()) {
-                accuracyRepository.deleteAllByAccountIdAndType(account.getAccountId(), DbConstant.ACCURACY_TYPE_COMPANY);
-            }
-            accuracyList = new ArrayList<>();
-            for (Map.Entry<String, String> stringMap : accuracyCompanyFilePathMap.entrySet()) {
-                Accuracy obj = new Accuracy();
-                obj.setAccountId(account.getAccountId());
-                obj.setAccuracyCompanyFilePath(stringMap.getValue());
-                obj.setAccuracyCompanyFileName(stringMap.getKey());
-                obj.setType(DbConstant.ACCURACY_TYPE_COMPANY);
-                obj.setCreateBy(account.getAccountId());
-                obj.setUpdateBy(account.getAccountId());
-                accuracyList.add(obj);
-            }
-            accuracyRepository.saveAll(accuracyList);
-        }
-
         facesNoticeController.addSuccessMessage("Cập nhật thành công");
-        actionSystemController.onSave("Cập nhật tài khoản cho người dùng " + account.getUsername(), account.getAccountId());
 
         if (assetId != null) {
             FacesUtil.redirect("/frontend/asset/asset_detail.xhtml?id=" + assetId);
@@ -566,8 +485,8 @@ public class AuthorizationFEController implements Serializable {
     }
 
     public void login() {
-        String username = AES.decrypt(accountDto.getUsername(), cryptoSecretKey);
-        String password = AES.decrypt(accountDto.getPassword(), cryptoSecretKey);
+        String username = accountDto.getUsername();
+        String password = accountDto.getPassword();
 
         facesNoticeController.resetGoogleRecaptcha("login-form");
 
@@ -604,11 +523,9 @@ public class AuthorizationFEController implements Serializable {
                     requiredCaptcha = true;
                 }
             }
-            //check failed login
-            SystemConfig sc = systemConfigRepository.findSystemConfigBySystemConfigId(DbConstant.SYSTEM_CONFIG_ID_NUMBER_LOGIN_FAILED);
-            if (account.getLoginFailed() < (sc.getValue().intValue() - 1)) {
+            if (account.getLoginFailed() < 5) {
                 account.setLoginFailed(account.getLoginFailed() + 1);
-                facesNoticeController.addErrorMessage("Tên đăng nhập hoặc mật khẩu không chính xác, bạn còn " + (sc.getValue().intValue() - account.getLoginFailed()) + " lần thử vui lòng thử lại ");
+                facesNoticeController.addErrorMessage("Tên đăng nhập hoặc mật khẩu không chính xác, bạn còn " + 5 + " lần thử vui lòng thử lại ");
                 accountRepository.save(account);
             } else {
                 facesNoticeController.addErrorMessage(PropertiesUtil.getProperty("notification.locked.account"));
@@ -744,35 +661,8 @@ public class AuthorizationFEController implements Serializable {
         myMenus = new ArrayList<>();
         account = new Account();
         accountDto.setRoleId((role));
-        accuracy = new Accuracy();
-        accuracyList = new ArrayList<>();
         accuracyCompanyFilePathMap = new LinkedHashMap<>();
         updateMenuByRole();
-        // get system config captcha
-        systemConfig = new ArrayList<>();
-        Iterable<SystemConfig> source = systemConfigRepository.findAll();
-        source.forEach(systemConfig::add);
-        try {
-            showCaptcha = getSystemConfigById(DbConstant.SYSTEM_CONFIG_ID_SHOW_CAPTCHA).getValue().intValue() == 1;
-            numberWrongShowCaptcha = getSystemConfigById(DbConstant.SYSTEM_CONFIG_ID_NUMBER_WRONG_SHOW_CAPTCHA).getValue().intValue();
-        } catch (Exception e) {
-            log.error(e);
-        }
-        systemConfigLoginFailed = getSystemConfigById(DbConstant.SYSTEM_CONFIG_ID_NUMBER_LOGIN_FAILED);
-        apiSexList = new ArrayList<>();
-        List<ApiSex> listApiSex = (List<ApiSex>) apiSexRepository.findAll();
-        for (ApiSex sex : listApiSex) {
-            apiSexList.add(new SelectItem(sex.getSexId(), sex.getName()));
-        }
-    }
-
-    private SystemConfig getSystemConfigById(Long id) {
-        for (SystemConfig sc : systemConfig) {
-            if (sc.getSystemConfigId().equals(id)) {
-                return sc;
-            }
-        }
-        return null;
     }
 
     public AccountDto getAccountDto() {
@@ -922,8 +812,7 @@ public class AuthorizationFEController implements Serializable {
 //            return;
 //        }
 
-        String username = AES.decrypt(accountDto.getUsername(), cryptoSecretKey);
-        Account account = accountRepository.findAccountByUsername(username);
+        Account account = accountRepository.findAccountByUsername("abc");
 //        if (account == null) {
 //            facesNoticeController.addErrorMessage("Tài khoản hoặc mật khẩu không chính xác");
 //            return;
@@ -932,10 +821,8 @@ public class AuthorizationFEController implements Serializable {
 //            facesNoticeController.addErrorMessage("Tài khoản hoặc mật khẩu không chính xác");
 //            return;
 //        }
-        account.setActiveToken(StringUtil.encryptPassword(StringUtil.generateSalt()));
-        account.setTokenExpire(DateUtil.plusMinute(new Date(), Integer.parseInt(PropertiesUtil.getProperty("auth.token.expire"))));
         accountRepository.save(account);
-        link = buildHttpURI() + "/frontend/account/activation.xhtml?token=" + account.getActiveToken();
+        link = buildHttpURI() + "/frontend/account/activation.xhtml?token=" + "abcdefgh";
         EmailUtil.getInstance().sendCreateUserEmail(account.getEmail(), link , account.getUsername());
         facesNoticeController.addSuccessMessage("Email đã được gửi về tài khoản: " + encodeEmail + " vui lòng kiểm tra email để kích hoạt tài khoản");
         checkActiveStatus = false;

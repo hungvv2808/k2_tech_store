@@ -7,14 +7,11 @@ import org.springframework.context.annotation.Scope;
 import vn.compedia.website.auction.controller.frontend.AuthorizationFEController;
 import vn.compedia.website.auction.controller.frontend.BaseFEController;
 import vn.compedia.website.auction.controller.frontend.payment.other.CaptureWallet;
-import vn.compedia.website.auction.model.Account;
-import vn.compedia.website.auction.model.AuctionRegister;
 import vn.compedia.website.auction.model.payment.Payment;
 import vn.compedia.website.auction.model.payment.other.*;
 import vn.compedia.website.auction.repository.*;
 import vn.compedia.website.auction.util.Constant;
 import vn.compedia.website.auction.util.DbConstant;
-import vn.compedia.website.auction.util.EmailUtil;
 import vn.compedia.website.auction.util.payment.PaymentVariableUtil;
 import vn.compedia.website.auction.util.payment.other.constants.PaymentConstant;
 
@@ -38,17 +35,11 @@ public class PaymentWalletReturnUrlController extends BaseFEController {
     @Autowired
     private PaymentRepository paymentRepository;
     @Autowired
-    private AuctionRegisterRepository auctionRegisterRepository;
-    @Autowired
     private PaymentCheckOrderRequestRepository paymentCheckOrderRequestRepository;
     @Autowired
     private PaymentCheckOrderResponseRepository paymentCheckOrderResponseRepository;
     @Autowired
     private PaymentCheckOrderResponseRefRepository paymentCheckOrderResponseRefRepository;
-    @Autowired
-    private AssetRepository assetRepository;
-    @Autowired
-    private RegulationRepository regulationRepository;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
@@ -151,19 +142,6 @@ public class PaymentWalletReturnUrlController extends BaseFEController {
         paymentReturnUrlRequest.setPaymentId(paymentTmp.getPaymentId());
         paymentReturnUrlRequestRepository.save(paymentReturnUrlRequest);
         System.err.println("Update data on table payment_return_url_request complete !!!");
-
-        // update status on auction_register table to approved
-        AuctionRegister auctionRegister = auctionRegisterRepository.findById(auctionRegisterId).orElse(null);
-        auctionRegister.setStatus(status == PaymentConstant.API_WALLET_STATUS_ALREADY_PAID ? DbConstant.AUCTION_REGISTER_STATUS_ACCEPTED : DbConstant.AUCTION_REGISTER_STATUS_WAITING);
-        if (status == PaymentConstant.API_WALLET_STATUS_ALREADY_PAID) {
-            auctionRegister.setStatusRefund(DbConstant.AUCTION_REGISTER_STATUS_REFUND_THREE);
-        }
-        auctionRegisterRepository.save(auctionRegister);
-        String assetName = assetRepository.getNameByAssetId(auctionRegister.getAssetId());
-        String regulationCode = regulationRepository.getCodeByRegulationId(auctionRegister.getRegulationId());
-        Account account = accountRepository.findAccountByAccountId(auctionRegister.getAccountId());
-        String name = account.isOrg() ? account.getOrgName() : account.getFullName();
-        EmailUtil.getInstance().sendNotificationAccepted(account.getEmail(),name, assetName, regulationCode, auctionRegister.getCode());
         System.err.println("Update status on table auction register complete !!!");
     }
     

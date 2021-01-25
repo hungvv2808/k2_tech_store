@@ -9,16 +9,16 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
-import vn.compedia.website.auction.controller.admin.common.ActionSystemController;
 import vn.compedia.website.auction.controller.admin.common.CityDistrictController;
 import vn.compedia.website.auction.controller.frontend.common.FacesNoticeController;
-import vn.compedia.website.auction.crypto.AES;
 import vn.compedia.website.auction.dto.common.CityDistrictDto;
 import vn.compedia.website.auction.dto.user.AccountDto;
 import vn.compedia.website.auction.entity.EFunction;
 import vn.compedia.website.auction.entity.EScope;
-import vn.compedia.website.auction.model.*;
-import vn.compedia.website.auction.model.api.ApiSex;
+import vn.compedia.website.auction.model.Account;
+import vn.compedia.website.auction.model.FunctionRole;
+import vn.compedia.website.auction.model.Province;
+import vn.compedia.website.auction.model.Role;
 import vn.compedia.website.auction.repository.*;
 import vn.compedia.website.auction.util.*;
 
@@ -30,8 +30,9 @@ import javax.inject.Named;
 import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Log4j2
 @Named
@@ -41,8 +42,6 @@ import java.util.*;
 public class AuthorizationController implements Serializable {
     @Inject
     HttpServletRequest request;
-    @Inject
-    private ActionSystemController actionSystemController;
     @Inject
     private AuthFunctionController authFunction;
     @Inject
@@ -60,12 +59,6 @@ public class AuthorizationController implements Serializable {
     private FunctionRoleRepository functionRoleRepository;
     @Autowired
     private ProvinceRepository provinceRepository;
-    @Autowired
-    private AssetRepository assetRepository;
-    @Autowired
-    private SystemConfigRepository systemConfigRepository;
-    @Autowired
-    private ApiSexRepository apiSexRepository;
 
     private List<String> functions;
     private int role = DbConstant.ROLE_ID_NOT_LOGIN;
@@ -79,7 +72,6 @@ public class AuthorizationController implements Serializable {
     private String newPassword;
     private String newRepassword;
     private boolean married;
-    private List<SystemConfig> systemConfig;
     // check show captcha
     private boolean showCaptcha;
     private Integer numberWrongShowCaptcha;
@@ -127,22 +119,6 @@ public class AuthorizationController implements Serializable {
         married = false;
         accountDto.setRoleId(role);
         authFunction.setRole(role);
-        // get system config captcha
-        systemConfig = new ArrayList<>();
-        Iterable<SystemConfig> source = systemConfigRepository.findAll();
-        source.forEach(systemConfig::add);
-        try {
-            showCaptcha = getSystemConfigById(DbConstant.SYSTEM_CONFIG_ID_SHOW_CAPTCHA).getValue().intValue() == 1;
-            numberWrongShowCaptcha = getSystemConfigById(DbConstant.SYSTEM_CONFIG_ID_NUMBER_WRONG_SHOW_CAPTCHA).getValue().intValue();
-        } catch (Exception e) {
-            log.error(e);
-        }
-        now = new Date();
-        apiSexList = new ArrayList<>();
-        List<ApiSex> listApiSex = (List<ApiSex>) apiSexRepository.findAll();
-        for (ApiSex sex : listApiSex) {
-            apiSexList.add(new SelectItem(sex.getSexId(), sex.getName()));
-        }
     }
 
     public void initChangePassword() {
@@ -163,15 +139,14 @@ public class AuthorizationController implements Serializable {
             FacesUtil.redirect("/admin/login.xhtml");
             return;
         }
-        if(!FacesContext.getCurrentInstance().isPostback()){
-           resetMyAccount();
+        if (!FacesContext.getCurrentInstance().isPostback()) {
+            resetMyAccount();
         }
     }
 
     public void resetMyAccount() {
         account = accountRepository.findByAccountId(accountDto.getAccountId());
-        BeanUtils.copyProperties(account,accountDto);
-        actionSystemController.resetAll();
+        BeanUtils.copyProperties(account, accountDto);
         married = StringUtils.isNotBlank(accountDto.getRelativeIdCardNumber()) && StringUtils.isNotBlank(accountDto.getRelativeName());
         permissionList = roleRepository.findRolesByType(DbConstant.ROLE_TYPE_ADMIN);
         listProvinceAccount = new ArrayList<>();
@@ -201,19 +176,19 @@ public class AuthorizationController implements Serializable {
             return false;
         }
 
-        if(accountDto.getDateOfBirth() != null) {
-            if (accountDto.getDateOfBirth().getYear() <= -1899){
+        if (accountDto.getDateOfBirth() != null) {
+            if (accountDto.getDateOfBirth().getYear() <= -1899) {
                 setErrorForm("Ngày sinh sai định dạng");
                 return false;
             }
         }
 
-        if(!accountDto.getPhone().matches("^0[1-9]{1}[0-9]{8,9}$|")){
+        if (!accountDto.getPhone().matches("^0[1-9]{1}[0-9]{8,9}$|")) {
             setErrorForm("Số điện thoại không đúng định dạng");
             return false;
         }
         if (!accountDto.isOrg()) {
-            if(StringUtils.isNotBlank(accountDto.getPhone())) {
+            if (StringUtils.isNotBlank(accountDto.getPhone())) {
                 accountDto.setPhone(accountDto.getPhone().trim());
                 Account oldAccount = accountRepository.findByPhone(accountDto.getPhone());
                 if (oldAccount != null && !account.getPhone().equals(accountDto.getPhone())) {
@@ -229,7 +204,7 @@ public class AuthorizationController implements Serializable {
         }
         if (accountDto.isOrg()) {
 
-            if(StringUtils.isNotBlank(accountDto.getPhone())) {
+            if (StringUtils.isNotBlank(accountDto.getPhone())) {
                 accountDto.setPhone(accountDto.getPhone().trim());
                 Account oldAccount = accountRepository.findByPhone(accountDto.getPhone());
                 if (oldAccount != null && !account.getPhone().equals(accountDto.getPhone())) {
@@ -243,7 +218,7 @@ public class AuthorizationController implements Serializable {
                 }
             }
 
-            if(StringUtils.isNotBlank(accountDto.getOrgPhone())) {
+            if (StringUtils.isNotBlank(accountDto.getOrgPhone())) {
                 accountDto.setOrgPhone(accountDto.getOrgPhone().trim());
                 Account oldAccountOrg = accountRepository.findByPhone(accountDto.getOrgPhone());
                 if (oldAccountOrg != null && !account.getOrgPhone().equals(accountDto.getOrgPhone())) {
@@ -265,7 +240,7 @@ public class AuthorizationController implements Serializable {
             return false;
         }
 
-        if(!accountDto.getEmail().matches("^\\s*[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})\\s*$")){
+        if (!accountDto.getEmail().matches("^\\s*[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})\\s*$")) {
             setErrorForm("Email không đúng định dạng");
             return false;
         }
@@ -282,7 +257,7 @@ public class AuthorizationController implements Serializable {
 
         accountDto.setEmail(accountDto.getEmail().trim());
         Account oldEmail = accountRepository.findByEmail(accountDto.getEmail());
-            if (oldEmail != null && !accountDto.getAccountId().equals(oldEmail.getAccountId())) {
+        if (oldEmail != null && !accountDto.getAccountId().equals(oldEmail.getAccountId())) {
             setErrorForm("Email đã tồn tại");
             FacesUtil.updateView("growl");
             return false;
@@ -303,7 +278,6 @@ public class AuthorizationController implements Serializable {
         account.setUpdateBy(accountDto.getAccountId());
         account.setFirstTimeLogin(true);
         accountRepository.save(account);
-        actionSystemController.onSave("Cập nhật tài khoản cho user "+account.getUsername(),account.getAccountId());
         setSuccessForm("Cập nhật thành công");
 
         // update view
@@ -313,8 +287,8 @@ public class AuthorizationController implements Serializable {
     }
 
     public void login() {
-        String username = StringUtils.isBlank(accountDto.getUsername()) ? "" : AES.decrypt(accountDto.getUsername(), cryptoSecretKey);
-        String password = StringUtils.isBlank(accountDto.getPassword()) ? "" : AES.decrypt(accountDto.getPassword(), cryptoSecretKey);
+        String username = accountDto.getUsername();
+        String password = accountDto.getPassword();
 
         createAccountDefault();
 
@@ -345,12 +319,9 @@ public class AuthorizationController implements Serializable {
                     requiredCaptcha = true;
                 }
             }
-            // check lock account
-            SystemConfig sc = new SystemConfig();
-            sc = systemConfigRepository.findSystemConfigBySystemConfigId(DbConstant.SYSTEM_CONFIG_ID_NUMBER_LOGIN_FAILED);
-            if (account.getLoginFailed() < (sc.getValue().intValue() - 1)) {
+            if (account.getLoginFailed() > 5) {
                 account.setLoginFailed(account.getLoginFailed() + 1);
-                setErrorForm("Tên đăng nhập hoặc mật khẩu không chính xác, bạn còn " + (sc.getValue().intValue() - account.getLoginFailed()) + " lần thử vui lòng thử lại");
+                setErrorForm("Tên đăng nhập hoặc mật khẩu không chính xác, bạn còn " + 5 + " lần thử vui lòng thử lại");
                 accountRepository.save(account);
             } else {
                 setErrorForm(PropertiesUtil.getProperty("notification.locked.account"));
@@ -533,15 +504,6 @@ public class AuthorizationController implements Serializable {
             user.setUpdateDate(new Date());
             accountRepository.save(user);
         }
-    }
-
-    private SystemConfig getSystemConfigById(Long id) {
-        for (SystemConfig sc : systemConfig) {
-            if (sc.getSystemConfigId().equals(id)) {
-                return sc;
-            }
-        }
-        return null;
     }
 
     public boolean hasRole(EScope... scopes) {

@@ -22,7 +22,7 @@
 
     <!-- Admin -->
     <welcome-file-list>
-        <welcome-file>frontend/index.xhtml</welcome-file>
+        <welcome-file>admin/login.xhtml</welcome-file>
     </welcome-file-list>
 
     <!-- Frontend -->
@@ -147,19 +147,6 @@
         <filter-name>authorizationFilter</filter-name>
         <url-pattern>/frontend/*</url-pattern>
     </filter-mapping>
-    <!--    <filter-mapping>-->
-    <!--        <filter-name>authorizationFilter</filter-name>-->
-    <!--        <url-pattern>/analysis/*</url-pattern>-->
-    <!--    </filter-mapping>-->
-    <!--    <filter-mapping>-->
-    <!--        <filter-name>authorizationFilter</filter-name>-->
-    <!--        <url-pattern>/management/*</url-pattern>-->
-    <!--    </filter-mapping>-->
-    <!--    <filter-mapping>-->
-    <!--        <filter-name>authorizationFilter</filter-name>-->
-    <!--        <url-pattern>/home/*</url-pattern>-->
-    <!--    </filter-mapping>-->
-
     <filter>
         <filter-name>AdminPage</filter-name>
         <filter-class>vn.compedia.website.auction.jsf.AdminPageFilter</filter-class>
@@ -168,8 +155,6 @@
         <filter-name>AdminPage</filter-name>
         <url-pattern>/dieuhanh</url-pattern>
     </filter-mapping>
-
-    <!-- Recaptcha start -->
     <context-param>
         <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
         <param-value>6Ld5X84UAAAAANzor2hATehQuI-7eUgLobNYWHat</param-value>
@@ -179,8 +164,6 @@
         <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
         <param-value>6Ld5X84UAAAAAMnu0-8-2X9bfLEn_oTSy8JIfBFy</param-value>
     </context-param>
-    <!-- Recaptcha end -->
-
     <error-page>
         <exception-type>java.lang.IllegalStateException</exception-type>
         <location>/admin/errors/expired.xhtml</location>

@@ -96,12 +96,6 @@ public class Account extends BaseModel {
     @Column(name = "login_failed")
     private Integer loginFailed = 0;
 
-    @Column(name = "active_token")
-    private String activeToken;
-
-    @Column(name = "token_expire")
-    private Date tokenExpire;
-
     @Column(name = "first_time_login")
     private boolean firstTimeLogin;
 

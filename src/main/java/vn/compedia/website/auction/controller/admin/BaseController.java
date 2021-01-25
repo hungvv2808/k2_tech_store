@@ -8,13 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import vn.compedia.website.auction.controller.admin.auth.AuthFunctionController;
 import vn.compedia.website.auction.controller.admin.auth.AuthorizationController;
-import vn.compedia.website.auction.controller.admin.common.ActionSystemController;
 import vn.compedia.website.auction.entity.EFunction;
 import vn.compedia.website.auction.entity.EScope;
 import vn.compedia.website.auction.model.Account;
-import vn.compedia.website.auction.model.Asset;
 import vn.compedia.website.auction.repository.AccountRepository;
-import vn.compedia.website.auction.repository.AssetRepository;
 import vn.compedia.website.auction.util.*;
 
 import javax.inject.Inject;
@@ -34,12 +31,7 @@ public abstract class BaseController implements Serializable {
     @Inject
     AuthorizationController authorizationController;
     @Inject
-    ActionSystemController actionSystemController;
-    @Inject
     CommonController commonController;
-
-    @Autowired
-    private AssetRepository assetRepository;
     @Autowired
     AccountRepository accountRepository;
 
@@ -60,37 +52,12 @@ public abstract class BaseController implements Serializable {
             FacesUtil.redirect("/admin/login.xhtml");
             return;
         }
-        // Check first time login
-        if (!authorizationController.getAccountDto().isLoginFromSso()
-                && !authorizationController.getAccountDto().isFirstTimeLogin()) {
-            FacesUtil.redirect("/admin/doi-mat-khau.xhtml");
-            return;
-        }
-        if (!authorizationController.getAccountDto().isLoginFromSso()
-                && authorizationController.getAccountDto().getTimeToChangePassword() != null) {
-            if (DateUtil.plusDay(authorizationController.getAccountDto().getTimeToChangePassword(), DbConstant.ACCOUNT_TIME_TO_CHANGE_PASSWORD).getTime() <= (new Date()).getTime() && authorizationController.getAccountDto().getAccountId() != null) {
-                FacesUtil.addErrorMessage("Mật khẩu của bạn đã được sử dụng trong " + DbConstant.ACCOUNT_TIME_TO_CHANGE_PASSWORD + " ngày vui lòng đổi mật khẩu để đảm bảo an toàn !");
-                FacesUtil.redirect("/admin/doi-mat-khau.xhtml");
-                return;
-            }
-        }
         // Check permission
         if (!authorizationController.hasRole(getMenuId())) {
             // redirect to access denied page
             FacesUtil.redirect("/admin/errors/access.xhtml");
         }
-
-        // load asset assign
-        List<Asset> assetList = assetRepository.getAssetByAuctioneerIdAndAssetStatus(
-                authorizationController.getAccountDto().getAccountId(),
-                Arrays.asList(DbConstant.ASSET_STATUS_WAITING, DbConstant.ASSET_STATUS_PLAYING)
-        );
-        authorizationController.getAccountDto().setSessionAsset(new HashMap<>());
-        for (Asset asset : assetList) {
-            authorizationController.getAccountDto().getSessionAsset().put(asset.getAssetId(), asset);
-        }
     }
-    public ActionSystemController actionSystemController(){ return  actionSystemController;}
 
     public EFunction getActions() {
         return authorizationController.getActions(getMenuId());

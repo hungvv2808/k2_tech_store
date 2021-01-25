@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.primefaces.model.UploadedFile;
 import vn.compedia.website.auction.model.Account;
-import vn.compedia.website.auction.model.Asset;
 
 import java.util.Date;
 import java.util.Map;
@@ -34,7 +33,6 @@ public class AccountDto extends Account {
     private String nameDistrict;
     private String nameCommune;
     private String updateName;
-    private Map<Long, Asset> sessionAsset;
     private String imageCardIdFrontPath;
     private String imageCardIdBackPath;
     private Map<String, String> accuracyCompanyFile; // file_path/file_name

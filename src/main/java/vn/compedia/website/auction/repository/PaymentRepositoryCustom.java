@@ -2,7 +2,6 @@ package vn.compedia.website.auction.repository;
 
 import vn.compedia.website.auction.dto.payment.PaymentDto;
 import vn.compedia.website.auction.dto.payment.PaymentSearchDto;
-import vn.compedia.website.auction.model.payment.Payment;
 
 import java.util.List;
 

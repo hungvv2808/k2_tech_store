@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.compedia.website.auction.controller.admin.BaseController;
 import vn.compedia.website.auction.controller.admin.auth.AuthorizationController;
-import vn.compedia.website.auction.controller.admin.common.ActionSystemController;
 import vn.compedia.website.auction.controller.admin.common.CityDistrictController;
 import vn.compedia.website.auction.dto.common.CityDistrictDto;
 import vn.compedia.website.auction.dto.user.AccountDto;
@@ -18,10 +17,15 @@ import vn.compedia.website.auction.dto.user.AdministratorsCentralStaffSearchDto;
 import vn.compedia.website.auction.entity.EScope;
 import vn.compedia.website.auction.model.Account;
 import vn.compedia.website.auction.model.Province;
-import vn.compedia.website.auction.model.Regulation;
 import vn.compedia.website.auction.model.Role;
-import vn.compedia.website.auction.repository.*;
-import vn.compedia.website.auction.util.*;
+import vn.compedia.website.auction.repository.AccountRepository;
+import vn.compedia.website.auction.repository.AdministratorsCentralStaffRepository;
+import vn.compedia.website.auction.repository.ProvinceRepository;
+import vn.compedia.website.auction.repository.RoleRepository;
+import vn.compedia.website.auction.util.DbConstant;
+import vn.compedia.website.auction.util.EmailUtil;
+import vn.compedia.website.auction.util.FacesUtil;
+import vn.compedia.website.auction.util.StringUtil;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -42,8 +46,6 @@ public class AdministratorsCentralStaffController extends BaseController {
     private AuthorizationController authorizationController;
     @Inject
     private CityDistrictController cityDistrictController;
-    @Inject
-    private ActionSystemController actionSystemController;
 
     @Autowired
     protected AdministratorsCentralStaffRepository administratorsCentralStaffRepository;
@@ -53,8 +55,6 @@ public class AdministratorsCentralStaffController extends BaseController {
     protected AccountRepository accountRepository;
     @Autowired
     private ProvinceRepository provinceRepository;
-    @Autowired
-    private RegulationRepository regulationRepository;
 
     private AdministratorsCentralStaffSearchDto adminSearchDto;
     private AccountDto accountDto;
@@ -65,8 +65,6 @@ public class AdministratorsCentralStaffController extends BaseController {
     private LazyDataModel<AccountDto> lazyDataModel;
     private Date now;
     private Account account;
-    private List<Regulation> regulation;
-    private List<Regulation> regulationCopy;
 
     private final String ROLE_NAME_ADMIN = "quản trị";
 
@@ -81,11 +79,8 @@ public class AdministratorsCentralStaffController extends BaseController {
         now = new Date();
         adminSearchDto = new AdministratorsCentralStaffSearchDto();
         accountDto = new AccountDto();
-        actionSystemController.resetAll();
         permissionList = roleRepository.findRolesByTypeAndStatus(DbConstant.ROLE_TYPE_ADMIN, DbConstant.ROLE_STATUS_ACTIVE);
         listProvinceAccount = new ArrayList<>();
-        regulation = new ArrayList<>();
-        regulationCopy = new ArrayList<>();
         provinceList = (List<Province>) provinceRepository.findAll();
         for (Province dto : provinceList) {
             listProvinceAccount.add(new SelectItem(dto.getProvinceId(), dto.getName()));
@@ -206,11 +201,6 @@ public class AdministratorsCentralStaffController extends BaseController {
             account.setUpdateBy(authorizationController.getAccountDto().getAccountId());
         }
         administratorsCentralStaffRepository.save(account);
-        if (accountDto.getAccountId() == null) {
-            actionSystemController.onSave("Thêm mới cán bộ " + account.getFullName(), authorizationController.getAccountDto().getAccountId());
-        } else {
-            actionSystemController.onSave("Sửa cán bộ " + accountDto.getFullName(), authorizationController.getAccountDto().getAccountId());
-        }
         FacesUtil.closeDialog("dialogInsertMember");
         if (accountDto.getAccountId() == null) {
             FacesUtil.addSuccessMessage("Tài khoản được tạo thành công, truy cập \"" + accountDto.getEmail() + "\" để lấy mật khẩu hệ thống !");
@@ -225,17 +215,6 @@ public class AdministratorsCentralStaffController extends BaseController {
 
     public void onDelete(AccountDto ac) {
         Account acc = new Account();
-        regulation = regulationRepository.findRegulationsByAuctioneerId(ac.getAccountId());
-        regulationCopy = regulationRepository.findRegulationsByCreateBy(ac.getAccountId());
-        if (regulation.size() != 0) {
-            FacesUtil.addErrorMessage("Không thể xóa đối với tài khoản đã tạo quy chế hoặc đã điều hành. Bạn vui lòng khóa tài khoản nếu không còn sử dụng!");
-            return;
-        }
-        if (regulationCopy.size() != 0) {
-            FacesUtil.addErrorMessage("Không thể xóa đối với tài khoản đã tạo quy chế hoặc đã điều hành. Bạn vui lòng khóa tài khoản nếu không còn sử dụng!");
-            return;
-        }
-        actionSystemController.onSave("Xóa cán bộ " + ac.getFullName(), authorizationController.getAccountDto().getAccountId());
         ac.setAccountStatus(DbConstant.ACCOUNT_DELETE_STATUS);
         BeanUtils.copyProperties(ac,acc);
         accountRepository.save(acc);
@@ -250,7 +229,6 @@ public class AdministratorsCentralStaffController extends BaseController {
         account = new Account();
         BeanUtils.copyProperties(ac, account);
         accountRepository.save(account);
-        actionSystemController.onSave("Mở khoá thông tin tài khoản cán bộ \"" + ac.getFullName() + "\"", authorizationController.getAccountDto().getAccountId());
         EmailUtil.getInstance().onUnLockAccount(account.getEmail(), account.getFullName());
         FacesUtil.addSuccessMessage("Mở khóa tài khoản thành công");
         resetAll();
@@ -263,7 +241,6 @@ public class AdministratorsCentralStaffController extends BaseController {
         account = new Account();
         BeanUtils.copyProperties(ac, account);
         accountRepository.save(account);
-        actionSystemController.onSave("Khoá thông tin tài khoản cán bộ \"" + ac.getFullName() + "\"", authorizationController.getAccountDto().getAccountId());
         FacesUtil.addSuccessMessage("Khóa tài khoản thành công");
         EmailUtil.getInstance().onLockAccount(account.getEmail(), account.getFullName());
         resetAll();
@@ -278,7 +255,6 @@ public class AdministratorsCentralStaffController extends BaseController {
         account.setPassword(StringUtil.encryptPassword(password, account.getSalt()));
         account.setFirstTimeLogin(false);
         accountRepository.save(account);
-        actionSystemController.onSave("Cấp lại mật khẩu tài khoản cán bộ " + dto.getFullName(), authorizationController.getAccountDto().getAccountId());
         // send email
         EmailUtil.getInstance().sendResetPasswordUserEmail(account.getEmail(),account.getUsername(), password, account.getFullName());
         FacesUtil.addSuccessMessage("Cấp lại mật khẩu thành công, truy cập \"" + account.getEmail() + "\" để lấy mật khẩu truy cập hệ thống!");

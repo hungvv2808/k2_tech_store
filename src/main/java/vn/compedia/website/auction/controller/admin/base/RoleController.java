@@ -3,7 +3,6 @@ package vn.compedia.website.auction.controller.admin.base;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
-import org.docx4j.wml.R;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import org.springframework.beans.BeanUtils;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.util.ObjectUtils;
 import vn.compedia.website.auction.controller.admin.BaseController;
 import vn.compedia.website.auction.controller.admin.auth.AuthorizationController;
-import vn.compedia.website.auction.controller.admin.common.ActionSystemController;
 import vn.compedia.website.auction.dto.base.FunctionDto;
 import vn.compedia.website.auction.dto.base.RoleSearchDto;
 import vn.compedia.website.auction.dto.user.AccountDto;
@@ -48,8 +46,6 @@ public class RoleController extends BaseController {
     protected RoleRepository roleRepository;
     @Autowired
     protected RoleService roleService;
-    @Inject
-    private ActionSystemController actionSystemController;
     @Autowired
     private FunctionRepository functionRepository;
     @Autowired
@@ -89,7 +85,6 @@ public class RoleController extends BaseController {
         scopeActionsAll = new HashMap<>();
         stateScope = new HashMap<>();
         checkboxSelectAll = false;
-        actionSystemController.resetAll();
         //build function list
         buildScopes();
         //reset table
@@ -137,7 +132,6 @@ public class RoleController extends BaseController {
         if (role.getType() == null) {
             role.setType(DbConstant.ROLE_TYPE_ADMIN);
         }
-        checkHistory();
         roleRepository.save(role);
         //save role's functions
         functionDtoList = new ArrayList<>();
@@ -168,7 +162,6 @@ public class RoleController extends BaseController {
         scopeActionsAll = new HashMap<>();
         stateScope = new HashMap<>();
         checkboxSelectAll = false;
-        actionSystemController.resetAll();
         //build function list
         buildScopes();
     }
@@ -183,14 +176,6 @@ public class RoleController extends BaseController {
         BeanUtils.copyProperties(obj, roleCopy);
     }
 
-    public void checkHistory() {
-        if (role.getRoleId() == null) {
-            actionSystemController.onSave("Thêm mới nhóm quyền " + role.getName(), authorizationController.getAccountDto().getAccountId());
-        } else {
-            actionSystemController.onSave("Sửa nhóm quyền " + role.getName(), authorizationController.getAccountDto().getAccountId());
-        }
-    }
-
     public void onDelete(Role obj) {
         try {
             if (!obj.getCanModify()) {
@@ -202,7 +187,6 @@ public class RoleController extends BaseController {
                 setErrorForm("Không được xóa vì nhóm quyền đang được gán cho người dùng");
                 return;
             }
-            actionSystemController.onSave("Xóa nhóm quyền " + obj.getName(), authorizationController.getAccountDto().getAccountId());
             roleService.delete(obj.getRoleId());
             onSearch();
             FacesUtil.addSuccessMessage("Xóa nhóm quyền thành công");

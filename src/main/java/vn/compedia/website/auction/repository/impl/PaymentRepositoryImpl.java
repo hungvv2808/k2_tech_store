@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import vn.compedia.website.auction.dto.payment.PaymentDto;
 import vn.compedia.website.auction.dto.payment.PaymentSearchDto;
-import vn.compedia.website.auction.model.payment.Payment;
 import vn.compedia.website.auction.repository.PaymentRepositoryCustom;
 import vn.compedia.website.auction.util.ValueUtil;
 

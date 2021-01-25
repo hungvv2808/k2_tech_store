@@ -11,9 +11,7 @@ import vn.compedia.website.auction.controller.admin.CommonController;
 import vn.compedia.website.auction.controller.admin.LanguageController;
 import vn.compedia.website.auction.controller.frontend.common.FacesNoticeController;
 import vn.compedia.website.auction.model.Account;
-import vn.compedia.website.auction.model.Asset;
 import vn.compedia.website.auction.repository.AccountRepository;
-import vn.compedia.website.auction.repository.AuctionRegisterRepository;
 import vn.compedia.website.auction.util.*;
 
 import javax.inject.Inject;
@@ -37,8 +35,6 @@ public abstract class BaseFEController implements Serializable {
     @Inject
     private FacesNoticeController facesNoticeController;
     @Autowired
-    private AuctionRegisterRepository auctionRegisterRepository;
-    @Autowired
     private AccountRepository accountRepository;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -58,9 +54,6 @@ public abstract class BaseFEController implements Serializable {
                 return;
             }
 
-            // load list asset joined
-            loadAssetJoined();
-
             // check first time login
             if (!authorizationFEController.getAccountDto().isFirstTimeLogin() && authorizationFEController.getAccountDto().getAccountId() != null) {
                 facesNoticeController.addErrorMessage("Vui lòng đổi mật khẩu trong lần đăng nhập đầu tiên !");
@@ -79,19 +72,6 @@ public abstract class BaseFEController implements Serializable {
         if (!authorizationFEController.hasRole(getMenuId())) {
             FacesUtil.redirect("/frontend/index.xhtml");
             return;
-        }
-
-        // load list link
-        commonController.loadLinkList();
-    }
-
-    public void loadAssetJoined() {
-        List<Asset> assetList = auctionRegisterRepository.getAllAssetByAccountId(authorizationFEController.getAccountDto().getAccountId(),
-                DbConstant.AUCTION_REGISTER_STATUS_ACCEPTED,
-                Arrays.asList(DbConstant.ASSET_STATUS_WAITING, DbConstant.ASSET_STATUS_PLAYING));
-        authorizationFEController.getAccountDto().setSessionAsset(new HashMap<>());
-        for (Asset asset : assetList) {
-            authorizationFEController.getAccountDto().getSessionAsset().put(asset.getAssetId(), asset);
         }
     }
 

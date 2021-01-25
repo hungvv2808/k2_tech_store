@@ -6,7 +6,6 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vn.compedia.website.auction.dto.report.ReportExcelDto;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
@@ -23,8 +22,7 @@ public class ExportUtil {
 
     private ExportUtil() {}
 
-    public static StreamedContent downloadExcelFile(
-            ReportExcelDto reportExcelDto, String fileName, String templateFile,
+    public static StreamedContent downloadExcelFile(String fileName, String templateFile,
             String reportFile) throws IOException {
 
         ServletContext servletContext = ((ServletContext) FacesContext
@@ -35,7 +33,7 @@ public class ExportUtil {
         String reportFilePath = servletContext.getRealPath(reportFile);
 
         Context context = new Context();
-        context.putVar("item", reportExcelDto);
+        context.putVar("item", null);
         JxlsHelper helper = JxlsHelper.getInstance();
         helper.setProcessFormulas(false);
         helper.processTemplate(new FileInputStream(templateFilePath), new FileOutputStream(reportFilePath), context);

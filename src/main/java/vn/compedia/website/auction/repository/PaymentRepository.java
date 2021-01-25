@@ -4,10 +4,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import vn.compedia.website.auction.model.payment.Payment;
-import vn.compedia.website.auction.model.payment.ReceiptManagement;
 import vn.compedia.website.auction.util.DbConstant;
 
-import javax.faces.model.SelectItem;
 import java.util.List;
 
 public interface PaymentRepository extends CrudRepository<Payment, Long>, PaymentRepositoryCustom {

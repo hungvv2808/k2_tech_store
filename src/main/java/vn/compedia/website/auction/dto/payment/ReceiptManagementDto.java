@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import vn.compedia.website.auction.model.payment.ReceiptManagement;
 
-import java.util.Date;
-
 @Getter
 @Setter
 

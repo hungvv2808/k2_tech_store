@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.compedia.website.auction.controller.admin.BaseController;
 import vn.compedia.website.auction.controller.admin.auth.AuthorizationController;
-import vn.compedia.website.auction.controller.admin.common.ActionSystemController;
 import vn.compedia.website.auction.controller.admin.common.CityDistrictController;
 import vn.compedia.website.auction.controller.frontend.common.AddressFEController;
 import vn.compedia.website.auction.dto.common.CityDistrictDto;
@@ -18,7 +17,6 @@ import vn.compedia.website.auction.dto.user.AccountDto;
 import vn.compedia.website.auction.dto.user.AccountSearchDto;
 import vn.compedia.website.auction.entity.EScope;
 import vn.compedia.website.auction.model.*;
-import vn.compedia.website.auction.model.api.ApiSex;
 import vn.compedia.website.auction.repository.*;
 import vn.compedia.website.auction.util.*;
 
@@ -36,8 +34,6 @@ public class AccountController extends BaseController {
     @Inject
     protected AuthorizationController authorizationController;
     @Inject
-    private ActionSystemController actionSystemController;
-    @Inject
     private CityDistrictController cityDistrictController;
     @Inject
     private AddressFEController addressFEController;
@@ -45,18 +41,6 @@ public class AccountController extends BaseController {
     protected AccountRepository accountRepository;
     @Autowired
     private ProvinceRepository provinceRepository;
-    @Autowired
-    protected AccountDetailRepository accountDetailRepository;
-    @Autowired
-    protected RegulationRepository regulationRepository;
-    @Autowired
-    private AssetRepository assetRepository;
-    @Autowired
-    private RegulationFileRepository regulationFileRepository;
-    @Autowired
-    private ApiSexRepository apiSexRepository;
-    @Autowired
-    private PlacesOfIssueRepository placesOfIssueRepository;
 
     private boolean publicRegister; // true public
     private Account account;
@@ -66,10 +50,7 @@ public class AccountController extends BaseController {
     private AccountDto objBackup;
     private boolean married;
     private List<SelectItem> listProvinceAccount;
-    private List<PlacesOfIssue> placesOfIssueList;
     private LazyDataModel<AccountDto> accountDtos;
-    private Regulation regulation;
-    private List<Asset> assetList;
     private Province province;
     private AccountDto accountDto;
     private AccountDto accountDtoAddress;
@@ -93,8 +74,6 @@ public class AccountController extends BaseController {
         showValidate = false;
         now = new Date();
         tabindex = 0;
-        assetList = new ArrayList<>();
-        regulation = new Regulation();
         accountList = new ArrayList<>();
         accountDto = new AccountDto();
         accountSearchDto = new AccountSearchDto();
@@ -102,15 +81,6 @@ public class AccountController extends BaseController {
         accountDto.setOrg(false);
         married = false;
         listProvinceAccount = new ArrayList<>();
-        placesOfIssueList = (List<PlacesOfIssue>) placesOfIssueRepository.findAll();
-        for (PlacesOfIssue dto : placesOfIssueList) {
-            listProvinceAccount.add(new SelectItem(dto.getPlacesOfIssueId(), dto.getName()));
-        }
-        apiSexList = new ArrayList<>();
-        List<ApiSex> listApiSex = (List<ApiSex>) apiSexRepository.findAll();
-        for (ApiSex sex : listApiSex) {
-            apiSexList.add(new SelectItem(sex.getSexId(), sex.getName()));
-        }
         cityDistrictController.resetAll();
         onSearch();
         FacesUtil.resetDataTable("searchForm", "tblSearchResult");
@@ -362,13 +332,6 @@ public class AccountController extends BaseController {
             account.setCreateDate(objBackup.getCreateDate());
             account.setUpdateBy(authorizationController.getAccountDto().getAccountId());
         }
-        if (account.getAccountId() == null) {
-            actionSystemController().onSave("Tạo thông tin tài khoản " + account.getUsername(), authorizationController.getAccountDto().getAccountId());
-            setSuccessForm("Bạn đã tạo thành công tài khoản, truy cập \"" + account.getEmail() + "\" để lấy mật khẩu ");
-        } else {
-            actionSystemController().onSave("Sửa thông tin tài khoản " + account.getUsername(), authorizationController.getAccountDto().getAccountId());
-            setSuccessForm("Chỉnh sửa tài khoản thành công");
-        }
         accountRepository.save(account);
 
         FacesUtil.closeDialog("dialogInsertUpdate");
@@ -410,7 +373,6 @@ public class AccountController extends BaseController {
     public void onDelete(AccountDto deleteObj) {
         try {
             accountRepository.deleteById(deleteObj.getAccountId());
-            actionSystemController().onSave("Xóa thông tin tài khoản " + deleteObj.getFullName(), authorizationController.getAccountDto().getAccountId());
             setSuccessForm("Xóa thành công");
             FacesUtil.updateView("growl");
             onSearch();
@@ -455,57 +417,6 @@ public class AccountController extends BaseController {
         FacesUtil.updateView("searchForm");
     }
 
-    public void onSearchDetail() {
-        accountSearchDto.setAccountId(accountDto.getAccountId());
-        province = provinceRepository.findByProvinceId(accountDto.getProvinceIdOfIssue());
-        accountDtos = new LazyDataModel<AccountDto>() {
-            @Override
-            public List<AccountDto> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-                accountSearchDto.setPageIndex(first);
-                accountSearchDto.setPageSize(pageSize);
-                accountSearchDto.setSortField(sortField);
-                String sort = "";
-                if (sortOrder.equals(SortOrder.ASCENDING)) {
-                    sort = "ASC";
-                } else {
-                    sort = "DESC";
-                }
-                accountSearchDto.setSortOrder(sort);
-                return accountDetailRepository.search(accountSearchDto);
-            }
-
-            @Override
-            public AccountDto getRowData(String rowKey) {
-                List<AccountDto> AccountList = getWrappedData();
-                String value = String.valueOf(rowKey);
-                for (AccountDto obj : AccountList) {
-                    if (obj.getName().equals(value) || obj.getAssetName().equals(value)) {
-                        return obj;
-                    }
-
-                }
-                return null;
-            }
-        };
-        int count = accountDetailRepository.countSearch(accountSearchDto).intValue();
-        accountDtos.setRowCount(count);
-    }
-
-//    public void onResetPassword(Account dto) {
-//        Account account = accountRepository.findByAccountId(dto.getAccountId());
-//        account.setSalt(StringUtil.generateSalt());
-//        String password = publicRegister ? account.getPassword() : StringUtil.generateSalt();
-//        account.setPassword(StringUtil.encryptPassword(password, account.getSalt()));
-//        accountRepository.save(account);
-//        if (account.getAccountId() != null) {
-//            //send email
-//            EmailUtil.getInstance().sendPasswordUserEmail(ROLE_NAME_USER, account.getEmail(), password);
-//            setSuccessForm("Tạo lại mật khẩu thành công");
-//        } else {
-//            setErrorForm("Tạo lại mật khẩu thất bại");
-//        }
-//    }
-
     public void onTabChange() {
         accountDto.setOrg(!accountDto.isOrg());
         if (accountDto.isOrg()) {
@@ -524,7 +435,6 @@ public class AccountController extends BaseController {
         };
         accountDtos.setRowCount(0);
         accountSearchDto.setKeyword(null);
-        onSearchDetail();
     }
 
     public void onClickDetail(AccountDto accountDtoDetail) {
@@ -532,26 +442,6 @@ public class AccountController extends BaseController {
         accountSearchDto = new AccountSearchDto();
         BeanUtils.copyProperties(accountDtoDetail, accountDto);
         FacesUtil.redirect("/admin/quan-ly-nguoi-dung/chi-tiet-nguoi-dung.xhtml");
-        onSearchDetail();
-    }
-
-    public void getRegulationInfor(Long regulationId,Long accountId, Long acction) {
-        if (regulationId == null) {
-            setDefaultValue();
-        } else {
-            regulation = regulationRepository.findById(regulationId).orElse(null);
-            if(acction == 1) {
-                assetList = assetRepository.findAssetsByRegulationId(regulationId, accountId);
-            }
-            if(acction == 2) {
-                assetList = assetRepository.findAssetsByRegulationId(regulationId);
-            }
-        }
-    }
-
-    public void setDefaultValue() {
-        regulation = new Regulation();
-        assetList = new ArrayList<>();
     }
 
     public void onUnlock(AccountDto ac) {
@@ -568,7 +458,6 @@ public class AccountController extends BaseController {
         } else {
             setSuccessForm("Kích hoạt tài khoản thành công");
         }
-        actionSystemController.onSave("Mở khoá thông tin tài khoản " + (ac.isOrg() ? "tổ chức" : "người dùng") + " \"" + ac.getFullName() + "\"", authorizationController.getAccountDto().getAccountId());
         resetAll();
         onSearch();
     }
@@ -579,7 +468,6 @@ public class AccountController extends BaseController {
         ac.setLoginFailed(5);
         BeanUtils.copyProperties(ac, account);
         accountRepository.save(account);
-        actionSystemController.onSave("Khoá thông tin tài khoản " + (ac.isOrg() ? "tổ chức" : "người dùng") + " \"" + ac.getFullName() + "\"", authorizationController.getAccountDto().getAccountId());
         setSuccessForm("Khóa tài khoản thành công");
         resetAll();
         onSearch();

@@ -21,8 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import vn.compedia.website.auction.model.Link;
-import vn.compedia.website.auction.repository.LinkRepository;
 import vn.compedia.website.auction.util.Constant;
 import vn.compedia.website.auction.util.FacesUtil;
 import vn.compedia.website.auction.util.FileUtil;
@@ -46,17 +44,7 @@ import java.util.List;
 public class CommonController implements Serializable {
     @Autowired
     private HttpServletRequest request;
-    @Autowired
-    private LinkRepository linkRepository;
-
-    private List<Link> linkList;
     private String yearNow;
-
-    public void loadLinkList() {
-        Iterable<Link> linkListTemp = linkRepository.findAll();
-        linkList = new ArrayList<>();
-        linkListTemp.forEach(linkList::add);
-    }
 
     public static String abbreviate(String text, int size) {
         if (StringUtils.isBlank(text)) {

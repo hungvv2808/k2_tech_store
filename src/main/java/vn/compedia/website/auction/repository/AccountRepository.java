@@ -42,8 +42,6 @@ public interface AccountRepository extends CrudRepository<Account, Long>, Accoun
 
     Account findByAccountId(Long AccountId);
 
-    Account findAccountByActiveToken(String activeToken);
-
     List<Account> findAccountsByProvinceId(Long provinceId);
 
     List<Account> findAccountsByDistrictId(Long districtId);
@@ -76,14 +74,6 @@ public interface AccountRepository extends CrudRepository<Account, Long>, Accoun
             "where ac.provinceId = pr.provinceId and ac.districtId = dis.districtId and ac.communeId = com.communeId and ac.accountId = :accountId")
     AccountDto getNameAddress(@Param("accountId") Long accountId);
 
-    @Query("select new vn.compedia.website.auction.dto.user.AccountDto(ac.accountId, ac.fullName, ac.orgName, ac.org) from Account ac, AuctionRegister ar " +
-            "where ac.accountId = ar.accountId and ar.assetId = :assetId and ar.status = :status order by ar.auctionRegisterId asc ")
-    List<Account> getAccountByAssetIdAndStatus(@Param("assetId") Long assetId, @Param("status") int status);
-
-    @Query("select acc from AuctionRegister ar, Account acc where ar.accountId = acc.accountId and ar.regulationId = :regulationId and ar.statusDeposit = 1 and ar.status = 1 group by ar.accountId")
-    List<Account> findAccountsByRegulationId(@Param("regulationId") Long regulationId);
-
     boolean existsAccountsByProvinceIdOrProvinceIdOfIssue(Long provinceId, Long provinceIdOfIssue);
-
 }
 
