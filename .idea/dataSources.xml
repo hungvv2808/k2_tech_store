@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="k2_tech_store@127.0.0.1" uuid="6564c65f-d76a-4e1f-9460-d7a5abe8ff94">
-      <driver-ref>mysql</driver-ref>
+    <data-source source="LOCAL" name="zeus" uuid="a8aa53b4-d4f4-4f63-a6fe-db24e48d9da2">
+      <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://127.0.0.1:3306/k2_tech_store</jdbc-url>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://@127.0.0.1:3306/zeus</jdbc-url>
     </data-source>
   </component>
 </project>

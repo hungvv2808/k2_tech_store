@@ -6,7 +6,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
-          <factory-entry name="Entities" value="6564c65f-d76a-4e1f-9460-d7a5abe8ff94" />
+          <factory-entry name="Entities" value="a8aa53b4-d4f4-4f63-a6fe-db24e48d9da2" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>
@@ -217,7 +217,7 @@
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.14" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:maven-lombok-plugin:0.9.3.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-api:2.0.9" level="project" />
-    <orderEntry type="library" name="Maven: vn.tech.momo-wallet:momopayment:1.0" level="project" />
+    <orderEntry type="library" name="Maven: vn.zeus.momo-wallet:momopayment:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.wickedsource:docx-stamper:1.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.docx4j:docx4j:3.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.plutext:jaxb-svg11:1.0.2" level="project" />

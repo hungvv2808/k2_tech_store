@@ -184,7 +184,7 @@
           <element id="library" level="project" name="Maven: log4j:log4j:1.2.14" />
           <element id="library" level="project" name="Maven: org.projectlombok:maven-lombok-plugin:0.9.3.1" />
           <element id="library" level="project" name="Maven: org.apache.maven:maven-plugin-api:2.0.9" />
-          <element id="library" level="project" name="Maven: vn.tech.momo-wallet:momopayment:1.0" />
+          <element id="library" level="project" name="Maven: vn.zeus.momo-wallet:momopayment:1.0" />
           <element id="library" level="project" name="Maven: org.wickedsource:docx-stamper:1.1.0" />
           <element id="library" level="project" name="Maven: org.docx4j:docx4j:3.3.0" />
           <element id="library" level="project" name="Maven: org.plutext:jaxb-svg11:1.0.2" />

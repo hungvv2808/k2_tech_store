@@ -8,9 +8,9 @@
         http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
 
-    <context:component-scan base-package="vn.tech.website.store"/>
+    <context:component-scan base-package="vn.zeus.website.store"/>
 
-    <jpa:repositories base-package="vn.tech.website.store.repository" entity-manager-factory-ref="emf"/>
+    <jpa:repositories base-package="vn.zeus.website.store.repository" entity-manager-factory-ref="emf"/>
 
     <!-- <context:annotation-config /> -->
 
@@ -30,7 +30,7 @@
         <property name="persistenceProvider">
             <bean class="org.hibernate.jpa.HibernatePersistenceProvider"/>
         </property>
-        <property name="packagesToScan" value="vn.tech.website.store.model"/>
+        <property name="packagesToScan" value="vn.zeus.website.store.model"/>
         <property name="jpaProperties">
             <props>
                 <prop key="hibernate.show_sql">false</prop>
