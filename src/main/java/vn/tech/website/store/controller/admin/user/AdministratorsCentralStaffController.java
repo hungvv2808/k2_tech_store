@@ -303,6 +303,7 @@ public class AdministratorsCentralStaffController extends BaseController {
     public String convertStringStatusAccount(Integer status) {
         return status == DbConstant.ACCOUNT_ACTIVE_STATUS ? "Hoạt động" : "Đã bị khoá";
     }
+
     @Override
     protected EScope getMenuId() {
         return EScope.ACCOUNT_OFFICIALS;
