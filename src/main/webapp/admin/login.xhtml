@@ -5,7 +5,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 
-    <p:importConstants type="vn.zeus.website.store.util.Constant" var="Constant"/>
+    <p:importConstants type="vn.tech.website.store.util.Constant" var="Constant"/>
 
     <f:metadata>
         <f:event type="preRenderView" listener="#{authorizationController.init}" />
@@ -50,7 +50,7 @@
                                                onkeyup="_inf_c_th(this, 'npt_accnt', 'scrt_login');"
                                                onchange="_inf_c_th(this, 'npt_accnt', 'scrt_login');"
                                                class="account ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all"/>
-                                        <h:inputHidden id="npt_accnt" value="#{authorizationController.accountDto.username}"/>
+                                        <h:inputHidden id="npt_accnt" value="#{authorizationController.accountDto.userName}"/>
                                     </div>
                                     <label style="padding-left: 13px" class="text-left" for="password">Mật khẩu</label>
                                     <div class="ui-g-12">

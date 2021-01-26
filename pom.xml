@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>vn.zeus.website</groupId>
+    <groupId>vn.tech.website</groupId>
     <artifactId>store</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
@@ -461,7 +461,7 @@
 
         <!--import library MOMO-->
         <dependency>
-            <groupId>vn.zeus.momo-wallet</groupId>
+            <groupId>vn.tech.momo-wallet</groupId>
             <artifactId>momopayment</artifactId>
             <version>1.0</version>
         </dependency>

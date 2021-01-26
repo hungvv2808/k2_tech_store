@@ -20,7 +20,7 @@
         <renderer>
             <component-family>javax.faces.Input</component-family>
             <renderer-type>javax.faces.Text</renderer-type>
-            <renderer-class>vn.zeus.website.store.jsf.InputRender</renderer-class>
+            <renderer-class>vn.tech.website.store.jsf.InputRender</renderer-class>
         </renderer>
     </render-kit>
 

@@ -121,7 +121,7 @@
     </filter-mapping>
     <filter>
         <filter-name>authSocketFilter</filter-name>
-        <filter-class>vn.zeus.website.store.jsf.filter.AuthSocketFilter</filter-class>
+        <filter-class>vn.tech.website.store.jsf.filter.AuthSocketFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>authSocketFilter</filter-name>
@@ -129,7 +129,7 @@
     </filter-mapping>
     <filter>
         <filter-name>noCacheFilter</filter-name>
-        <filter-class>vn.zeus.website.store.jsf.NoCacheFilter</filter-class>
+        <filter-class>vn.tech.website.store.jsf.NoCacheFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>noCacheFilter</filter-name>
@@ -141,7 +141,7 @@
     </filter-mapping>
     <filter>
         <filter-name>authorizationFilter</filter-name>
-        <filter-class>vn.zeus.website.store.jsf.filter.AuthorizationFilter</filter-class>
+        <filter-class>vn.tech.website.store.jsf.filter.AuthorizationFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>authorizationFilter</filter-name>
@@ -149,7 +149,7 @@
     </filter-mapping>
     <filter>
         <filter-name>AdminPage</filter-name>
-        <filter-class>vn.zeus.website.store.jsf.AdminPageFilter</filter-class>
+        <filter-class>vn.tech.website.store.jsf.AdminPageFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AdminPage</filter-name>
