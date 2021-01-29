@@ -36,27 +36,27 @@ create table if not exists commune
 drop table if exists role;
 create table if not exists role
 (
-    role_id     int primary key comment '0: admin / 1: quản trị - nhân viên / 2: quản trị - quản lý / 3: khách hàng',
-    name        varchar(200) null comment 'admin/employee/manager/customer',
-    status      int(1)       null comment '0: active / 1: disable',
-    can_modify  int(1) default 0 comment 'A(all)/C(create)/U(update)/D(delete)/W(watch) - Cấu hình quyền thêm sửa xoá cho từng quyền trong constant'
+    role_id    int primary key comment '0: admin / 1: quản trị - nhân viên / 2: quản trị - quản lý / 3: khách hàng',
+    name       varchar(200) null comment 'admin/employee/manager/customer',
+    status     int(1)       null comment '0: active / 1: disable',
+    can_modify int(1) default 0 comment 'A(all)/C(create)/U(update)/D(delete)/W(watch) - Cấu hình quyền thêm sửa xoá cho từng quyền trong constant'
 );
 
 drop table if exists account;
 create table if not exists account
 (
     account_id    int auto_increment primary key,
-    user_name     varchar(32)  null comment 'Tên đăng nhập',
-    full_name    varchar(50)  null comment 'Họ và tên',
-    date_of_birth date         null comment 'Ngày sinh',
+    user_name     varchar(100) null comment 'Tên đăng nhập',
+    full_name     varchar(100) null comment 'Họ và tên',
+    date_of_birth datetime     null comment 'Ngày sinh',
     gender        int(1) default 0 comment '0: Không xác định / 1: Nam / 2: Nữ',
     role_id       int          null comment 'Quyền truy cập',
-    password      varchar(32)  null comment 'Mật khẩu - mã hoá',
-    salt          varchar(50)  null comment 'Mã sha5 để mã hoá mật khẩu',
+    password      varchar(200) null comment 'Mật khẩu - mã hoá',
+    salt          varchar(100) null comment 'Mã sha5 để mã hoá mật khẩu',
     email         varchar(50)  null comment 'Địa chỉ email',
     phone         char(11)     null comment 'Số điện thoại',
     address       text         null comment 'Địa chi',
-    avatar_path    varchar(200) null comment 'Ảnh đại diện',
+    avatar_path   varchar(200) null comment 'Ảnh đại diện',
     status        int(1)       null comment 'Trạng thái kích hoạt tài khoản: 0: active / 1: disable',
     province_id   int          null comment 'Tỉnh id',
     district_id   int          null comment 'Quận/Huyện id',
@@ -101,10 +101,10 @@ create table if not exists brand
     code        varchar(100) null comment 'Mã thương hiệu',
     name        varchar(100) null comment 'Tên thương hiệu',
     status      int(1)       null comment 'Trạng thái hoạt động của thương hiệu. 0: active / 1: disable',
-    create_date   datetime     null comment 'Ngày tạo',
-    create_by     int          null comment 'Nười tạo',
-    update_date   datetime     null comment 'Ngày cập nhật',
-    update_by     int          null comment 'Người cập nhật'
+    create_date datetime     null comment 'Ngày tạo',
+    create_by   int          null comment 'Nười tạo',
+    update_date datetime     null comment 'Ngày cập nhật',
+    update_by   int          null comment 'Người cập nhật'
 );
 ### close brand ###
 
@@ -116,10 +116,10 @@ create table if not exists category
     code        varchar(100) null comment 'Mã nhãn hiệu',
     name        varchar(100) null comment 'Tên nhãn hiệu',
     status      int(1)       null comment 'Trạng thái hoạt động nhãn hiệu. 0: active / 1: disable',
-    create_date   datetime     null comment 'Ngày tạo',
-    create_by     int          null comment 'Nười tạo',
-    update_date   datetime     null comment 'Ngày cập nhật',
-    update_by     int          null comment 'Người cập nhật'
+    create_date datetime     null comment 'Ngày tạo',
+    create_by   int          null comment 'Nười tạo',
+    update_date datetime     null comment 'Ngày cập nhật',
+    update_by   int          null comment 'Người cập nhật'
 );
 ### close category ###
 
@@ -133,10 +133,10 @@ create table if not exists product
     name        varchar(200) null comment 'Tên sản phẩm',
     code        varchar(100) null comment 'Mã sản phẩm',
     status      int(1)       null comment 'Trạng thái hiển thị cho sản phẩm. 0: active / 1: disable',
-    create_date   datetime     null comment 'Ngày tạo',
-    create_by     int          null comment 'Nười tạo',
-    update_date   datetime     null comment 'Ngày cập nhật',
-    update_by     int          null comment 'Người cập nhật',
+    create_date datetime     null comment 'Ngày tạo',
+    create_by   int          null comment 'Nười tạo',
+    update_date datetime     null comment 'Ngày cập nhật',
+    update_by   int          null comment 'Người cập nhật',
     constraint fk_product_brand
         foreign key (brand_id) references brand (brand_id),
     constraint fk_product_category
@@ -151,10 +151,10 @@ create table if not exists product_option
     description       varchar(200) null comment 'Tóm tắt thông tin lựa chọn',
     type              int(1)       null comment 'Loại lựa chọn 0: size / 1: color / 2: version(release year)',
     status            int(1) default 0 comment 'Trạng thái hiển thị của lựa chọn. 0: active / 1: disable',
-    create_date   datetime     null comment 'Ngày tạo',
-    create_by     int          null comment 'Nười tạo',
-    update_date   datetime     null comment 'Ngày cập nhật',
-    update_by     int          null comment 'Người cập nhật'
+    create_date       datetime     null comment 'Ngày tạo',
+    create_by         int          null comment 'Nười tạo',
+    update_date       datetime     null comment 'Ngày cập nhật',
+    update_by         int          null comment 'Người cập nhật'
 );
 
 drop table if exists product_detail;
@@ -166,10 +166,10 @@ create table if not exists product_detail
     description       text     null comment 'Mô tả chi tiết cho sản phẩm với lựa chọn riêng',
     price             double   null comment 'Giá sản phẩm theo từng lựac chọn',
     discount          float    null comment 'Mức giảm giá cho từng sản phẩm nhỏ',
-    create_date   datetime     null comment 'Ngày tạo',
-    create_by     int          null comment 'Nười tạo',
-    update_date   datetime     null comment 'Ngày cập nhật',
-    update_by     int          null comment 'Người cập nhật',
+    create_date       datetime null comment 'Ngày tạo',
+    create_by         int      null comment 'Nười tạo',
+    update_date       datetime null comment 'Ngày cập nhật',
+    update_by         int      null comment 'Người cập nhật',
     constraint fk_product_option
         foreign key (product_option_id) references product_option (product_option_id),
     constraint fk_product
@@ -179,14 +179,14 @@ create table if not exists product_detail
 drop table if exists product_detail_image;
 create table if not exists product_detail_image
 (
-    product_detail_image int auto_increment primary key,
-    product_detail_id    int          null comment 'Id sản phẩm chi tiết -Mỗi sản phẩm nhỏ có nhiều ảnh khách nhau',
-    image_name           varchar(200) null comment 'Tên ảnh',
-    image_path           varchar(200) null comment 'Địa chỉ ảnh',
-    create_date   datetime     null comment 'Ngày tạo',
-    create_by     int          null comment 'Nười tạo',
-    update_date   datetime     null comment 'Ngày cập nhật',
-    update_by     int          null comment 'Người cập nhật',
+    product_detail_image_id int auto_increment primary key,
+    product_detail_id       int          null comment 'Id sản phẩm chi tiết -Mỗi sản phẩm nhỏ có nhiều ảnh khách nhau',
+    image_name              varchar(200) null comment 'Tên ảnh',
+    image_path              varchar(200) null comment 'Địa chỉ ảnh',
+    create_date             datetime     null comment 'Ngày tạo',
+    create_by               int          null comment 'Nười tạo',
+    update_date             datetime     null comment 'Ngày cập nhật',
+    update_by               int          null comment 'Người cập nhật',
     constraint fk_product_detail
         foreign key (product_detail_id) references product_detail (product_detail_id)
 );
@@ -203,11 +203,11 @@ create table if not exists orders
     phone        varchar(11)   null comment 'Số điện thoại nhận hàng',
     note         varchar(200)  null comment 'Ghi chú của khách hàng',
     total_amount double(22, 0) null comment 'Tổng tiền đơn hàng',
-    shipping double(22, 0) null comment 'Phí ship cho đơn hàng',
-    create_date   datetime     null comment 'Ngày tạo',
-    create_by     int          null comment 'Nười tạo',
-    update_date   datetime     null comment 'Ngày cập nhật',
-    update_by     int          null comment 'Người cập nhật',
+    shipping     double(22, 0) null comment 'Phí ship cho đơn hàng',
+    create_date  datetime      null comment 'Ngày tạo',
+    create_by    int           null comment 'Nười tạo',
+    update_date  datetime      null comment 'Ngày cập nhật',
+    update_by    int           null comment 'Người cập nhật',
     constraint fk_order_account
         foreign key (account_id) references account (account_id)
 );
@@ -220,10 +220,10 @@ create table if not exists order_detail
     product_id      int      null comment 'Id sản phẩm - 1 hoá đơn có nhiều sản phẩm',
     quantity        int(2)   null comment 'Số lượng của từng sản phẩm',
     amount          double   null comment 'Giá tiền của từng sản phẩm',
-    create_date   datetime     null comment 'Ngày tạo',
-    create_by     int          null comment 'Nười tạo',
-    update_date   datetime     null comment 'Ngày cập nhật',
-    update_by     int          null comment 'Người cập nhật',
+    create_date     datetime null comment 'Ngày tạo',
+    create_by       int      null comment 'Nười tạo',
+    update_date     datetime null comment 'Ngày cập nhật',
+    update_by       int      null comment 'Người cập nhật',
     constraint fk_orders_id foreign key (order_id) references orders (orders_id),
     constraint fk_product_id foreign key (product_id) references product (product_id)
 );
@@ -237,10 +237,10 @@ create table if not exists payments
     total_amount double(22, 0) null comment 'Tổng tiền của hoá đơn bao gồm tổng tiền sản phẩm + phí ship',
     type         int(1)        null comment 'Loại thanh toán. 0: offline / 1: online',
     status       int(1)        null comment 'Trạng thái thanh toán. 0: unpaid / 1: paid',
-    create_date   datetime     null comment 'Ngày tạo',
-    create_by     int          null comment 'Nười tạo',
-    update_date   datetime     null comment 'Ngày cập nhật',
-    update_by     int          null comment 'Người cập nhật',
+    create_date  datetime      null comment 'Ngày tạo',
+    create_by    int           null comment 'Nười tạo',
+    update_date  datetime      null comment 'Ngày cập nhật',
+    update_by    int           null comment 'Người cập nhật',
     constraint fk_orders foreign key (orders_id) references orders (orders_id)
 );
 ### close orders ###
