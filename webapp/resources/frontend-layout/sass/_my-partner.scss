@@ -1,0 +1,47 @@
+.my-partners {
+    background-image: url('../img/my-partner-min.jpg');
+    background-size: 100%;
+    margin-top: 7rem;
+    .container {
+        >.row {
+            padding: 2rem 1rem 1rem 1rem;
+            h1,
+            p {
+                color: $third-color;
+                text-align: center;
+                width: 100%;
+                padding: 1rem 0;
+            }
+            .owl-carousel {
+                width: 95%;
+                margin-left: 2rem;
+                .owl-stage-outer {
+                    .owl-stage {
+                        .owl-item {
+                            width: 245px !important;
+                            height: 245px;
+                            img {
+                                width: 100%;
+                                height: 100%;
+                            }
+                        }
+                    }
+                }
+                .owl-nav,
+                .owl-dots {
+                    display: none;
+                }
+            }
+            p {
+                font-size: 20px;
+                i {
+                    padding: 0 0.7rem;
+                }
+                &:hover {
+                    cursor: pointer;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
