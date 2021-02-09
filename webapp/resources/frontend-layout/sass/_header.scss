@@ -126,6 +126,27 @@
                             }
                         }
                     }
+                    .dropdown-menu {
+                        width: 20vw;
+                        height: 70vh;
+                        overflow-y: auto;
+                        word-break: break-all;
+                        border: 1px solid #0000003d;
+                        position: absolute;
+                        top: 3.5rem;
+                        background: #ffffffdb;
+                        .dropdown-item {
+                            display: block;
+                            padding: 1rem 2rem;
+                            span {
+                                white-space: normal;
+                            }
+                            i {
+                                font-size: 15px;
+                                color: #0000009e;
+                            }
+                        }
+                    }
                 }
                 .nav-link {
                     font-size: 13px;
@@ -146,6 +167,7 @@
                             height: 50px;
                             object-fit: cover;
                             border-radius: 2rem;
+                            border: 1px solid $primary-color;
                         }
                         &__name {
                             text-transform: uppercase;
