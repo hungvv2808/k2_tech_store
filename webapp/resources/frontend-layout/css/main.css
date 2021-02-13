@@ -533,7 +533,7 @@
 }
 @keyframes fadein {
   from {
-    background-color: #2f80ed63;
+    background-color: #02ff3985;
   }
   to {
     background-color: #3aaf29;
@@ -681,7 +681,7 @@
 }
 @keyframes fadein {
   from {
-    background-color: #2f80edab;
+    background-color: #02ff3985;
   }
   to {
     background-color: #3aaf29;
@@ -759,9 +759,9 @@
 }
 .my-footer .container > .row .k2-linked__label h5::after {
   content: "";
-  background: linear-gradient(to right, #2F80ED, #c4ecff29);
+  background: linear-gradient(to right, #3aaf29, #00ff3742);
   display: block;
-  height: 2px;
+  height: 3px;
   width: 100%;
   position: absolute;
   bottom: -3px;
@@ -782,9 +782,9 @@
 }
 .my-footer .container > .row .k2-technology__label h5::after {
   content: "";
-  background: linear-gradient(to right, #2F80ED, #c4ecff29);
+  background: linear-gradient(to right, #3aaf29, #00ff3742);
   display: block;
-  height: 2px;
+  height: 3px;
   width: 100%;
   position: absolute;
   bottom: -3px;
@@ -802,9 +802,9 @@
 }
 .my-footer .container > .row .k2-register__label h5::after {
   content: "";
-  background: linear-gradient(to right, #2F80ED, #c4ecff29);
+  background: linear-gradient(to right, #3aaf29, #00ff3742);
   display: block;
-  height: 2px;
+  height: 3px;
   width: 100%;
   position: absolute;
   bottom: -3px;

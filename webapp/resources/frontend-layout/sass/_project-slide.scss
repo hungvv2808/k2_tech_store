@@ -55,7 +55,7 @@
                                             }
                                             @keyframes fadein {
                                                 from {
-                                                    background-color: #2f80ed63;
+                                                    background-color: $primary-color-blur;
                                                 }
                                                 to {
                                                     background-color: $primary-color;

@@ -1,5 +1,6 @@
 // #2F80ED
 $primary-color: #3aaf29;
+$primary-color-blur: #02ff3985;
 $secondary-color: #000000;
 $secondary-color-copy: #828282;
 $third-color: #ffffff;
@@ -20,9 +21,9 @@ $bottom-color: #8282828c;
     position: relative;
     &::after {
         content: '';
-        background: linear-gradient(to right, #2F80ED, #c4ecff29);
+        background: linear-gradient(to right, $primary-color, #00ff3742);
         display: block;
-        height: 2px;
+        height: 3px;
         width: 100%;
         position: absolute;
         bottom: -3px;
