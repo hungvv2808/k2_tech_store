@@ -1,0 +1,113 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <div class="header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="top-link">
+                        <ul>
+                            <li>
+                                <a href="mailto:youremail@yourdomain"><i class="fa fa-envelope"></i>
+                                    <span>daugia@danang.gov.vn</span></a>
+                            </li>
+                            <li>
+                                <a href="callto:0969866678"><i class="fa fa-phone"></i>
+                                    <span>(0236) 3889 627</span></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6 text-right">
+                    <div class="social-top">
+                        <ul>
+                            <c:if test="#{empty authorizationFEController.accountDto.fullName}">
+                                <li>
+                                    <a href="#" data-toggle="modal" data-target="#RegisterPopup" onclick="openModalRegister(this);">
+                                        <i class="fa fa-user-plus" aria-hidden="true"/> <span>Đăng ký</span></a>
+                                </li>
+                                <li>
+                                    <a href="#" data-toggle="modal" data-target="#loginPopup" onclick="openModalLogin(this);">
+                                        <i class="fa fa-lock" aria-hidden="true"/><span>Đăng nhập</span>
+                                    </a>
+                                </li>
+                            </c:if>
+                            <c:if test="#{not empty authorizationFEController.accountDto.fullName}">
+
+                                <li class="logged-in">
+                                    <c:if test="#{empty authorizationFEController.accountDto.avatarPath}">
+                                        <img class="avatar" src="#{resource['apollo-layout:images/noavatar.png']}" />
+                                    </c:if>
+                                    <c:if test="#{not empty authorizationFEController.accountDto.avatarPath}">
+                                        <img class="avatar" src="#{resource[authorizationFEController.accountDto.avatarPath]}" />
+                                    </c:if>
+                                    <span>Xin chào,  </span>
+                                    <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <c:if test="#{!authorizationFEController.accountDto.org}">
+                                            <span>#{authorizationFEController.accountDto.fullName}</span>
+                                        </c:if>
+                                        <c:if test="#{authorizationFEController.accountDto.org}">
+                                            <span>#{authorizationFEController.accountDto.orgName}</span>
+                                        </c:if>
+                                        <i class="fa fa-caret-down" aria-hidden="true"/>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" style="padding: 5px;" href="#" data-toggle="modal" data-target="#changePassword" aria-hidden="true" onclick="resetModal(this); focusInput('oldPass')">Đổi mật khẩu</a>
+                                        <h:link style="padding: 5px;" value="Tài khoản của tôi" outcome="/frontend/account/personal_account.xhtml"
+                                                rendered="#{authorizationFEController.hasLogged() and !authorizationFEController.accountDto.org}"/>
+                                        <h:link style="padding: 5px;" value="Tài khoản của tôi" outcome="/frontend/account/company_account.xhtml"
+                                                rendered="#{authorizationFEController.hasLogged() and authorizationFEController.accountDto.org}"/>
+                                        <h:link style="padding: 5px;" value="Đấu giá đã đăng ký" outcome="/frontend/account/my_store.xhtml"
+                                                rendered="#{authorizationFEController.hasLogged()}"/>
+                                        <h:link style="padding: 5px;" value="Lịch sử giao dịch" outcome="/frontend/account/my_payment.xhtml"
+                                                rendered="#{authorizationFEController.hasLogged()}"/>
+                                        <h:link style="padding: 5px;" value="Lịch sử mua bán tài sản" outcome="/frontend/account/my_store_history.xhtml"
+                                                rendered="#{authorizationFEController.hasLogged()}"/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <h:form>
+                                        <h:commandLink onclick="logout();" actionListener="#{authorizationFEController.logout}">
+                                            <i class="custom-icon logout" aria-hidden="true"/>
+                                            <span>Đăng xuất</span>
+                                        </h:commandLink>
+                                    </h:form>
+                                </li>
+                            </c:if>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-mid">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                    <div class="header-logo">
+                        <h1 class="logo">
+                            <h:link rel="home" outcome="/frontend/index.xhtml"> <img class="logo-header"
+                                                                                     src="#{resource['frontend-layout:images/logo.svg']}"
+                                                                                     alt="Danang"/></h:link>
+                            <h:link rel="home" outcome="/frontend/index.xhtml"> <img class="logo-header-stick"
+                                                                                     src="#{resource['frontend-layout:images/logo_bottom.svg']}"
+                                                                                     alt="Danang"/></h:link>
+                        </h1>
+                    </div>
+                    <div class="btn-menu hidden-lg">
+                        <button class="open-menu"><i class="fa fa-bars"></i></button>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12
+                                kad-header-menu">
+                    <ui:include src="menu.xhtml"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>

@@ -1,0 +1,29 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="template.xhtml">
+
+    <ui:define name="main">
+        <div class="side-breadcrumb">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="page-title">
+                            <ul class="breadcrumb">
+                                <li><h:link styleClass="home" value="Trang chủ" outcome="/frontend/index.xhtml"/></li>
+                                <ui:insert name="breadcrumb"/>
+                            </ul>
+                            <ui:insert name="screenTitle"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content #{mainContentStyle}">
+            <div class="container">
+                <ui:insert name="content"/>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

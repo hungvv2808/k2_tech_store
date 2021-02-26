@@ -1,0 +1,278 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/admin/template/template.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{districtController.initData}"/>
+    </f:metadata>
+
+    <ui:define name="title">Quản lý quận/huyện</ui:define>
+
+    <ui:define name="breadcrumb">
+        <li>
+            <p:link outcome="/admin/quan-ly-chung/quan-huyen">Quản lý danh mục / Quản lý quận/huyện</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="formTop">
+        <p:outputPanel styleClass="ui-g" rendered="#{districtController.getActions().canCreate()}">
+            <div class="ui-g-12" style="padding-top:0">
+                <div class="card no-margin">
+                    <p:commandButton value="Thêm mới" icon="fa fa-plus"
+                                     actionListener="#{districtController.resetDialog}"
+                                     oncomplete="PF('dialogInsertUpdate').show();" update="dlForm"/>
+                    <p:commandButton value="#{districtController.labelVersion}" icon="fa fa-list"
+                                     actionListener="#{districtController.showVersion}"
+                                     disabled="#{districtController.statusVersion.status.equals(DbConstant.STATUS_VERSION_STATUS_ACTIVE) || districtController.statusApi.status.equals(DbConstant.STATUS_API_STATUS_ACTIVE)}"
+                                     oncomplete="PF('dialogChangeVersion').show();" update="dlForm"
+                                     style="float: right" styleClass="orange-btn"/>
+                    <p:commandButton value="#{districtController.labelSynchronized}" actionListener="#{districtController.dataSynchronization}"
+                                     disabled="#{districtController.statusVersion.status.equals(DbConstant.STATUS_VERSION_STATUS_ACTIVE) || districtController.statusApi.status.equals(DbConstant.STATUS_API_STATUS_ACTIVE)}"
+                                     rendered="#{districtController.getActions().canSync()}"
+                                     icon="fa fa-refresh" style="float: right">
+                        <p:confirm header="Xác nhận đồng bộ dữ liệu" message="Bạn chắc chắn muốn đồng bộ dữ liệu, quá trình đồng bộ dữ liệu sẽ bao gồm đồng bộ tỉnh, quận, huyện ?"
+                                   icon="fa fa-refresh"/>
+                    </p:commandButton>
+
+                    <div style="clear: both"></div>
+                </div>
+            </div>
+        </p:outputPanel>
+        </h:form>
+
+        <div class="ui-fluid">
+            <p:dialog id="dlg" header="Thông tin quận/huyện" widgetVar="dialogInsertUpdate" modal="true" width="1000"
+                      style="max-height: 90vh; max-width: 90vw"
+                      rendered="#{districtController.getActions().hasAction(EAction.CREATE,EAction.UPDATE)}">
+                <h:form id="dlForm" enctype="multipart/form-data">
+                    <p:scrollPanel mode="native" style="width: 100%; max-height: 400px; border: none">
+                        <p:focus id = "focus"/>
+                        <p:panelGrid id="basicPanel1" columns="4"
+                                     columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+
+                            <p:outputLabel value="Chọn tỉnh/tp:" for="name" />
+                            <p:outputPanel>
+                                <p:selectOneMenu id="name" filter="true" filterMatchMode="contains" autoWidth="false"
+                                                 effect="fade" required="true" requiredMessage="Bạn vui lòng chọn tỉnh/tp"
+                                                 value="#{districtController.district.provinceId}" >
+                                    <f:selectItem itemLabel="Chọn tỉnh/tp" itemValue=""/>
+                                    <f:selectItems value="#{districtController.provinceList}"/>
+                                </p:selectOneMenu>
+                                <p:message id="id1" for="name" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel value="Mã quận/huyện:" for="code"/>
+                            <p:outputPanel>
+                                <p:inputText id="code" placeholder="Nhập mã quận/huyện"
+                                             decimalPlaces="0" thousandSeparator=""  symbolPosition="s" autoWidth="false" effect="fade" minValue="0"
+                                             value="#{districtController.district.code}" onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));"
+                                             maxlength="15" required="true" requiredMessage="Bạn vui lòng nhập mã quận/huyện">
+                                    <p:tooltip value="Mã quận/huyện là các ký tự số" for="code" showEvent="focus" hideEvent="blur"/>
+                                </p:inputText>
+                                <p:message id="id2" for ="code" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel  value="Tên quận/huyện:" for="nameDistrict"/>
+                            <p:outputPanel>
+                                <p:inputText id="nameDistrict" placeholder="Nhập tên quận/huyện" validatorMessage="Tên quận/huyện sai định dạng"
+                                             value="#{districtController.district.name}"
+                                             onchange="this.value = this.value.trim()"
+                                             maxlength="50" required="true" requiredMessage="Bạn vui lòng nhập tên quận/huyện">
+                                    <f:validateRegex pattern="^[\p{L}\d\s]{1,50}" />
+                                </p:inputText>
+                                <p:message id="id3" for="nameDistrict" styleClass="focus-input-text" display="text"/>
+                            </p:outputPanel>
+
+                            <p:outputLabel styleClass="requireLabel" value="Trạng thái:" for="status"/>
+                            <p:selectOneMenu id="status" autoWidth="false" effect="fade"
+                                             value="#{districtController.district.status}"
+                                             filterMatchMode="contains">
+                                <f:selectItem itemLabel="Hoạt động" itemValue="true"/>
+                                <f:selectItem itemLabel="Không hoạt động" itemValue="false"/>
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="3"
+                                     columnClasses="ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5"
+                                     layout="grid" styleClass="ui-panelgrid-blank">
+                            <p:commandButton value="Lưu" actionListener="#{districtController.onSaveData}"
+                                             icon="fa fa-save" style="width: 80px"
+                                             update="searchForm focus id3 id1 id2"/>
+
+                            <p:commandButton value="Ðóng" styleClass="close"
+                                             actionListener="#{districtController.resetDialog}"
+                                             oncomplete="PF('dialogInsertUpdate').hide()" icon="fa fa-close"
+                                             style="width: 80px"/>
+                        </p:panelGrid>
+                    </p:scrollPanel>
+
+                </h:form>
+            </p:dialog>
+        </div>
+
+        <div class="ui-fluid">
+            <p:dialog id="dlgv" header="Quản lý version" widgetVar="dialogChangeVersion" modal="true" width="600"
+                      style="max-height: 90vh; max-width: 90vw"
+                      rendered="#{districtController.getActions().hasAction(EAction.CREATE,EAction.UPDATE)}">
+                <h:form id="dlFormVersion" enctype="multipart/form-data">
+                    <p:scrollPanel mode="native" style="width: 100%; max-height: 400px; border: none">
+                        <p:dataTable id="tblSearchResultVersion" tableStyle="table-layout: auto;"
+                                     widgetVar="wdgProvince" resizableColumns="true" paginator="true"
+                                     rows="10"
+                                     value="#{districtController.lazyDataModelVersion}"
+                                     lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
+                                     paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="#{t['lbl.recordTotal']}: #{districtController.lazyDataModelVersion.rowCount}"
+                                     emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                     rowKey="#{resultDto.historySync}">
+
+                            <p:column headerText="STT" width="30" style="text-align: center">
+                                <h:outputText value="#{rowIndex + 1}"/>
+                            </p:column>
+
+                            <p:column headerText="Ngày" style="text-align: center" sortBy="#{resultDto.createDate}" >
+                                <h:outputText value="#{resultDto.createDate}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Version" style="text-align: center;" sortBy="#{resultDto.versionId}">
+                                <h:outputText value="#{resultDto.versionId}"/>
+                            </p:column>
+
+                            <p:column headerText="Thay đổi version" style="text-align: center;">
+                                <p:commandButton value="Áp dụng" style="margin: auto" actionListener="#{districtController.changeVersion(resultDto)}" rendered="#{resultDto.statusApply == 0}">
+                                    <p:confirm header="Xác nhận thay đổi version"
+                                               message="Bạn chắc chắn muốn thay đổi version, quá trình thay đổi version sẽ thay đổi đồng thời version cả tỉnh, quận, huyện?"
+                                               icon="fa fa-refresh"/>
+                                </p:commandButton>
+                                <p:outputLabel value="Đang được sử dụng" style="margin: auto" actionListener="#{districtController.changeVersion(resultDto)}" rendered="#{resultDto.statusApply != 0}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:scrollPanel>
+                </h:form>
+                <p:commandButton value="Ðóng" styleClass="close"
+                                 oncomplete="PF('dialogChangeVersion').hide()" icon="fa fa-close"
+                                 style="width: 80px;float: right;margin: auto"/>
+            </p:dialog>
+        </div>
+
+        <h:form id="searchForm">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" style="padding-top:0">
+                        <div class="card no-margin">
+                            <p:panel id="searchCode" header="Tìm kiếm" style="margin-bottom:5px"
+                                     rendered="#{districtController.getActions().canSearch()}">
+                                <p:panelGrid id="searchPanel" columns="4"
+                                             columnClasses="ui-grid-col-4,ui-grid-col-1.5,ui-grid-col-1.5,ui-grid-col-1.5"
+                                             styleClass="ui-panelgrid-blank" layout="grid">
+                                    <p:inputText id="smanhomquyen" placeholder="Nhập mã quận/huyện, tên quận/huyện, tên tỉnh/thành phố"
+                                                 value="#{districtController.districtSearchDto.keyword}"/>
+                                    <p:commandButton value="Tìm kiếm"
+                                                     actionListener="#{districtController.onSearch()}"
+                                                     update="searchForm tblSearchResult" icon="fa fa-search"
+                                                     style="width: auto"/>
+                                    <p:commandButton value="Làm mới"
+                                                     actionListener="#{districtController.resetAll()}"
+                                                     update="searchForm tblSearchResult" icon="fa fa-refresh"
+                                                     styleClass="orange-btn" style="width: auto"/>
+                                    <p:commandButton value="Xuất dữ liệu" icon="fa fa-copy" update="growl" ajax="false" rendered="#{districtController.lazyDataModel.rowCount gt 0}">
+                                        <p:dataExporter type="xlsxstream" target="tblSearchResult" fileName="Danh sách thông tin quận/Huyện" />
+                                    </p:commandButton>
+
+                                </p:panelGrid>
+                            </p:panel>
+
+                            <p:panel id="searchResult" header="Kết quả tìm kiếm" style="margin-bottom:5px">
+                                <p:dataTable id="tblSearchResult" tableStyle="table-layout: auto;"
+                                             widgetVar="wdgProvince" resizableColumns="true" paginator="true"
+                                             rows="10"
+                                             value="#{districtController.lazyDataModel}"
+                                             lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
+                                             paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{districtController.lazyDataModel.rowCount}"
+                                             emptyMessage="#{t['lbl.emptyTable']}" rowIndexVar="rowIndex"
+                                             rowKey="#{resultDto.districtId}">
+
+                                    <p:column headerText="STT" width="30" style="text-align: center">
+                                        <h:outputText value="#{rowIndex + 1}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Mã quận/huyện" sortBy="#{resultDto.code}"  width="15%">
+                                        <h:outputText value="#{resultDto.code}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên quận/huyện " sortBy="#{resultDto.name}">
+                                        <h:outputText value="#{commonController.upperCaseFirstChar(resultDto.name)}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên tỉnh/thành phố " sortBy="#{resultDto.provinceName}">
+                                        <h:outputText value="#{commonController.upperCaseFirstChar(resultDto.provinceName)}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Ngày cập nhật" style="text-align: center" sortBy="#{resultDto.updateDate}" width="15%">
+                                        <h:outputText value="#{resultDto.updateDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Trạng thái " sortBy="#{resultDto.status}"  width="15%">
+                                        <h:outputText value="Đang hoạt động" rendered="#{resultDto.status eq true}"/>
+                                        <h:outputText value="Không hoạt động" rendered="#{resultDto.status eq false}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Sửa"
+                                              rendered="#{districtController.getActions().canUpdate()}"
+                                              exportable="false" width="40">
+                                        <div class="my-data-table">
+                                            <p:commandLink styleClass="edit"
+                                                           oncomplete="PF('dialogInsertUpdate').show();"
+                                                           update="dlForm growl"
+                                                           actionListener="#{districtController.showUpdatePopup(resultDto)}">
+                                                <i class="fa fa-edit"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </p:column>
+
+                                    <p:column headerText="Xóa"
+                                              rendered="#{districtController.getActions().canDelete()}"
+                                              style="width: 40px" exportable="false">
+                                        <div class="my-data-table">
+                                            <p:commandLink styleClass="delete"
+                                                           actionListener="#{districtController.onDelete(resultDto)}"
+                                                           update="tblSearchResult growl searchForm">
+                                                <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
+                                                           icon="fa fa-question-circle"/>
+                                                <i class="fa fa-remove"/>
+                                            </p:commandLink>
+                                        </div>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                            <p:outputLabel value="Version đang sử dụng: #{districtController.versionUse}" rendered="#{districtController.versionUse != 0}" style="font-weight: bold"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+        <h:form id="refreshAfterSyncDistrict" prependId="false" style="display: none !important;">
+            <p:commandButton id="updateScreenDistrict"
+                             global="false"
+                             actionListener="#{districtController.resetAll}"
+                             update="formTop searchForm growl">
+            </p:commandButton>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -20,7 +20,10 @@ public class Brand extends BaseModel{
     private Long brandId;
 
     @Column(name = "name")
-    private Long brandName;
+    private String brandName;
+
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "status")
     private Integer status;

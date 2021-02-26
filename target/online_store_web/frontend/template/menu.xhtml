@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+        <div class="btn-menu hidden-lg">
+            <button class="close-menu"><i class="pe-7s-close"/></button>
+        </div>
+        <nav id="site-navigation" class="main-navigation">
+            <ul id="primary-menu" class="primary-menu">
+                <li class="menu-item">
+                    <h:link value="Trang chủ" outcome="/frontend/index.xhtml"/>
+                </li>
+                <li class="menu-item">
+                    <h:link value="Giới thiệu" outcome="/frontend/intro/about.xhtml" />
+                </li>
+                <li class="menu-item">
+                    <h:link value="Tin tức" outcome="/frontend/news/category_news.xhtml"/>
+                </li>
+                <li class="menu-item dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Thông tin
+                        đấu giá <span class="fa fa-caret-down"/></a>
+                    <ul class="dropdown-menu sub-menu">
+                        <li>
+                            <h:link value="Danh sách tài sản" outcome="/frontend/asset/asset_list.xhtml"/>
+                        </li>
+                        <li>
+                            <h:link value="Danh sách quy chế" outcome="/frontend/regulation/regulation_list.html"/>
+                        </li>
+                    </ul>
+                </li>
+                <li class="menu-item">
+                    <h:link value="Văn bản" outcome="/frontend/document/document.xhtml"/>
+                </li>
+                <li class="menu-item">
+                    <h:link value="Hướng dẫn" outcome="/frontend/help/help.xhtml"/>
+                </li>
+                <li class="menu-item">
+                    <h:link value="Liên hệ" outcome="/frontend/contact/contact.xhtml"/>
+                </li>
+                <li class="book-home">
+                    <a href="#" data-toggle="modal" data-target="##{authorizationFEController.hasLogged() ? 'storePopup' : 'loginPopup'}" title="Đăng ký bán đấu giá" onclick="resetModal(this);focusInputSecond('login_account',1000);focusInputSecond('asset_name',600)">Đăng ký bán đấu giá</a>
+                </li>
+            </ul>
+
+        </nav>
+
+</ui:composition>
