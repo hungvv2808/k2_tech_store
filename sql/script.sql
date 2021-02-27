@@ -1,4 +1,4 @@
-ưuse k2_tech_store;
+use k2_tech_store;
 # missing notification table
 ### table province/district/commune ###
 drop table if exists province;

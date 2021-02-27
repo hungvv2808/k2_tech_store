@@ -40,7 +40,7 @@ table.dataTable thead .sorting_desc_disabled {
 }
 
 table.dataTable thead .sorting {
-    background-image: url("#{resource['frontend-layout:plugin/datatables/DataTables-1.10.20/images/sort_both.png']}")
+    background-image: url("url(")
 }
 
 table.dataTable thead .sorting_asc {

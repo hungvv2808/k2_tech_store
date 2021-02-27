@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Created-By: IntelliJ IDEA
-Built-By: ADMIN
-Build-Jdk: 1.8.0_251
+Built-By: vuhung
+Build-Jdk: 1.8.0_231
 Implementation-Title: store
 Implementation-Version: 1.0
 Implementation-Vendor-Id: vn.tech.website

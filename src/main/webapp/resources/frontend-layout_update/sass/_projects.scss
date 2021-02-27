@@ -1,0 +1,49 @@
+.project-demo {
+    background-color: $background-project;
+    background-image: url('../img/project-demo.png');
+    background-size: cover;
+    margin-top: 7rem;
+    .container {
+        >.row {
+            padding: 5rem 0;
+            .count-project {
+                text-align: right;
+                margin-top: 9vh;
+                margin-right: 4vw;
+                h1 {
+                    font-size: 7rem;
+                    color: $primary-color;
+                }
+                p {
+                    font-size: 2.5rem;
+                    padding-right: 1rem;
+                }
+            }
+            .feedback-project {
+                h3 {
+                    color: $primary-color;
+                    font-size: 3rem;
+                }
+                p {
+                    font-size: 1.5rem;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .project-demo {
+        .container {
+            >.row {
+                .count-project {
+                    text-align: center;
+                    margin: 0;
+                }
+                .feedback-project {
+                    text-align: center;
+                }
+            }
+        }
+    }
+}

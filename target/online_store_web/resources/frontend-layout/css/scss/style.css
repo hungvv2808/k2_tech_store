@@ -80,7 +80,7 @@ select {
   -moz-appearance: none;
   -ms-appearance: none;
   -o-appearance: none;
-  background: #fff url("#{resource['frontend-layout:images/bg-select.png']}") no-repeat scroll 96% center !important;
+  background: #fff url("url(") no-repeat scroll 96% center !important;
   border: medium none;
   border: 1px solid #ebebeb;
   border-radius: 0;
