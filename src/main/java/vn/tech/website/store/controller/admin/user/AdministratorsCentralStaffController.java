@@ -190,7 +190,7 @@ public class AdministratorsCentralStaffController extends BaseController {
             account.setUpdateBy(authorizationController.getAccountDto().getAccountId());
             //account.setTimeToChangePassword(new Date());
             // send email
-            EmailUtil.getInstance().sendPasswordAdminEmail(ROLE_NAME_ADMIN, account.getEmail(), password, account.getFirstName() + account.getLastName(), account.getUserName());
+            EmailUtil.getInstance().sendPasswordAdminEmail(ROLE_NAME_ADMIN, account.getEmail(), password, account.getFullName(), account.getUserName());
         } else {
             account.setSalt(objBackup.getSalt());
             account.setPassword(objBackup.getPassword());
@@ -229,7 +229,7 @@ public class AdministratorsCentralStaffController extends BaseController {
         account = new Account();
         BeanUtils.copyProperties(ac, account);
         accountRepository.save(account);
-        EmailUtil.getInstance().onUnLockAccount(account.getEmail(), account.getFirstName()+ account.getLastName());
+        EmailUtil.getInstance().onUnLockAccount(account.getEmail(), account.getFullName());
         FacesUtil.addSuccessMessage("Mở khóa tài khoản thành công");
         resetAll();
         onSearch();
@@ -242,7 +242,7 @@ public class AdministratorsCentralStaffController extends BaseController {
         BeanUtils.copyProperties(ac, account);
         accountRepository.save(account);
         FacesUtil.addSuccessMessage("Khóa tài khoản thành công");
-        EmailUtil.getInstance().onLockAccount(account.getEmail(), account.getFirstName() + account.getLastName());
+        EmailUtil.getInstance().onLockAccount(account.getEmail(), account.getFullName());
         resetAll();
         onSearch();
     }
@@ -256,7 +256,7 @@ public class AdministratorsCentralStaffController extends BaseController {
         //account.setFirstTimeLogin(false);
         accountRepository.save(account);
         // send email
-        EmailUtil.getInstance().sendResetPasswordUserEmail(account.getEmail(),account.getUserName(), password, account.getFirstName() + account.getLastName());
+        EmailUtil.getInstance().sendResetPasswordUserEmail(account.getEmail(),account.getUserName(), password, account.getFullName());
         FacesUtil.addSuccessMessage("Cấp lại mật khẩu thành công, truy cập \"" + account.getEmail() + "\" để lấy mật khẩu truy cập hệ thống!");
     }
 

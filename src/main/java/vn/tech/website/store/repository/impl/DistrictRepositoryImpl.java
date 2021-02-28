@@ -28,14 +28,8 @@ public class DistrictRepositoryImpl implements DistrictRepositoryCustom {
         sb.append("SELECT "
                 + "n.district_id,"
                 + "n.province_id,"
-                + " n.code, "
                 + "n.name as districtName,"
-                + " n.status,"
-                + " pn.name as provinceName,"
-                + "n.district_api_id,"
-                + "n.version_id,"
-                + "n.create_date,"
-                + "n.update_date ");
+                + " pn.name as provinceName");
         appendQueryFromAndWhereForSearch(sb, searchDto);
         sb.append(" GROUP BY n.district_id ");
         if (searchDto.getSortField() != null) {
@@ -44,10 +38,6 @@ public class DistrictRepositoryImpl implements DistrictRepositoryCustom {
                 sb.append(" n.code ");
             } else if (searchDto.getSortField().equals("name")) {
                 sb.append(" n.name collate utf8_vietnamese_ci ");
-            } else if (searchDto.getSortField().equals("status")) {
-                sb.append(" n.status ");
-            } else if (searchDto.getSortField().equals("updateDate")) {
-                sb.append(" n.update_date ");
             } else if (searchDto.getSortField().equals("provinceName")) {
                 sb.append(" pn.name collate utf8mb4_vietnamese_ci ");
             }
@@ -71,14 +61,8 @@ public class DistrictRepositoryImpl implements DistrictRepositoryCustom {
             DistrictDto dto = new DistrictDto();
             dto.setDistrictId(ValueUtil.getLongByObject(obj[0]));
             dto.setProvinceId(ValueUtil.getLongByObject(obj[1]));
-            dto.setCode(ValueUtil.getStringByObject(obj[2]));
-            dto.setName(ValueUtil.getStringByObject(obj[3]));
-            dto.setStatus(ValueUtil.getBooleanByObject(obj[4]));
-            dto.setProvinceName(ValueUtil.getStringByObject(obj[5]));
-            dto.setDistrictApiId(ValueUtil.getLongByObject(obj[6]));
-            dto.setVersionId(ValueUtil.getLongByObject(obj[7]));
-            dto.setCreateDate(ValueUtil.getDateByObject(obj[8]));
-            dto.setUpdateDate(ValueUtil.getDateByObject(obj[9]));
+            dto.setName(ValueUtil.getStringByObject(obj[2]));
+            dto.setProvinceName(ValueUtil.getStringByObject(obj[3]));
 
             districtList.add(dto);
         }

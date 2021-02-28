@@ -110,19 +110,6 @@ public class ProvinceController extends BaseController {
 //            }
 //        }
         List<Province> pro = (List<Province>) provinceRepository.findAll();
-        province.setCode(province.getCode().trim());
-        if (province.getProvinceId() == null) {
-            province.setProvinceApiId(0L);
-        }
-        if (province.getProvinceId() == null || !province.getCode().equalsIgnoreCase(provinceCopy.getCode().trim())) {
-            checkNoteLabel = false;
-            List<Province> oldCode = provinceRepository.findByCode(province.getCode());
-            if (oldCode.size() != 0) {
-                FacesUtil.addErrorMessage("Mã tỉnh/thành phố đã tồn tại");
-                FacesUtil.updateView("growl");
-                return;
-            }
-        }
 
         province.setName(province.getName().trim());
         if (province.getProvinceId() == null || !province.getName().trim().equalsIgnoreCase(provinceCopy.getName().trim())) {
@@ -134,15 +121,6 @@ public class ProvinceController extends BaseController {
             }
         }
 
-
-        if (province.getCreateBy() == null) {
-            province.setCreateBy(authorizationController.getAccountDto().getAccountId());
-            province.setUpdateBy(authorizationController.getAccountDto().getAccountId());
-        } else {
-            province.setCreateBy(provinceCopy.getCreateBy());
-            province.setCreateDate(provinceCopy.getCreateDate());
-            province.setUpdateBy(authorizationController.getAccountDto().getAccountId());
-        }
         FacesUtil.addSuccessMessage("Lưu thành công");
         FacesUtil.closeDialog("dialogInsertUpdate");
         resetAll();
@@ -212,7 +190,7 @@ public class ProvinceController extends BaseController {
                 List<Province> provinceList = getWrappedData();
                 String value = String.valueOf(rowKey);
                 for (Province obj : provinceList) {
-                    if (obj.getCode().equals(value) || obj.getName().equals(value) || obj.getStatus().equals(value)) {
+                    if (obj.getProvinceId().equals(value) || obj.getName().equals(value)) {
                         return obj;
                     }
                 }

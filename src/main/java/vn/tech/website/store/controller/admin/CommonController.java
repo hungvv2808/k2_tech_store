@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.FacesUtil;
 import vn.tech.website.store.util.FileUtil;
+import vn.tech.website.store.util.PropertiesUtil;
 
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -155,5 +156,10 @@ public class CommonController implements Serializable {
 
     public int getYearNow() {
         return Calendar.getInstance().get(Calendar.YEAR);
+    }
+
+    public String buildURLImage(String imagePath) {
+        String domain = PropertiesUtil.getProperty("domain.static.context");
+        return domain + imagePath;
     }
 }

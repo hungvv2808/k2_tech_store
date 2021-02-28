@@ -9,15 +9,19 @@ import org.primefaces.model.SortOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import vn.tech.website.store.controller.admin.auth.AuthorizationController;
 import vn.tech.website.store.dto.BrandDto;
 import vn.tech.website.store.dto.BrandSearchDto;
 import vn.tech.website.store.model.Brand;
 import vn.tech.website.store.repository.BrandRepository;
+import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
 
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +30,9 @@ import java.util.Map;
 @Getter
 @Setter
 public class BrandController {
+    @Inject
+    private AuthorizationController authorizationController;
+
     @Autowired
     private BrandRepository brandRepository;
 
@@ -86,11 +93,6 @@ public class BrandController {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập tên thương hiệu");
             return false;
         }
-        if (StringUtils.isBlank(brandDto.getDescription())) {
-            FacesUtil.addErrorMessage("Bạn vui lòng nhập mô tả thương hiệu");
-            return false;
-        }
-        brandDto.setDescription(brandDto.getDescription().trim());
         List<Brand> brandList = new ArrayList<>();
         if (brandDto.getBrandId() == null) {
             brandList = brandRepository.findAll();
@@ -100,7 +102,7 @@ public class BrandController {
         brandDto.setBrandName(removeSpaceOfString(brandDto.getBrandName()));
         for (Brand brand : brandList) {
             if (brandDto.getBrandName().equalsIgnoreCase(removeSpaceOfString(brand.getBrandName()))) {
-                FacesUtil.addErrorMessage("Tên ngành hàng này đã tồn tại");
+                FacesUtil.addErrorMessage("Tên thương hiệu này đã tồn tại");
                 return false;
             }
         }
@@ -113,6 +115,9 @@ public class BrandController {
         }
         Brand brand = new Brand();
         BeanUtils.copyProperties(brandDto, brand);
+        brand.setStatus(DbConstant.STATUS_BRAND_ACTIVE);
+        brand.setUpdateDate(new Date());
+        brand.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
         brandRepository.save(brand);
         FacesUtil.addSuccessMessage("Lưu thành công.");
         FacesUtil.closeDialog("dialogInsertUpdate");
@@ -128,7 +133,10 @@ public class BrandController {
 //            FacesUtil.addErrorMessage("Không thể xóa vì " + resultDto.getTitle() + " đang được sử dụng");
 //            return;
 //        }
-        brandRepository.deleteById(resultDto.getBrandId());
+        resultDto.setStatus(DbConstant.STATUS_BRAND_INACTIVE);
+        Brand brand = new Brand();
+        BeanUtils.copyProperties(resultDto, brand);
+        brandRepository.save(brand);
         FacesUtil.addSuccessMessage("Xóa thành công.");
         onSearch();
     }

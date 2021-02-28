@@ -29,14 +29,9 @@ public class CommuneRepositoryImpl implements CommuneRepositoryCustom {
                 + "n.commune_id,"
                 + "n.province_id,"
                 + "n.district_id,"
-                + "n.code, "
                 + "n.name as communeName, "
-                + "n.status,"
                 + "dtr.name as districtName,"
-                + "pr.name as provinceName,"
-                + "n.version_id,"
-                + "n.create_date,"
-                + "n.update_date ");
+                + "pr.name as provinceName ");
         appendQueryFromAndWhereForSearch(sb, searchDto);
         sb.append(" GROUP BY n.commune_id ");
         if (searchDto.getSortField() != null) {
@@ -75,14 +70,9 @@ public class CommuneRepositoryImpl implements CommuneRepositoryCustom {
             dto.setCommuneId(ValueUtil.getLongByObject(obj[0]));
             dto.setProvinceId(ValueUtil.getLongByObject(obj[1]));
             dto.setDistrictId(ValueUtil.getLongByObject(obj[2]));
-            dto.setCode(ValueUtil.getStringByObject(obj[3]));
-            dto.setName(ValueUtil.getStringByObject(obj[4]));
-            dto.setStatus(ValueUtil.getBooleanByObject(obj[5]));
-            dto.setDistrictName(ValueUtil.getStringByObject(obj[6]));
-            dto.setProvinceName(ValueUtil.getStringByObject(obj[7]));
-            dto.setVersionId(ValueUtil.getLongByObject(obj[8]));
-            dto.setCreateDate(ValueUtil.getDateByObject(obj[9]));
-            dto.setUpdateDate(ValueUtil.getDateByObject(obj[10]));
+            dto.setName(ValueUtil.getStringByObject(obj[3]));
+            dto.setDistrictName(ValueUtil.getStringByObject(obj[4]));
+            dto.setProvinceName(ValueUtil.getStringByObject(obj[5]));
 
             communeList.add(dto);
         }

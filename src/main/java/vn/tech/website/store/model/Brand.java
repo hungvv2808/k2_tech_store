@@ -22,9 +22,6 @@ public class Brand extends BaseModel{
     @Column(name = "name")
     private String brandName;
 
-    @Column(name = "description")
-    private String description;
-
     @Column(name = "status")
     private Integer status;
 }

@@ -328,7 +328,7 @@ public class AccountController extends BaseController {
             account.setUpdateBy(authorizationController.getAccountDto().getAccountId());
             //account.setTimeToChangePassword(new Date());
             //send email
-            EmailUtil.getInstance().sendPasswordUserEmail(ROLE_NAME_USER, account.getEmail(), password, account.getUserName(), account.getFirstName() + account.getLastName());
+            EmailUtil.getInstance().sendPasswordUserEmail(ROLE_NAME_USER, account.getEmail(), password, account.getUserName(), account.getFullName());
 
         } else {
             account.setSalt(objBackup.getSalt());

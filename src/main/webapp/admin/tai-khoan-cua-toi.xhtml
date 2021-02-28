@@ -56,20 +56,13 @@
 
                             <p:outputLabel value="Tên đăng nhập:" styleClass="requireLabel" for="username"/>
                             <p:outputPanel>
-                                <p:inputText id="username" placeholder="#{authorizationController.accountDto.username}" disabled="true"/>
+                                <p:inputText id="username" placeholder="#{authorizationController.accountDto.updateName}" disabled="true"/>
                                 <p:message id="id-username" for="username" styleClass="focus-input-text" display="text"/>
-                            </p:outputPanel>
-
-
-                            <p:outputLabel value="Chức danh:" for="positions"/>
-                            <p:outputPanel>
-                                <p:inputText id="positions" placeholder="#{authorizationController.accountDto.position}" disabled="true"/>
-                                <p:message id="id-positions" for="username" styleClass="focus-input-text" display="text"/>
                             </p:outputPanel>
 
                             <p:outputLabel value="Giới tính:" for="gender"/>
                             <p:outputPanel>
-                                <p:selectOneMenu id="gender" value="#{authorizationController.accountDto.sex}">
+                                <p:selectOneMenu id="gender" value="#{authorizationController.accountDto.gender}">
                                     <f:selectItem itemLabel="Chọn giới tính" itemValue=""/>
                                     <f:selectItem itemValue="0" itemLabel="Nam"/>
                                     <f:selectItem itemValue="1" itemLabel="Nữ"/>
@@ -83,7 +76,6 @@
                                 <p:inputText id="email" placeholder="Nhập email" maxlength="50" required="true"
                                              validatorMessage="Email không đúng định dạng"
                                              onblur="this.value = this.value.trim()"
-                                             disabled="#{authorizationController.accountDto.loginFromSso}"
                                              requiredMessage="Bạn vui lòng nhập địa chỉ email"
                                              value="#{authorizationController.accountDto.email}">
                                     <f:validateRegex
@@ -109,19 +101,6 @@
                                 <p:message id="id-dateOfBirth" for="dateOfBirth" styleClass="focus-input-text" display="text"/>
                             </p:outputPanel>
 
-                            <p:outputLabel value="Nhóm quyền:" styleClass="requireLabel" for="permission"/>
-                            <p:outputPanel>
-                                <p:selectOneMenu id="permission"
-                                                 value="#{authorizationController.accountDto.roleId}"
-                                                 autoWidth="false" effect="fade"
-                                                 label="Chọn quyền thành viên" disabled="true">
-                                    <f:selectItem itemLabel="Chọn quyền thành viên" itemValue="-1"/>
-                                    <f:selectItems value="#{authorizationController.permissionList}"
-                                                   var="permission" itemLabel="#{permission.name}"
-                                                   itemValue="#{permission.roleId}"/>
-                                </p:selectOneMenu>
-                                <p:message id="id-permission" for="permission" styleClass="focus-input-text" display="text"/>
-                            </p:outputPanel>
 
                         </p:panelGrid>
 
@@ -152,11 +131,11 @@
                                               update="mainForm"
                                               dragDropSupport="false" auto="true">
                                 </p:fileUpload>
-                                <p:graphicImage rendered="#{empty authorizationController.accountDto.avatarPath}"
+                                <p:graphicImage rendered="#{empty authorizationController.accountDto.imagePath}"
                                                 name="images/noavatar.png" library="apollo-layout"
                                                 style="margin-top: 10px;"/>
-                                <p:graphicImage rendered="#{not empty authorizationController.accountDto.avatarPath}"
-                                                name="#{authorizationController.accountDto.avatarPath}"
+                                <p:graphicImage rendered="#{not empty authorizationController.accountDto.imagePath}"
+                                                name="#{authorizationController.accountDto.imagePath}"
                                                 style="width: 160px; height: 160px; margin-top: 10px;"/>
                             </p:panelGrid>
                             <p:outputPanel/>
@@ -167,8 +146,8 @@
                             <p:commandButton actionListener="#{authorizationController.onSaveData()}"
                                              value="Cập nhật"
                                              update="mainForm topbar
-                                         id-fullname id-gender id-dateOfBirth id-positions
-                                         id-address id-phone id-email id-permission focus"
+                                             id-fullname id-gender id-dateOfBirth
+                                             id-address id-phone id-email focus"
                                              style="margin-top:5px;margin-left: 10px; width: auto;"
                                              icon="fa fa-save"/>
                         </p:outputLabel>

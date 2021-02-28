@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface DistrictRepository extends CrudRepository<District, Long>, DistrictRepositoryCustom {
 
-    List <District> findByCode(String code);
 
     List<District> findByNameAndProvinceId(String code, Long pronvince);
 

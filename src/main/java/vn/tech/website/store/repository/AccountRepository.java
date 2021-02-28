@@ -70,5 +70,11 @@ public interface AccountRepository extends CrudRepository<Account, Long>, Accoun
     Account getAccountByAccountId(@Param("accountId") Long id);
 
 //    boolean existsAccountsByProvinceIdOrProvinceIdOfIssue(Long provinceId, Long provinceIdOfIssue);
+
+    @Query("select acc from Account  acc where acc.email <>:email")
+    List<Account> getAllAccountExpertEmail(@Param("email") String email);
+
+    @Query("select acc from Account  acc where acc.accountId <> :accountId")
+    List<Account> findAllAccountExpertId(@Param("accountId") Long accountId );
 }
 

@@ -135,20 +135,21 @@ public class AuthorizationController implements Serializable {
     }
 
     public void initMyAccount() {
-        if (!hasLogged()) {
-            FacesUtil.redirect("/admin/login.xhtml");
-            return;
-        }
+//        if (!hasLogged()) {
+//            FacesUtil.redirect("/admin/login.xhtml");
+//            return;
+//        }
         if (!FacesContext.getCurrentInstance().isPostback()) {
             resetMyAccount();
         }
     }
 
     public void resetMyAccount() {
-        account = accountRepository.findByAccountId(accountDto.getAccountId());
+        account = accountRepository.findByAccountId(1L);
+//        account = accountRepository.findByAccountId(accountDto.getAccountId());
         BeanUtils.copyProperties(account, accountDto);
        // married = StringUtils.isNotBlank(accountDto.getRelativeIdCardNumber()) && StringUtils.isNotBlank(accountDto.getRelativeName());
-        permissionList = roleRepository.findRolesByType(DbConstant.ROLE_TYPE_ADMIN);
+        //permissionList = roleRepository.findRolesByType(DbConstant.ROLE_TYPE_ADMIN);
         listProvinceAccount = new ArrayList<>();
         now = new Date();
         provinceList = (List<Province>) provinceRepository.findAll();
@@ -162,12 +163,12 @@ public class AuthorizationController implements Serializable {
     }
 
     public void onUpload(FileUploadEvent e) {
-//        if (e.getFile().getSize() > Constant.MAX_FILE_SIZE) {
-//            setErrorForm(Constant.ERROR_MESSAGE_ID, String.format(getErrorMessage(ErrorConstant.KEY_ERROR_FILE_SIZE), Constant.MAX_FILE_SIZE / 1000000));
-//            return;
-//        }
+        if (e.getFile().getSize() > Constant.MAX_FILE_SIZE) {
+            setErrorForm("looix the thoi");
+            return;
+        }
         accountDto.setUploadedFile(e.getFile());
-        //accountDto.setAvatarPath(FileUtil.saveImageFile(e.getFile()));
+        accountDto.setImagePath(FileUtil.saveImageFile(e.getFile()));
     }
 
     private boolean validateField(AccountDto accountDto) {

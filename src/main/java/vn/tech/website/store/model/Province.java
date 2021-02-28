@@ -15,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "province")
-public class Province extends BaseModel {
+public class Province {
     private static final long serialVersionUID = -5406999938328491965L;
 
     @Id
@@ -23,39 +23,7 @@ public class Province extends BaseModel {
     @Column(name = "province_id")
     private Long provinceId;
 
-    @Column(name = "code")
-    private String code;
-
     @Column(name = "name")
     private String name;
-
-    @Column(name = "status")
-    private Boolean status;
-
-    @Column(name = "province_api_id")
-    private Long provinceApiId;
-
-    @Column(name = "version_id")
-    private Long versionId;
-
-
-    // api use
-    public Province(Date createDate, Date updateDate, Long createBy, Long updateBy, String code, String name, Boolean status, Long provinceApiId, Long versionId) {
-        super(createDate, updateDate, createBy, updateBy);
-        this.code = code;
-        this.name = name;
-        this.status = status;
-        this.provinceApiId = provinceApiId;
-        this.versionId = versionId;
-    }
-
-    public Province(Date createDate, Date updateDate, Long createBy, Long updateBy, String code, String name, Boolean status, Long provinceApiId) {
-        super(createDate, updateDate, createBy, updateBy);
-        this.code = code;
-        this.name = name;
-        this.status = status;
-        this.provinceApiId = provinceApiId;
-    }
-
 
 }

@@ -115,14 +115,13 @@ public class CommuneController extends BaseController {
             FacesUtil.closeDialog("dialogInsertUpdate");
             return;
         }
-        commune.setCode(commune.getCode().trim());
-        if (commune.getCommuneId() == null || !commune.getCode().trim().equalsIgnoreCase(communeCopy.getCode().trim())) {
-            List<Commune> oldCode = communeRepository.findByCode(commune.getCode());
-            if (oldCode.size() != 0) {
+
+        if (commune.getCommuneId() == null ) {
+
+
                 FacesUtil.addErrorMessage("Mã phường/xã đã tồn tại");
                 FacesUtil.updateView("growl");
                 return;
-            }
         }
         commune.setName(commune.getName().trim());
         if (commune.getCommuneId() == null || !commune.getName().equalsIgnoreCase(communeCopy.getName().trim())) {
@@ -134,15 +133,6 @@ public class CommuneController extends BaseController {
             }
         }
 
-        if (commune.getCreateBy() == null) {
-            commune.setCreateBy(authorizationController.getAccountDto().getAccountId());
-            commune.setUpdateBy(authorizationController.getAccountDto().getAccountId());
-        } else {
-            commune.setCreateBy(communeCopy.getCreateBy());
-            commune.setCreateDate(communeCopy.getCreateDate());
-            commune.setUpdateBy(authorizationController.getAccountDto().getAccountId());
-        }
-        commune.setVersionId(idVersion);
 
         FacesUtil.addSuccessMessage("Lưu thành công");
         FacesUtil.closeDialog("dialogInsertUpdate");
@@ -221,7 +211,7 @@ public class CommuneController extends BaseController {
                 List<CommuneDto> communeList = getWrappedData();
                 String value = String.valueOf(rowKey);
                 for (CommuneDto obj : communeList) {
-                    if (obj.getCode().equals(value) || obj.getName().equals(value)) {
+                    if (obj.getName().equals(value)) {
                         return obj;
                     }
 

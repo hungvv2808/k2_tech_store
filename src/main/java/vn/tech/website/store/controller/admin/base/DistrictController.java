@@ -118,40 +118,22 @@ public class DistrictController extends BaseController {
             return;
         }
 
-        district.setCode(district.getCode().trim());
-        if (district.getDistrictId() == null) {
-            district.setDistrictApiId(0L);
-        }
 
-        if (district.getDistrictId() == null || !district.getCode().equalsIgnoreCase(districtCopy.getCode().trim())) {
-            List<District> oldCode = districtRepository.findByCode(district.getCode());
-            if (oldCode.size() != 0) {
+        if (district.getDistrictId() == null ) {
+
                 FacesUtil.addErrorMessage("Mã quận/huyện đã tồn tại");
                 FacesUtil.updateView("growl");
                 return;
-            }
+
         }
 
         district.setName(district.getName().trim());
-        if (district.getDistrictId() == null || !district.getName().trim().equalsIgnoreCase(districtCopy.getName().trim())) {
-            List<District> oldCode = districtRepository.findByNameAndProvinceId(district.getName(), district.getProvinceId());
-            if (oldCode.size() != 0) {
+        if (district.getDistrictId() == null ) {
+
                 FacesUtil.addErrorMessage("Tên quận/huyện đã tồn tại trong tỉnh bạn chọn");
                 FacesUtil.updateView("growl");
                 return;
-            }
         }
-
-        if (district.getCreateBy() == null) {
-            district.setCreateBy(authorizationController.getAccountDto().getAccountId());
-            district.setUpdateBy(authorizationController.getAccountDto().getAccountId());
-        } else {
-            district.setCreateBy(districtCopy.getCreateBy());
-            district.setCreateDate(districtCopy.getCreateDate());
-            district.setUpdateBy(authorizationController.getAccountDto().getAccountId());
-        }
-
-        district.setVersionId(idVersion);
         FacesUtil.addSuccessMessage("Lưu thành công");
         FacesUtil.closeDialog("dialogInsertUpdate");
         resetAll();
@@ -212,7 +194,7 @@ public class DistrictController extends BaseController {
                 List<DistrictDto> districtList = getWrappedData();
                 String value = String.valueOf(rowKey);
                 for (DistrictDto obj : districtList) {
-                    if (obj.getCode().equals(value) || obj.getName().equals(value)) {
+                    if ( obj.getName().equals(value)) {
                         return obj;
                     }
 

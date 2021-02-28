@@ -27,26 +27,13 @@ public class ProvinceRepositoryImpl implements ProvinceRepositoryCustom {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT "
                 + "n.province_id,"
-                + " n.code, "
-                + "n.name,"
-                + "n.status,"
-                + "n.province_api_id,"
-                + "n.version_id,"
-                + "n.create_date,"
-                + "n.update_date ");
+                + "n.name,");
         appendQueryFromAndWhereForSearch(sb, searchDto);
         sb.append(" GROUP BY n.province_id ");
         if (searchDto.getSortField() != null) {
             sb.append(" ORDER BY ");
-            if (searchDto.getSortField().equals("code")) {
-                sb.append(" n.code ");
             } else if (searchDto.getSortField().equals("name")) {
                 sb.append(" n.name ");
-            } else if (searchDto.getSortField().equals("status")) {
-                sb.append(" n.status ");
-            } else if (searchDto.getSortField().equals("updateDate")) {
-                sb.append(" n.update_date ");
-            }
             sb.append(searchDto.getSortOrder());
         } else {
             sb.append(" ORDER BY n.province_id DESC ");
@@ -66,13 +53,7 @@ public class ProvinceRepositoryImpl implements ProvinceRepositoryCustom {
         for (Object[] obj : result) {
             Province dto = new Province();
             dto.setProvinceId(ValueUtil.getLongByObject(obj[0]));
-            dto.setCode(ValueUtil.getStringByObject(obj[1]));
             dto.setName(ValueUtil.getStringByObject(obj[2]));
-            dto.setStatus(ValueUtil.getBooleanByObject(obj[3]));
-            dto.setProvinceApiId(ValueUtil.getLongByObject(obj[4]));
-            dto.setVersionId(ValueUtil.getLongByObject(obj[5]));
-            dto.setCreateDate(ValueUtil.getDateByObject(obj[6]));
-            dto.setUpdateDate(ValueUtil.getDateByObject(obj[7]));
 
             provinceList.add(dto);
         }

@@ -746,7 +746,7 @@ public class AuthorizationFEController implements Serializable {
                 return;
             }
         code = StringUtil.generateSalt();
-        EmailUtil.getInstance().sendLostPasswordEmail(account.getEmail(), code, account.getFirstName()+ account.getLastName());
+        EmailUtil.getInstance().sendLostPasswordEmail(account.getEmail(), code, account.getFullName());
         facesNoticeController.addSuccessMessage("Mã xác nhận đã được gửi về tài khoản email của bạn");
         facesNoticeController.activeFunction("countdownCheckMail");
     }

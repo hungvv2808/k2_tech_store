@@ -294,6 +294,9 @@ public class FileUtil {
     }
 
     //Image
+    public static boolean isAcceptFileImageType(UploadedFile uploadedFile) {
+        return isAcceptFileImageType(uploadedFile.getFileName().toLowerCase());
+    }
     public static boolean isAcceptFileImageType(String fileName) {
         String fileTypeString = getAccpetFileImageString();
         if (StringUtils.isBlank(fileTypeString) || StringUtils.isBlank(fileName)) {

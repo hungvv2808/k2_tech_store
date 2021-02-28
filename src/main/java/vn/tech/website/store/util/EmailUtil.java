@@ -181,6 +181,15 @@ public class EmailUtil implements Runnable {
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
+    public boolean sendConfirmChangeEmail(String emailTo,String userName,String code) {
+        String subject = PropertiesUtil.getProperty("email.changeEmail.subject");
+        String content = PropertiesUtil.getProperty("email.changeEmail.content")
+                .replace("{TEN_TAI_KHOAN}", userName)
+                .replace("{EMAIL}",emailTo)
+                .replace("{CODE}", code);
+        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
+    }
+
     public boolean sendResultStore(String emailTo, String userName, Boolean status, String regulationCode, String assetName, Date startTime, Date endTime, Long price, Date timeAccept){
         String content;
         if (status == DbConstant.ASSET_MANAGEMENT_ENDING_GOOD) {
@@ -269,7 +278,7 @@ public class EmailUtil implements Runnable {
         }
     }
 
-    public static void main(String[] args) {
-      EmailUtil.getInstance().sendResultStore("thinhhoang3030@gmail.com", "truongvvt", true, "QC000012", "Tài sản A", new Date() , new Date(), 10000000L, new Date());
-    }
+//    public static void main(String[] args) {
+//      EmailUtil.getInstance().sendConfirmChangeEmail("o2xallblue@gmail.com","niet","123456");
+//    }
 }

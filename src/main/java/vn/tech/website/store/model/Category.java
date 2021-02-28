@@ -17,10 +17,10 @@ public class Category extends BaseModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
-    private Long brandId;
+    private Long categoryId;
 
     @Column(name = "name")
-    private Long categoryName;
+    private String categoryName;
 
     @Column(name = "status")
     private Integer status;

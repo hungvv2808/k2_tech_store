@@ -7,7 +7,7 @@ import vn.tech.website.store.model.Commune;
 import java.util.List;
 
 public interface CommuneRepository extends CrudRepository<Commune, Long>, CommuneRepositoryCustom {
-    List<Commune> findByCode(String code);
+
 
     List<Commune> deleteCommunesByProvinceId(Long provinceId);
 

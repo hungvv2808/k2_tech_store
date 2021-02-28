@@ -4,14 +4,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import vn.tech.website.store.model.Brand;
+import vn.tech.website.store.util.DbConstant;
 
 import java.util.List;
 
 public interface BrandRepository extends CrudRepository<Brand, Long>,BrandRepositoryCustom {
 
-    @Query("select b from Brand b")
+    @Query("select b from Brand b where b.status = "+ DbConstant.STATUS_BRAND_ACTIVE)
     List<Brand> findAll();
 
-    @Query("select b from Brand b where b.brandId <> :brandId")
+    @Query("select b from Brand b where b.brandId <> :brandId and b.status = "+ DbConstant.STATUS_BRAND_ACTIVE)
     List<Brand> findAllGoodsExpertId(@Param("brandId") Long brandId);
 }

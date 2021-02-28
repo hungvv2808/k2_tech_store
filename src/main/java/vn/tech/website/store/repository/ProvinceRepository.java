@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface ProvinceRepository extends CrudRepository<Province, Long>, ProvinceRepositoryCustom {
 
-    List<Province> findByCode(String code);
 
     List<Province> findByName(String name);
 

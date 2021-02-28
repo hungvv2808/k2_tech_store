@@ -26,11 +26,8 @@ public class Account extends BaseModel {
     @Column(name = "user_name")
     private String userName;
 
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
+    @Column(name = "full_name")
+    private String fullName;
 
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
@@ -56,11 +53,14 @@ public class Account extends BaseModel {
     @Column(name = "address")
     private String address;
 
-    @Column(name ="image_path")
+    @Column(name ="avatar_path")
     private String imagePath;
 
     @Column(name ="status")
     private Integer status;
+
+    @Column(name ="verify_code")
+    private String verifyCode;
 
     @Column(name = "province_id")
     private Long provinceId;

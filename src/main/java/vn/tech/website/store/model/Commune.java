@@ -15,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "commune")
-public class Commune extends BaseModel {
+public class Commune {
     private static final long serialVersionUID = 9141645777240335742L;
 
     @Id
@@ -29,35 +29,7 @@ public class Commune extends BaseModel {
     @Column(name = "district_id")
     private Long districtId;
 
-    @Column(name = "code")
-    private String code;
-
     @Column(name = "name")
     private String name;
-
-    @Column(name = "status")
-    private Boolean status;
-
-    @Column(name = "version_id")
-    private Long versionId;
-
-    public Commune(Date createDate, Date updateDate, Long createBy, Long updateBy, Long provinceId, Long districtId, String code, String name, Boolean status, Long versionId) {
-        super(createDate, updateDate, createBy, updateBy);
-        this.provinceId = provinceId;
-        this.districtId = districtId;
-        this.code = code;
-        this.name = name;
-        this.status = status;
-        this.versionId = versionId;
-    }
-
-    public Commune(Date createDate, Date updateDate, Long createBy, Long updateBy, Long provinceId, Long districtId, String code, String name, Boolean status) {
-        super(createDate, updateDate, createBy, updateBy);
-        this.provinceId = provinceId;
-        this.districtId = districtId;
-        this.code = code;
-        this.name = name;
-        this.status = status;
-    }
 }
 

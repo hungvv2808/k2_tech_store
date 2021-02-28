@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.admin.BaseController;
 import vn.tech.website.store.entity.EScope;
 import vn.tech.website.store.util.Constant;
+import vn.tech.website.store.util.FacesUtil;
 import vn.tech.website.store.util.FileUtil;
 
 import javax.inject.Named;
