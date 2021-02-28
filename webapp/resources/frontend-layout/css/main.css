@@ -559,6 +559,80 @@
   color: #3aaf29;
   text-transform: uppercase;
 }
+.content-products .highlight-products > .row,
+.content-products .mobile-products > .row,
+.content-products .laptop-products > .row,
+.content-products .watch-products > .row,
+.content-products .wireless-products > .row {
+  margin-left: 7rem;
+}
+.content-products .highlight-products .grid-style,
+.content-products .mobile-products .grid-style,
+.content-products .laptop-products .grid-style,
+.content-products .watch-products .grid-style,
+.content-products .wireless-products .grid-style {
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid #3aaf29;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  margin: 0 1.5rem 1.5rem 0;
+}
+.content-products .highlight-products a,
+.content-products .mobile-products a,
+.content-products .laptop-products a,
+.content-products .watch-products a,
+.content-products .wireless-products a {
+  text-decoration: none;
+}
+.content-products .highlight-products__img,
+.content-products .mobile-products__img,
+.content-products .laptop-products__img,
+.content-products .watch-products__img,
+.content-products .wireless-products__img {
+  width: 200px;
+  height: 250px;
+  object-fit: cover;
+}
+.content-products .highlight-products p,
+.content-products .mobile-products p,
+.content-products .laptop-products p,
+.content-products .watch-products p,
+.content-products .wireless-products p {
+  margin: 0;
+  padding: 6px 0;
+}
+.content-products .highlight-products__title,
+.content-products .mobile-products__title,
+.content-products .laptop-products__title,
+.content-products .watch-products__title,
+.content-products .wireless-products__title {
+  color: #3aaf29;
+}
+.content-products .highlight-products__price,
+.content-products .mobile-products__price,
+.content-products .laptop-products__price,
+.content-products .watch-products__price,
+.content-products .wireless-products__price {
+  color: #F42F4C;
+}
+.content-products .more-products > .row {
+  margin-top: 1rem;
+}
+.content-products .more-products a {
+  width: 100%;
+  text-align: right;
+  text-decoration: none;
+}
+.content-products .more-products a span {
+  color: #3aaf29;
+  font-size: 18px;
+  padding-right: 7rem;
+}
+.content-products .more-products a span:hover {
+  color: #02ff3985;
+  text-decoration: underline;
+}
 
 .feedbacks-slide .container {
   padding: 0;
