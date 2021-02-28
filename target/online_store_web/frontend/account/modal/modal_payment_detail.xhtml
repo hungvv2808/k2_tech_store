@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <div class="modal fade" id="paymentDetailPopup">
+        <div class="modal-dialog modal-login" style="min-width: inherit">
+            <div class="modal-content">
+                <h:panelGroup id="popupShowFile">
+                    <div class="col-md-12 help-documents" style="background-color: white; padding: 0;">
+                        <button id="close_paymentDetailPopup" type="button" class="close" style="margin: 0 5px 0 0; padding: 5px;"
+                                data-dismiss="modal">&#xd7;
+                        </button>
+                        <h:panelGroup rendered="#{paymentHistoryController.renderPopup}">
+                            <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=#{commonController.getCurrentDomain()}#{resource[paymentHistoryController.payment.receiptFilePath]}"
+                                    style="border: none" height="600" width="100%">
+                            </iframe>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{!paymentHistoryController.renderPopup}">
+                            <h:outputLabel value="Giao dịch chưa được tạo biên lai." style="margin:10px;"/>
+                        </h:panelGroup>
+                    </div>
+                </h:panelGroup>
+            </div>
+        </div>
+    </div>
+</ui:composition>

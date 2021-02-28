@@ -1,0 +1,30 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pa="http://primefaces.org/apollo">
+
+    <div class="layout-menu-container">
+        <div class="nano">
+            <div class="nano-content menu-scroll-content">
+                <div class="layout-menu-title">MENU</div>
+                <h:form id="menuForm" prependId="false">
+                    <pa:menu widgetVar="menuWidget">
+                        <p:menuitem id="menu-1" icon="fa fa-home" value="Trang chủ"
+                                    outcome="/admin/dashboard"
+                                    />
+                        <p:menuitem  id="menu-2" value="Quản lý thương hiệu" icon="fa fa-archive"
+                                     outcome="/admin/brand.xhtml"/>
+
+                        <p:menuitem  id="menu-3" value="Quản lý loại sản phẩm" icon="fa fa-archive"
+                                     outcome="/admin/category.xhtml"/>
+                    </pa:menu>
+                </h:form>
+
+                <div class="layout-menu-footer"></div>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>
