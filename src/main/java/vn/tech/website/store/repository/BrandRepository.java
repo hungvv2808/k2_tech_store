@@ -14,5 +14,5 @@ public interface BrandRepository extends CrudRepository<Brand, Long>,BrandReposi
     List<Brand> findAll();
 
     @Query("select b from Brand b where b.brandId <> :brandId and b.status = "+ DbConstant.STATUS_BRAND_ACTIVE)
-    List<Brand> findAllGoodsExpertId(@Param("brandId") Long brandId);
+    List<Brand> findAllExpertId(@Param("brandId") Long brandId);
 }

@@ -96,7 +96,7 @@ public class CategoryController {
         if (categoryDto.getCategoryId() == null) {
             categoryList = categoryRepository.findAll();
         } else {
-            categoryList = categoryRepository.findAllGoodsExpertId(categoryDto.getCategoryId());
+            categoryList = categoryRepository.findAllExpertId(categoryDto.getCategoryId());
         }
         categoryDto.setCategoryName(removeSpaceOfString(categoryDto.getCategoryName()));
         for (Category category : categoryList) {

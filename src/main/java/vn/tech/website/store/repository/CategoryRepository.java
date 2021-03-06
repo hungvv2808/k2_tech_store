@@ -13,6 +13,6 @@ public interface CategoryRepository extends CrudRepository<Category,Long>, Categ
     @Query("select c from Category c where c.status = "+ DbConstant.STATUS_CATEGORY_ACTIVE)
     List<Category> findAll();
 
-    @Query("select b from Category b where b.categoryId <> :categoryId and b.status = "+ DbConstant.STATUS_CATEGORY_ACTIVE)
-    List<Category> findAllGoodsExpertId(@Param("categoryId") Long categoryId);
+    @Query("select c from Category c where c.categoryId <> :categoryId and c.status = "+ DbConstant.STATUS_CATEGORY_ACTIVE)
+    List<Category> findAllExpertId(@Param("categoryId") Long categoryId);
 }

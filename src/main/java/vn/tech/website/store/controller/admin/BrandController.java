@@ -97,7 +97,7 @@ public class BrandController {
         if (brandDto.getBrandId() == null) {
             brandList = brandRepository.findAll();
         } else {
-            brandList = brandRepository.findAllGoodsExpertId(brandDto.getBrandId());
+            brandList = brandRepository.findAllExpertId(brandDto.getBrandId());
         }
         brandDto.setBrandName(removeSpaceOfString(brandDto.getBrandName()));
         for (Brand brand : brandList) {
