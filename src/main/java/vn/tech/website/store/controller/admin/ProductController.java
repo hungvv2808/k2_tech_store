@@ -211,23 +211,31 @@ public class ProductController {
         product.setUpdateDate(new Date());
         product.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
         productRepository.save(product);
-        if (product.getType() != DbConstant.TYPE_PRODUCT_PARENT){
+        if (product.getType() != DbConstant.TYPE_PRODUCT_PARENT) {
             //save to product_detail
             ProductDetail productDetail = new ProductDetail();
-            BeanUtils.copyProperties(productDto,productDetail);
+            BeanUtils.copyProperties(productDto, productDetail);
             productDetail.setProductId(product.getProductId());
             productDetail.setUpdateDate(new Date());
             productDetail.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
             productDetailRepository.save(productDetail);
             //save to product_option_detail
-            for (Long productOptionId : listOptionSelect ){
+            if (productDto.getProductId() != null) {
+                List<ProductOptionDetail> optionDetailListDelete = productOptionDetailRepository.findAllByProductId(productDto.getProductId());
+                if (optionDetailListDelete != null) {
+                    for (ProductOptionDetail productOptionDetail : optionDetailListDelete) {
+                        productOptionDetailRepository.delete(productOptionDetail);
+                    }
+                }
+            }
+            for (Long productOptionId : listOptionSelect) {
                 ProductOptionDetail productOptionDetail = new ProductOptionDetail();
                 productOptionDetail.setProductId(product.getProductId());
                 productOptionDetail.setProductOptionId(productOptionId);
                 productOptionDetailRepository.save(productOptionDetail);
             }
             //save to product_link
-            if (product.getType() == DbConstant.TYPE_PRODUCT_CHILD){
+            if (product.getType() == DbConstant.TYPE_PRODUCT_CHILD) {
                 ProductLink productLink = new ProductLink();
                 productLink.setChildId(product.getProductId());
                 productLink.setParentId(productDto.getProductParentId());

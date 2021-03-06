@@ -22,9 +22,6 @@ public class ProductDetail extends BaseModel{
     @Column(name = "product_id")
     private Long productId;
 
-    @Column(name = "product_option_id")
-    private Long productOptionId;
-
     @Column(name = "description")
     private String description;
 

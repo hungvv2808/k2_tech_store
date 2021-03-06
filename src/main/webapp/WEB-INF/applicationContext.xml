@@ -58,20 +58,20 @@
     </bean>
 
 <!--    K2's Database-->
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://127.0.0.1:3306/k2_tech_store?useUnicode=true&#38;characterEncoding=UTF-8"/>
-        <property name="username" value="root"/>
-        <property name="password" value="1111"/>
-    </bean>
-
-<!--    Niet's Database-->
 <!--    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
 <!--        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>-->
-<!--        <property name="url" value="jdbc:mysql://127.0.0.1:3306/zeus?useUnicode=true&#38;characterEncoding=UTF-8"/>-->
+<!--        <property name="url" value="jdbc:mysql://127.0.0.1:3306/k2_tech_store?useUnicode=true&#38;characterEncoding=UTF-8"/>-->
 <!--        <property name="username" value="root"/>-->
-<!--        <property name="password" value="144014"/>-->
+<!--        <property name="password" value="1111"/>-->
 <!--    </bean>-->
+
+<!--    Niet's Database-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/zeus?useUnicode=true&#38;characterEncoding=UTF-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="144014"/>
+    </bean>
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>
