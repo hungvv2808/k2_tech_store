@@ -104,6 +104,9 @@ public class DbConstant {
     public static final int TYPE_OPTION_RELEASE = 2; public static final String TYPE_OPTION_RELEASE_STRING = "Năm sản xuất";
 
     //type product
+    public static final int STATUS_PRODUCT_INACTIVE = 0;
+    public static final int STATUS_PRODUCT_ACTIVE = 1;
+
     public static final int TYPE_PRODUCT_PARENT = 0;
     public static final int TYPE_PRODUCT_CHILD = 1;
     public static final int TYPE_PRODUCT_NONE = 2;

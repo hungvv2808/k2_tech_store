@@ -20,7 +20,7 @@ public class ProductDetail extends BaseModel{
     private Long productDetailId;
 
     @Column(name = "product_id")
-    private Long brandId;
+    private Long productId;
 
     @Column(name = "product_option_id")
     private Long productOptionId;

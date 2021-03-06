@@ -23,7 +23,7 @@
             <div class="ui-g-12" style="padding-top:0">
                 <div class="card no-margin">
                     <p:commandButton value="Thêm mới" icon="fa fa-plus"
-                                     actionListener="#{categoryController.resetDialog}"
+                                     actionListener="#{productController.resetDialog}"
                                      oncomplete="PF('dialogInsertUpdate').show();" update="dlForm"/>
                 </div>
             </div>
@@ -67,10 +67,33 @@
                                 />
                             </p:selectOneMenu>
 
+                            <p:outputLabel value="Sản phẩm cha:" for="parentProduct" styleClass="requireLabel"
+                                           rendered="#{productController.productDto.type eq DbConstant.TYPE_PRODUCT_CHILD}"/>
+                            <p:selectOneMenu id="parentProduct" filter="true" filterMatchMode="contains"
+                                             autoWidth="true" dynamic="true" style="width: 100%"
+                                             effect="fade" maxlength="255"
+                                             rendered="#{productController.productDto.type eq DbConstant.TYPE_PRODUCT_CHILD}"
+                                             value="#{productController.productDto.productParentId}">
+                                <f:selectItem itemLabel="Chọn sản phẩm cha" itemValue=""/>
+                                <f:selectItems value="#{productController.productParentList}"/>
+                                <p:ajax event="change" update="dlForm" process="@form"
+                                />
+                            </p:selectOneMenu>
+
                             <p:outputLabel value="Mã sản phẩm:" for="code"/>
                             <p:inputText id="code" placeholder="Nhập mã(Bỏ qua nếu muốn tự động tạo mã)"
                                          value="#{productController.productDto.code}"
                                          maxlength="8"/>
+
+                            <p:outputLabel value="Số lượng:" for="quantity" styleClass="required-label"
+                                           rendered="#{productController.productDto.type eq DbConstant.TYPE_PRODUCT_CHILD
+                                                or productController.productDto.type eq DbConstant.TYPE_PRODUCT_NONE}"/>
+                            <p:inputText id="quantity" placeholder="Nhập số lượng"
+                                         rendered="#{productController.productDto.type eq DbConstant.TYPE_PRODUCT_CHILD
+                                                or productController.productDto.type eq DbConstant.TYPE_PRODUCT_NONE}"
+                                         value="#{productController.productDto.code}"
+                                         onkeyup="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                         onchange="this.value = this.value.trim()"/>
 
                         </p:panelGrid>
 
@@ -85,23 +108,26 @@
                         </p:panelGrid>
 
                         <p:panelGrid columns="4" id="panelDetail"
-                                     rendered="#{productController.productDto.type eq DbConstant.TYPE_PRODUCT_CHILD or productController.productDto.type eq DbConstant.TYPE_PRODUCT_NONE}"
+                                     rendered="#{productController.productDto.type eq DbConstant.TYPE_PRODUCT_CHILD
+                                                or productController.productDto.type eq DbConstant.TYPE_PRODUCT_NONE}"
                                      columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
                                      styleClass="ui-panelgrid-blank" layout="grid">
                             <p:outputLabel value="Mô tả:" for="description" styleClass="required-label"/>
                             <p:inputText id="description" placeholder="Nhập mô tả"
-                                         value="#{productController.productDto.code}"
-                                         maxlength="8"/>
+                                         value="#{productController.productDto.description}"
+                                         maxlength="200"/>
 
                             <p:outputLabel value="Đơn giá:" for="price" styleClass="required-label"/>
                             <p:inputText id="price" placeholder="Nhập đơn giá(VNĐ)"
-                                         value="#{productController.productDto.code}"
-                                         maxlength="8"/>
+                                         onkeyup="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                         onchange="this.value = this.value.trim()"
+                                         value="#{productController.productDto.price}"/>
 
                             <p:outputLabel value="Giảm giá:" for="discount"/>
                             <p:inputText id="discount" placeholder="Nhập giảm giá(%)"
-                                         value="#{productController.productDto.code}"
-                                         maxlength="8"/>
+                                         onkeyup="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                         onchange="this.value = this.value.trim()"
+                                         value="#{productController.productDto.discount}"/>
 
                             <p:outputLabel value="Thuộc tính:" for="attribute"/>
                             <p:selectCheckboxMenu id="attribute"
