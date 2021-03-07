@@ -20,10 +20,10 @@ public class ProductOption extends BaseModel{
     private Long productOptionId;
 
     @Column(name = "name")
-    private String name;
+    private String optionName;
 
     @Column(name = "value")
-    private String value;
+    private String optionValue;
 
     @Column(name = "type")
     private Integer type;

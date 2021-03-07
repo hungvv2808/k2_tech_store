@@ -109,7 +109,7 @@ public class ProductController extends BaseController {
         optionList = new ArrayList<>();
         List<ProductOption> options = productOptionRepository.findAll();
         for (ProductOption obj : options) {
-            optionList.add(new SelectItem(obj.getProductOptionId(), obj.getName() + "(" + obj.getValue() + ")"));
+            optionList.add(new SelectItem(obj.getProductOptionId(), obj.getOptionName() + "(" + obj.getOptionValue() + ")"));
         }
         //onSearch();
     }

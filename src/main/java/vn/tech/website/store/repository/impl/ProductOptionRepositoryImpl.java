@@ -80,8 +80,8 @@ public class ProductOptionRepositoryImpl implements ProductOptionRepositoryCusto
             if (dto.getType() == DbConstant.TYPE_OPTION_RELEASE){
                 dto.setTypeOptionString(DbConstant.TYPE_OPTION_RELEASE_STRING);
             }
-            dto.setName(ValueUtil.getStringByObject(obj[2]));
-            dto.setValue(ValueUtil.getStringByObject(obj[3]));
+            dto.setOptionName(ValueUtil.getStringByObject(obj[2]));
+            dto.setOptionValue(ValueUtil.getStringByObject(obj[3]));
             dto.setStatus(ValueUtil.getIntegerByObject(obj[4]));
             dto.setCreateDate(ValueUtil.getDateByObject(obj[5]));
             dto.setCreateBy(ValueUtil.getLongByObject(obj[6]));
