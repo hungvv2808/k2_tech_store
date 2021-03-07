@@ -27,17 +27,9 @@ public class ProvinceRepositoryImpl implements ProvinceRepositoryCustom {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT "
                 + "n.province_id,"
-                + "n.name,");
+                + "n.name ");
         appendQueryFromAndWhereForSearch(sb, searchDto);
-        sb.append(" GROUP BY n.province_id ");
-        if (searchDto.getSortField() != null) {
-            sb.append(" ORDER BY ");
-            } else if (searchDto.getSortField().equals("name")) {
-                sb.append(" n.name ");
-            sb.append(searchDto.getSortOrder());
-        } else {
-            sb.append(" ORDER BY n.province_id DESC ");
-        }
+        sb.append(" GROUP BY n.province_id ORDER BY n.province_id DESC ");
 
         Query query = createQueryObjForSearch(sb, searchDto);
         if (searchDto.getPageSize() > 0) {
@@ -53,8 +45,7 @@ public class ProvinceRepositoryImpl implements ProvinceRepositoryCustom {
         for (Object[] obj : result) {
             Province dto = new Province();
             dto.setProvinceId(ValueUtil.getLongByObject(obj[0]));
-            dto.setName(ValueUtil.getStringByObject(obj[2]));
-
+            dto.setName(ValueUtil.getStringByObject(obj[1]));
             provinceList.add(dto);
         }
         return provinceList;

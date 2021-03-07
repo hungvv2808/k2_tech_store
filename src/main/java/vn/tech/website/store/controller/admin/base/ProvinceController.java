@@ -215,7 +215,7 @@ public class ProvinceController extends BaseController {
 
     @Override
     protected EScope getMenuId() {
-        return EScope.PROVINCE;
+        return null;
     }
 }
 

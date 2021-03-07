@@ -226,7 +226,7 @@ public class CommuneController extends BaseController {
 
     @Override
     protected EScope getMenuId() {
-        return EScope.COMMUNE;
+        return null;
     }
 
 }
