@@ -27,7 +27,7 @@ public class Product extends BaseModel{
     private Long categoryId;
 
     @Column(name = "name")
-    private String name;
+    private String productName;
 
     @Column(name = "code")
     private String code;

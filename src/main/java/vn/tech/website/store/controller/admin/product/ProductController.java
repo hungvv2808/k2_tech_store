@@ -99,7 +99,7 @@ public class ProductController extends BaseController {
         productParentList = new ArrayList<>();
         List<Product> parentList = productRepository.getAllByType(DbConstant.TYPE_PRODUCT_PARENT);
         for (Product obj : parentList) {
-            productParentList.add(new SelectItem(obj.getProductId(), obj.getName()));
+            productParentList.add(new SelectItem(obj.getProductId(), obj.getProductName()));
         }
         //add combobox option
         optionList = new ArrayList<>();
@@ -163,16 +163,16 @@ public class ProductController extends BaseController {
             FacesUtil.addErrorMessage("Bạn vui lòng chọn kiểu sản phẩm");
             return false;
         }
-        if (StringUtils.isBlank(productDto.getName())) {
+        if (StringUtils.isBlank(productDto.getProductName())) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập tên sản phẩm");
             return false;
         } else {
-            productDto.setName(removeSpaceOfString(productDto.getName()));
+            productDto.setProductName(removeSpaceOfString(productDto.getProductName()));
         }
         if (productDto.getType() == DbConstant.TYPE_PRODUCT_PARENT) {
             List<Product> productList = productRepository.getAllByType(DbConstant.TYPE_PRODUCT_PARENT);
             for (Product product : productList) {
-                if (productDto.getName().equalsIgnoreCase(product.getName())) {
+                if (productDto.getProductName().equalsIgnoreCase(product.getProductName())) {
                     FacesUtil.addErrorMessage("Sản phẩm đã tồn tại");
                     return false;
                 }
