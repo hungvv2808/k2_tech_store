@@ -117,7 +117,7 @@ public class BrandController extends BaseController {
         }
         Brand brand = new Brand();
         BeanUtils.copyProperties(brandDto, brand);
-        brand.setStatus(DbConstant.STATUS_BRAND_ACTIVE);
+        brand.setStatus(DbConstant.BRAND_STATUS_ACTIVE);
         brand.setUpdateDate(new Date());
         brand.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
         brandRepository.save(brand);
@@ -135,7 +135,7 @@ public class BrandController extends BaseController {
 //            FacesUtil.addErrorMessage("Không thể xóa vì " + resultDto.getTitle() + " đang được sử dụng");
 //            return;
 //        }
-        resultDto.setStatus(DbConstant.STATUS_BRAND_INACTIVE);
+        resultDto.setStatus(DbConstant.BRAND_STATUS_INACTIVE);
         Brand brand = new Brand();
         BeanUtils.copyProperties(resultDto, brand);
         brandRepository.save(brand);

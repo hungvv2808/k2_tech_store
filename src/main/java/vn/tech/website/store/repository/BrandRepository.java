@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface BrandRepository extends CrudRepository<Brand, Long>,BrandRepositoryCustom {
 
-    @Query("select b from Brand b where b.status = "+ DbConstant.STATUS_BRAND_ACTIVE)
+    @Query("select b from Brand b where b.status = "+ DbConstant.BRAND_STATUS_ACTIVE)
     List<Brand> findAll();
 
-    @Query("select b from Brand b where b.brandId <> :brandId and b.status = "+ DbConstant.STATUS_BRAND_ACTIVE)
+    @Query("select b from Brand b where b.brandId <> :brandId and b.status = "+ DbConstant.BRAND_STATUS_ACTIVE)
     List<Brand> findAllExpertId(@Param("brandId") Long brandId);
 }

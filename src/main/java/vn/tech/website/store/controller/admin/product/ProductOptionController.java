@@ -54,9 +54,9 @@ public class ProductOptionController extends BaseController {
         productOptionDto = new ProductOptionDto();
         searchDto = new ProductOptionSearchDto();
         typeList = new ArrayList<>();
-        typeList.add(new SelectItem(DbConstant.TYPE_OPTION_SIZE, DbConstant.TYPE_OPTION_SIZE_STRING));
-        typeList.add(new SelectItem(DbConstant.TYPE_OPTION_COLOR, DbConstant.TYPE_OPTION_COLOR_STRING));
-        typeList.add(new SelectItem(DbConstant.TYPE_OPTION_RELEASE, DbConstant.TYPE_OPTION_RELEASE_STRING));
+        typeList.add(new SelectItem(DbConstant.OPTION_TYPE_SIZE, DbConstant.OPTION_TYPE_SIZE_STRING));
+        typeList.add(new SelectItem(DbConstant.OPTION_TYPE_COLOR, DbConstant.OPTION_TYPE_COLOR_STRING));
+        typeList.add(new SelectItem(DbConstant.OPTION_TYPE_RELEASE, DbConstant.OPTION_TYPE_RELEASE_STRING));
         onSearch();
     }
 
@@ -133,7 +133,7 @@ public class ProductOptionController extends BaseController {
         }
         ProductOption productOption = new ProductOption();
         BeanUtils.copyProperties(productOptionDto, productOption);
-        productOption.setStatus(DbConstant.STATUS_OPTION_ACTIVE);
+        productOption.setStatus(DbConstant.OPTION_STATUS_ACTIVE);
         productOption.setUpdateDate(new Date());
         productOption.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
         productOptionRepository.save(productOption);
@@ -147,7 +147,7 @@ public class ProductOptionController extends BaseController {
     }
 
     public void onDelete(ProductOptionDto resultDto) {
-        resultDto.setStatus(DbConstant.STATUS_OPTION_INACTIVE);
+        resultDto.setStatus(DbConstant.OPTION_STATUS_INACTIVE);
         ProductOption productOption = new ProductOption();
         BeanUtils.copyProperties(resultDto, productOption);
         productOptionRepository.save(productOption);

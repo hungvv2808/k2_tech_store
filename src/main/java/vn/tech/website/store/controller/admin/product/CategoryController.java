@@ -96,9 +96,9 @@ public class CategoryController extends BaseController {
         }
         List<Category> categoryList = new ArrayList<>();
         if (categoryDto.getCategoryId() == null) {
-            categoryList = categoryRepository.findAll();
+            categoryList = categoryRepository.findAllCategoryProduct();
         } else {
-            categoryList = categoryRepository.findAllExpertId(categoryDto.getCategoryId());
+            categoryList = categoryRepository.findAllCategoryProductExpertId(categoryDto.getCategoryId());
         }
         categoryDto.setCategoryName(removeSpaceOfString(categoryDto.getCategoryName()));
         for (Category category : categoryList) {
@@ -116,7 +116,8 @@ public class CategoryController extends BaseController {
         }
         Category category = new Category();
         BeanUtils.copyProperties(categoryDto, category);
-        category.setStatus(DbConstant.STATUS_CATEGORY_ACTIVE);
+        category.setType(DbConstant.CATEGORY_TYPE_PRODUCT);
+        category.setStatus(DbConstant.CATEGORY_STATUS_ACTIVE);
         category.setUpdateDate(new Date());
         category.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
         categoryRepository.save(category);
@@ -130,7 +131,7 @@ public class CategoryController extends BaseController {
     }
 
     public void onDelete(CategoryDto resultDto) {
-        resultDto.setStatus(DbConstant.STATUS_CATEGORY_INACTIVE);
+        resultDto.setStatus(DbConstant.CATEGORY_STATUS_INACTIVE);
         Category category = new Category();
         BeanUtils.copyProperties(resultDto, category);
         categoryRepository.save(category);

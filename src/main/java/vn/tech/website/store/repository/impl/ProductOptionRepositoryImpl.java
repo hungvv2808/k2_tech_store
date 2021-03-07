@@ -71,14 +71,14 @@ public class ProductOptionRepositoryImpl implements ProductOptionRepositoryCusto
             ProductOptionDto dto = new ProductOptionDto();
             dto.setProductOptionId(ValueUtil.getLongByObject(obj[0]));
             dto.setType(ValueUtil.getIntegerByObject(obj[1]));
-            if (dto.getType() == DbConstant.TYPE_OPTION_SIZE){
-                dto.setTypeOptionString(DbConstant.TYPE_OPTION_SIZE_STRING);
+            if (dto.getType() == DbConstant.OPTION_TYPE_SIZE){
+                dto.setTypeOptionString(DbConstant.OPTION_TYPE_SIZE_STRING);
             }
-            if (dto.getType() == DbConstant.TYPE_OPTION_COLOR){
-                dto.setTypeOptionString(DbConstant.TYPE_OPTION_COLOR_STRING);
+            if (dto.getType() == DbConstant.OPTION_TYPE_COLOR){
+                dto.setTypeOptionString(DbConstant.OPTION_TYPE_COLOR_STRING);
             }
-            if (dto.getType() == DbConstant.TYPE_OPTION_RELEASE){
-                dto.setTypeOptionString(DbConstant.TYPE_OPTION_RELEASE_STRING);
+            if (dto.getType() == DbConstant.OPTION_TYPE_RELEASE){
+                dto.setTypeOptionString(DbConstant.OPTION_TYPE_RELEASE_STRING);
             }
             dto.setName(ValueUtil.getStringByObject(obj[2]));
             dto.setValue(ValueUtil.getStringByObject(obj[3]));

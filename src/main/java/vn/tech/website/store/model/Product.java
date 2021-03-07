@@ -35,14 +35,14 @@ public class Product extends BaseModel{
     @Column(name = "count_code")
     private Long countCode;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "quantity")
     private BigInteger quantity;
 
     @Column(name = "type")
     private Integer type;
-
-    @Column(name = "description")
-    private String description;
 
     @Column(name = "price")
     private Double price;

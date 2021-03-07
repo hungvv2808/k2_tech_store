@@ -86,7 +86,8 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
     private void appendQueryFromAndWhereForSearch(StringBuilder sb, CategorySearchDto searchDto) {
         sb.append("FROM category c " +
                 " LEFT JOIN account acc ON c.update_by = acc.account_id ");
-        sb.append(" WHERE 1=1  AND c.status = " + DbConstant.STATUS_CATEGORY_ACTIVE);
+        sb.append(" WHERE 1=1  AND c.status = " + DbConstant.CATEGORY_STATUS_ACTIVE);
+        sb.append(" AND c.type = " + DbConstant.CATEGORY_TYPE_PRODUCT);
 
         if (StringUtils.isNotBlank(searchDto.getCategoryName())) {
             sb.append(" AND c.name LIKE :categoryName ");

@@ -8,11 +8,16 @@ import vn.tech.website.store.util.DbConstant;
 
 import java.util.List;
 
-public interface CategoryRepository extends CrudRepository<Category,Long>, CategoryRepositoryCustom {
+public interface CategoryRepository extends CrudRepository<Category, Long>, CategoryRepositoryCustom {
 
-    @Query("select c from Category c where c.status = "+ DbConstant.STATUS_CATEGORY_ACTIVE)
-    List<Category> findAll();
+    @Query("select c from Category c " +
+            " where c.status = " + DbConstant.CATEGORY_STATUS_ACTIVE
+            + " and c.type = " + DbConstant.CATEGORY_TYPE_PRODUCT)
+    List<Category> findAllCategoryProduct();
 
-    @Query("select c from Category c where c.categoryId <> :categoryId and c.status = "+ DbConstant.STATUS_CATEGORY_ACTIVE)
-    List<Category> findAllExpertId(@Param("categoryId") Long categoryId);
+    @Query("select c from Category c " +
+            "where c.categoryId <> :categoryId " +
+            " and c.status = " + DbConstant.CATEGORY_STATUS_ACTIVE
+            + " and c.type = " + DbConstant.CATEGORY_TYPE_PRODUCT)
+    List<Category> findAllCategoryProductExpertId(@Param("categoryId") Long categoryId);
 }

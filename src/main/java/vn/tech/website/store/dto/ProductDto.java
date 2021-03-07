@@ -14,7 +14,4 @@ public class ProductDto extends Product {
     private String brandName;
     private String categoryName;
     private Long productParentId;
-    private String description;
-    private Double price;
-    private Float discount;
 }

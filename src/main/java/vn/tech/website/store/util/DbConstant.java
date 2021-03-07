@@ -89,29 +89,30 @@ public class DbConstant {
     public static final int NOTIFY_PAYMENT_STATUS_CREATED = 1;
 
     //status brand
-    public static final int STATUS_BRAND_INACTIVE = 0;
-    public static final int STATUS_BRAND_ACTIVE = 1;
+    public static final int BRAND_STATUS_INACTIVE = 0;
+    public static final int BRAND_STATUS_ACTIVE = 1;
 
     //status category
-    public static final int STATUS_CATEGORY_INACTIVE = 0;
-    public static final int STATUS_CATEGORY_ACTIVE = 1;
+    public static final int CATEGORY_TYPE_PRODUCT = 1;
+    public static final int CATEGORY_STATUS_INACTIVE = 0;
+    public static final int CATEGORY_STATUS_ACTIVE = 1;
 
     //product option
-    public static final int STATUS_OPTION_INACTIVE = 0;
-    public static final int STATUS_OPTION_ACTIVE = 1;
-    public static final int TYPE_OPTION_SIZE = 0; public static final String TYPE_OPTION_SIZE_STRING = "Size";
-    public static final int TYPE_OPTION_COLOR = 1; public static final String TYPE_OPTION_COLOR_STRING = "Màu";
-    public static final int TYPE_OPTION_RELEASE = 2; public static final String TYPE_OPTION_RELEASE_STRING = "Năm sản xuất";
+    public static final int OPTION_STATUS_INACTIVE = 0;
+    public static final int OPTION_STATUS_ACTIVE = 1;
+    public static final int OPTION_TYPE_SIZE = 0; public static final String OPTION_TYPE_SIZE_STRING = "Size";
+    public static final int OPTION_TYPE_COLOR = 1; public static final String OPTION_TYPE_COLOR_STRING = "Màu";
+    public static final int OPTION_TYPE_RELEASE = 2; public static final String OPTION_TYPE_RELEASE_STRING = "Năm sản xuất";
 
     //type product
-    public static final int STATUS_PRODUCT_INACTIVE = 0;
-    public static final int STATUS_PRODUCT_ACTIVE = 1;
+    public static final int PRODUCT_STATUS_INACTIVE = 0;
+    public static final int PRODUCT_STATUS_ACTIVE = 1;
 
-    public static final int TYPE_PRODUCT_PARENT = 0;
-    public static final int TYPE_PRODUCT_CHILD = 1;
-    public static final int TYPE_PRODUCT_NONE = 2;
+    public static final int PRODUCT_TYPE_PARENT = 0;
+    public static final int PRODUCT_TYPE_CHILD = 1;
+    public static final int PRODUCT_TYPE_NONE = 2;
 
-    public static final String TYPE_PRODUCT_PARENT_STRING = "Sản phẩm cha";
-    public static final String TYPE_PRODUCT_CHILD_STRING = "Sản phẩm con";
-    public static final String TYPE_PRODUCT_NONE_STRING = "Sản phẩm duy nhất";
+    public static final String PRODUCT_TYPE_PARENT_STRING = "Sản phẩm cha";
+    public static final String PRODUCT_TYPE_CHILD_STRING = "Sản phẩm con";
+    public static final String PRODUCT_TYPE_NONE_STRING = "Sản phẩm duy nhất";
 }
