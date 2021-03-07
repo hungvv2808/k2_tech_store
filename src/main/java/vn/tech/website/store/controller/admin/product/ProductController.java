@@ -149,6 +149,7 @@ public class ProductController extends BaseController {
 
     public void resetDialog() {
         productDto = new ProductDto();
+        uploadMultipleImageController.resetAll(null);
     }
 
     public boolean validateData() {
