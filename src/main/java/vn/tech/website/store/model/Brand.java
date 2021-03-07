@@ -19,6 +19,9 @@ public class Brand extends BaseModel{
     @Column(name = "brand_id")
     private Long brandId;
 
+    @Column(name = "code")
+    private String code;
+
     @Column(name = "name")
     private String brandName;
 

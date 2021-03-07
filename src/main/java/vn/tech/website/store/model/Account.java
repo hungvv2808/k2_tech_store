@@ -59,9 +59,6 @@ public class Account extends BaseModel {
     @Column(name ="status")
     private Integer status;
 
-    @Column(name ="verify_code")
-    private String verifyCode;
-
     @Column(name = "province_id")
     private Long provinceId;
 

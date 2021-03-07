@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.model.charts.bar.BarChartModel;
 import org.springframework.context.annotation.Scope;
-import vn.tech.website.store.entity.DashboardDoughnut;
 import vn.tech.website.store.entity.EScope;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +25,6 @@ public class DashboardController extends BaseController {
     private List<SelectItem> listYear;
     private String year;
     private Long selectedYear;
-    private DashboardDoughnut dashboardDoughnut;
 
     @PostConstruct
     public void initData() {

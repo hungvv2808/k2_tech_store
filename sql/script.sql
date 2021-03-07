@@ -158,18 +158,18 @@ create table if not exists product_link
     child_id        int null comment 'Id sản phẩm con'
 );
 
-drop table if exists product_detail_image;
-create table if not exists product_detail_image
+drop table if exists product_image;
+create table if not exists product_image
 (
-    product_detail_image_id int auto_increment primary key,
-    product_id              int           null comment 'Id sản phẩm',
-    image_name              nvarchar(200) null comment 'Tên ảnh',
-    image_path              nvarchar(200) null comment 'Địa chỉ ảnh',
-    is_main                 int(1)        null comment '0 - ảnh phụ / 1 - ảnh chính',
-    create_date             datetime      null comment 'Ngày tạo',
-    create_by               int           null comment 'Nười tạo',
-    update_date             datetime      null comment 'Ngày cập nhật',
-    update_by               int           null comment 'Người cập nhật',
+    product_image_id int auto_increment primary key,
+    product_id       int           null comment 'Id sản phẩm',
+    image_name       nvarchar(200) null comment 'Tên ảnh',
+    image_path       nvarchar(200) null comment 'Địa chỉ ảnh',
+    is_main          int(1)        null comment '0 - ảnh phụ / 1 - ảnh chính',
+    create_date      datetime      null comment 'Ngày tạo',
+    create_by        int           null comment 'Nười tạo',
+    update_date      datetime      null comment 'Ngày cập nhật',
+    update_by        int           null comment 'Người cập nhật',
     constraint fk_product_detail
         foreign key (product_id) references product (product_id)
 );
@@ -179,7 +179,7 @@ create table if not exists product_option
 (
     product_option_id int auto_increment primary key,
     name              nvarchar(100) null comment 'Tên lựa chọn: Size, Color, Version',
-    description       nvarchar(200) null comment 'Tóm tắt thông tin lựa chọn',
+    value             nvarchar(200) null comment 'Tóm tắt thông tin lựa chọn',
     type              nvarchar(100) null comment 'Loại lựa chọn size / color / version(release year)',
     status            int(1)        null comment 'Trạng thái hiển thị của lựa chọn. 0: active / 1: disable',
     create_date       datetime      null comment 'Ngày tạo',
@@ -225,7 +225,7 @@ drop table if exists order_detail;
 create table if not exists order_detail
 (
     order_detail_id int auto_increment primary key,
-    order_id        int      null comment 'Id hoá đơn',
+    orders_id        int      null comment 'Id hoá đơn',
     product_id      int      null comment 'Id sản phẩm - 1 hoá đơn có nhiều sản phẩm',
     quantity        bigint   null comment 'Số lượng của từng sản phẩm',
     amount          double   null comment 'Giá tiền của từng sản phẩm',
@@ -233,7 +233,7 @@ create table if not exists order_detail
     create_by       int      null comment 'Nười tạo',
     update_date     datetime null comment 'Ngày cập nhật',
     update_by       int      null comment 'Người cập nhật',
-    constraint fk_orders_id foreign key (order_id) references orders (orders_id),
+    constraint fk_orders_id foreign key (orders_id) references orders (orders_id),
     constraint fk_product_id foreign key (product_id) references product (product_id)
 );
 

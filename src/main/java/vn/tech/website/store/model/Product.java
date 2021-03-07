@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 @Getter
 @Setter
@@ -25,17 +26,26 @@ public class Product extends BaseModel{
     @Column(name = "category_id")
     private Long categoryId;
 
-    @Column(name = "type")
-    private Integer type;
-
     @Column(name = "name")
-    private String productName;
+    private String name;
 
     @Column(name = "code")
     private String code;
 
     @Column(name = "quantity")
-    private Long quantity;
+    private BigInteger quantity;
+
+    @Column(name = "type")
+    private Integer type;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "price")
+    private Double price;
+
+    @Column(name = "discount")
+    private Float discount;
 
     @Column(name = "status")
     private Integer status;

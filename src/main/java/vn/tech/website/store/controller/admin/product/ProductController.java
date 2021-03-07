@@ -48,8 +48,6 @@ public class ProductController extends BaseController {
     @Autowired
     private ProductOptionRepository productOptionRepository;
     @Autowired
-    private ProductDetailRepository productDetailRepository;
-    @Autowired
     private ProductLinkRepository productLinkRepository;
     @Autowired
     private ProductOptionDetailRepository productOptionDetailRepository;
@@ -101,13 +99,13 @@ public class ProductController extends BaseController {
         productParentList = new ArrayList<>();
         List<Product> parentList = productRepository.getAllByType(DbConstant.TYPE_PRODUCT_PARENT);
         for (Product obj : parentList) {
-            productParentList.add(new SelectItem(obj.getProductId(), obj.getProductName()));
+            productParentList.add(new SelectItem(obj.getProductId(), obj.getName()));
         }
         //add combobox option
         optionList = new ArrayList<>();
         List<ProductOption> options = productOptionRepository.findAll();
         for (ProductOption obj : options) {
-            optionList.add(new SelectItem(obj.getProductOptionId(), obj.getOptionName() + "(" + obj.getOptionValue() + ")"));
+            optionList.add(new SelectItem(obj.getProductOptionId(), obj.getName() + "(" + obj.getValue() + ")"));
         }
         //onSearch();
     }
@@ -165,16 +163,16 @@ public class ProductController extends BaseController {
             FacesUtil.addErrorMessage("Bạn vui lòng chọn kiểu sản phẩm");
             return false;
         }
-        if (StringUtils.isBlank(productDto.getProductName())) {
+        if (StringUtils.isBlank(productDto.getName())) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập tên sản phẩm");
             return false;
         } else {
-            productDto.setProductName(removeSpaceOfString(productDto.getProductName()));
+            productDto.setName(removeSpaceOfString(productDto.getName()));
         }
         if (productDto.getType() == DbConstant.TYPE_PRODUCT_PARENT) {
             List<Product> productList = productRepository.getAllByType(DbConstant.TYPE_PRODUCT_PARENT);
             for (Product product : productList) {
-                if (productDto.getProductName().equalsIgnoreCase(product.getProductName())) {
+                if (productDto.getName().equalsIgnoreCase(product.getName())) {
                     FacesUtil.addErrorMessage("Sản phẩm đã tồn tại");
                     return false;
                 }
@@ -222,13 +220,6 @@ public class ProductController extends BaseController {
         product.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
         productRepository.save(product);
         if (product.getType() != DbConstant.TYPE_PRODUCT_PARENT) {
-            //save to product_detail
-            ProductDetail productDetail = new ProductDetail();
-            BeanUtils.copyProperties(productDto, productDetail);
-            productDetail.setProductId(product.getProductId());
-            productDetail.setUpdateDate(new Date());
-            productDetail.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
-            productDetailRepository.save(productDetail);
             //save to product_option_detail
             if (productDto.getProductId() != null) {
                 List<ProductOptionDetail> optionDetailListDelete = productOptionDetailRepository.findAllByProductId(productDto.getProductId());

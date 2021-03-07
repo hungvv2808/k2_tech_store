@@ -25,7 +25,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CityDistrictController implements Serializable {
+public class CityDistrictCommuneController implements Serializable {
 
     @Autowired
     private ProvinceRepository provinceRepository;

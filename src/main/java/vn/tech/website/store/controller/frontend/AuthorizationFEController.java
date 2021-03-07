@@ -589,8 +589,8 @@ public class AuthorizationFEController implements Serializable {
         }
 
         BeanUtils.copyProperties(account, accountDto);
-        Role userRole = roleRepository.findRoleByRoleId(accountDto.getRoleId());
-        accountDto.setRoleName(userRole.getName());
+//        Role userRole = roleRepository.findRoleByRoleId(accountDto.getRoleId());
+//        accountDto.setRoleName(userRole.getName());
 
         this.role = account.getRoleId();
         updateMenuByRole();

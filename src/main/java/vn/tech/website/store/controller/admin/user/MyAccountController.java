@@ -8,7 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.admin.auth.AuthorizationController;
-import vn.tech.website.store.controller.admin.common.CityDistrictController;
+import vn.tech.website.store.controller.admin.common.CityDistrictCommuneController;
 import vn.tech.website.store.controller.admin.common.UploadSingleImageController;
 import vn.tech.website.store.dto.common.CityDistrictDto;
 import vn.tech.website.store.dto.user.AccountDto;
@@ -41,7 +41,7 @@ public class MyAccountController {
     @Inject
     private HttpServletRequest request;
     @Inject
-    private CityDistrictController cityDistrictController;
+    private CityDistrictCommuneController cityDistrictCommuneController;
 
     @Autowired
     private AccountRepository accountRepository;
@@ -74,7 +74,6 @@ public class MyAccountController {
 //        account =  accountRepository.findAccountByAccountId(authorizationController.getAccountDto().getAccountId());
         account =  accountRepository.findAccountByAccountId(1L);
         BeanUtils.copyProperties(account,accountDto);
-        accountDto.setVerifyCode(null);
         emailBackup = account.getEmail();
         accountList = new ArrayList<>();
 
@@ -83,10 +82,10 @@ public class MyAccountController {
         for (Province dto : provinceList) {
             listProvinceAccount.add(new SelectItem(dto.getProvinceId(), dto.getName()));
         }
-        cityDistrictController.resetAll();
+        cityDistrictCommuneController.resetAll();
         CityDistrictDto cityDistrictDto = new CityDistrictDto(accountDto.getProvinceId(), accountDto.getDistrictId(), accountDto.getCommuneId());
-        cityDistrictController.setCityDistrictDto(cityDistrictDto);
-        cityDistrictController.loadData();
+        cityDistrictCommuneController.setCityDistrictDto(cityDistrictDto);
+        cityDistrictCommuneController.loadData();
 
         uploadSingleImageController.resetAll(null);
         if (accountDto.getImagePath() != null) {
@@ -137,9 +136,9 @@ public class MyAccountController {
 
             Account account = new Account();
             accountDto.setImagePath(uploadSingleImageController.getImagePath());
-            accountDto.setProvinceId(cityDistrictController.getCityDistrictDto().getProvinceId());
-            accountDto.setDistrictId(cityDistrictController.getCityDistrictDto().getDistrictId());
-            accountDto.setCommuneId(cityDistrictController.getCityDistrictDto().getCommuneId());
+            accountDto.setProvinceId(cityDistrictCommuneController.getCityDistrictDto().getProvinceId());
+            accountDto.setDistrictId(cityDistrictCommuneController.getCityDistrictDto().getDistrictId());
+            accountDto.setCommuneId(cityDistrictCommuneController.getCityDistrictDto().getCommuneId());
             BeanUtils.copyProperties(accountDto, account);
             accountRepository.save(account);
             authorizationController.setAccountDto(accountDto);
@@ -178,22 +177,21 @@ public class MyAccountController {
                 }
             }
         }
-        account.setVerifyCode(StringUtil.generateSalt());
         account = accountRepository.save(account);
-        EmailUtil.getInstance().sendConfirmChangeEmail(newEmail, account.getUserName(),account.getVerifyCode());
+//        EmailUtil.getInstance().sendConfirmChangeEmail(newEmail, account.getUserName(),account.getVerifyCode());
         FacesUtil.addSuccessMessage("Bạn vui lòng kiếm tra mail để lẩy mã xác nhận");
         allowSendCode=true;
     }
 
     public void onSaveEmail(){
-        if(StringUtils.isBlank(accountDto.getVerifyCode())){
-            FacesUtil.addErrorMessage("Bạn vui lòng kiểm tra email và nhập mã xác nhận");
-            return;
-        }
-        if(!accountDto.getVerifyCode().equals(account.getVerifyCode())){
-            FacesUtil.addErrorMessage("Mã xác nhận không đúng. Vui lòng kiểm tra lại");
-            return;
-        }
+//        if(StringUtils.isBlank(accountDto.getVerifyCode())){
+//            FacesUtil.addErrorMessage("Bạn vui lòng kiểm tra email và nhập mã xác nhận");
+//            return;
+//        }
+//        if(!accountDto.getVerifyCode().equals(account.getVerifyCode())){
+//            FacesUtil.addErrorMessage("Mã xác nhận không đúng. Vui lòng kiểm tra lại");
+//            return;
+//        }
         account.setEmail(newEmail);
         account = accountRepository.save(account);
         FacesUtil.addSuccessMessage("Cập nhật thành công.");

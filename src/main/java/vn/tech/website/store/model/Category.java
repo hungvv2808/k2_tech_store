@@ -19,8 +19,14 @@ public class Category extends BaseModel{
     @Column(name = "category_id")
     private Long categoryId;
 
+    @Column(name = "code")
+    private String code;
+
     @Column(name = "name")
     private String categoryName;
+
+    @Column(name = "type")
+    private Integer type;
 
     @Column(name = "status")
     private Integer status;

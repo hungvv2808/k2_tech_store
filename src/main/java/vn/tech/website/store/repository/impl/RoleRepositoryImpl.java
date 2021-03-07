@@ -25,14 +25,9 @@ public class RoleRepositoryImpl implements RoleRepositoryCustom {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT "
                 + "n.role_id,"
-                + "n.code,"
                 + "n.name,"
                 + "n.status,"
-                + "n.create_date,"
-                + "n.update_date,"
-                + "n.type,"
-                + "n.can_modify, "
-                + "n.description ");
+                + "n.can_modify ");
         appendQueryFromAndWhereForSearch(sb, searchDto);
         sb.append(" GROUP BY n.role_id ");
         if (searchDto.getSortField() != null) {
@@ -71,19 +66,13 @@ public class RoleRepositoryImpl implements RoleRepositoryCustom {
         for (Object[] obj : result) {
             Role dto = new Role();
             dto.setRoleId(ValueUtil.getIntegerByObject(obj[0]));
-            dto.setCode(ValueUtil.getStringByObject(obj[1]));
-            dto.setName(ValueUtil.getStringByObject(obj[2]));
-            dto.setStatus(ValueUtil.getIntegerByObject(obj[3]));
-            dto.setCreateDate(ValueUtil.getDateByObject(obj[4]));
-            dto.setUpdateDate(ValueUtil.getDateByObject(obj[5]));
-            dto.setType(ValueUtil.getIntegerByObject(obj[6]));
-            dto.setCanModify(ValueUtil.getBooleanByObject(obj[7]));
-            dto.setDescription(ValueUtil.getStringByObject(obj[8]));
+            dto.setName(ValueUtil.getStringByObject(obj[1]));
+            dto.setStatus(ValueUtil.getIntegerByObject(obj[2]));
+            dto.setCanModify(ValueUtil.getBooleanByObject(obj[3]));
 
             roleList.add(dto);
         }
         return roleList;
-
     }
 
     @Override
@@ -101,8 +90,7 @@ public class RoleRepositoryImpl implements RoleRepositoryCustom {
         sb.append(" WHERE 1=1 ");
 
         if (StringUtils.isNotBlank(searchDto.getKeyword())) {
-            sb.append(" AND (n.code LIKE :keyword ");
-            sb.append(" OR n.name LIKE :keyword) ");
+            sb.append(" AND n.name LIKE :keyword) ");
         }
     }
 

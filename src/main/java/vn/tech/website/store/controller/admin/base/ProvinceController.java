@@ -36,7 +36,6 @@ import java.util.Map;
 @Setter
 @Scope(value = "session")
 public class ProvinceController extends BaseController {
-
     @Inject
     private AuthorizationController authorizationController;
 
