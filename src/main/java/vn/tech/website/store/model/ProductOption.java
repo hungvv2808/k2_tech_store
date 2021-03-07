@@ -19,14 +19,14 @@ public class ProductOption extends BaseModel{
     @Column(name = "product_option_id")
     private Long productOptionId;
 
-    @Column(name = "type")
-    private Integer type;
-
     @Column(name = "name")
-    private String optionName;
+    private String name;
 
     @Column(name = "value")
-    private String optionValue;
+    private String value;
+
+    @Column(name = "type")
+    private Integer type;
 
     @Column(name = "status")
     private Integer status;

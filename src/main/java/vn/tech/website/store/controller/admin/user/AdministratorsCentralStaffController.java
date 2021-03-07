@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.admin.BaseController;
 import vn.tech.website.store.controller.admin.auth.AuthorizationController;
-import vn.tech.website.store.controller.admin.common.CityDistrictController;
+import vn.tech.website.store.controller.admin.common.CityDistrictCommuneController;
 import vn.tech.website.store.dto.common.CityDistrictDto;
 import vn.tech.website.store.dto.user.AccountDto;
 import vn.tech.website.store.dto.user.AdministratorsCentralStaffSearchDto;
@@ -45,7 +45,7 @@ public class AdministratorsCentralStaffController extends BaseController {
     @Inject
     private AuthorizationController authorizationController;
     @Inject
-    private CityDistrictController cityDistrictController;
+    private CityDistrictCommuneController cityDistrictCommuneController;
 
     @Autowired
     protected AdministratorsCentralStaffRepository administratorsCentralStaffRepository;
@@ -79,7 +79,7 @@ public class AdministratorsCentralStaffController extends BaseController {
         now = new Date();
         adminSearchDto = new AdministratorsCentralStaffSearchDto();
         accountDto = new AccountDto();
-        permissionList = roleRepository.findRolesByTypeAndStatus(DbConstant.ROLE_TYPE_ADMIN, DbConstant.ROLE_STATUS_ACTIVE);
+        permissionList = null;
         listProvinceAccount = new ArrayList<>();
         provinceList = (List<Province>) provinceRepository.findAll();
         for (Province dto : provinceList) {
@@ -88,7 +88,7 @@ public class AdministratorsCentralStaffController extends BaseController {
 
         adminSearchDto.setStatus(-1);
         accountDto.setGender(-1);
-        cityDistrictController.resetAll();
+        cityDistrictCommuneController.resetAll();
         onSearch();
         FacesUtil.resetDataTable("searchForm", "tblSearchResult");
     }
@@ -162,8 +162,8 @@ public class AdministratorsCentralStaffController extends BaseController {
         BeanUtils.copyProperties(ac, accountDto);
         BeanUtils.copyProperties(ac, objBackup);
         CityDistrictDto cityDistrictDto = new CityDistrictDto(ac.getProvinceId(), ac.getDistrictId(), ac.getCommuneId());
-        cityDistrictController.setCityDistrictDto(cityDistrictDto);
-        cityDistrictController.loadData();
+        cityDistrictCommuneController.setCityDistrictDto(cityDistrictDto);
+        cityDistrictCommuneController.loadData();
     }
 
     public void onSaveData() {
@@ -173,9 +173,9 @@ public class AdministratorsCentralStaffController extends BaseController {
 
         Account account = new Account();
         //accountDto.setPosition(accountDto.getPosition().trim());
-        accountDto.setProvinceId(cityDistrictController.getCityDistrictDto().getProvinceId());
-        accountDto.setDistrictId(cityDistrictController.getCityDistrictDto().getDistrictId());
-        accountDto.setCommuneId(cityDistrictController.getCityDistrictDto().getCommuneId());
+        accountDto.setProvinceId(cityDistrictCommuneController.getCityDistrictDto().getProvinceId());
+        accountDto.setDistrictId(cityDistrictCommuneController.getCityDistrictDto().getDistrictId());
+        accountDto.setCommuneId(cityDistrictCommuneController.getCityDistrictDto().getCommuneId());
         BeanUtils.copyProperties(accountDto, account);
 
         if (account.getAccountId() == null) {
@@ -262,7 +262,7 @@ public class AdministratorsCentralStaffController extends BaseController {
 
     public void resetDialog() {
         accountDto = new AccountDto();
-        cityDistrictController.resetAll();
+        cityDistrictCommuneController.resetAll();
     }
 
     public void onSearch() {

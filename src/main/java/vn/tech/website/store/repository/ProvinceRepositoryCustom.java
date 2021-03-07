@@ -11,5 +11,4 @@ public interface ProvinceRepositoryCustom {
     Long countSearch(ProvinceSearchDto provinceSearchDto);
 
     void deleteAllRecords();
-
 }

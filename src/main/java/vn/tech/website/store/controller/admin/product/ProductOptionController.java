@@ -100,17 +100,17 @@ public class ProductOptionController extends BaseController {
             FacesUtil.addErrorMessage("Bạn vui lòng chọn loại thuộc tính");
             return false;
         }
-        if (StringUtils.isBlank(productOptionDto.getOptionName())) {
+        if (StringUtils.isBlank(productOptionDto.getName())) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập tên thuộc tính");
             return false;
         } else {
-            productOptionDto.setOptionName(removeSpaceOfString(productOptionDto.getOptionName()));
+            productOptionDto.setName(removeSpaceOfString(productOptionDto.getName()));
         }
-        if (StringUtils.isBlank(productOptionDto.getOptionValue())) {
+        if (StringUtils.isBlank(productOptionDto.getValue())) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập giá trị thuộc tính");
             return false;
         } else {
-            productOptionDto.setOptionValue(removeSpaceOfString(productOptionDto.getOptionValue()));
+            productOptionDto.setValue(removeSpaceOfString(productOptionDto.getValue()));
         }
         List<ProductOption> productOptionList = new ArrayList<>();
         if(productOptionDto.getProductOptionId() == null){
@@ -119,7 +119,7 @@ public class ProductOptionController extends BaseController {
             productOptionList = productOptionRepository.findAllExpertId(productOptionDto.getProductOptionId());
         }
         for (ProductOption option : productOptionList){
-            if (productOptionDto.getType() == option.getType() && productOptionDto.getOptionName().equalsIgnoreCase(option.getOptionName()) && productOptionDto.getOptionValue().equalsIgnoreCase(option.getOptionValue())){
+            if (productOptionDto.getType() == option.getType() && productOptionDto.getName().equalsIgnoreCase(option.getName()) && productOptionDto.getValue().equalsIgnoreCase(option.getValue())){
                 FacesUtil.addErrorMessage("Thuộc tính này đã tồn tại");
                 return false;
             }

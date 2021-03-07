@@ -85,7 +85,6 @@ public class ProvinceRepositoryImpl implements ProvinceRepositoryCustom {
         if (StringUtils.isNotBlank(searchDto.getKeyword())) {
             query.setParameter("keyword", "%" + searchDto.getKeyword().trim() + "%");
         }
-
         return query;
     }
 

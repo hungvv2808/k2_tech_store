@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.admin.BaseController;
 import vn.tech.website.store.controller.admin.auth.AuthorizationController;
-import vn.tech.website.store.controller.admin.common.CityDistrictController;
+import vn.tech.website.store.controller.admin.common.CityDistrictCommuneController;
 import vn.tech.website.store.controller.frontend.common.AddressFEController;
 import vn.tech.website.store.dto.common.CityDistrictDto;
 import vn.tech.website.store.dto.user.AccountDto;
@@ -39,7 +39,7 @@ public class AccountController extends BaseController {
     @Inject
     protected AuthorizationController authorizationController;
     @Inject
-    private CityDistrictController cityDistrictController;
+    private CityDistrictCommuneController cityDistrictCommuneController;
     @Inject
     private AddressFEController addressFEController;
     @Autowired
@@ -86,7 +86,7 @@ public class AccountController extends BaseController {
         //accountDto.setOrg(false);
         married = false;
         listProvinceAccount = new ArrayList<>();
-        cityDistrictController.resetAll();
+        cityDistrictCommuneController.resetAll();
         onSearch();
         FacesUtil.resetDataTable("searchForm", "tblSearchResult");
     }
@@ -308,9 +308,9 @@ public class AccountController extends BaseController {
         if (!validate()) {
             return;
         }
-        accountDto.setProvinceId(cityDistrictController.getCityDistrictDto().getProvinceId());
-        accountDto.setDistrictId(cityDistrictController.getCityDistrictDto().getDistrictId());
-        accountDto.setCommuneId(cityDistrictController.getCityDistrictDto().getCommuneId());
+        accountDto.setProvinceId(cityDistrictCommuneController.getCityDistrictDto().getProvinceId());
+        accountDto.setDistrictId(cityDistrictCommuneController.getCityDistrictDto().getDistrictId());
+        accountDto.setCommuneId(cityDistrictCommuneController.getCityDistrictDto().getCommuneId());
         Account account = new Account();
         BeanUtils.copyProperties(accountDto, account);
         if(!married){
@@ -362,15 +362,15 @@ public class AccountController extends BaseController {
         objBackup = new AccountDto();
         BeanUtils.copyProperties(obj, accountDto);
         BeanUtils.copyProperties(accountDto, objBackup);
-        cityDistrictController.resetAll();
+        cityDistrictCommuneController.resetAll();
         CityDistrictDto cityDistrictDto = new CityDistrictDto(obj.getProvinceId(), obj.getDistrictId(), obj.getCommuneId());
-        cityDistrictController.setCityDistrictDto(cityDistrictDto);
-        cityDistrictController.loadData();
+        cityDistrictCommuneController.setCityDistrictDto(cityDistrictDto);
+        cityDistrictCommuneController.loadData();
     }
 
     public void resetDialog() {
         accountDto = new AccountDto();
-        cityDistrictController.resetAll();
+        cityDistrictCommuneController.resetAll();
         married = false;
         tabindex = 0;
     }

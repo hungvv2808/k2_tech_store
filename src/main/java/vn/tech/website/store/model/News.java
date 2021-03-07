@@ -12,18 +12,24 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "color")
-public class Color extends BaseModel{
+@Table(name = "news")
+public class News {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "color_id")
+    @Column(name = "news_id")
     private Long colorId;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @Column(name = "title")
+    private String title;
 
-    @Column(name = "name")
-    private Long name;
+    @Column(name = "short_content")
+    private String shortContent;
+
+    @Column(name = "content")
+    private String content;
+
+    @Column(name = "category_id")
+    private Integer categoryId;
 
     @Column(name = "status")
     private Integer status;

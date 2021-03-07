@@ -93,31 +93,11 @@ public class RoleController extends BaseController {
     }
 
     public void onSaveData(Long roleId ) {
-
-        role.setCode(role.getCode().trim());
-        if (role.getRoleId() == null || !role.getCode().equalsIgnoreCase(roleCopy.getCode().trim())) {
-            Role oldCode = roleRepository.findByCode(role.getCode());
-            if (oldCode != null) {
-                setErrorForm("Mã nhóm quyền đã tồn tại");
-                FacesUtil.updateView("growl");
-                return;
-            }
-        }
-
-        if ((role.getType() == null || role.getType().equals(DbConstant.ROLE_TYPE_ADMIN)) && scopeActions.entrySet().stream().allMatch(e -> ObjectUtils.isEmpty(e.getValue()))) {
-            setErrorForm("Bạn phải chọn ít nhất một quyền");
-            FacesUtil.updateView("growl");
-            buildScopes();
-            return;
-        }
-
         if (role.getRoleId() == null) {
             role.setCreateBy(authorizationController.getAccountDto().getAccountId());
-            role.setUpdateBy(role.getCreateBy());
         } else {
             role.setCreateBy(roleCopy.getCreateBy());
             role.setCreateDate(roleCopy.getCreateDate());
-            role.setUpdateBy(authorizationController.getAccountDto().getAccountId());
         }
 
         if (role.getRoleId() != null && checkEditButton(roleId)) {
@@ -126,11 +106,6 @@ public class RoleController extends BaseController {
                 FacesUtil.updateView("growl");
                 return;
             }
-        }
-
-        // save role
-        if (role.getType() == null) {
-            role.setType(DbConstant.ROLE_TYPE_ADMIN);
         }
         roleRepository.save(role);
         //save role's functions
@@ -217,12 +192,12 @@ public class RoleController extends BaseController {
             public Role getRowData(String rowKey) {
                 List<Role> roleList = getWrappedData();
                 String value = String.valueOf(rowKey);
-                for (Role obj : roleList) {
-                    if (obj.getCode().equals(value) || obj.getName().equals(value)) {
-                        return obj;
-                    }
-
-                }
+//                for (Role obj : roleList) {
+//                    if (obj.getName().equals(value) || obj.getName().equals(value)) {
+//
+//                    }
+//
+//                }
                 return null;
             }
         };

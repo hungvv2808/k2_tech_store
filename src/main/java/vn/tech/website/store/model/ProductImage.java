@@ -22,9 +22,12 @@ public class ProductImage extends BaseModel{
     @Column(name = "product_id")
     private Long productId;
 
+    @Column(name = "image_name")
+    private String imageName;
+
     @Column(name = "image_path")
     private String imagePath;
 
-    @Column(name = "type")
-    private Integer type;
+    @Column(name = "is_main")
+    private Integer isMain;
 }

@@ -50,8 +50,6 @@ public class ProductController extends BaseController {
     @Autowired
     private ProductOptionRepository productOptionRepository;
     @Autowired
-    private ProductDetailRepository productDetailRepository;
-    @Autowired
     private ProductLinkRepository productLinkRepository;
     @Autowired
     private ProductOptionDetailRepository productOptionDetailRepository;
@@ -111,7 +109,7 @@ public class ProductController extends BaseController {
         optionList = new ArrayList<>();
         List<ProductOption> options = productOptionRepository.findAll();
         for (ProductOption obj : options) {
-            optionList.add(new SelectItem(obj.getProductOptionId(), obj.getOptionName() + "(" + obj.getOptionValue() + ")"));
+            optionList.add(new SelectItem(obj.getProductOptionId(), obj.getName() + "(" + obj.getValue() + ")"));
         }
         //onSearch();
     }
@@ -273,13 +271,6 @@ public class ProductController extends BaseController {
             productImageRepository.save(productImage);
         }
         if (product.getType() != DbConstant.TYPE_PRODUCT_PARENT) {
-            //save to product_detail
-            ProductDetail productDetail = new ProductDetail();
-            BeanUtils.copyProperties(productDto, productDetail);
-            productDetail.setProductId(product.getProductId());
-            productDetail.setUpdateDate(new Date());
-            productDetail.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
-            productDetailRepository.save(productDetail);
             //save to product_option_detail
             if (productDto.getProductId() != null) {
                 List<ProductOptionDetail> optionDetailListDelete = productOptionDetailRepository.findAllByProductId(productDto.getProductId());

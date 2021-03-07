@@ -9,7 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
-import vn.tech.website.store.controller.admin.common.CityDistrictController;
+import vn.tech.website.store.controller.admin.common.CityDistrictCommuneController;
 import vn.tech.website.store.controller.frontend.common.FacesNoticeController;
 import vn.tech.website.store.dto.common.CityDistrictDto;
 import vn.tech.website.store.dto.user.AccountDto;
@@ -45,7 +45,7 @@ public class AuthorizationController implements Serializable {
 //    @Inject
 //    private AuthFunctionController authFunction;
     @Inject
-    private CityDistrictController cityDistrictController;
+    private CityDistrictCommuneController cityDistrictCommuneController;
     @Inject
     private FacesNoticeController facesNoticeController;
 
@@ -156,10 +156,10 @@ public class AuthorizationController implements Serializable {
         for (Province dto : provinceList) {
             listProvinceAccount.add(new SelectItem(dto.getProvinceId(), dto.getName()));
         }
-        cityDistrictController.resetAll();
+        cityDistrictCommuneController.resetAll();
         CityDistrictDto cityDistrictDto = new CityDistrictDto(accountDto.getProvinceId(), accountDto.getDistrictId(), accountDto.getCommuneId());
-        cityDistrictController.setCityDistrictDto(cityDistrictDto);
-        cityDistrictController.loadData();
+        cityDistrictCommuneController.setCityDistrictDto(cityDistrictDto);
+        cityDistrictCommuneController.loadData();
     }
 
     public void onUpload(FileUploadEvent e) {
@@ -271,9 +271,9 @@ public class AuthorizationController implements Serializable {
             FacesUtil.updateView(Constant.ERROR_GROWL_ID);
             return;
         }
-        accountDto.setProvinceId(cityDistrictController.getCityDistrictDto().getProvinceId());
-        accountDto.setDistrictId(cityDistrictController.getCityDistrictDto().getDistrictId());
-        accountDto.setCommuneId(cityDistrictController.getCityDistrictDto().getCommuneId());
+        accountDto.setProvinceId(cityDistrictCommuneController.getCityDistrictDto().getProvinceId());
+        accountDto.setDistrictId(cityDistrictCommuneController.getCityDistrictDto().getDistrictId());
+        accountDto.setCommuneId(cityDistrictCommuneController.getCityDistrictDto().getCommuneId());
         Account account = new Account();
         BeanUtils.copyProperties(accountDto, account);
         account.setUpdateBy(accountDto.getAccountId());
@@ -356,7 +356,7 @@ public class AuthorizationController implements Serializable {
 
     public boolean processLogin(Account account) {
 
-        Role userRole = roleRepository.findRoleByRoleId(account.getRoleId());
+        Role userRole = null;
         if (userRole == null) {
             setErrorForm("Quyền hạn không đủ để đăng nhập");
             return false;
@@ -467,15 +467,9 @@ public class AuthorizationController implements Serializable {
         String defaultRoleDescription = PropertiesUtil.getProperty("default_role_description");
         if (accountRepository.findAccountByUserName(defaultUserName) == null) {
             //setup role default
-            Role role = roleRepository.findByCode(defaultRoleCode);
+            Role role = null;
             if (role == null) {
-                role = new Role(
-                        null,
-                        defaultRoleCode,
-                        defaultRoleName,
-                        defaultRoleDescription,
-                        1, 1, false
-                );
+                role = new Role(null, "admin", 0, false);
                 roleRepository.save(role);
 
 //                List<FunctionRole> functionRoleList = new ArrayList<>();

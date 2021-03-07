@@ -9,8 +9,6 @@ import vn.tech.website.store.model.Province;
 import java.util.List;
 
 public interface ProvinceRepository extends CrudRepository<Province, Long>, ProvinceRepositoryCustom {
-
-
     List<Province> findByName(String name);
 
     Province findByProvinceId(Long Id);
