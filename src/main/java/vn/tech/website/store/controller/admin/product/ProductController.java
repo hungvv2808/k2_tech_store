@@ -17,8 +17,10 @@ import vn.tech.website.store.dto.ProductSearchDto;
 import vn.tech.website.store.entity.EScope;
 import vn.tech.website.store.model.*;
 import vn.tech.website.store.repository.*;
+import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
+import vn.tech.website.store.util.StringUtil;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -53,6 +55,8 @@ public class ProductController extends BaseController {
     private ProductLinkRepository productLinkRepository;
     @Autowired
     private ProductOptionDetailRepository productOptionDetailRepository;
+    @Autowired
+    private ProductImageRepository productImageRepository;
 
     private LazyDataModel<ProductDto> lazyDataModel;
     private ProductDto productDto;
@@ -171,6 +175,46 @@ public class ProductController extends BaseController {
         } else {
             productDto.setProductName(removeSpaceOfString(productDto.getProductName()));
         }
+
+        //check validate code
+        Long countCode = productRepository.findMaxCountCode() == null ? 0 : productRepository.findMaxCountCode();
+        if (productDto.getProductId() != null){
+            Product product = productRepository.getByProductId(productDto.getProductId());
+            String codeBak = product.getCode();
+            if (!productDto.getCode().equals(codeBak) && !productDto.getCode().equals("") && product.getCode() != null && productDto.getCode() != null) {
+                productDto.setCode(StringUtil.createCode(productDto.getCode(), Constant.ACRONYM_PRODUCT, countCode));
+                if (productDto.getCode() == "") {
+                    FacesUtil.addErrorMessage("Mã sản phẩm không hợp lệ");
+                    return false;
+                }
+                List<Product> listCheckCode = productRepository.findByCode(productDto.getCode());
+                if (listCheckCode.size() > 1) {
+                    FacesUtil.addErrorMessage("Mã sản phẩm đã tồn tại");
+                    return false;
+                }
+                productDto.setCountCode(StringUtil.createCountCode(productDto.getCode(), Constant.ACRONYM_PRODUCT));
+            }else {
+                productDto.setCode(codeBak);
+            }
+        }else {
+            productDto.setCode(StringUtil.createCode(productDto.getCode(), Constant.ACRONYM_PRODUCT, countCode));
+            if (productDto.getCode() == "") {
+                FacesUtil.addErrorMessage("Mã sản phẩm không hợp lệ");
+                return false;
+            }
+            List<Product> listCheckCode = productRepository.findByCode(productDto.getCode());
+            if (listCheckCode.size() > 0) {
+                FacesUtil.addErrorMessage("Mã sản phẩm đã tồn tại");
+                return false;
+            }
+            productDto.setCountCode(StringUtil.createCountCode(productDto.getCode(), Constant.ACRONYM_PRODUCT));
+        }
+
+        if (uploadMultipleImageController.getUploadMultipleFileDto().getListToAdd().size() == 0){
+            FacesUtil.addErrorMessage("Bạn vui lòng chọn ảnh cho sản phẩm");
+            return false;
+        }
+
         if (productDto.getType() == DbConstant.TYPE_PRODUCT_PARENT) {
             List<Product> productList = productRepository.getAllByType(DbConstant.TYPE_PRODUCT_PARENT);
             for (Product product : productList) {
@@ -215,12 +259,19 @@ public class ProductController extends BaseController {
             return;
         }
         //save to product
-        Product product = new ProductDto();
+        Product product = new Product();
         BeanUtils.copyProperties(productDto, product);
         product.setStatus(DbConstant.STATUS_PRODUCT_ACTIVE);
         product.setUpdateDate(new Date());
         product.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
-        productRepository.save(product);
+        product = productRepository.save(product);
+        //save image product
+        for (String imagePath : uploadMultipleImageController.getUploadMultipleFileDto().getListToAdd()){
+            ProductImage productImage = new ProductImage();
+            productImage.setProductId(product.getProductId());
+            productImage.setImagePath(imagePath);
+            productImageRepository.save(productImage);
+        }
         if (product.getType() != DbConstant.TYPE_PRODUCT_PARENT) {
             //save to product_detail
             ProductDetail productDetail = new ProductDetail();

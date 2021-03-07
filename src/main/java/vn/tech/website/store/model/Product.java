@@ -34,6 +34,9 @@ public class Product extends BaseModel{
     @Column(name = "code")
     private String code;
 
+    @Column(name = "count_code")
+    private Long countCode;
+
     @Column(name = "quantity")
     private Long quantity;
 

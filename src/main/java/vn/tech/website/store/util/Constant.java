@@ -118,4 +118,8 @@ public class Constant {
     public static final int HIS_WITHDRAW_THE_PRICE_PAID = 8;
 
     public static final String TIME_ZONE_DEFAULT = "Asia/Ho_Chi_Minh";
+
+    //acronym for create code
+    public static final String ACRONYM_PRODUCT = "SP";
+    public static final String ACRONYM_BILL = "HD";
 }

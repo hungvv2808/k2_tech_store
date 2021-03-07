@@ -39,7 +39,7 @@ public class CommuneRepositoryImpl implements CommuneRepositoryCustom {
             if (searchDto.getSortField().equals("code")) {
                 sb.append(" n.code ");
             }  else if (searchDto.getSortField().equals("name")) {
-                sb.append(" n.name collate utf8_vietnamese_ci ");
+                sb.append(" n.name collate utf8mb4_vietnamese_ci ");
             } else if (searchDto.getSortField().equals("status")) {
                 sb.append(" n.status ");
             } else if (searchDto.getSortField().equals("updateDate")) {
@@ -47,7 +47,7 @@ public class CommuneRepositoryImpl implements CommuneRepositoryCustom {
             } else if (searchDto.getSortField().equals("provinceName")) {
                 sb.append(" pr.name collate utf8mb4_vietnamese_ci ");
             }   else if (searchDto.getSortField().equals("districtName")) {
-                sb.append(" dtr.name collate utf8_vietnamese_ci ");
+                sb.append(" dtr.name collate utf8mb4_vietnamese_ci ");
             }
             sb.append(searchDto.getSortOrder());
         } else {

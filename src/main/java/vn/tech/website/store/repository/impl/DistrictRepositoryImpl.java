@@ -37,7 +37,7 @@ public class DistrictRepositoryImpl implements DistrictRepositoryCustom {
             if (searchDto.getSortField().equals("code")) {
                 sb.append(" n.code ");
             } else if (searchDto.getSortField().equals("name")) {
-                sb.append(" n.name collate utf8_vietnamese_ci ");
+                sb.append(" n.name collate utf8mb4_vietnamese_ci ");
             } else if (searchDto.getSortField().equals("provinceName")) {
                 sb.append(" pn.name collate utf8mb4_vietnamese_ci ");
             }

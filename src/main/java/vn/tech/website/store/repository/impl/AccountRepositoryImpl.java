@@ -73,7 +73,7 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
         if (searchDto.getSortField() != null) {
             sb.append(" ORDER BY ");
             if (searchDto.getSortField().equals("fullName")) {
-                sb.append(" acc.full_name collate utf8_vietnamese_ci ");
+                sb.append(" acc.full_name collate utf8mb4_vietnamese_ci ");
             } else if (searchDto.getSortField().equals("accountStatus")) {
                 sb.append(" acc.status ");
             } else if (searchDto.getSortField().equals("org")) {

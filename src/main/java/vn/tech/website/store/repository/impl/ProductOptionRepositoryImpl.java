@@ -41,7 +41,7 @@ public class ProductOptionRepositoryImpl implements ProductOptionRepositoryCusto
             } else if (searchDto.getSortField().equals("type")) {
                 sb.append(" po.type ");
             } else if (searchDto.getSortField().equals("optionName")) {
-                sb.append(" po.name collate utf8_vietnamese_ci ");
+                sb.append(" po.name collate utf8mb4_vietnamese_ci ");
             } else if (searchDto.getSortField().equals("optionValue")) {
                 sb.append(" po.value ");
             } else if (searchDto.getSortField().equals("status")) {

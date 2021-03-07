@@ -70,15 +70,15 @@ public class AdministratorsCentralStaffRepositoryImpl implements AdministratorsC
         if (searchDto.getSortField() != null) {
             sb.append(" ORDER BY ");
             if (searchDto.getSortField().equals("fullName")) {
-                sb.append(" acc.full_name collate utf8_vietnamese_ci ");
+                sb.append(" acc.full_name collate utf8mb4_vietnamese_ci ");
             } else if (searchDto.getSortField().equals("phone")) {
                 sb.append(" acc.phone ");
             } else if (searchDto.getSortField().equals("address")) {
-                sb.append(" acc.address collate utf8_vietnamese_ci ");
+                sb.append(" acc.address collate utf8mb4_vietnamese_ci ");
             } else if (searchDto.getSortField().equals("email")) {
                 sb.append(" acc.email ");
             } else if (searchDto.getSortField().equals("username")) {
-                sb.append(" acc.username collate utf8_vietnamese_ci ");
+                sb.append(" acc.username collate utf8mb4_vietnamese_ci ");
             } else if (searchDto.getSortField().equals("roleId")) {
                 sb.append(" acc.role_id ");
             } else if (searchDto.getSortField().equals("accountStatus")) {

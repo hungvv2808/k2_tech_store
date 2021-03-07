@@ -41,7 +41,7 @@ public class RoleRepositoryImpl implements RoleRepositoryCustom {
                 sb.append(" n.code ");
             }
             if (searchDto.getSortField().equals("name")) {
-                sb.append(" n.name collate utf8_vietnamese_ci ");
+                sb.append(" n.name collate utf8mb4_vietnamese_ci ");
             }
             if (searchDto.getSortField().equals("status")) {
                 sb.append(" n.status ");

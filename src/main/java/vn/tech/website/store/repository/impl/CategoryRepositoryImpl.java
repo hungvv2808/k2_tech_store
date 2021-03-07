@@ -36,7 +36,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
             if (searchDto.getSortField().equals("categoryId")) {
                 sb.append(" c.category_id ");
             } else if (searchDto.getSortField().equals("categoryName")) {
-                sb.append(" c.name collate utf8_vietnamese_ci ");
+                sb.append(" c.name collate utf8mb4_vietnamese_ci ");
             } else if (searchDto.getSortField().equals("status")) {
                 sb.append(" c.status ");
             } else if (searchDto.getSortField().equals("updateDate")) {

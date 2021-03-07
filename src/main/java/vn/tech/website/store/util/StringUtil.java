@@ -32,6 +32,8 @@ public class StringUtil {
 
     private static final String PUNCTUATION = "~`!@#$%^&*()-_=+[{]}\\\\|;:\\'\\\",<.>/?\"";
 
+    private static String maxValueCodeDefault = PropertiesUtil.getProperty("max.value.code.default");
+
     public static String encryptPassword(String password) {
         String sha1 = "";
         try {
@@ -225,6 +227,44 @@ public class StringUtil {
     public static String formatCurrency(long money) {
         String output = NumberFormat.getCurrencyInstance().format(money).substring(1);
         return StringUtils.removeEnd(output, ".00");
+    }
+
+    public static String createCode(String code, String twoFirstChar, Long countCode) {
+        //không nhập
+        if (code == null || code == "") {
+            if (countCode == Long.parseLong(maxValueCodeDefault)) {
+                return String.format(twoFirstChar + Long.toString(Long.parseLong(maxValueCodeDefault) + 2));
+            }
+            return String.format(twoFirstChar + "%06d", countCode + 1);
+        }
+        //nhập
+        //kiểm ktra xem có đúng định dạng "%2s" + số
+        //Đúng
+        if (code.substring(0, 2).equals(twoFirstChar) && StringUtils.isNumeric(code.substring(2))) {
+            //kiểm tra xem số có nhỏ hơn mặc định tự sinh hay không
+            //Nhỏ hơn
+            if (Long.parseLong(code.substring(2)) <= Long.parseLong(maxValueCodeDefault)) {
+                return String.format(twoFirstChar + "%06d", Long.parseLong(code.substring(2)));
+            }
+            //Lớn hơn hoặc bằng
+            else {
+                return "";
+            }
+        }
+        //Sai định dạng
+        else {
+            return code;
+        }
+    }
+
+    public static Long createCountCode(String code, String twoFirstChar){
+        if (code == null){
+            return 0L;
+        }
+        if (code.substring(0, 2).equals(twoFirstChar) && StringUtils.isNumeric(code.substring(2))){
+            return Long.parseLong(code.substring(2));
+        }
+        return 0L;
     }
 
     public static void main(String args[]) {

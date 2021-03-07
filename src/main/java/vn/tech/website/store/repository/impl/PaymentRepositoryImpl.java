@@ -54,7 +54,7 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
             } else if (searchDto.getSortField().equals("fullNameNguoiDangKy")) {
                 sb.append(" acc.full_name ");
             }else if (searchDto.getSortField().equals("assetName")) {
-                sb.append(" ass.name collate utf8_vietnamese_ci ");
+                sb.append(" ass.name collate utf8mb4_vietnamese_ci ");
             } else if (searchDto.getSortField().equals("paymentFormality")) {
                 sb.append(" n.payment_formality ");
             } else if (searchDto.getSortField().equals("code")) {

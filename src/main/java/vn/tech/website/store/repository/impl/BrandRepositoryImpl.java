@@ -36,7 +36,7 @@ public class BrandRepositoryImpl implements BrandRepositoryCustom {
             if (searchDto.getSortField().equals("brandId")) {
                 sb.append(" b.brand_id ");
             } else if (searchDto.getSortField().equals("brandName")) {
-                sb.append(" b.name collate utf8_vietnamese_ci ");
+                sb.append(" b.name collate utf8mb4_vietnamese_ci ");
             } else if (searchDto.getSortField().equals("status")) {
                 sb.append(" b.status ");
             }  else if (searchDto.getSortField().equals("updateDate")) {
