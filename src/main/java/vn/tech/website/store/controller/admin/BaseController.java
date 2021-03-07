@@ -39,17 +39,17 @@ public abstract class BaseController implements Serializable {
 
     public void init() {
         // Check login
-        if (!authorizationController.hasLogged()) {
-            FacesUtil.redirect("/admin/login.xhtml");
-            return;
-        }
+//        if (!authorizationController.hasLogged()) {
+//            FacesUtil.redirect("/admin/login.xhtml");
+//            return;
+//        }
         // Check block account
-        Account account = accountRepository.getAccountByAccountId(authorizationController.getAccountDto().getAccountId());
-        if (account == null || Arrays.asList(DbConstant.ACCOUNT_DELETE_STATUS, DbConstant.ACCOUNT_LOCK_STATUS).contains(account.getStatus())) {
-            authorizationController.resetAll();
-            FacesUtil.redirect("/admin/login.xhtml");
-            return;
-        }
+//        Account account = accountRepository.getAccountByAccountId(authorizationController.getAccountDto().getAccountId());
+//        if (account == null || Arrays.asList(DbConstant.ACCOUNT_DELETE_STATUS, DbConstant.ACCOUNT_LOCK_STATUS).contains(account.getStatus())) {
+//            authorizationController.resetAll();
+//            FacesUtil.redirect("/admin/login.xhtml");
+//            return;
+//        }
         // Check permission
 //        if (!authorizationController.hasRole(getMenuId())) {
 //            // redirect to access denied page

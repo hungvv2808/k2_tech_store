@@ -209,7 +209,7 @@ public class DistrictController extends BaseController {
 
     @Override
     protected EScope getMenuId() {
-        return EScope.DISTRICT;
+        return null;
     }
 
 
