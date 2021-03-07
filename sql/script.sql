@@ -5,7 +5,7 @@ drop table if exists province;
 create table if not exists province
 (
     province_id int auto_increment primary key,
-    name        varchar(200) null comment 'Tên tỉnh'
+    name        nvarchar(200) null comment 'Tên tỉnh'
 );
 
 drop table if exists district;
@@ -13,7 +13,7 @@ create table if not exists district
 (
     district_id int auto_increment primary key,
     province_id int          null comment 'Id tỉnh',
-    name        varchar(200) null comment 'Tên quận/huyện',
+    name        nvarchar(200) null comment 'Tên quận/huyện',
     constraint fk_district_province
         foreign key (province_id) references province (province_id)
 );
@@ -24,7 +24,7 @@ create table if not exists commune
     commune_id  int auto_increment primary key,
     province_id int          null comment 'Id tỉnh',
     district_id int          null comment 'Id quận/huyện',
-    name        varchar(200) null comment 'Tên phường/xã',
+    name        nvarchar(200) null comment 'Tên phường/xã',
     constraint fk_commune_district
         foreign key (district_id) references district (district_id),
     constraint fk_commune_province
@@ -37,7 +37,7 @@ drop table if exists role;
 create table if not exists role
 (
     role_id    int primary key comment '0: admin / 1: quản trị - nhân viên / 2: quản trị - quản lý / 3: khách hàng',
-    name       varchar(200) null comment 'admin/employee/manager/customer',
+    name       nvarchar(200) null comment 'admin/employee/manager/customer',
     status     int(1)       null comment '0: active / 1: disable',
     can_modify int(1) default 0 comment 'A(all)/C(create)/U(update)/D(delete)/W(watch) - Cấu hình quyền thêm sửa xoá cho từng quyền trong constant'
 );
@@ -46,17 +46,17 @@ drop table if exists account;
 create table if not exists account
 (
     account_id    int auto_increment primary key,
-    user_name     varchar(100) null comment 'Tên đăng nhập',
-    full_name     varchar(100) null comment 'Họ và tên',
+    user_name     nvarchar(100) null comment 'Tên đăng nhập',
+    full_name     nvarchar(100) null comment 'Họ và tên',
     date_of_birth datetime     null comment 'Ngày sinh',
     gender        int(1) default 0 comment '0: Không xác định / 1: Nam / 2: Nữ',
     role_id       int          null comment 'Quyền truy cập',
-    password      varchar(200) null comment 'Mật khẩu - mã hoá',
-    salt          varchar(100) null comment 'Mã sha5 để mã hoá mật khẩu',
-    email         varchar(50)  null comment 'Địa chỉ email',
+    password      nvarchar(200) null comment 'Mật khẩu - mã hoá',
+    salt          nvarchar(100) null comment 'Mã sha5 để mã hoá mật khẩu',
+    email         nvarchar(50)  null comment 'Địa chỉ email',
     phone         char(11)     null comment 'Số điện thoại',
     address       text         null comment 'Địa chi',
-    avatar_path   varchar(200) null comment 'Ảnh đại diện',
+    avatar_path   nvarchar(200) null comment 'Ảnh đại diện',
     status        int(1)       null comment 'Trạng thái kích hoạt tài khoản: 0: active / 1: disable',
     province_id   int          null comment 'Tỉnh id',
     district_id   int          null comment 'Quận/Huyện id',
@@ -81,8 +81,8 @@ drop table if exists news;
 create table if not exists news
 (
     news_id       int auto_increment primary key,
-    title         varchar(200) null comment 'Tiêu đề tin tức',
-    short_content varchar(200) null comment 'Tóm tắt tin tức',
+    title         nvarchar(200) null comment 'Tiêu đề tin tức',
+    short_content nvarchar(200) null comment 'Tóm tắt tin tức',
     content       text         null comment 'Chi tiết bài viết',
     type          int(1)       null comment 'Loại tin tức: 0: category / 1: product / 3: technology',
     status        int(1)       null comment 'Trạng thái hiển thị tin tức: 0: active / 1: disable',
@@ -98,8 +98,8 @@ drop table if exists brand;
 create table if not exists brand
 (
     brand_id    int auto_increment primary key,
-    code        varchar(100) null comment 'Mã thương hiệu',
-    name        varchar(100) null comment 'Tên thương hiệu',
+    code        nvarchar(100) null comment 'Mã thương hiệu',
+    name        nvarchar(100) null comment 'Tên thương hiệu',
     status      int(1)       null comment 'Trạng thái hoạt động của thương hiệu. 0: active / 1: disable',
     create_date datetime     null comment 'Ngày tạo',
     create_by   int          null comment 'Nười tạo',
@@ -113,8 +113,8 @@ drop table if exists category;
 create table if not exists category
 (
     category_id int auto_increment primary key,
-    code        varchar(100) null comment 'Mã nhãn hiệu',
-    name        varchar(100) null comment 'Tên nhãn hiệu',
+    code        nvarchar(100) null comment 'Mã nhãn hiệu',
+    name        nvarchar(100) null comment 'Tên nhãn hiệu',
     status      int(1)       null comment 'Trạng thái hoạt động nhãn hiệu. 0: active / 1: disable',
     create_date datetime     null comment 'Ngày tạo',
     create_by   int          null comment 'Nười tạo',
@@ -130,8 +130,8 @@ create table if not exists product
     product_id  int auto_increment primary key,
     brand_id    int          null comment 'Thương hiệu id',
     category_id int          null comment 'Nhãn hiệu id',
-    name        varchar(200) null comment 'Tên sản phẩm',
-    code        varchar(100) null comment 'Mã sản phẩm',
+    name        nvarchar(200) null comment 'Tên sản phẩm',
+    code        nvarchar(100) null comment 'Mã sản phẩm',
     status      int(1)       null comment 'Trạng thái hiển thị cho sản phẩm. 0: active / 1: disable',
     create_date datetime     null comment 'Ngày tạo',
     create_by   int          null comment 'Nười tạo',
@@ -147,8 +147,8 @@ drop table if exists product_option;
 create table if not exists product_option
 (
     product_option_id int auto_increment primary key,
-    name              varchar(100) null comment 'Tên lựa chọn: Size, Color, Version',
-    description       varchar(200) null comment 'Tóm tắt thông tin lựa chọn',
+    name              nvarchar(100) null comment 'Tên lựa chọn: Size, Color, Version',
+    description       nvarchar(200) null comment 'Tóm tắt thông tin lựa chọn',
     type              int(1)       null comment 'Loại lựa chọn 0: size / 1: color / 2: version(release year)',
     status            int(1) default 0 comment 'Trạng thái hiển thị của lựa chọn. 0: active / 1: disable',
     create_date       datetime     null comment 'Ngày tạo',
@@ -181,8 +181,8 @@ create table if not exists product_detail_image
 (
     product_detail_image_id int auto_increment primary key,
     product_detail_id       int          null comment 'Id sản phẩm chi tiết -Mỗi sản phẩm nhỏ có nhiều ảnh khách nhau',
-    image_name              varchar(200) null comment 'Tên ảnh',
-    image_path              varchar(200) null comment 'Địa chỉ ảnh',
+    image_name              nvarchar(200) null comment 'Tên ảnh',
+    image_path              nvarchar(200) null comment 'Địa chỉ ảnh',
     create_date             datetime     null comment 'Ngày tạo',
     create_by               int          null comment 'Nười tạo',
     update_date             datetime     null comment 'Ngày cập nhật',
@@ -198,10 +198,10 @@ create table if not exists orders
 (
     orders_id    int auto_increment primary key,
     account_id   int           null comment 'Id khách đặt hoá đơn',
-    code         varchar(100)  null comment 'Mã hoá đơn',
+    code         nvarchar(100)  null comment 'Mã hoá đơn',
     address      text          null comment 'Địa chỉ giao hàng',
-    phone        varchar(11)   null comment 'Số điện thoại nhận hàng',
-    note         varchar(200)  null comment 'Ghi chú của khách hàng',
+    phone        nvarchar(11)   null comment 'Số điện thoại nhận hàng',
+    note         nvarchar(200)  null comment 'Ghi chú của khách hàng',
     total_amount double(22, 0) null comment 'Tổng tiền đơn hàng',
     shipping     double(22, 0) null comment 'Phí ship cho đơn hàng',
     create_date  datetime      null comment 'Ngày tạo',
@@ -233,7 +233,7 @@ create table if not exists payments
 (
     payment_id   int auto_increment primary key,
     orders_id    int           null comment 'Id đơn đặt hàng',
-    code         varchar(100)  null comment 'Mã thanh toán',
+    code         nvarchar(100)  null comment 'Mã thanh toán',
     total_amount double(22, 0) null comment 'Tổng tiền của hoá đơn bao gồm tổng tiền sản phẩm + phí ship',
     type         int(1)        null comment 'Loại thanh toán. 0: offline / 1: online',
     status       int(1)        null comment 'Trạng thái thanh toán. 0: unpaid / 1: paid',

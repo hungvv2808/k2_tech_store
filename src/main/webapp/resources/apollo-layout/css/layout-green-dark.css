@@ -75,6 +75,11 @@ body {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.layout-wrapper .topbar .logo-admin {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #141d26;
+}
 .layout-wrapper .topbar #menu-button {
   display: none;
   vertical-align: top;
@@ -1334,6 +1339,11 @@ h2 {
 
 :-ms-input-placeholder {
   color: #6c6c6c;
+}
+
+.ui-button {
+  width: 100px;
+  border-radius: 1.5rem !important;
 }
 
 /* Dashboard */

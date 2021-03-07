@@ -10,6 +10,12 @@
         width: 100%;
         z-index: 102;
         @include border-box();
+
+        .logo-admin {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: $bodyBgColor;
+        }
         
         #menu-button {
             display: none;

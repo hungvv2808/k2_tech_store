@@ -121,3 +121,8 @@ h2 {
 :-moz-placeholder           {color:$placeholderColor}
 ::-moz-placeholder          {color:$placeholderColor}
 :-ms-input-placeholder      {color:$placeholderColor}
+
+.ui-button {
+  width: 100px;
+  border-radius: 1.5rem !important;
+}
