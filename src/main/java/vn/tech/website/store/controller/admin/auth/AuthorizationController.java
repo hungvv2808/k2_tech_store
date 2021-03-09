@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.admin.common.CityDistrictCommuneController;
 import vn.tech.website.store.controller.frontend.common.FacesNoticeController;
+import vn.tech.website.store.crypto.AES;
 import vn.tech.website.store.dto.common.CityDistrictDto;
 import vn.tech.website.store.dto.user.AccountDto;
 import vn.tech.website.store.entity.EFunction;
@@ -42,8 +43,8 @@ import java.util.List;
 public class AuthorizationController implements Serializable {
     @Inject
     HttpServletRequest request;
-//    @Inject
-//    private AuthFunctionController authFunction;
+    @Inject
+    private AuthFunctionController authFunction;
     @Inject
     private CityDistrictCommuneController cityDistrictCommuneController;
     @Inject
@@ -53,10 +54,10 @@ public class AuthorizationController implements Serializable {
     private AccountRepository accountRepository;
     @Autowired
     private RoleRepository roleRepository;
-//    @Autowired
-//    private FunctionRepository functionRepository;
-//    @Autowired
-//    private FunctionRoleRepository functionRoleRepository;
+    @Autowired
+    private FunctionRepository functionRepository;
+    @Autowired
+    private FunctionRoleRepository functionRoleRepository;
     @Autowired
     private ProvinceRepository provinceRepository;
 
@@ -80,37 +81,20 @@ public class AuthorizationController implements Serializable {
     private Date plusDate;
     //	private static final Logger LOGGER = LoggerFactory.getLogger(AuthSocketFilter.class);
     private FilterConfig config = null;
-    private List<SelectItem> apiSexList;
     // message CAS
     private String MESSAGE_ERROR_GROWL;
 
     @Value("${LOGIN_SECRET_KEY}")
     private String cryptoSecretKey;
-    @Value("${cas.server.logout.url}")
-    private String casSecurityServerLogout;
-    @Value("${cas.client.login.url}")
-    private String casSecurityClientLogin;
 
     @PostConstruct
     public void init() {
         // TODO: We have to check postback at here
-//        updateMenuByRole();
         if (hasLogged()) {
             FacesUtil.redirect("/admin/dashboard.xhtml");
             return;
         }
-
-        // for login CAS
-        if (MESSAGE_ERROR_GROWL != null) {
-            try {
-                setErrorForm(MESSAGE_ERROR_GROWL);
-            } finally {
-                MESSAGE_ERROR_GROWL = null;
-            }
-        }
-
         resetAll();
-        // For testing
     }
 
     public void resetAll() {
@@ -118,7 +102,6 @@ public class AuthorizationController implements Serializable {
         accountDto = new AccountDto();
         married = false;
         accountDto.setRoleId(role);
-        //authFunction.setRole(role);
     }
 
     public void initChangePassword() {
@@ -130,26 +113,22 @@ public class AuthorizationController implements Serializable {
             this.oldPassword = "";
             this.newRepassword = "";
             this.newRepassword = "";
-            //plusDate = DateUtil.plusDay(accountDto.getTimeToChangePassword(), DbConstant.ACCOUNT_TIME_TO_CHANGE_PASSWORD);
         }
     }
 
     public void initMyAccount() {
-//        if (!hasLogged()) {
-//            FacesUtil.redirect("/admin/login.xhtml");
-//            return;
-//        }
+        if (!hasLogged()) {
+            FacesUtil.redirect("/admin/login.xhtml");
+            return;
+        }
         if (!FacesContext.getCurrentInstance().isPostback()) {
             resetMyAccount();
         }
     }
 
     public void resetMyAccount() {
-        account = accountRepository.findByAccountId(1L);
-//        account = accountRepository.findByAccountId(accountDto.getAccountId());
+        account = accountRepository.findByAccountId(accountDto.getAccountId());
         BeanUtils.copyProperties(account, accountDto);
-       // married = StringUtils.isNotBlank(accountDto.getRelativeIdCardNumber()) && StringUtils.isNotBlank(accountDto.getRelativeName());
-        //permissionList = roleRepository.findRolesByType(DbConstant.ROLE_TYPE_ADMIN);
         listProvinceAccount = new ArrayList<>();
         now = new Date();
         provinceList = (List<Province>) provinceRepository.findAll();
@@ -164,18 +143,17 @@ public class AuthorizationController implements Serializable {
 
     public void onUpload(FileUploadEvent e) {
         if (e.getFile().getSize() > Constant.MAX_FILE_SIZE) {
-            setErrorForm("looix the thoi");
+            setErrorForm("Dung lượng file quá lớn, dung lượng cho phép < " + Constant.MAX_FILE_SIZE + "MB");
             return;
         }
-        accountDto.setUploadedFile(e.getFile());
         accountDto.setImagePath(FileUtil.saveImageFile(e.getFile()));
     }
 
     private boolean validateField(AccountDto accountDto) {
-//        if (StringUtils.isBlank(accountDto.getFullName().trim())) {
-//            setErrorForm("Họ và tên là trường bắt buộc");
-//            return false;
-//        }
+        if (StringUtils.isBlank(accountDto.getFullName().trim())) {
+            setErrorForm("Họ và tên là trường bắt buộc");
+            return false;
+        }
 
         if (accountDto.getDateOfBirth() != null) {
             if (accountDto.getDateOfBirth().getYear() <= -1899) {
@@ -188,51 +166,6 @@ public class AuthorizationController implements Serializable {
             setErrorForm("Số điện thoại không đúng định dạng");
             return false;
         }
-//        if (!accountDto.isOrg()) {
-//            if (StringUtils.isNotBlank(accountDto.getPhone())) {
-//                accountDto.setPhone(accountDto.getPhone().trim());
-//                Account oldAccount = accountRepository.findByPhone(accountDto.getPhone());
-//                if (oldAccount != null && !account.getPhone().equals(accountDto.getPhone())) {
-//                    setErrorForm("Số điện thoại đã tồn tại");
-//                    return false;
-//                }
-//                Account checkAccountOrg = accountRepository.findByOrgPhone(accountDto.getPhone());
-//                if (checkAccountOrg != null && !account.getPhone().equals(accountDto.getPhone())) {
-//                    setErrorForm("Số điện thoại đã tồn tại");
-//                    return false;
-//                }
-//            }
-//        }
-//        if (accountDto.isOrg()) {
-//
-//            if (StringUtils.isNotBlank(accountDto.getPhone())) {
-//                accountDto.setPhone(accountDto.getPhone().trim());
-//                Account oldAccount = accountRepository.findByPhone(accountDto.getPhone());
-//                if (oldAccount != null && !account.getPhone().equals(accountDto.getPhone())) {
-//                    setErrorForm("Số điện thoại của người đại diện đã tồn tại");
-//                    return false;
-//                }
-//                Account checkAccountOrg = accountRepository.findByOrgPhone(accountDto.getPhone());
-//                if (checkAccountOrg != null && !account.getPhone().equals(accountDto.getPhone())) {
-//                    setErrorForm("Số điện thoại của người đại diện đã tồn tại");
-//                    return false;
-//                }
-//            }
-//
-//            if (StringUtils.isNotBlank(accountDto.getOrgPhone())) {
-//                accountDto.setOrgPhone(accountDto.getOrgPhone().trim());
-//                Account oldAccountOrg = accountRepository.findByPhone(accountDto.getOrgPhone());
-//                if (oldAccountOrg != null && !account.getOrgPhone().equals(accountDto.getOrgPhone())) {
-//                    setErrorForm("Số điện thoại tổ chức đã tồn tại");
-//                    return false;
-//                }
-//                Account checkOldAccountOrg = accountRepository.findByOrgPhone(accountDto.getOrgPhone());
-//                if (checkOldAccountOrg != null && !account.getOrgPhone().equals(accountDto.getOrgPhone())) {
-//                    setErrorForm("Số điện thoại tổ chức đã tồn tại");
-//                    return false;
-//                }
-//            }
-//        }
 
         accountDto.setPhone(accountDto.getPhone().trim());
         Account oldPhone = accountDto.getPhone().compareTo("") != 0 ? accountRepository.findByPhone(accountDto.getPhone()) : null;
@@ -277,7 +210,6 @@ public class AuthorizationController implements Serializable {
         Account account = new Account();
         BeanUtils.copyProperties(accountDto, account);
         account.setUpdateBy(accountDto.getAccountId());
-        //account.setFirstTimeLogin(true);
         accountRepository.save(account);
         setSuccessForm("Cập nhật thành công");
 
@@ -288,8 +220,8 @@ public class AuthorizationController implements Serializable {
     }
 
     public void login() {
-        String username = accountDto.getUserName();
-        String password = accountDto.getPassword();
+        String username = StringUtils.isBlank(accountDto.getUserName()) ? "" : AES.decrypt(accountDto.getUserName(), cryptoSecretKey);
+        String password = StringUtils.isBlank(accountDto.getPassword()) ? "" : AES.decrypt(accountDto.getPassword(), cryptoSecretKey);
 
         createAccountDefault();
 
@@ -302,13 +234,13 @@ public class AuthorizationController implements Serializable {
             return;
         }
 
-        //Account account = accountRepository.getAccountByUsernameAndRoleId(username.trim(), DbConstant.ROLE_ID_USER);
+        Account account = accountRepository.findAccountByUserName(username.trim());
 
         if (account == null) {
             setErrorForm("Tên đăng nhập hoặc mật khẩu không chính xác!");
             return;
         }
-        if (account.getRoleId() == 1) {
+        if (account.getRoleId() == DbConstant.ROLE_ID_USER) {
             setErrorForm("Tên đăng nhập hoặc mật khẩu không chính xác!");
             return;
         }
@@ -320,30 +252,21 @@ public class AuthorizationController implements Serializable {
                     requiredCaptcha = true;
                 }
             }
-//            if (account.getLoginFailed() > 5) {
-//                account.setLoginFailed(account.getLoginFailed() + 1);
-//                setErrorForm("Tên đăng nhập hoặc mật khẩu không chính xác, bạn còn " + 5 + " lần thử vui lòng thử lại");
-//                accountRepository.save(account);
-//            } else {
-//                setErrorForm(PropertiesUtil.getProperty("notification.locked.account"));
-//                account.setAccountStatus(DbConstant.ACCOUNT_LOCK_STATUS);
-//                accountRepository.save(account);
-//            }
             return;
         }
 
-//        if (DbConstant.ACCOUNT_INACTIVE_STATUS.equals(account.getAccountStatus())) {
-//            setErrorForm("Tài khoản chưa được phê duyệt");
-//            return;
-//        }
-//        if (account.getAccountStatus().equals(DbConstant.ACCOUNT_LOCK_STATUS)) {
-//            setErrorForm("Tài khoản của bạn đã bị khóa");
-//            return;
-//        }
-//        if (account.getAccountStatus().equals(DbConstant.ACCOUNT_DELETE_STATUS)) {
-//            setErrorForm("Tài khoản này đã bị xóa");
-//            return;
-//        }
+        if (DbConstant.ACCOUNT_INACTIVE_STATUS.equals(account.getStatus())) {
+            setErrorForm("Tài khoản chưa được phê duyệt");
+            return;
+        }
+        if (account.getStatus().equals(DbConstant.ACCOUNT_LOCK_STATUS)) {
+            setErrorForm("Tài khoản của bạn đã bị khóa");
+            return;
+        }
+        if (account.getStatus().equals(DbConstant.ACCOUNT_DELETE_STATUS)) {
+            setErrorForm("Tài khoản này đã bị xóa");
+            return;
+        }
 
         // process login
         if (!processLogin(account)) {
@@ -355,8 +278,7 @@ public class AuthorizationController implements Serializable {
     }
 
     public boolean processLogin(Account account) {
-
-        Role userRole = null;
+        Role userRole = roleRepository.findRoleByRoleId(account.getRoleId());
         if (userRole == null) {
             setErrorForm("Quyền hạn không đủ để đăng nhập");
             return false;
@@ -377,31 +299,11 @@ public class AuthorizationController implements Serializable {
     }
 
     public void logout() {
-        //boolean loginFromSso = accountDto.isLoginFromSso();
-
         // destroy current session
         request.getSession().invalidate();
-
-//        if (loginFromSso) {
-//            try {
-//                FacesUtil.externalRedirect(String.format(
-//                        "%s?service=%s",
-//                        casSecurityServerLogout,
-//                        URLEncoder.encode(casSecurityClientLogin, "UTF-8")
-//                ));
-//                return;
-//            } catch (Exception e) {
-//                log.error(e);
-//            }
-//        }
-
         // Redirect to home page
         FacesUtil.redirect("/admin/login.xhtml");
     }
-
-//    private void updateAuthFunction() {
-//        authFunction.setRole(role);
-//    }
 
     public AccountDto getAccountDto() {
         if (accountDto == null) {
@@ -462,73 +364,39 @@ public class AuthorizationController implements Serializable {
         String defaultAccount = PropertiesUtil.getProperty("default_account");
         String defaultUserName = PropertiesUtil.getProperty("default_username");
         String defaultPassword = PropertiesUtil.getProperty("default_password");
-        String defaultRoleCode = PropertiesUtil.getProperty("default_role_code");
-        String defaultRoleName = PropertiesUtil.getProperty("default_role_name");
-        String defaultRoleDescription = PropertiesUtil.getProperty("default_role_description");
         if (accountRepository.findAccountByUserName(defaultUserName) == null) {
-            //setup role default
-            Role role = null;
-            if (role == null) {
-                role = new Role(null, "admin", 0, false);
-                roleRepository.save(role);
-
-//                List<FunctionRole> functionRoleList = new ArrayList<>();
-                //update function_role
-                Role finalRole = role;
-//                functionRepository.findAll().forEach(e -> {
-//                    functionRoleList.add(new FunctionRole(null, finalRole.getRoleId(), e.getFunctionId()));
-//                });
-//                functionRoleRepository.saveAll(functionRoleList);
-            }
-            //
             Account user = new Account();
+            user.setUserName(defaultUserName);
+            user.setFullName("Admin");
+            user.setDateOfBirth(new Date());
+            user.setGender(DbConstant.MAN);
+            user.setRoleId(DbConstant.ROLE_ID_ADMIN);
             user.setSalt(StringUtil.generateSalt());
             user.setPassword(StringUtil.encryptPassword(defaultPassword, user.getSalt()));
-            //user.setFullName("Tài Khoản Mặc Định");
             user.setEmail(defaultAccount);
-            user.setUserName(defaultUserName);
-            user.setGender(1);
-            user.setDateOfBirth(new Date());
-            //user.setIdCardNumber("111111111111");
-            //user.setDateOfIssue(new Date());
             user.setPhone("0999999999");
+            user.setAddress("Ha Noi, Viet Nam");
             user.setStatus(DbConstant.ACCOUNT_ACTIVE_STATUS);
-            user.setRoleId(role.getRoleId());
-            //user.setFirstTimeLogin(true);
+            user.setProvinceId(1L);
+            user.setDistrictId(1L);
+            user.setCommuneId(1L);
             user.setCreateDate(new Date());
             user.setUpdateDate(new Date());
             accountRepository.save(user);
         }
     }
 
-//    public boolean hasRole(EScope... scopes) {
-//        return authFunction.hasScope(scopes);
-//    }
-
-//    public EFunction getActions(EScope scope) {
-//       return authFunction.scope(scope);
-//    }
-
-    public int getRole() {
-        return role;
+    public boolean hasRole(EScope... scopes) {
+        return authFunction.hasScope(scopes);
     }
 
-    public void setRole(int role) {
-        this.role = role;
-        //updateAuthFunction();
-    }
-
-    public void setAccountDto(AccountDto accountDto) {
-        this.accountDto = accountDto;
+    public EFunction getActions(EScope scope) {
+        return authFunction.scope(scope);
     }
 
     public boolean hasLogged() {
         return role != DbConstant.ROLE_ID_NOT_LOGIN;
     }
-
-//    public List<String> getFunctions() {
-//        return functions;
-//    }
 
     private void setErrorForm(String str) {
         FacesUtil.addErrorMessage(str);

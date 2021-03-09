@@ -39,7 +39,7 @@ create table if not exists role
     role_id    int primary key comment '0: admin / 1: quản trị - nhân viên / 2: quản trị - quản lý / 3: khách hàng',
     name       nvarchar(200) null comment 'admin/employee/manager/customer',
     status     int(1)        null comment '0: active / 1: disable',
-    can_modify int(1) default 0 comment 'A(all)/C(create)/U(update)/D(delete)/W(watch) - Cấu hình quyền thêm sửa xoá cho từng quyền trong constant'
+    can_modify int(1) default 0 comment 'F(full)/A(all)/C(create)/U(update)/D(delete)/W(watch) - Cấu hình quyền thêm sửa xoá cho từng quyền trong constant'
 );
 
 drop table if exists account;
@@ -225,7 +225,7 @@ drop table if exists order_detail;
 create table if not exists order_detail
 (
     order_detail_id int auto_increment primary key,
-    orders_id        int      null comment 'Id hoá đơn',
+    orders_id       int      null comment 'Id hoá đơn',
     product_id      int      null comment 'Id sản phẩm - 1 hoá đơn có nhiều sản phẩm',
     quantity        bigint   null comment 'Số lượng của từng sản phẩm',
     amount          double   null comment 'Giá tiền của từng sản phẩm',

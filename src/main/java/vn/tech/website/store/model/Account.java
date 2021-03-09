@@ -16,8 +16,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a")
 public class Account extends BaseModel {
-    private static final long serialVersionUID = -1609232659532090425L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_id")

@@ -1346,6 +1346,14 @@ h2 {
   border-radius: 1.5rem !important;
 }
 
+.ui-dialog-titlebar {
+  background-color: #6ebc3b !important;
+  color: #ffffff !important;
+}
+.ui-dialog-titlebar .ui-dialog-titlebar-close {
+  color: #ffffff !important;
+}
+
 /* Dashboard */
 .dashboard .overview-box {
   box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.3);

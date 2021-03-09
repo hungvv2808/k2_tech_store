@@ -82,8 +82,6 @@ public class AccountController extends BaseController {
         accountList = new ArrayList<>();
         accountDto = new AccountDto();
         accountSearchDto = new AccountSearchDto();
-        accountSearchDto.setOrg(null);
-        //accountDto.setOrg(false);
         married = false;
         listProvinceAccount = new ArrayList<>();
         cityDistrictCommuneController.resetAll();
@@ -92,38 +90,6 @@ public class AccountController extends BaseController {
     }
 
     private boolean validate() {
-//        if (accountDto.isOrg()) {
-//            if (StringUtils.isBlank(accountDto.getOrgName())) {
-//                setErrorForm("Bạn vui lòng nhập tên tổ chức");
-//                FacesUtil.updateView("growl");
-//                return false;
-//            }
-//            if (StringUtils.isBlank(accountDto.getBusinessLicense())) {
-//                setErrorForm("Bạn vui lòng nhập số đăng ký kinh doanh");
-//                FacesUtil.updateView("growl");
-//                return false;
-//            }
-//            if (StringUtils.isBlank(accountDto.getOrgPhone())) {
-//                setErrorForm("Bạn vui lòng nhập số điện thoại tổ chức");
-//                FacesUtil.updateView("growl");
-//                return false;
-//            }
-//            if (StringUtils.isBlank(accountDto.getFullName())) {
-//                setErrorForm("Bạn vui lòng nhập tên người đại diện");
-//                FacesUtil.updateView("growl");
-//                return false;
-//            }
-//            if (StringUtils.isBlank(accountDto.getPosition())) {
-//                setErrorForm("Bạn vui lòng nhập chức vụ");
-//                FacesUtil.updateView("growl");
-//                return false;
-//            }
-//            if (accountDto.getPhone().trim().equals(accountDto.getOrgPhone().trim())) {
-//                setErrorForm("Số điện thoại của người đại diện không được trùng số điện thoại tổ chức");
-//                FacesUtil.updateView("growl");
-//                return false;
-//            }
-//        }
 //        if(!accountDto.isOrg()) {
 //            if (accountDto.getDateOfBirth() == null) {
 //                setErrorForm("Bạn vui lòng chọn ngày tháng năm sinh");
@@ -480,15 +446,6 @@ public class AccountController extends BaseController {
 
     public String upperCaseFirstChar(String name) {
         return name.substring(0, 1).toUpperCase() + name.substring(1);
-    }
-
-    //Get file path regulation
-    public void getFilePathRegulation(AccountDto accountDto) {
-        filePath = accountDto.getFilePath();
-    }
-
-    public String cutStringAssetName(String assetName) {
-        return assetName.length() > 105 ? assetName.substring(0, 100) + " ..." : assetName;
     }
 
     @Override

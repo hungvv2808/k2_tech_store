@@ -32,10 +32,12 @@ public class DbConstant {
     public static final int NOGENDER = -1;
 
     //role
-    public static final int ROLE_ID_NOT_LOGIN = 0;
-    public static final int ROLE_ID_USER = 1;
-    public static final int ROLE_TYPE_USER = 0;
-    public static final int ROLE_TYPE_ADMIN = 1;
+    public static final int ROLE_ID_NOT_LOGIN = -1;
+    public static final int ROLE_ID_ADMIN = 0;
+    public static final int ROLE_ID_MANAGER = 1;
+    public static final int ROLE_ID_EMPLOYEE = 2;
+    public static final int ROLE_ID_USER = 3;
+
     public static final int ROLE_STATUS_ACTIVE = 1;
     public static final int ROLE_STATUS_INACTIVE = 0;
 
@@ -94,6 +96,8 @@ public class DbConstant {
 
     //status category
     public static final int CATEGORY_TYPE_PRODUCT = 1;
+    public static final int CATEGORY_TYPE_NEWS = 0;
+
     public static final int CATEGORY_STATUS_INACTIVE = 0;
     public static final int CATEGORY_STATUS_ACTIVE = 1;
 

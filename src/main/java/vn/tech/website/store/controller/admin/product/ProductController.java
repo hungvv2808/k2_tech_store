@@ -79,7 +79,7 @@ public class ProductController extends BaseController {
 
         //add combobox category
         categoryList = new ArrayList<>();
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = (List<Category>) categoryRepository.findAll();
         for (Category obj : categories) {
             categoryList.add(new SelectItem(obj.getCategoryId(), obj.getCategoryName()));
         }

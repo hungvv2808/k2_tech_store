@@ -11,4 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CategorySearchDto extends BaseSearchDto {
     private String categoryName;
+    private Integer type;
 }

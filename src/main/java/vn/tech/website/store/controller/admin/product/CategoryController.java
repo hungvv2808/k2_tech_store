@@ -43,14 +43,17 @@ public class CategoryController extends BaseController {
 
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
-            //init();
+            init();
             resetAll();
         }
     }
 
     public void resetAll() {
         categoryDto = new CategoryDto();
+        categoryDto.setType(DbConstant.CATEGORY_TYPE_PRODUCT);
+
         searchDto = new CategorySearchDto();
+        searchDto.setType(DbConstant.CATEGORY_TYPE_PRODUCT);
         onSearch();
     }
 
@@ -116,8 +119,6 @@ public class CategoryController extends BaseController {
         }
         Category category = new Category();
         BeanUtils.copyProperties(categoryDto, category);
-        category.setType(DbConstant.CATEGORY_TYPE_PRODUCT);
-        category.setStatus(DbConstant.CATEGORY_STATUS_ACTIVE);
         category.setUpdateDate(new Date());
         category.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
         categoryRepository.save(category);
@@ -141,6 +142,7 @@ public class CategoryController extends BaseController {
 
     public void resetDialog() {
         categoryDto = new CategoryDto();
+        categoryDto.setType(DbConstant.CATEGORY_TYPE_PRODUCT);
     }
 
     public String removeSpaceOfString(String str) {

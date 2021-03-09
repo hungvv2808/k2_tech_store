@@ -93,13 +93,6 @@ public class RoleController extends BaseController {
     }
 
     public void onSaveData(Long roleId ) {
-        if (role.getRoleId() == null) {
-            role.setCreateBy(authorizationController.getAccountDto().getAccountId());
-        } else {
-            role.setCreateBy(roleCopy.getCreateBy());
-            role.setCreateDate(roleCopy.getCreateDate());
-        }
-
         if (role.getRoleId() != null && checkEditButton(roleId)) {
             if (role.getStatus() == DbConstant.ROLE_STATUS_INACTIVE) {
                 FacesUtil.addErrorMessage("Không được ngừng hoạt động vì nhóm quyền " + role.getName() + " đang được gán cho người dùng");

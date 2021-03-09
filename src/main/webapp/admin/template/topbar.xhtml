@@ -18,13 +18,12 @@
                     <p:graphicImage rendered="#{not empty authorizationController.accountDto.imagePath}"
                                     name="#{authorizationController.accountDto.imagePath}"
                                     style="width: 40px; height: 40px;border-radius: 50%"/>
-                    <span class="username">Xin chào: {authorizationController.accountDto.fullName}</span>
+                    <span class="username">Xin chào: #{authorizationController.accountDto.fullName}</span>
                     <i class="fa fa-angle-double-down"/>
                 </h:form>
             </a>
 
             <ul class="topbar-menu fadeInDown">
-
                 <li role="menuitem">
                     <p:link outcome="/admin/my-account">
                         <i class="fa fa-fw fa-user"/>
@@ -44,13 +43,7 @@
                         <i class="fa fa-fw fa-sign-out"/>
                         <span>Đăng xuất</span>
                     </p:commandLink>
-
                 </li>
-
-
             </ul>
-
         </div>
-
-
 </ui:composition>

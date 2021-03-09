@@ -15,7 +15,6 @@ import vn.tech.website.store.dto.user.AccountDto;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.websocket.Session;
 import java.io.*;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
@@ -189,19 +188,6 @@ public class StringUtil {
         }
     }
 
-    public static AccountDto getAccountDto(Session session) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-//            if (!session.isOpen()) {
-//                return null;
-//            }
-            return mapper.readValue(session.getUserPrincipal().getName(), AccountDto.class);
-        } catch (Exception e) {
-            log.error("[StringUtil|getAccountDto] cause error: ", e);
-            return null;
-        }
-    }
-
     public <K, V> Stream<K> keys(Map<K, V> map, V value) {
         return map
                 .entrySet()
@@ -267,7 +253,10 @@ public class StringUtil {
         return 0L;
     }
 
-    public static void main(String args[]) {
-        System.out.println(encryptPassword("123456a@"));
+    public static void main(String[] args) {
+        String salt = generateSalt();
+        String passwordDefault = encryptPassword("123456a@", salt);
+        System.out.println("Salt: " + salt + "\nPassword: " + passwordDefault);
+//        System.out.println(encryptPassword("123456a@"));
     }
 }
