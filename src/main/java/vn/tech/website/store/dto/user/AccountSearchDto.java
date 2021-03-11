@@ -15,24 +15,12 @@ import java.util.Date;
 public class AccountSearchDto extends BaseSearchDto {
     private Long accountId;
     private Integer roleId;
+    private String username;
     private String fullName;
-    private Integer sex;
+    private Integer gender;
     private Date dateOfBirth;
     private String address;
     private String phone;
     private String email;
-    private String password;
-    private String idCardNumber;
-    private Long provinceIdOfIssue;
-    private Date dateOfIssue;
-    private Boolean relativeInfor;
-    private String permanentResidence;
-    private String orgName;
-    private String businessLicense;
-    private String orgAddress;
-    private String position;
-    private String orgPhone;
-    private Boolean org;
     private Integer accountStatus;
-    private String username;
 }

@@ -3,6 +3,7 @@ package vn.tech.website.store.repository.impl;
 import org.apache.commons.lang3.StringUtils;
 import vn.tech.website.store.dto.CategoryDto;
 import vn.tech.website.store.dto.CategorySearchDto;
+import vn.tech.website.store.entity.EntityMapper;
 import vn.tech.website.store.repository.CategoryRepositoryCustom;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.ValueUtil;
@@ -19,22 +20,25 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<CategoryDto> search(CategorySearchDto searchDto) {
+    public List search(CategorySearchDto searchDto) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT "
-                + "c.category_id, "
-                + "c.name, "
-                + "c.status, "
-                + "c.create_date, "
-                + "c.create_by, "
-                + "c.update_date, "
-                + "acc.full_name as name_update ");
+                + "c.category_id AS categoryId, "
+                + "c.code AS code, "
+                + "c.name AS categoryName, "
+                + "c.type AS type, "
+                + "c.status AS status, "
+                + "c.create_date AS createDate, "
+                + "c.create_by AS createBy, "
+                + "c.update_date AS updateDate, "
+                + "c.update_by AS updateBy, "
+                + "acc.full_name AS nameUpdate ");
         appendQueryFromAndWhereForSearch(sb, searchDto);
         sb.append(" GROUP BY c.category_id ");
         if (searchDto.getSortField() != null) {
             sb.append(" ORDER BY ");
-            if (searchDto.getSortField().equals("categoryId")) {
-                sb.append(" c.category_id ");
+            if (searchDto.getSortField().equals("code")) {
+                sb.append(" c.code ");
             } else if (searchDto.getSortField().equals("categoryName")) {
                 sb.append(" c.name collate utf8mb4_vietnamese_ci ");
             } else if (searchDto.getSortField().equals("status")) {
@@ -50,7 +54,6 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
         }
 
         Query query = createQueryObjForSearch(sb, searchDto);
-        query.setParameter("type",searchDto.getType());
         if (searchDto.getPageSize() > 0) {
             query.setFirstResult(searchDto.getPageIndex());
             query.setMaxResults(searchDto.getPageSize());
@@ -59,20 +62,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
             query.setMaxResults(Integer.MAX_VALUE);
         }
 
-        List<CategoryDto> dtoList = new ArrayList<>();
-        List<Object[]> result = query.getResultList();
-        for (Object[] obj : result) {
-            CategoryDto dto = new CategoryDto();
-            dto.setCategoryId(ValueUtil.getLongByObject(obj[0]));
-            dto.setCategoryName(ValueUtil.getStringByObject(obj[1]));
-            dto.setStatus(ValueUtil.getIntegerByObject(obj[2]));
-            dto.setCreateDate(ValueUtil.getDateByObject(obj[3]));
-            dto.setCreateBy(ValueUtil.getLongByObject(obj[4]));
-            dto.setUpdateDate(ValueUtil.getDateByObject(obj[5]));
-            dto.setNameUpdate(ValueUtil.getStringByObject(obj[6]));
-            dtoList.add(dto);
-        }
-        return dtoList;
+        return EntityMapper.mapper(query, sb.toString(), CategoryDto.class);
     }
 
     @Override
@@ -81,25 +71,21 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
         sb.append(" SELECT COUNT(c.category_id) ");
         appendQueryFromAndWhereForSearch(sb, searchDto);
         Query query = createQueryObjForSearch(sb, searchDto);
-        query.setParameter("type",searchDto.getType());
         return Long.valueOf(query.getSingleResult().toString());
     }
 
     private void appendQueryFromAndWhereForSearch(StringBuilder sb, CategorySearchDto searchDto) {
-        sb.append("FROM category c " +
-                " LEFT JOIN account acc ON c.update_by = acc.account_id ");
-        sb.append(" WHERE 1=1  AND c.status = " + DbConstant.CATEGORY_STATUS_ACTIVE);
-        sb.append(" AND c.type = :type ");
+        sb.append("FROM category c LEFT JOIN account acc ON c.update_by = acc.account_id WHERE 1 = 1 AND c.type = ").append(searchDto.getType());
 
         if (StringUtils.isNotBlank(searchDto.getCategoryName())) {
-            sb.append(" AND c.name LIKE :categoryName ");
+            sb.append(" AND (c.code LIKE :keyword OR c.name LIKE :keyword) ");
         }
     }
 
     private Query createQueryObjForSearch(StringBuilder sb, CategorySearchDto searchDto) {
         Query query = entityManager.createNativeQuery(sb.toString());
         if (StringUtils.isNotBlank(searchDto.getCategoryName())) {
-            query.setParameter("categoryName", "%" + searchDto.getCategoryName().trim() + "%");
+            query.setParameter("keyword", "%" + searchDto.getKeyword().trim() + "%");
         }
 
         return query;

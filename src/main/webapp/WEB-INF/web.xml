@@ -22,7 +22,7 @@
 
     <!-- Admin -->
     <welcome-file-list>
-        <welcome-file>admin/dashboard.xhtml</welcome-file>
+        <welcome-file>admin/login.xhtml</welcome-file>
     </welcome-file-list>
 
     <!-- Frontend -->

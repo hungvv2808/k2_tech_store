@@ -35,7 +35,6 @@ public class DashboardController extends BaseController {
     }
 
     public void resetAll() {
-
     }
 
     @Override

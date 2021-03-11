@@ -126,3 +126,12 @@ h2 {
   width: 100px;
   border-radius: 1.5rem !important;
 }
+
+.ui-dialog-titlebar {
+  background-color: $primaryColor !important;
+  color: $primaryTextColor !important;
+
+  .ui-dialog-titlebar-close {
+    color: $primaryTextColor !important;
+  }
+}

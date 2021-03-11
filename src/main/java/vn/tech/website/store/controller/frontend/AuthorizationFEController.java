@@ -374,7 +374,7 @@ public class AuthorizationFEController implements Serializable {
 //            if (!validateUploadFile(e)) {
 //                return;
 //            }
-            accountDto.setUploadedFile(e.getFile());
+            accountDto.setImagePath(null);
             //accountDto.setAvatarPath(FileUtil.saveImageFile(e.getFile()));
         } catch (Exception ex) {
             log.error("Error", ex);
@@ -583,9 +583,9 @@ public class AuthorizationFEController implements Serializable {
         AccountDto accountDtoAddress = addressFEController.getAddressForAccount(account.getAccountId());
 
         if (accountDtoAddress != null) {
-            accountDto.setNameProvice(accountDtoAddress.getNameProvice());
-            accountDto.setNameDistrict(accountDtoAddress.getNameDistrict());
-            accountDto.setNameCommune(accountDtoAddress.getNameCommune());
+            accountDto.setProvinceName(accountDtoAddress.getProvinceName());
+            accountDto.setDistrictName(accountDtoAddress.getDistrictName());
+            accountDto.setCommuneName(accountDtoAddress.getCommuneName());
         }
 
         BeanUtils.copyProperties(account, accountDto);

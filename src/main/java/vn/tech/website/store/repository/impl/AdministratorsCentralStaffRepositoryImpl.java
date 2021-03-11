@@ -100,50 +100,6 @@ public class AdministratorsCentralStaffRepositoryImpl implements AdministratorsC
 
         List<AccountDto> accountDtoList = new ArrayList<>();
         List<Object[]> result = query.getResultList();
-        for (Object[] obj : result) {
-            AccountDto dto = new AccountDto();
-            dto.setAccountId(ValueUtil.getLongByObject(obj[0]));
-//            dto.setFullName(ValueUtil.getStringByObject(obj[1]));
-            dto.setGender(ValueUtil.getIntegerByObject(obj[2]));
-            dto.setDateOfBirth(ValueUtil.getDateByObject(obj[3]));
-            dto.setAddress(ValueUtil.getStringByObject(obj[4]));
-            dto.setPhone(ValueUtil.getStringByObject(obj[5]));
-            dto.setEmail(ValueUtil.getStringByObject(obj[6]));
-            dto.setPassword(ValueUtil.getStringByObject(obj[7]));
-            dto.setSalt(ValueUtil.getStringByObject(obj[8]));
-//            dto.setIdCardNumber(ValueUtil.getStringByObject(obj[9]));
-//            dto.setProvinceIdOfIssue(ValueUtil.getLongByObject(obj[10]));
-//            dto.setDateOfIssue(ValueUtil.getDateByObject(obj[11]));
-//            dto.setRelativeName(ValueUtil.getStringByObject(obj[12]));
-//            dto.setRelativeIdCardNumber(ValueUtil.getStringByObject(obj[13]));
-//            dto.setPermanentResidence(ValueUtil.getStringByObject(obj[14]));
-//            dto.setOrgName(ValueUtil.getStringByObject(obj[15]));
-//            dto.setBusinessLicense(ValueUtil.getStringByObject(obj[16]));
-//            dto.setOrgAddress(ValueUtil.getStringByObject(obj[17]));
-//            dto.setPosition(ValueUtil.getStringByObject(obj[18]));
-//            dto.setOrgPhone(ValueUtil.getStringByObject(obj[19]));
-//            dto.setAccountStatus(ValueUtil.getIntegerByObject(obj[20]));
-//            dto.setOrg(ValueUtil.getBooleanByObject(obj[21]));
-            dto.setRoleId(ValueUtil.getIntegerByObject(obj[22]));
-            dto.setUserName(ValueUtil.getStringByObject(obj[23]));
-            dto.setProvinceId(ValueUtil.getLongByObject(obj[24]));
-            dto.setNameProvice(ValueUtil.getStringByObject(obj[25]));
-            dto.setDistrictId(ValueUtil.getLongByObject(obj[26]));
-            dto.setNameDistrict(ValueUtil.getStringByObject(obj[27]));
-            dto.setCommuneId(ValueUtil.getLongByObject(obj[28]));
-            dto.setNameCommune(ValueUtil.getStringByObject(obj[29]));
-            dto.setCreateBy(ValueUtil.getLongByObject(obj[30]));
-            dto.setCreateDate(ValueUtil.getDateByObject(obj[31]));
-            dto.setRoleName(ValueUtil.getStringByObject(obj[32]));
-//            dto.setLoginFailed(ValueUtil.getIntegerByObject(obj[33]));
-            dto.setUpdateDate(ValueUtil.getDateByObject(obj[34]));
-            dto.setUpdateBy(ValueUtil.getLongByObject(obj[35]));
-//            dto.setAvatarPath(ValueUtil.getStringByObject(obj[36]));
-//            dto.setFirstTimeLogin(ValueUtil.getBooleanByObject(obj[37]));
-            dto.setUpdateName(ValueUtil.getStringByObject(obj[38]));
-//            dto.setLoginFromSso(ValueUtil.getBooleanByObject(obj[39]));
-            accountDtoList.add(dto);
-        }
         return accountDtoList;
     }
 

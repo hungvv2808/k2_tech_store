@@ -39,31 +39,23 @@ public abstract class BaseController implements Serializable {
 
     public void init() {
         // Check login
-//        if (!authorizationController.hasLogged()) {
-//            FacesUtil.redirect("/admin/login.xhtml");
-//            return;
-//        }
+        if (!authorizationController.hasLogged()) {
+            FacesUtil.redirect("/admin/login.xhtml");
+            return;
+        }
         // Check block account
-//        Account account = accountRepository.getAccountByAccountId(authorizationController.getAccountDto().getAccountId());
-//        if (account == null || Arrays.asList(DbConstant.ACCOUNT_DELETE_STATUS, DbConstant.ACCOUNT_LOCK_STATUS).contains(account.getStatus())) {
-//            authorizationController.resetAll();
-//            FacesUtil.redirect("/admin/login.xhtml");
-//            return;
-//        }
+        Account account = accountRepository.getAccountByAccountId(authorizationController.getAccountDto().getAccountId());
+        if (account == null || Arrays.asList(DbConstant.ACCOUNT_DELETE_STATUS, DbConstant.ACCOUNT_LOCK_STATUS).contains(account.getStatus())) {
+            authorizationController.resetAll();
+            FacesUtil.redirect("/admin/login.xhtml");
+            return;
+        }
         // Check permission
-//        if (!authorizationController.hasRole(getMenuId())) {
-//            // redirect to access denied page
-//            FacesUtil.redirect("/admin/errors/access.xhtml");
-//        }
+        if (!authorizationController.hasRole(getMenuId())) {
+            // redirect to access denied page
+            FacesUtil.redirect("/admin/errors/access.xhtml");
+        }
     }
-
-//    public EFunction getActions() {
-//        return authorizationController.getActions(getMenuId());
-//    }
-
-//    public AuthFunctionController getAuthFunction() {
-//        return authorizationController.getAuthFunction();
-//    };
 
     public void redirectToSuccessPage() {
         FacesUtil.redirect("/common/success.xhtml");

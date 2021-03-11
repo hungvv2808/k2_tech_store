@@ -8,9 +8,6 @@ import java.math.BigInteger;
 import java.util.List;
 
 public interface AccountRepositoryCustom {
-    BigInteger checkExistEmail(String email);
-    BigInteger checkExistPhone(String phone);
     List<AccountDto> search(AccountSearchDto searchDto);
     BigInteger countSearch(AccountSearchDto searchDto);
-    List<Account> findAccountByRoleIdAndAccountStatus(Integer roleId, Integer accountStatus);
 }
