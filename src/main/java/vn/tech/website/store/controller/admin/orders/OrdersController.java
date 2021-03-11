@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.admin.auth.AuthorizationController;
@@ -12,6 +13,7 @@ import vn.tech.website.store.model.Account;
 import vn.tech.website.store.model.OrdersDetail;
 import vn.tech.website.store.model.Product;
 import vn.tech.website.store.repository.AccountRepository;
+import vn.tech.website.store.repository.OrderDetailRepository;
 import vn.tech.website.store.repository.OrderRepository;
 import vn.tech.website.store.repository.ProductRepository;
 import vn.tech.website.store.util.DbConstant;
@@ -39,14 +41,20 @@ public class OrdersController {
     private ProductRepository productRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
     private LazyDataModel<OrdersDto> lazyDataModel;
     private OrdersDto ordersDto;
     private OrdersSearchDto searchDto;
     private int orderType;
     private List<OrdersDetailDto> ordersDetailDtoList;
+    private List<OrdersDetailDto> ordersDetailDtoListBak;
     private List<SelectItem> productList;
     private List<SelectItem> accountList;
+    private OrdersDto ordersDtoBak;
+    private OrdersDetailDto ordersDetailDto;
+    private OrdersDetailDto ordersDetailDtoBak;
 
     public void initDataOrder() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
@@ -117,7 +125,7 @@ public class OrdersController {
         lazyDataModel.setRowCount(count);
     }
 
-    public void resetDialog(){
+    public void resetDialog() {
         ordersDto = new OrdersDto();
         ordersDetailDtoList = new ArrayList<>();
     }
@@ -154,4 +162,39 @@ public class OrdersController {
         ordersDetailDtoList.add(new OrdersDetailDto());
     }
 
+    public void onUpdate(OrdersDto resultDto) {
+        ordersDtoBak = new OrdersDto();
+        ordersDetailDtoList = new ArrayList<>();
+        ordersDto = new OrdersDto();
+        OrdersDetailDto ordersDetailDtoNew = new OrdersDetailDto();
+        List<OrdersDetail> listOrdersDetails = orderDetailRepository.getAllByOrdersId(resultDto.getOrdersId());
+        ordersDetailDtoBak = new OrdersDetailDto();
+        BeanUtils.copyProperties(resultDto, ordersDtoBak);
+        convertEntityToDto(listOrdersDetails);
+        BeanUtils.copyProperties(ordersDetailDtoNew, ordersDetailDtoBak);
+        ordersDetailDtoListBak = new ArrayList<>();
+        copyList(ordersDetailDtoList, ordersDetailDtoListBak);
+        BeanUtils.copyProperties(resultDto, ordersDto);
+        ordersDetailDto = ordersDetailDtoNew;
+    }
+
+    private void convertEntityToDto(List<OrdersDetail> ordersDetails) {
+        ordersDetailDtoList = new ArrayList<>();
+        for (OrdersDetail obj : ordersDetails) {
+            OrdersDetailDto dto = new OrdersDetailDto();
+            BeanUtils.copyProperties(obj, dto);
+            Product product = productRepository.getByProductId(obj.getProductId());
+            dto.setUnitPrice(product.getPrice());
+            dto.setDiscount(product.getDiscount());
+            ordersDetailDtoList.add(dto);
+        }
+    }
+
+    private void copyList(List<OrdersDetailDto> fromList, List<OrdersDetailDto> toList) {
+        for (OrdersDetailDto dto : fromList) {
+            OrdersDetailDto obj = new OrdersDetailDto();
+            BeanUtils.copyProperties(dto, obj);
+            toList.add(obj);
+        }
+    }
 }

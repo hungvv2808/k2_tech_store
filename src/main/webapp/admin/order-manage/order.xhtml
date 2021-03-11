@@ -217,22 +217,32 @@
                                             <p:commandButton styleClass="edit" value="Sửa"
                                                              oncomplete="PF('dialogInsertUpdate').show();"
                                                              update="dlForm growl"
-                                                             actionListener="#{categoryNewsController.showUpdatePopup(resultDto)}">
+                                                             actionListener="#{ordersController.onUpdate(resultDto)}">
                                                 <i class="fa fa-edit"/>
                                             </p:commandButton>
                                         </div>
                                     </p:column>
 
-                                    <p:column headerText="Xóa"
+                                    <p:column headerText="Đổi trạng thái"
                                               exportable="false" style="width: 30px">
                                         <div class="my-data-table">
-                                            <p:commandButton styleClass="delete" value="Xóa"
-                                                             actionListener="#{categoryNewsController.onDelete(resultDto)}"
-                                                             update="tblSearchResult growl searchForm">
-                                                <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
-                                                           icon="fa fa-question-circle"/>
-                                                <i class="fa fa-remove"/>
-                                            </p:commandButton>
+                                            <p:menuButton icon="fa fa-cogs">
+                                                <p:menuitem value="Phê duyệt" style="font-weight: bold;"
+                                                            update="dlForm growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_NOT_APPROVED}}"
+                                                            icon="fa fa-edit"
+                                                            actionListener="#{categoryNewsController.showUpdatePopup(resultDto)}"/>
+                                                <p:menuitem value="Hủy phê duyệt" style="font-weight: bold;"
+                                                            update="dlForm growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}}"
+                                                            icon="fa fa-edit"
+                                                            actionListener="#{categoryNewsController.showUpdatePopup(resultDto)}"/>
+                                                <p:menuitem value="Hủy đơn hàng" style="font-weight: bold;"
+                                                            icon="fa fa-trash"
+                                                            actionListener="#{categoryNewsController.onDelete(resultDto)}"
+                                                            update="tblSearchResult growl">
+                                                    <p:confirm header="Xác nhận hủy" message="Bạn chắc chắn muốn hủy ?"
+                                                               icon="fa fa-question-circle"/>
+                                                </p:menuitem>
+                                            </p:menuButton>
                                         </div>
                                     </p:column>
 

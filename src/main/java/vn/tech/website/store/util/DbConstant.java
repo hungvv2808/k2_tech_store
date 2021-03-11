@@ -97,7 +97,6 @@ public class DbConstant {
     //status category
     public static final int CATEGORY_TYPE_NEWS = 0;
     public static final int CATEGORY_TYPE_PRODUCT = 1;
-    public static final int CATEGORY_TYPE_NEWS = 0;
 
     public static final int CATEGORY_STATUS_INACTIVE = 0;
     public static final int CATEGORY_STATUS_ACTIVE = 1;
