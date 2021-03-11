@@ -17,13 +17,19 @@ public class Orders extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orders_id")
-    private Integer ordersId;
+    private Long ordersId;
 
     @Column(name = "account_id")
-    private Integer accountId;
+    private Long accountId;
+
+    @Column(name = "customer_name")
+    private String customerName;
 
     @Column(name = "code")
     private String code;
+
+    @Column(name = "count_code")
+    private Long countCode;
 
     @Column(name = "address")
     private String address;
@@ -39,4 +45,7 @@ public class Orders extends BaseModel {
 
     @Column(name = "shipping")
     private Double shipping;
+
+    @Column(name = "status")
+    private Integer status;
 }

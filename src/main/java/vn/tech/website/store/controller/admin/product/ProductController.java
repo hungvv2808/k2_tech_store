@@ -22,10 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Named
 @Scope(value = "session")
@@ -79,7 +76,7 @@ public class ProductController extends BaseController {
 
         //add combobox category
         categoryList = new ArrayList<>();
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAllCategoryProduct();
         for (Category obj : categories) {
             categoryList.add(new SelectItem(obj.getCategoryId(), obj.getCategoryName()));
         }
@@ -107,7 +104,7 @@ public class ProductController extends BaseController {
         for (ProductOption obj : options) {
             optionList.add(new SelectItem(obj.getProductOptionId(), obj.getOptionName() + "(" + obj.getOptionValue() + ")"));
         }
-        //onSearch();
+        onSearch();
     }
 
     public void onSearch() {
@@ -148,6 +145,7 @@ public class ProductController extends BaseController {
     public void resetDialog() {
         productDto = new ProductDto();
         uploadMultipleImageController.resetAll(null);
+        listOptionSelect = new ArrayList<>();
     }
 
     public boolean validateData() {
@@ -190,6 +188,7 @@ public class ProductController extends BaseController {
             } else {
                 productDto.setCode(codeBak);
             }
+            uploadMultipleImageController.getUploadMultipleFileDto().setListToAdd(uploadMultipleImageController.getUploadMultipleFileDto().getListToShow());
         } else {
             productDto.setCode(StringUtil.createCode(productDto.getCode(), Constant.ACRONYM_PRODUCT, countCode));
             if (productDto.getCode() == "") {
@@ -210,7 +209,7 @@ public class ProductController extends BaseController {
         }
 
         if (productDto.getType() == DbConstant.PRODUCT_TYPE_PARENT) {
-            List<Product> productList = productRepository.getAllByType(DbConstant.PRODUCT_TYPE_PARENT);
+            List<Product> productList = productRepository.getAllByTypeAndExpertId(DbConstant.PRODUCT_TYPE_PARENT,productDto.getProductId() != null ? productDto.getProductId() : 0 );
             for (Product product : productList) {
                 if (productDto.getProductName().equalsIgnoreCase(product.getProductName())) {
                     FacesUtil.addErrorMessage("Sản phẩm đã tồn tại");
@@ -260,6 +259,12 @@ public class ProductController extends BaseController {
         product.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
         product = productRepository.save(product);
         //save image product
+        if (productDto.getProductId() != null){
+            List<ProductImage> imageList = productImageRepository.getByProductId(productDto.getProductId());
+            for(ProductImage obj : imageList){
+                productImageRepository.deleteById(obj.getProductImageId());
+            }
+        }
         for (String imagePath : uploadMultipleImageController.getUploadMultipleFileDto().getListToAdd()) {
             ProductImage productImage = new ProductImage();
             productImage.setProductId(product.getProductId());
@@ -285,6 +290,10 @@ public class ProductController extends BaseController {
             }
             //save to product_link
             if (product.getType() == DbConstant.PRODUCT_TYPE_CHILD) {
+                ProductLink productLinkDelete = productLinkRepository.getByChildId(product.getProductId());
+                if (productLinkDelete != null) {
+                    productLinkRepository.delete(productLinkDelete);
+                }
                 ProductLink productLink = new ProductLink();
                 productLink.setChildId(product.getProductId());
                 productLink.setParentId(productDto.getProductParentId());
@@ -293,6 +302,31 @@ public class ProductController extends BaseController {
         }
         FacesUtil.addSuccessMessage("Lưu thành công.");
         FacesUtil.closeDialog("dialogInsertUpdate");
+        resetAll();
+    }
+
+    public void showUpdatePopup(ProductDto resultDto){
+        BeanUtils.copyProperties(resultDto, productDto);
+        productDto.setProductImages(new LinkedHashSet<>());
+        productDto.setProductImages(productImageRepository.getImagePathByProductId(productDto.getProductId()));
+        uploadMultipleImageController.resetAll(productDto.getProductImages());
+        productDto.setOptionDetails(new ArrayList<>());
+        productDto.setOptionDetails(productOptionDetailRepository.findAllByProductId(productDto.getProductId()));
+        for (ProductOptionDetail obj : productDto.getOptionDetails()) {
+            listOptionSelect.add(obj.getProductOptionId());
+        }
+        if (productDto.getType() == DbConstant.PRODUCT_TYPE_CHILD){
+            ProductLink productLink = productLinkRepository.getByChildId(productDto.getProductId());
+            productDto.setProductParentId(productLink.getParentId());
+        }
+    }
+
+    public void onDelete(ProductDto resultDto){
+        resultDto.setStatus(DbConstant.PRODUCT_STATUS_INACTIVE);
+        Product product = new ProductDto();
+        BeanUtils.copyProperties(resultDto, product);
+        productRepository.save(product);
+        FacesUtil.addSuccessMessage("Xóa thành công.");
         resetAll();
     }
 

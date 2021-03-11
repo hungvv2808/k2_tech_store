@@ -39,7 +39,7 @@ public class Product extends BaseModel{
     private String description;
 
     @Column(name = "quantity")
-    private BigInteger quantity;
+    private Long quantity;
 
     @Column(name = "type")
     private Integer type;

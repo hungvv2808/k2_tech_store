@@ -1,4 +1,4 @@
-package vn.tech.website.store.controller.admin.product;
+package vn.tech.website.store.controller.admin.news;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +30,7 @@ import java.util.Map;
 @Scope(value = "session")
 @Getter
 @Setter
-public class CategoryController extends BaseController {
+public class CategoryNewsController extends BaseController {
     @Inject
     private AuthorizationController authorizationController;
 
@@ -55,7 +55,7 @@ public class CategoryController extends BaseController {
     }
 
     public void onSearch() {
-        searchDto.setType(DbConstant.CATEGORY_TYPE_PRODUCT);
+        searchDto.setType(DbConstant.CATEGORY_TYPE_NEWS);
         FacesUtil.resetDataTable("searchForm", "tblSearchResult");
         lazyDataModel = new LazyDataModel<CategoryDto>() {
             @Override
@@ -97,9 +97,9 @@ public class CategoryController extends BaseController {
         }
         List<Category> categoryList = new ArrayList<>();
         if (categoryDto.getCategoryId() == null) {
-            categoryList = categoryRepository.findAllCategoryProduct();
+            categoryList = categoryRepository.findAllCategoryNews();
         } else {
-            categoryList = categoryRepository.findAllCategoryProductExpertId(categoryDto.getCategoryId());
+            categoryList = categoryRepository.findAllCategoryNewsExpertId(categoryDto.getCategoryId());
         }
         categoryDto.setCategoryName(removeSpaceOfString(categoryDto.getCategoryName()));
         for (Category category : categoryList) {
@@ -117,7 +117,7 @@ public class CategoryController extends BaseController {
         }
         Category category = new Category();
         BeanUtils.copyProperties(categoryDto, category);
-        category.setType(DbConstant.CATEGORY_TYPE_PRODUCT);
+        category.setType(DbConstant.CATEGORY_TYPE_NEWS);
         category.setStatus(DbConstant.CATEGORY_STATUS_ACTIVE);
         category.setUpdateDate(new Date());
         category.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);

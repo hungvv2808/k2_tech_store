@@ -188,19 +188,52 @@
                         <div class="card no-margin">
                             <p:panel id="searchCode" header="Tìm kiếm sản phẩm" style="margin-bottom:5px">
                                 <p:panelGrid id="searchPanel" columns="3"
-                                             columnClasses="ui-grid-col-4,ui-grid-col-1.5,ui-grid-col-1.5"
+                                             columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
                                              styleClass="ui-panelgrid-blank" layout="grid">
 
-                                    <p:inputText id="smanhomquyen" placeholder="Nhập tên sản phẩm"
-                                                 value="#{categoryController.searchDto.categoryName}"/>
+                                    <p:inputText id="codeSearch" placeholder="Nhập mã sản phẩm"
+                                                 value="#{productController.searchDto.code}"/>
 
+                                    <p:inputText id="nameSearch" placeholder="Nhập tên sản phẩm"
+                                                 value="#{productController.searchDto.productName}"/>
+
+                                    <p:selectOneMenu id="categorySearch" filter="true" filterMatchMode="contains"
+                                                     autoWidth="true" dynamic="true" style="width: 100%"
+                                                     effect="fade" maxlength="255"
+                                                     value="#{productController.searchDto.categoryId}">
+                                        <f:selectItem itemLabel="Chọn loại sản phẩm" itemValue=""/>
+                                        <f:selectItems value="#{productController.categoryList}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:selectOneMenu id="brandSearch" filter="true" filterMatchMode="contains"
+                                                     autoWidth="true" dynamic="true" style="width: 100%"
+                                                     effect="fade" maxlength="255"
+                                                     value="#{productController.searchDto.brandId}">
+                                        <f:selectItem itemLabel="Chọn thương hiệu" itemValue=""/>
+                                        <f:selectItems value="#{productController.brandList}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:selectOneMenu id="typeSearch" filter="true" filterMatchMode="contains"
+                                                     autoWidth="true" dynamic="true" style="width: 100%"
+                                                     effect="fade" maxlength="255"
+                                                     value="#{productController.searchDto.type}">
+                                        <f:selectItem itemLabel="Chọn kiểu" itemValue=""/>
+                                        <f:selectItems value="#{productController.typeList}"/>
+                                        <p:ajax event="change" update="dlForm" process="@form"/>
+                                    </p:selectOneMenu>
+
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="4"
+                                             columnClasses="ui-grid-col-2, ui-grid-col-2, ui-grid-col-4,ui-grid-col-4"
+                                             styleClass="ui-panelgrid-blank width-100">
                                     <p:commandButton value="Tìm kiếm"
-                                                     actionListener="#{categoryController.onSearch()}"
+                                                     actionListener="#{productController.onSearch()}"
                                                      update="searchForm tblSearchResult" icon="fa fa-search"
                                                      style="width: auto"/>
 
                                     <p:commandButton value="Làm mới"
-                                                     actionListener="#{categoryController.resetAll()}"
+                                                     actionListener="#{productController.resetAll()}"
                                                      update="searchForm tblSearchResult" icon="fa fa-refresh"
                                                      styleClass="orange-btn" style="width: auto"/>
                                 </p:panelGrid>
@@ -212,54 +245,63 @@
                                              widgetVar="wdgNhomQuyen"
                                              resizableColumns="true" paginator="true"
                                              reflow="true" rows="10"
-                                             value="#{categoryController.lazyDataModel}"
+                                             value="#{productController.lazyDataModel}"
                                              lazy="true" pageLinks="5" paginatorPosition="top" var="resultDto"
                                              paginatorAlwaysVisible="true" rowsPerPageTemplate="10,20,50,100"
                                              paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{categoryController.lazyDataModel.rowCount}"
+                                             currentPageReportTemplate="#{t['lbl.recordTotal']}: #{productController.lazyDataModel.rowCount}"
                                              emptyMessage="Không có bản ghi nào" rowIndexVar="rowIndex"
-                                             rowKey="#{resultDto.goodsId}">
+                                             rowKey="#{resultDto.productId}">
 
                                     <p:column headerText="STT" width="30" style="text-align: center">
                                         <h:outputText value="#{rowIndex + 1}"/>
                                     </p:column>
 
-                                    <p:column headerText="Tên sản phẩm " sortBy="#{resultDto.categoryName}">
+                                    <p:column headerText="Mã sản phẩm " sortBy="#{resultDto.code}">
+                                        <h:outputText value="#{resultDto.code}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Tên sản phẩm " sortBy="#{resultDto.productName}">
+                                        <h:outputText value="#{resultDto.productName}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Loại sản phẩm " sortBy="#{resultDto.categoryName}">
                                         <h:outputText value="#{resultDto.categoryName}"/>
                                     </p:column>
 
-                                    <p:column headerText="Người cập nhật" sortBy="#{resultDto.nameUpdate}">
-                                        <h:outputText value="#{resultDto.nameUpdate}"/>
+                                    <p:column headerText="Thương hiệu " sortBy="#{resultDto.brandName}">
+                                        <h:outputText value="#{resultDto.brandName}"/>
                                     </p:column>
 
-                                    <p:column headerText="Ngày cập nhật" sortBy="#{resultDto.updateDate}"
-                                              style="text-align: center">
-                                        <h:outputText value="#{resultDto.updateDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
-                                        </h:outputText>
+                                    <p:column headerText="Kiểu sản phẩm " sortBy="#{resultDto.type}">
+                                        <h:outputText value="#{DbConstant.PRODUCT_TYPE_PARENT_STRING}" rendered="#{resultDto.type eq DbConstant.PRODUCT_TYPE_PARENT}"/>
+                                        <h:outputText value="#{DbConstant.PRODUCT_TYPE_CHILD_STRING}" rendered="#{resultDto.type eq DbConstant.PRODUCT_TYPE_CHILD}"/>
+                                        <h:outputText value="#{DbConstant.PRODUCT_TYPE_NONE_STRING}" rendered="#{resultDto.type eq DbConstant.PRODUCT_TYPE_NONE}"/>
                                     </p:column>
+
 
                                     <p:column headerText="Sửa"
                                               exportable="false" style="width: 30px">
                                         <div class="my-data-table">
-                                            <p:commandButton styleClass="edit" value="Sửa"
+                                            <p:commandLink styleClass="edit"
                                                              oncomplete="PF('dialogInsertUpdate').show();"
                                                              update="dlForm growl"
-                                                             actionListener="#{categoryController.showUpdatePopup(resultDto)}">
-                                            </p:commandButton>
+                                                             actionListener="#{productController.showUpdatePopup(resultDto)}">
+                                                <i class="fa fa-edit"/>
+                                            </p:commandLink>
                                         </div>
                                     </p:column>
 
                                     <p:column headerText="Xóa"
                                               exportable="false" style="width: 30px">
                                         <div class="my-data-table">
-                                            <p:commandButton styleClass="delete" value="Xóa"
-                                                             actionListener="#{categoryController.onDelete(resultDto)}"
-                                                             update="tblSearchResult growl searchForm"
-                                                             style="background: #D9534F">
+                                            <p:commandLink styleClass="delete"
+                                                             actionListener="#{productController.onDelete(resultDto)}"
+                                                             update="tblSearchResult growl searchForm">
                                                 <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
                                                            icon="fa fa-question-circle"/>
-                                            </p:commandButton>
+                                                <i class="fa fa-remove"/>
+                                            </p:commandLink>
                                         </div>
                                     </p:column>
 

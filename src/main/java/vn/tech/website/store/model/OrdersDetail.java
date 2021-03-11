@@ -18,16 +18,16 @@ public class OrdersDetail extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_detail_id")
-    private Integer orderDetailId;
+    private Long orderDetailId;
 
     @Column(name = "orders_id")
-    private Integer ordersId;
+    private Long ordersId;
 
     @Column(name = "product_id")
-    private Integer productId;
+    private Long productId;
 
     @Column(name = "quantity")
-    private BigInteger quantity;
+    private Long quantity;
 
     @Column(name = "amount")
     private Double amount;

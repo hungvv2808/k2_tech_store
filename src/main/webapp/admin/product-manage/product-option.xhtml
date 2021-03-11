@@ -144,24 +144,25 @@
                                     <p:column headerText="Sửa"
                                               exportable="false" style="width: 30px">
                                         <div class="my-data-table">
-                                            <p:commandButton styleClass="edit" value="Sửa"
+                                            <p:commandLink styleClass="edit"
                                                              oncomplete="PF('dialogInsertUpdate').show();"
                                                              update="dlForm growl"
                                                              actionListener="#{productOptionController.showUpdatePopup(resultDto)}">
-                                            </p:commandButton>
+                                                <i class="fa fa-edit"/>
+                                            </p:commandLink>
                                         </div>
                                     </p:column>
 
                                     <p:column headerText="Xóa"
                                               exportable="false" style="width: 30px">
                                         <div class="my-data-table">
-                                            <p:commandButton styleClass="delete" value="Xóa"
+                                            <p:commandLink styleClass="delete"
                                                              actionListener="#{productOptionController.onDelete(resultDto)}"
-                                                             update="tblSearchResult growl searchForm"
-                                                             style="background: #D9534F">
+                                                             update="tblSearchResult growl searchForm">
                                                 <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
                                                            icon="fa fa-question-circle"/>
-                                            </p:commandButton>
+                                                <i class="fa fa-remove"/>
+                                            </p:commandLink>
                                         </div>
                                     </p:column>
 

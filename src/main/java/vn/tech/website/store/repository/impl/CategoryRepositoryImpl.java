@@ -50,6 +50,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
         }
 
         Query query = createQueryObjForSearch(sb, searchDto);
+        query.setParameter("type",searchDto.getType());
         if (searchDto.getPageSize() > 0) {
             query.setFirstResult(searchDto.getPageIndex());
             query.setMaxResults(searchDto.getPageSize());
@@ -80,6 +81,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
         sb.append(" SELECT COUNT(c.category_id) ");
         appendQueryFromAndWhereForSearch(sb, searchDto);
         Query query = createQueryObjForSearch(sb, searchDto);
+        query.setParameter("type",searchDto.getType());
         return Long.valueOf(query.getSingleResult().toString());
     }
 
@@ -87,7 +89,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
         sb.append("FROM category c " +
                 " LEFT JOIN account acc ON c.update_by = acc.account_id ");
         sb.append(" WHERE 1=1  AND c.status = " + DbConstant.CATEGORY_STATUS_ACTIVE);
-        sb.append(" AND c.type = " + DbConstant.CATEGORY_TYPE_PRODUCT);
+        sb.append(" AND c.type = :type ");
 
         if (StringUtils.isNotBlank(searchDto.getCategoryName())) {
             sb.append(" AND c.name LIKE :categoryName ");

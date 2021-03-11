@@ -9,13 +9,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductSearchDto extends BaseSearchDto {
-    private String productName;
+public class OrdersSearchDto extends BaseSearchDto {
     private String code;
     private Integer status;
-    private String brandName;
-    private String categoryName;
-    private Long brandId;
-    private Long categoryId;
-    private Integer type;
+    private String customerName;
+    private String phone;
+    private Integer statusInit;
 }

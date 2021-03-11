@@ -93,6 +93,7 @@ public class DbConstant {
     public static final int BRAND_STATUS_ACTIVE = 1;
 
     //status category
+    public static final int CATEGORY_TYPE_NEWS = 0;
     public static final int CATEGORY_TYPE_PRODUCT = 1;
     public static final int CATEGORY_STATUS_INACTIVE = 0;
     public static final int CATEGORY_STATUS_ACTIVE = 1;
@@ -115,4 +116,11 @@ public class DbConstant {
     public static final String PRODUCT_TYPE_PARENT_STRING = "Sản phẩm cha";
     public static final String PRODUCT_TYPE_CHILD_STRING = "Sản phẩm con";
     public static final String PRODUCT_TYPE_NONE_STRING = "Sản phẩm duy nhất";
+
+    //order
+    public static final int ORDER_STATUS_NOT_APPROVED = 0; public static final String ORDER_STATUS_NOT_APPROVED_STRING = "Chưa phê duyệt";
+    public static final int ORDER_STATUS_APPROVED = 1; public static final String ORDER_STATUS_APPROVED_STRING = "Đã phê duyệt";
+    public static final int ORDER_STATUS_PAID = 2; public static final String ORDER_STATUS_PAID_STRING = "Đã thanh toán";
+    public static final int ORDER_TYPE_ORDER = 0;
+    public static final int ORDER_TYPE_BILL = 1;
 }
