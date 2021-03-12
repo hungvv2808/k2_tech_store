@@ -1,0 +1,229 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" id="navbar">
+        <a class="navbar-brand" href="./index.html">
+            <img src="../resources/frontend-layout/img/logo.png" class="d-inline-block align-top" alt="logo"
+                 style="width: 100%; height: 50px; object-fit: cover;"/>
+        </a>
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="icon-bar" />
+            <span class="icon-bar" />
+            <span class="icon-bar" />
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="nav navbar-nav navbar-primary ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link nav-link__home" href="./index.html">
+                        <span class="uppercase">Trang chủ</span>
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarNews" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <span class="uppercase">Tin tức</span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarNews">
+                        <a class="dropdown-item" href="#">
+                            <span>Tin tức điện thoại</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Tin tức máy tính</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Tin tức đồng hồ</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Tin tức tai nghe</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Tin tức công nghệ</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarProducts" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="uppercase">Sản phẩm</span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarProducts">
+                        <a class="dropdown-item" href="#">
+                            <span>Danh sách điện thoại</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Danh sách máy tính</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Danh sách đồng hồ</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Danh sách tai nghe</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Tất cả sản phẩm</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarBrands" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <span class="uppercase">Nhãn hiệu</span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarBrands">
+                        <a class="dropdown-item" href="#">
+                            <span>Apple</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Xiaomi</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Samsung</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Huawei</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Sony</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>LG</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="uppercase">Loại sản phẩm</span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">
+                            <span>Điện thoại</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Máy tính</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đồng hồ</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Tai nghe</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarOrders" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <span class="uppercase">Đơn hàng</span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarOders">
+                        <a class="dropdown-item" href="#">
+                            <span>Giỏ hàng</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Hoá đơn</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle dropdown-toggle__profile" href="#" id="navbarProfile"
+                       role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="profile">
+                            <img src="../resources/frontend-layout/img/founder.jpg" alt="my_profile"
+                                 class="profile__avatar"/>
+                            <span class="profile__name">Vũ Văn Hùng</span>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarProfile">
+                        <a class="dropdown-item" href="#">
+                            <span>Thông tin cá nhân</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đăng xuất</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item nav-item__last-child dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarNotis" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <div class="noti">
+                            <i class="far fa-bell fa-lg noti__bell"/>
+                            <span class="noti__count">100+</span>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarNotis">
+                        <a class="dropdown-item" href="#">
+                            <span>Bạn có thông báo mới từ Admin với nội dung: "Alo alo admin on the mic. Mic check mic check"</span>
+                            <br/>
+                            <i>7 giờ trước</i>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đơn hàng #1 của bạn đã được tạo thành công</span>
+                            <br/>
+                            <i>7 giờ trước</i>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đơn hàng #2 của bạn đã được tạo thành công</span>
+                            <br/>
+                            <i>7 giờ trước</i>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đơn hàng #3 của bạn đã được tạo thành công</span>
+                            <br/>
+                            <i>7 giờ trước</i>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đơn hàng #4 của bạn đã được tạo thành công</span>
+                            <br/>
+                            <i>7 giờ trước</i>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đơn hàng #5 của bạn đã được tạo thành công</span>
+                            <br/>
+                            <i>7 giờ trước</i>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đơn hàng #6 của bạn đã được tạo thành công</span>
+                            <br/>
+                            <i>7 giờ trước</i>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đơn hàng #7 của bạn đã được tạo thành công</span>
+                            <br/>
+                            <i>7 giờ trước</i>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đơn hàng #8 của bạn đã được tạo thành công</span>
+                            <br/>
+                            <i>7 giờ trước</i>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đơn hàng #9 của bạn đã được tạo thành công</span>
+                            <br/>
+                            <i>7 giờ trước</i>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <span>Đơn hàng #10 của bạn đã được tạo thành công</span>
+                            <br/>
+                            <i>7 giờ trước</i>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline">
+                <i class="fas fa-search fa-sm search-function" onclick="searchClick(true);"/>
+                <div class="search-function__input">
+                    <input class="form-control mr-sm-2 nav-search" type="search" placeholder="Tìm kiếm"
+                           aria-label="Tìm kiếm"/>
+                    <i class="fas fa-times fa-sm search-cancel" onclick="searchClick(false);"/>
+                </div>
+            </form>
+        </div>
+    </nav>
+
+</ui:composition>

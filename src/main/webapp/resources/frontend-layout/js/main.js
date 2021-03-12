@@ -7,7 +7,7 @@
 $(document).ready(function() {
     searchClick(false);
     $('.carousel').carousel({
-        interval: 2000
+        interval: 200000
     });
     $('.content-introduce-detail__content').hover(
         function() {
@@ -18,9 +18,9 @@ $(document).ready(function() {
         }
     );
     scrollPage();
-    autoPlayCarousel('.my-projects-slide', 3000, true, 3);
-    autoPlayCarousel('.my-partners-slides', 3000, false, 4);
-    autoPlayCarousel('.my-feedback-slide', 3000, false, 3);
+    autoPlayCarousel('.my-projects-slide', 300000, true, 3);
+    autoPlayCarousel('.content-brands-slides', 300000, false, 4);
+    autoPlayCarousel('.my-feedback-slide', 300000, false, 3);
 });
 
 // press esc to exit search form

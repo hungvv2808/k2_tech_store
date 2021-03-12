@@ -3,54 +3,133 @@
         xmlns:h="http://java.sun.com/jsf/html"
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:f="http://java.sun.com/jsf/core">
-
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                <div class="logo">
-                    <h:link outcome="/frontend/index.xhtml"><img class="logo-header" src="#{resource['frontend-layout:images/logo_bottom.svg']}" alt="Danang"/></h:link>
+    <div class="container-fluid">
+        <div class="my-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-12 no-padding">
+                        <div class="k2-infor">
+                            <div class="row">
+                                <div class="k2-infor__img">
+                                    <img src="../resources/frontend-layout/img/logo-footer.png" alt="logo-footer"
+                                         style="background: #ffffffb5; border-radius: 1rem;"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="k2-infor__detail">
+                                    <p>
+                                        K2 Store cung cấp các sản phẩm công nghệ như điện thoại, máy tính, đồng hồ, tai nghe, ... Cam kết đem lại những sản phẩm chất lượng cho người sử dụng.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="k2-infor__link">
+                                    <p>
+                                        Follow us:
+                                        <a href="#">
+                                            <i class="fab fa-facebook-f"/>
+                                        </a>
+                                        <a href="#">
+                                            <i class="fab fa-twitter"/>
+                                        </a>
+                                        <a href="#">
+                                            <i class="fab fa-instagram"/>
+                                        </a>
+                                        <a href="#">
+                                            <i class="fab fa-linkedin-in"/>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6 col-6 no-padding">
+                        <div class="k2-linked">
+                            <div class="row">
+                                <div class="k2-linked__label">
+                                    <h5>Liên kết</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="k2-linked__content">
+                                    <a href="#">Về chúng tôi</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="k2-linked__content">
+                                    <a href="#">Tuyển dụng</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="k2-linked__content">
+                                    <a href="#">Liên hệ</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6 col-6 no-padding">
+                        <div class="k2-technology">
+                            <div class="row">
+                                <div class="k2-technology__label">
+                                    <h5>Loại sản phẩm</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="k2-technology__tech">
+                                    <p>Mobile Phone</p>
+                                    <p>Desktop</p>
+                                    <p>Laptop</p>
+                                    <p>Smart Watch</p>
+                                    <p>Wireless Headphone</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 no-padding">
+                        <div class="k2-register">
+                            <div class="row">
+                                <div class="k2-register__label">
+                                    <h5>Đăng ký</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="k2-register__form">
+                                    <form>
+                                        <p>Đăng ký để nhận được những tin tức mới nhất của chúng tôi.</p>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-group__input"
+                                                   placeholder="Họ và tên"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-group__input"
+                                                   placeholder="Email"/>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-custom hvr-rectangle-out">Gửi
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="footer-info">
-                    <ul>
-                        <li>
-                            <img src="#{resource['frontend-layout:images/icon-map.svg']}" /> Số 08 Phan Bội Châu, quận Hải Châu, thành phố Đà Nẵng
-                        </li>
-                        <li>
-                            <img src="#{resource['frontend-layout:images/icon-phone.svg']}" />
-                            <a href="tel:02363889627">(0236) 3889 627</a><span>hoặc</span><a href="tel:02363889627">38 876 768 </a> <span>hoặc</span><a href="tel:02363889627">3895 593</a>
-                        </li>
-                        <li>
-                            <img src="#{resource['frontend-layout:images/icon-mail.svg']}" />
-                            <a href="mailto:daugia@danang.gov.vn">daugia@danang.gov.vn</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                <form class="subcribe-form">
-                    <div class="row"></div>
-                </form>
-                <ul class="menu-footer-menu menu">
-                    <li><h:link value="Trang chủ" outcome="/frontend/index.xhtml"/></li>
-                    <li><h:link value="Giới thiệu" outcome="/frontend/intro/about.xhtml" /></li>
-                    <li><h:link value="Tin tức" outcome="/frontend/news/category_news.xhtml"/></li>
-                    <li><h:link value="Danh sách quy chế" outcome="/frontend/regulation/regulation_list.xhtml"/></li>
-                    <li><h:link value="Danh sách tài sản" outcome="/frontend/asset/asset_list.xhtml"/></li>
-                    <li><h:link value="Văn bản" outcome="/frontend/document/document.xhtml"/></li>
-                    <li><h:link value="Hướng dẫn" outcome="/frontend/help/help.xhtml"/></li>
-                    <li><h:link value="Liên hệ" outcome="/frontend/contact/contact.xhtml"/></li>
-                </ul>
-                <h:panelGroup rendered="#{commonController.linkList.size() > 0}">
-                    <h:selectOneMenu styleClass="bootbox-input bootbox-input-select form-control" style="margin-top: 10px;"
-                                     onchange="if(this.value!==''){window.open(this.value,'_blank');}">
-                        <f:selectItem itemValue="" itemLabel="----Liên kết website----"/>
-                        <f:selectItems value="#{commonController.linkList}" var="link" itemLabel="#{link.title}" itemValue="#{link.linkPath}"/>
-                    </h:selectOneMenu>
-                </h:panelGroup>
             </div>
         </div>
-        <div class="row footer-bottom">
-            <p class="text-center">Phát triển bởi Công ty Cổ phần Công nghệ phần mềm và Nội dung số OSP</p>
+        <div class="my-copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 no-padding">
+                        <p class="text-left no-margin">Privacy Policy Term and Condition</p>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 no-padding">
+                        <p class="text-right no-margin">&#169; Copyright
+                            <script>
+                                document.write(new Date().getFullYear())
+                            </script>
+                            K2 Store All Rights Reserved.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </ui:composition>

@@ -9,8 +9,6 @@
 <f:view locale="#{languageController.currentLocale}">
     <p:importConstants type="vn.tech.website.store.util.Constant" var="Constant" />
     <p:importConstants type="vn.tech.website.store.util.DbConstant" var="DbConstant" />
-    <p:importConstants type="vn.tech.website.store.entity.EScope" var="EScope" />
-    <p:importConstants type="vn.tech.website.store.entity.EAction" var="EAction" />
 
     <h:head>
         <f:facet name="first">
@@ -19,7 +17,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
             <meta name="apple-mobile-web-app-capable" content="yes" />
         </f:facet>
-        <title><ui:insert name="title">Đấu giá trực tuyến Đà Nẵng</ui:insert></title>
+        <title><ui:insert name="title">Trang quản trị cửa hàng</ui:insert></title>
         <link type="image/x-icon" href="#{resource['images:favicon_backend.ico']}" rel="icon"/>
         <ui:include src="/admin/template/css_lib.xhtml"/>
         <h:outputScript>

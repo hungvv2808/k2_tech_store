@@ -8,410 +8,589 @@
         <f:event type="preRenderView" listener="#{homeFEController.initData}"/>
     </f:metadata>
     <ui:define name="title">Trang chủ</ui:define>
-    <ui:param name="bodyStyleClass" value="home"/>
 
-    <ui:define name="main-slide">
-        <div class="main-slide">
+    <ui:define name="body-content">
+        <div class="content-introduce">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="slide">
-                            <div class="content-slide">
-                                <h2>Chào mừng bạn! </h2>
-                                <p>đến với </p>
-                                <h2>Trung tâm dịch vụ đấu giá tài sản <span>thành phố Đà Nẵng</span></h2>
+                    <div class="content-introduce-title">
+                        <h1>Chúng tôi có</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <div class="content-introduce-detail">
+                            <div class="content-introduce-detail__content">
+                                <div class="icon-title">
+                                    <i class="fas fa-concierge-bell fa-2x"/>
+                                </div>
+                                <div class="title">
+                                    <h2>Dịch vụ</h2>
+                                </div>
+                                <div class="detail">
+                                    <p>
+                                        Cung cấp các dịch vụ, sản phẩm đa dạng - chất lượng - uy tín đa nền tảng như: Mobile Phone, Desktop, Laptop, Smart Watch, Wireless Headphone.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <div class="content-introduce-detail animated">
+                            <div class="content-introduce-detail__content">
+                                <div class="icon-title">
+                                    <i class="fas fa-shopping-bag fa-2x"/>
+                                </div>
+                                <div class="title">
+                                    <h2>Sản phẩm</h2>
+                                </div>
+                                <div class="detail">
+                                    <p>
+                                        Cung cấp những sản phẩm chính hãng đến khách hàng với rất nhiều ưu đãi danh cho người sử dụng. Mọi sản phẩm đều được đảm bảo về chất lượng trước khi được giao đến tay khách hàng.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <div class="content-introduce-detail animated">
+                            <div class="content-introduce-detail__content">
+                                <div class="icon-title icon-special">
+                                    <i class="fas fa-shipping-fast fa-2x"/>
+                                </div>
+                                <div class="title">
+                                    <h2>Giao hàng</h2>
+                                </div>
+                                <div class="detail">
+                                    <p>
+                                        Chúng tôi cung cấp những dịch giao hàng thuận lợi cho khách hàng. Cam kết giao hàng đúng thời hạn. An toàn, tiết kiệm và uy tín.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="search-form">
-                <div class="container search-area">
+        </div>
+
+        <div class="technology-life">
+            <div class="background-image"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <h1 class="title">
+                            Công nghệ cho cuộc sống
+                        </h1>
+                    </div>
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <p class="detail">
+                            K2 Store cung cấp cho bạn các sản phẩm công nghệ
+                            <br/> đem lại cảm giác tối ưu nhất cho bạn trong mọi tác vụ, công việc của bạn.
+                        </p>
+                    </div>
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <button type="button" class="btn btn-link hvr-sweep-to-right">
+                            Xem thêm về K2 Store
+                            <i class="fas fa-arrow-circle-right fa-lg"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-news">
+            <div class="container">
+                <div class="title-news">
                     <div class="row">
-                        <h:form prependId="false" a:onSubmit="return false;">
-                            <div class="form-group col-lg-7 col-md-7 col-xs-12 col-sm-12">
-                                <h:inputText class="form-control" type="text" maxlength="255"
-                                             onkeypress="if (event.keyCode === 13) { document.getElementById('searchButton').click(); }"
-                                             placeholder="Nhập từ khoá tìm kiếm (trạng thái, tên)"
-                                             value="#{homeFEController.keyword}"/>
+                        <h1>Tin tức mới nhất</h1>
+                    </div>
+                </div>
+                <div class="top-news">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="top-news__img">
+                                <a href="#">
+                                    <img src="../resources/frontend-layout/img/demo/new_1.jpg" alt="new 1"/>
+                                </a>
                             </div>
-                            <div class="form-group col-lg-3 col-md-3 col-xs-12 col-sm-12">
-                                <h:selectOneMenu class="form-control" value="#{homeFEController.itemValue}">
-                                    <f:selectItem itemValue="2" itemLabel="Tài sản"/>
-                                    <f:selectItem itemValue="1" itemLabel="Quy chế"/>
-                                </h:selectOneMenu>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="top-news__detail">
+                                <a href="#">
+                                    <p>OPPO chính thức giới thiệu Reno5 5G tại Việt Nam</p>
+                                </a>
+                                <p><a href="#"><span>Sản phẩm mới</span></a> 27 Tháng Hai, 2021</p>
+                                <p>OPPO chính thức ra mắt Reno5 5G, tiến thêm một bước vào kỷ nguyên công nghệ mới tại Việt Nam. Với vi xử lý...</p>
                             </div>
-                            <div class="form-group col-lg-2 col-md-2 col-xs-12 col-sm-12">
-                                <h:commandLink id="searchButton"
-                                               type="submit"
-                                               class="btn btn-primary search-btn"
-                                               action="#{homeFEController.onSearch()}">
-                                    <i class="fa fa-search" aria-hidden="true" style="padding-top: 5px"/>Tìm kiếm
-                                    <f:ajax execute="@form"/>
-                                </h:commandLink>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="top-news__img">
+                                <a href="#">
+                                    <img src="../resources/frontend-layout/img/demo/new_2.jpg" alt="new 1"/>
+                                </a>
                             </div>
-                        </h:form>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="top-news__detail">
+                                <a href="#">
+                                    <p>Xiaomi Mi 11 5G cháy toàn bộ suất đặt trước chỉ sau 12 giờ mở pre-order</p>
+                                </a>
+                                <p><a href="#"><span>Sản phẩm mới</span></a> 27 Tháng Hai, 2021</p>
+                                <p>Tính cho tới 12 giờ trưa ngày hôm qua, tức 26/2, Hoàng Hà Mobile đã chính thức "cháy hàng" toàn bộ suất đặt trước...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="top-news__img">
+                                <a href="#">
+                                    <img src="../resources/frontend-layout/img/demo/new_3.jpg" alt="new 1"/>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="top-news__detail">
+                                <a href="#">
+                                    <p>Galaxy S21 Ultra 5G được DxOMark đánh giá là smartphone có màn hình tốt nhất ở thời điểm hiện tại</p>
+                                </a>
+                                <p><a href="#"><span>Tin tức</span></a> 27 Tháng Hai, 2021</p>
+                                <p>Mới đây, chuyên trang đánh giá DxOMark đã vừa công bố số điểm của Galaxy S21 Ultra 5G, và không ngoài dự đoán, mẫu...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="top-news__img">
+                                <a href="#">
+                                    <img src="../resources/frontend-layout/img/demo/new_4.jpg" alt="new 1"/>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="top-news__detail">
+                                <a href="#">
+                                    <p>Sẽ có nhà máy đầu tiên của Xiaomi được xây dựng tại Việt Nam</p>
+                                </a>
+                                <p><a href="#"><span>Tin hot</span></a> 27 Tháng Hai, 2021</p>
+                                <p>Để dịch chuyển một phần chuỗi cung ứng của mình sang Việt Nam, Xiaomi sẽ mở một nhà máy sản xuất điện thoại tại...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="top-news__img">
+                                <a href="#">
+                                    <img src="../resources/frontend-layout/img/demo/new_5.jpg" alt="new 1"/>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="top-news__detail">
+                                <a href="#">
+                                    <p>Lộ hình ảnh trên tay Redmi Note 10: màn hình AMOLED, camera 48MP</p>
+                                </a>
+                                <p><a href="#"><span>Tin hot</span></a> 27 Tháng Hai, 2021</p>
+                                <p>Đầu tuần này, một số bức ảnh thực tế của Xiaomi Redmi Note 10 đã được phát hiện trên các trang mạng xã hội....</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="more-news">
+                    <div class="row">
+                        <a href="#">
+                            <span>Xem thêm <i class="fas fa-angle-double-right"/></span>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </ui:define>
 
-    <ui:define name="main">
+        <div class="content-brands">
+            <div class="container-fluid">
+                <div class="row">
+                    <h1>Thương hiệu của chúng tôi</h1>
+                    <div class="owl-carousel owl-theme content-brands-slides">
+                        <img src="../resources/frontend-layout/img/demo/brand_apple.jpg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_asus.jpg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_huawei.jpeg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_lg.jpg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_samsung.jpg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_sony.jpg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_vin.png" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_xiaomi.jpg" alt="k2-demo"/>
+                    </div>
+                    <p>Xem thêm <i class="fas fa-angle-double-right"/></p>
+                </div>
+            </div>
+        </div>
 
-        <h:panelGroup rendered="#{authorizationFEController.hasLogged() and homeFEController.storeRegisterDtoList.size() ne 0}">
-            <ui:include src="index-logged.xhtml"/>
-        </h:panelGroup>
-
-        <div class="asset-list">
+        <div class="content-products">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="title-heading text-left">
-                            <h2>Tài sản đấu giá </h2>
-                            <div class="view-more">
-                                <h:link outcome="/frontend/asset/asset_list.xhtml">
-                                    Xem tất cả<i class="fa fa-angle-double-right" aria-hidden="true"/>
-                                </h:link>
-                            </div>
-                        </div>
+                <div class="title-products">
+                    <div class="row">
+                        <h1>Điện thoại mới nhất</h1>
                     </div>
                 </div>
-                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="navbar-link active" role="presentation">
-                            <a data-toggle="tab" role="tab"
-                               aria-controls="tab6"
-                               href="#tab6">Tất cả</a>
-                        </li>
-                        <li class="navbar-link" role="presentation">
-                            <a data-toggle="tab" role="tab"
-                               aria-controls="tab7"
-                               href="#tab7">Sắp diễn ra</a>
-                        </li>
-                        <li class="navbar-link" role="presentation">
-                            <a data-toggle="tab" role="tab" aria-controls="tab8"
-                               data-target="#tab8" href="#tab8">Đang diễn ra</a>
-                        </li>
-                        <li class="navbar-link" role="presentation">
-                            <a data-toggle="tab" role="tab"
-                               aria-controls="tab9"
-                               href="#tab9">Đã kết thúc</a>
-                        </li>
-                    </ul>
-
-                    <h:panelGroup id="assetList">
-                        <div class="tab-content">
-                            <div id="tab6" class="tab-pane fade in active" role="tabpanel">
-                                <div class="row">
-                                    <h:panelGroup rendered="#{homeFEController.allAssetDtoList.size() eq 0}">
-                                        <h3 style="margin-top: 20px;">Chưa có bản ghi nào</h3>
-                                    </h:panelGroup>
-                                    <ui:repeat value="#{homeFEController.allAssetDtoList}" var="allAsset">
-                                        <h:panelGroup rendered="#{allAsset.status eq DbConstant.ASSET_STATUS_WAITING}">
-                                            <ui:include src="common/asset/grid-asset-waiting.xhtml">
-                                                <ui:param name="asset" value="#{allAsset}"/>
-                                            </ui:include>
-                                        </h:panelGroup>
-                                        <h:panelGroup rendered="#{allAsset.status eq DbConstant.ASSET_STATUS_PLAYING}">
-                                            <ui:include src="common/asset/grid-asset-playing.xhtml">
-                                                <ui:param name="asset" value="#{allAsset}"/>
-                                            </ui:include>
-                                        </h:panelGroup>
-                                        <h:panelGroup rendered="#{homeFEController.hasEnded(allAsset.status)}">
-                                            <ui:include src="common/asset/grid-asset-ended.xhtml">
-                                                <ui:param name="asset" value="#{allAsset}"/>
-                                            </ui:include>
-                                        </h:panelGroup>
-                                    </ui:repeat>
-                                </div>
-                            </div>
-
-                            <div id="tab7" class="tab-pane fade in" role="tabpanel">
-                                <div class="row">
-                                    <h:panelGroup rendered="#{homeFEController.comingAssetDtoList.size() eq 0}">
-                                        <h3 style="margin-top: 20px;">Không có bản ghi nào</h3>
-                                    </h:panelGroup>
-                                    <ui:repeat value="#{homeFEController.comingAssetDtoList}" var="comingAsset">
-                                        <ui:include src="common/asset/grid-asset-waiting.xhtml">
-                                            <ui:param name="asset" value="#{comingAsset}"/>
-                                        </ui:include>
-                                    </ui:repeat>
-                                </div>
-                            </div>
-
-                            <div id="tab8" class="tab-pane fade" role="tabpanel">
-                                <div class="row">
-                                    <h:panelGroup rendered="#{homeFEController.doingAssetDtoList.size() eq 0}">
-                                        <h3 style="margin-top: 20px;">Không có bản ghi nào</h3>
-                                    </h:panelGroup>
-                                    <ui:repeat value="#{homeFEController.doingAssetDtoList}" var="doingAsset">
-                                        <ui:include src="common/asset/grid-asset-playing.xhtml">
-                                            <ui:param name="asset" value="#{doingAsset}"/>
-                                        </ui:include>
-                                    </ui:repeat>
-                                </div>
-                            </div>
-
-                            <div id="tab9" class="tab-pane fade " role="tabpanel">
-                                <div class="row">
-                                    <h:panelGroup rendered="#{homeFEController.expiredAssetDtoList.size() eq 0}">
-                                        <h3 style="margin-top: 20px;">Không có bản ghi nào</h3>
-                                    </h:panelGroup>
-                                    <ui:repeat value="#{homeFEController.expiredAssetDtoList}" var="expiredAsset">
-                                        <ui:include src="common/asset/grid-asset-ended.xhtml">
-                                            <ui:param name="asset" value="#{expiredAsset}"/>
-                                        </ui:include>
-                                    </ui:repeat>
-                                </div>
-                            </div>
-                        </div>
-                    </h:panelGroup>
-                </div>
-            </div>
-        </div>
-        <div class="product-list">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                        <div class="title-heading text-left">
-                            <h2>Thông tin quy chế </h2>
-                            <div class="view-more">
-                                <h:link outcome="/frontend/regulation/regulation_list.xhtml">
-                                    Xem tất cả<i class="fa fa-angle-double-right" aria-hidden="true"/>
-                                </h:link>
-                            </div>
-                        </div>
-                        <div class="toolbar">
-                            <p><i class="fa fa-circle green-color" aria-hidden="true"/>Sắp diễn ra</p>
-                            <p><i class="fa fa-circle blue-color" aria-hidden="true"/>Đang diễn ra</p>
-                            <p><i class="fa fa-circle orange-color" aria-hidden="true"/>Đã kết thúc</p>
-                            <p><i class="fa fa-circle black-color" aria-hidden="true"/>Đã tạm dừng</p>
-                        </div>
-                        <h:panelGroup id="regulationList">
-                            <div class="row">
-                                <div class="product grid">
-                                    <h:panelGroup rendered="#{homeFEController.regulationDtoList.size() eq 0}">
-                                        <h3>Chưa có bản ghi nào</h3>
-                                    </h:panelGroup>
-
-                                    <ui:repeat value="#{homeFEController.regulationDtoList}" var="regulationVar"
-                                               varStatus="varStatus">
-                                        <div class="child child-#{varStatus.index + 1}">
-                                            <div class="product-item">
-                                                <div class="product-two-columns current-product">
-                                                    <div class="row">
-                                                        <div class="col-lg-5 col-md-5 col-xs-12 col-sm-6 no-padding">
-                                                            <h:panelGroup
-                                                                    rendered="#{regulationVar.storeStatus eq DbConstant.REGULATION_AUCTION_STATUS_WAITING}">
-                                                                <div class="product-image future-product">
-                                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
-                                                                        <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
-                                                                        <div class="middle">
-                                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </h:link>
-                                                                    <div class="countdown-wrapper">
-                                                                        <p>Thời gian bắt đầu đấu giá còn</p>
-                                                                        <div class="pts-countdown clearfix"
-                                                                             data-countdown="countdown"
-                                                                             data-countup="false"
-                                                                             data-date="#{homeFEController.formatDate(regulationVar.startTime)}">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </h:panelGroup>
-                                                            <h:panelGroup
-                                                                    rendered="#{regulationVar.storeStatus eq DbConstant.REGULATION_AUCTION_STATUS_PLAYING}">
-                                                                <div class="product-image now-product">
-                                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
-                                                                        <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
-                                                                        <div class="middle">
-                                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </h:link>
-                                                                    <div class="countdown-wrapper">
-                                                                        <p>Thời gian kết thúc còn</p>
-                                                                        <div class="pts-countdown clearfix"
-                                                                             data-countdown="countdown"
-                                                                             data-countup="true"
-                                                                             data-date="#{homeFEController.formatDate(regulationVar.startTime)}"></div>
-                                                                    </div>
-                                                                </div>
-                                                            </h:panelGroup>
-                                                            <h:panelGroup
-                                                                    rendered="#{regulationVar.storeStatus eq DbConstant.REGULATION_AUCTION_STATUS_ENDED}">
-                                                                <div class="product-image ended-product">
-                                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
-                                                                        <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
-                                                                        <div class="middle">
-                                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </h:link>
-                                                                    <div class="countdown-wrapper">
-                                                                        <p>Đấu giá đã kết thúc</p>
-                                                                    </div>
-                                                                </div>
-                                                            </h:panelGroup>
-                                                            <h:panelGroup
-                                                                    rendered="#{regulationVar.storeStatus eq DbConstant.REGULATION_AUCTION_STATUS_CANCELLED}">
-                                                                <div class="product-image stoped-product">
-                                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}">
-                                                                        <img src="#{resource['frontend-layout:images/book1.svg']}" alt=""/>
-                                                                        <div class="middle">
-                                                                            <div class="text"><i class="fa fa-eye" aria-hidden="true"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </h:link>
-                                                                    <div class="countdown-wrapper">
-                                                                        <p>Tạm dừng đấu giá</p>
-                                                                    </div>
-                                                                </div>
-                                                            </h:panelGroup>
-                                                        </div>
-
-                                                        <div class="col-lg-7 col-md-7 col-xs-12 col-sm-6">
-                                                            <div class="product-info">
-                                                                <h5 class="product-title" style="text-align: left">
-                                                                    <h:link outcome="/frontend/regulation/regulation_detail.xhtml?id=#{regulationVar.regulationId}"
-                                                                            value="#{regulationVar.code}">
-                                                                    </h:link>
-                                                                </h5>
-                                                                <div class="product-detail"
-                                                                     title="#{regulationVar.nameAsset}">
-                                                                    #{regulationVar.nameAsset}
-                                                                </div>
-                                                                <div class="time-start">
-                                                                    <div class="icon-product">
-                                                                        <img src="#{resource['frontend-layout:images/clock.svg']}" alt=""/>
-                                                                    </div>
-                                                                    <div class="info">
-                                                                        <p>Thời gian diễn ra</p>
-                                                                        <p><b><h:outputText
-                                                                                value="#{regulationVar.startTime}"><f:convertDateTime
-                                                                                pattern="HH:mm, dd/MM/yyyy"/></h:outputText></b>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </ui:repeat>
-                                </div>
-                            </div>
-                        </h:panelGroup>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="news-list">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="title-heading text-left">
-                            <h2>Tin tức mới nhất</h2>
-                            <div class="view-more">
-                                <h:link outcome="/frontend/news/category_news.xhtml">
-                                    Xem tất cả<i class="fa fa-angle-double-right" aria-hidden="true"/>
-                                </h:link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <h:panelGroup rendered="#{homeFEController.decisionNewsDtoList.size() eq 0}">
-                            <h3>Chưa có bản ghi nào</h3>
-                        </h:panelGroup>
-                        <div class="text-left sidebar">
-                            <div class="news-item">
-                                <h:panelGroup layout="block" styleClass="row" id="news-layout">
-                                    <p:repeat value="#{homeFEController.decisionNewsDtoList}" var="news">
-                                        <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12 news-detail">
-                                            <div class="row">
-                                                <h:link outcome="/frontend/news/detail.xhtml?id=#{news.decisionNewsId}">
-                                                    <div class="img-sidebar">
-                                                        <div class="image-news">
-                                                            <h:graphicImage name="images/tintuc.png"
-                                                                            library="apollo-layout"
-                                                                            rendered="#{empty news.imagePath}"/>
-                                                            <h:graphicImage name="#{news.imagePath}"
-                                                                            rendered="#{not empty news.imagePath}"/>
-                                                            <div class="middle">
-                                                                <div class="text">
-                                                                    <i class="fa fa-eye" aria-hidden="true"/> Xem chi tiết
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="time-news">
-                                                            <span>
-                                                                <i class="custom-icon calendar"/>
-                                                                <h:outputText value="#{news.createDate}">
-                                                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
-                                                                </h:outputText>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </h:link>
-                                            </div>
-                                            <div class="row">
-                                                <div class="title-news">
-                                                    <div style="height: 60px">
-                                                        <h:link outcome="/frontend/news/detail.xhtml?id=#{news.decisionNewsId}" value="#{commonController.abbreviate(news.title, DbConstant.LIMITCHARACTER_TITLE)}"/>
-                                                    </div>
-                                                    <div style="margin-top: 10px" class="product-detail">
-                                                        <h:outputText value="#{news.decisionSummary}" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </p:repeat>
-                                </h:panelGroup>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row connect-slider">
-            <div class="col-lg-12 col-sm-12 col-xs-12">
-                <div class="connect">
-                    <ui:repeat value="#{homeFEController.bannerList}" var="bannerVar">
-                        <div class="item">
-                            <a href="#{bannerVar.bannerLink}">
-                                <img src="#{resource[bannerVar.imagePath]}" alt=""/>
+                <div class="mobile-products">
+                    <div class="row">
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="mobile-products__img"
+                                     src="../resources/frontend-layout/img/demo/phone_1.png" alt="highlight product"/>
+                                <p class="mobile-products__title">Apple iPhone 12 Pro Max - 512GB - Chính hãng VN/A</p>
+                                <p class="mobile-products__price">37,690,000 ₫</p>
                             </a>
                         </div>
-                    </ui:repeat>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="mobile-products__img"
+                                     src="../resources/frontend-layout/img/demo/phone_2.png" alt="highlight product"/>
+                                <p class="mobile-products__title">Apple iPhone 12 Pro Max - 512GB - Chính hãng VN/A</p>
+                                <p class="mobile-products__price">37,690,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="mobile-products__img"
+                                     src="../resources/frontend-layout/img/demo/phone_3.png" alt="highlight product"/>
+                                <p class="mobile-products__title">Apple iPhone 12 Pro Max - 512GB - Chính hãng VN/A</p>
+                                <p class="mobile-products__price">37,690,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="mobile-products__img"
+                                     src="../resources/frontend-layout/img/demo/phone_4.png" alt="highlight product"/>
+                                <p class="mobile-products__title">Apple iPhone 12 Pro Max - 512GB - Chính hãng VN/A</p>
+                                <p class="mobile-products__price">37,690,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="mobile-products__img"
+                                     src="../resources/frontend-layout/img/demo/phone_5.png" alt="highlight product"/>
+                                <p class="mobile-products__title">Apple iPhone 12 Pro Max - 512GB - Chính hãng VN/A</p>
+                                <p class="mobile-products__price">37,690,000 ₫</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="more-products">
+                    <div class="row">
+                        <a href="#">
+                            <span>Xem thêm <i class="fas fa-angle-double-right"/></span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- update scope -->
-        <p:remoteCommand name="cmdRefreshData" update="regulationList assetList myAssetList #{Constant.ID_COUNTDOWN_LIBRARY}"
-                         global="false"
-                         actionListener="#{homeFEController.resetAll()}"/>
-        <style>
-            .product-one-columns .end-product .countdown-wrapper {
-                padding: 5px;
-                word-break: break-all;
-            }
+        <div class="content-products">
+            <div class="container">
+                <div class="title-products">
+                    <div class="row">
+                        <h1>Laptop - Desktop mới nhất</h1>
+                    </div>
+                </div>
+                <div class="laptop-products">
+                    <div class="row">
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="laptop-products__img" src="../resources/frontend-layout/img/demo/mac1.png"
+                                     alt="highlight product"/>
+                                <p class="laptop-products__title">MacBook Air 13" - M1 256GB 2020 - Chính hãng Apple Việt Nam</p>
+                                <p class="laptop-products__price">24,990,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="laptop-products__img" src="../resources/frontend-layout/img/demo/mac2.png"
+                                     alt="highlight product"/>
+                                <p class="laptop-products__title">MacBook Air 13" - M1 512GB 2020 - Chính hãng Apple Việt Nam</p>
+                                <p class="laptop-products__price">30,790,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="laptop-products__img" src="../resources/frontend-layout/img/demo/mac3.png"
+                                     alt="highlight product"/>
+                                <p class="laptop-products__title">MacBook Pro 13" - M1 512GB 2020 - Chính hãng Apple Việt Nam</p>
+                                <p class="laptop-products__price">36,490,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="laptop-products__img" src="../resources/frontend-layout/img/demo/mac3.png"
+                                     alt="highlight product"/>
+                                <p class="laptop-products__title">MacBook Pro 13" - M1 256GB 2020 - Chính hãng Apple Việt Nam</p>
+                                <p class="laptop-products__price">31,790,000 ₫</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="more-products">
+                    <div class="row">
+                        <a href="#">
+                            <span>Xem thêm <i class="fas fa-angle-double-right"/></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            .product-one-columns .product-image .countdown-wrapper {
-                width: auto;
-                min-width: 60%;
-                padding: 5px;
-            }
-        </style>
-        <script>
-            var myStore = false;
-        </script>
+        <div class="content-products">
+            <div class="container">
+                <div class="title-products">
+                    <div class="row">
+                        <h1>Đồng hồ thông minh mới nhất</h1>
+                    </div>
+                </div>
+                <div class="watch-products">
+                    <div class="row">
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="watch-products__img" src="../resources/frontend-layout/img/demo/watch1.png"
+                                     alt="highlight product"/>
+                                <p class="watch-products__title">Đồng hồ thông minh Huami Amazfit GTR 2 Silicon - Chính hãng</p>
+                                <p class="watch-products__price">3,990,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="watch-products__img" src="../resources/frontend-layout/img/demo/watch2.png"
+                                     alt="highlight product"/>
+                                <p class="watch-products__title">Đồng hồ thông minh Huami Amazfit GTR 2 Leather - Chính hãng</p>
+                                <p class="watch-products__price">4,290,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="watch-products__img" src="../resources/frontend-layout/img/demo/watch3.png"
+                                     alt="highlight product"/>
+                                <p class="watch-products__title">Đồng hồ thông minh Xiaomi Mi Watch Lite - Chính hãng</p>
+                                <p class="watch-products__price">1,450,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="watch-products__img" src="../resources/frontend-layout/img/demo/watch4.png"
+                                     alt="highlight product"/>
+                                <p class="watch-products__title">Đồng hồ thông minh Garmin Lily- Bản dây silicon - Chính hãng</p>
+                                <p class="watch-products__price">4,990,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="watch-products__img" src="../resources/frontend-layout/img/demo/watch5.png"
+                                     alt="highlight product"/>
+                                <p class="watch-products__title">Huami Amazfit Stratos 3 - Chính hãng DGW</p>
+                                <p class="watch-products__price">3,290,000 ₫</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="more-products">
+                    <div class="row">
+                        <a href="#">
+                            <span>Xem thêm <i class="fas fa-angle-double-right"/></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-products">
+            <div class="container">
+                <div class="title-products">
+                    <div class="row">
+                        <h1>Tai nghe - Loa mới nhất</h1>
+                    </div>
+                </div>
+                <div class="wireless-products">
+                    <div class="row">
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air1.png"
+                                     alt="highlight product"/>
+                                <p class="wireless-products__title">Tai nghe Apple AirPods 2 - Wireless Charging Case - chính hãng VN/A</p>
+                                <p class="wireless-products__price">4,990,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air2.png"
+                                     alt="highlight product"/>
+                                <p class="wireless-products__title">Apple AirPods 2 - Case sạc thường (MV7N2VN/A)</p>
+                                <p class="wireless-products__price">3,350,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air3.png"
+                                     alt="highlight product"/>
+                                <p class="wireless-products__title">Tai nghe Apple AirPods Pro - Chính Hãng VN/A (MWP22VN/A)</p>
+                                <p class="wireless-products__price">4,190,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air4.png"
+                                     alt="highlight product"/>
+                                <p class="wireless-products__title">Tai nghe Apple AirPods Max - Chính hãng VN/A</p>
+                                <p class="wireless-products__price">11,990,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air5.png"
+                                     alt="highlight product"/>
+                                <p class="wireless-products__title">Loa Sony SRS-XB01 Chính hãng</p>
+                                <p class="wireless-products__price">450,000 ₫</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 grid-style">
+                            <a href="#">
+                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air6.png"
+                                     alt="highlight product"/>
+                                <p class="wireless-products__title">Loa JBL Clip 4 - chính hãng</p>
+                                <p class="wireless-products__price">1,590,000 ₫</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="more-products">
+                    <div class="row">
+                        <a href="#">
+                            <span>Xem thêm <i class="fas fa-angle-double-right"/></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feedbacks-slide">
+            <div class="container">
+                <div class="feedback-slide">
+                    <div class="feedback-slide__title">
+                        <div class="row">
+                            <h1>Khách hàng nói gì về chúng tôi ?</h1>
+                        </div>
+                    </div>
+                    <div class="feedback-slide__contents">
+                        <div class="carousel-wrap">
+                            <div class="owl-carousel owl-theme my-feedback-slide">
+                                <div class="item">
+                                    <div class="item__details">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 no-padding-left">
+                                                <img src="../resources/frontend-layout/img/founder.jpg"
+                                                     alt="customer-demo-1"/>
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 no-padding">
+                                                <div class="customer-infor">
+                                                    <p class="no-margin customer-name">Parker Frankie</p>
+                                                    <p class="no-margin customer-position">CEO, Founder K2 Store</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <p>
+                                                K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại. K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item__details">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 no-padding-left">
+                                                <img src="../resources/frontend-layout/img/founder.jpg"
+                                                     alt="customer-demo-1"/>
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 no-padding">
+                                                <div class="customer-infor">
+                                                    <p class="no-margin customer-name">Parker Frankie</p>
+                                                    <p class="no-margin customer-position">CEO, Founder K2 Store</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <p>
+                                                K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại. K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item__details">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 no-padding-left">
+                                                <img src="../resources/frontend-layout/img/founder.jpg"
+                                                     alt="customer-demo-1"/>
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 no-padding">
+                                                <div class="customer-infor">
+                                                    <p class="no-margin customer-name">Parker Frankie</p>
+                                                    <p class="no-margin customer-position">CEO, Founder K2 Store</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <p>
+                                                K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại. K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item__details">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 no-padding-left">
+                                                <img src="../resources/frontend-layout/img/founder.jpg"
+                                                     alt="customer-demo-1"/>
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 no-padding">
+                                                <div class="customer-infor">
+                                                    <p class="no-margin customer-name">Parker Frankie</p>
+                                                    <p class="no-margin customer-position">CEO, Founder K2 Store</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <p>
+                                                K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại. K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item__details">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 no-padding-left">
+                                                <img src="../resources/frontend-layout/img/founder.jpg"
+                                                     alt="customer-demo-1"/>
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 no-padding">
+                                                <div class="customer-infor">
+                                                    <p class="no-margin customer-name">Parker Frankie</p>
+                                                    <p class="no-margin customer-position">CEO, Founder K2 Store</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <p>
+                                                K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại. K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </ui:define>
 </ui:composition>

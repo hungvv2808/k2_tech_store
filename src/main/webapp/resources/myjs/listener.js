@@ -1,53 +1,53 @@
 var first_load = true;
-function socketConnect() {
-    if (window.WebSocket) {
-        var ws, data_, pingMsg;
-        var ws_prefix = "ws://";
-        if (location.protocol === 'https:') {
-            ws_prefix = "wss://";
-        }
-        var be = typeof beRequest === "undefined" ? "" : "?be";
-        var urlSocket = [ws_prefix, location.host, urlContext, "/connection", be];
-        ws = new WebSocket(urlSocket.join(""));
-        ws.onopen = function() {
-            console.log('Connected!');
-            pingMsg = setInterval(function() {
-                ws.send("ping " + ((typeof assetDetail === 'undefined') ? '0' : assetDetail));
-            }, 1500);
-            if (first_load) {
-                first_load = false
-            } else if (typeof cmdRefreshData === "function") {
-                cmdRefreshData();
-            }
-        };
-        ws.onclose = function() {
-            console.log('Disconnected!');
-            clearInterval(pingMsg);
-            console.log("Trying to reconnect...");
-            setTimeout(function() {
-                socketConnect();
-            }, 1000);
-        };
-        ws.onmessage =
-            function onMessage(event) {
-                data_ = JSON.parse(event.data);
-                if (data_.data != null) {
-                    try {
-                        data_.data = JSON.parse(data_.data);
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-                console.log(window[data_.action]);
-                if (window[data_.action]) {
-                    window[data_.action](data_);
-                }
-            };
-    } else {
-
-    }
-}
-socketConnect();
+// function socketConnect() {
+//     if (window.WebSocket) {
+//         var ws, data_, pingMsg;
+//         var ws_prefix = "ws://";
+//         if (location.protocol === 'https:') {
+//             ws_prefix = "wss://";
+//         }
+//         var be = typeof beRequest === "undefined" ? "" : "?be";
+//         var urlSocket = [ws_prefix, location.host, urlContext, "/connection", be];
+//         ws = new WebSocket(urlSocket.join(""));
+//         ws.onopen = function() {
+//             console.log('Connected!');
+//             pingMsg = setInterval(function() {
+//                 ws.send("ping " + ((typeof assetDetail === 'undefined') ? '0' : assetDetail));
+//             }, 1500);
+//             if (first_load) {
+//                 first_load = false
+//             } else if (typeof cmdRefreshData === "function") {
+//                 cmdRefreshData();
+//             }
+//         };
+//         ws.onclose = function() {
+//             console.log('Disconnected!');
+//             clearInterval(pingMsg);
+//             console.log("Trying to reconnect...");
+//             setTimeout(function() {
+//                 socketConnect();
+//             }, 1000);
+//         };
+//         ws.onmessage =
+//             function onMessage(event) {
+//                 data_ = JSON.parse(event.data);
+//                 if (data_.data != null) {
+//                     try {
+//                         data_.data = JSON.parse(data_.data);
+//                     } catch (e) {
+//                         console.log(e);
+//                     }
+//                 }
+//                 console.log(window[data_.action]);
+//                 if (window[data_.action]) {
+//                     window[data_.action](data_);
+//                 }
+//             };
+//     } else {
+//
+//     }
+// }
+// socketConnect();
 
 function countDown(value, stringExpired) {
     stringExpired = "00:00:00";

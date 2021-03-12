@@ -25,9 +25,7 @@ public class HomeFEController extends BaseFEController {
 
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
-
-
-            init();
+//            init();
             resetAll();
         }
     }
@@ -40,16 +38,8 @@ public class HomeFEController extends BaseFEController {
 
     }
 
-    public boolean hasEnded(Integer status) {
-        return Arrays.asList(
-                DbConstant.ASSET_STATUS_ENDED,
-                DbConstant.ASSET_STATUS_CANCELED,
-                DbConstant.ASSET_STATUS_NOT_SUCCESS
-        ).contains(status);
-    }
-
     @Override
     protected String getMenuId() {
-        return Constant.ID_INDEX_FONTEND;
+        return null;
     }
 }
