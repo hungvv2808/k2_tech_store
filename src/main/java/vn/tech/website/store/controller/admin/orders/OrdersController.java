@@ -2,28 +2,34 @@ package vn.tech.website.store.controller.admin.orders;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.util.CollectionUtils;
 import vn.tech.website.store.controller.admin.auth.AuthorizationController;
 import vn.tech.website.store.dto.*;
 import vn.tech.website.store.model.Account;
+import vn.tech.website.store.model.Orders;
 import vn.tech.website.store.model.OrdersDetail;
 import vn.tech.website.store.model.Product;
 import vn.tech.website.store.repository.AccountRepository;
 import vn.tech.website.store.repository.OrderDetailRepository;
 import vn.tech.website.store.repository.OrderRepository;
 import vn.tech.website.store.repository.ProductRepository;
+import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
+import vn.tech.website.store.util.StringUtil;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -137,6 +143,7 @@ public class OrdersController {
             ordersDto.setPhone(account.getPhone());
             ordersDto.setAddress(account.getAddress());
         }
+        FacesUtil.updateView("dlForm");
     }
 
     public void updatePrice(Integer index) {
@@ -147,15 +154,84 @@ public class OrdersController {
             ordersDetailDtoList.get(index).setUnitPrice(unitPrice);
             discount = productRepository.getByProductId(ordersDetailDtoList.get(index).getProductId()).getDiscount() != null ? productRepository.getByProductId(ordersDetailDtoList.get(index).getProductId()).getDiscount() : 0;
             ordersDetailDtoList.get(index).setDiscount(discount);
+            FacesUtil.updateView("dlForm");
         }
         if (ordersDetailDtoList.get(index).getQuantity() != null) {
             Double amount = (unitPrice - unitPrice * discount / 100) * ordersDetailDtoList.get(index).getQuantity();
             ordersDetailDtoList.get(index).setAmount(amount);
+            if (index == 0){
+                ordersDto.setTotalAmount(amount);
+            }else {
+                ordersDto.setTotalAmount(ordersDto.getTotalAmount() + amount);
+            }
+            FacesUtil.updateView("dlForm");
         }
     }
 
+    public boolean validateData() {
+        if (StringUtils.isBlank(ordersDto.getCustomerName())) {
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập tên khách hàng hoặc chọn khách hàng");
+            return false;
+        }
+        if (StringUtils.isBlank(ordersDto.getPhone())) {
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập số điện thoại");
+            return false;
+        }
+        if (StringUtils.isBlank(ordersDto.getAddress())) {
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập địa chỉ");
+            return false;
+        }
+        if (CollectionUtils.isEmpty(ordersDetailDtoList)) {
+            FacesUtil.addErrorMessage("Bạn vui lòng thêm loại sản phẩm");
+            return false;
+        }
+        for (OrdersDetailDto obj : ordersDetailDtoList) {
+            if (obj.getProductId() == null) {
+                FacesUtil.addErrorMessage("Bạn vui lòng chọn sản phẩm");
+                return false;
+            }
+            if (obj.getQuantity() == null) {
+                FacesUtil.addErrorMessage("Bạn vui lòng nhập số lượng sản phẩm");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void onSave() {
+        if (!validateData()) {
+            return;
+        }
+        Long countCode = orderRepository.findMaxCountCode() != null ? orderRepository.findMaxCountCode() : 0;
+        Orders orders = new Orders();
+        BeanUtils.copyProperties(ordersDto, orders);
+        if (orders.getOrdersId() == null) {
+            orders.setCode(StringUtil.createCode(null, Constant.ACRONYM_ORDER, countCode));
+            orders.setCountCode(StringUtil.createCountCode(null, Constant.ACRONYM_ORDER));
+            orders.setStatus(DbConstant.ORDER_STATUS_NOT_APPROVED);
+            orders.setCreateBy(authorizationController.getAccountDto().getAccountId());
+            orders.setCreateDate(new Date());
+        }
+        orders.setUpdateBy(authorizationController.getAccountDto().getAccountId());
+        orders.setUpdateDate(new Date());
+        orderRepository.save(orders);
+        for (OrdersDetailDto dto : ordersDetailDtoList) {
+            OrdersDetail ordersDetail = new OrdersDetail();
+            ordersDetail.setOrdersId(orders.getOrdersId());
+            ordersDetail.setProductId(dto.getProductId());
+            ordersDetail.setQuantity(dto.getQuantity());
+            ordersDetail.setAmount(dto.getAmount());
+            orderDetailRepository.save(ordersDetail);
+        }
+        FacesUtil.addSuccessMessage("Lưu thành công.");
+        FacesUtil.closeDialog("dialogInsertUpdate");
+        onSearch(orderType);
+    }
+
     public void onDeleteProduct(OrdersDetailDto ordersDetailDto) {
+        ordersDto.setTotalAmount(ordersDto.getTotalAmount() - ordersDetailDto.getAmount());
         ordersDetailDtoList.remove(ordersDetailDto);
+        FacesUtil.updateView("dlForm");
     }
 
     public void onAddNew() {
@@ -196,5 +272,46 @@ public class OrdersController {
             BeanUtils.copyProperties(dto, obj);
             toList.add(obj);
         }
+    }
+
+    public void onChangeStatusApproved(OrdersDto resultDto) {
+        if (resultDto.getStatus() == DbConstant.ORDER_STATUS_NOT_APPROVED) {
+            Orders orders = orderRepository.getByOrdersId(resultDto.getOrdersId());
+            orders.setStatus(DbConstant.ORDER_STATUS_APPROVED);
+            orders.setUpdateBy(authorizationController.getAccountDto().getAccountId());
+            orders.setUpdateDate(new Date());
+            orderRepository.save(orders);
+        }
+        if (resultDto.getStatus() == DbConstant.ORDER_STATUS_APPROVED) {
+            Orders orders = orderRepository.getByOrdersId(resultDto.getOrdersId());
+            orders.setStatus(DbConstant.ORDER_STATUS_NOT_APPROVED);
+            orders.setUpdateBy(authorizationController.getAccountDto().getAccountId());
+            orders.setUpdateDate(new Date());
+            orderRepository.save(orders);
+        }
+        FacesUtil.addSuccessMessage("Đổi trạng thái thành công.");
+        onSearch(orderType);
+    }
+
+    public void onCancelOrder(OrdersDto resultDto) {
+        Orders orders = orderRepository.getByOrdersId(resultDto.getOrdersId());
+        orders.setStatus(DbConstant.ORDER_STATUS_CANCEL);
+        orders.setUpdateBy(authorizationController.getAccountDto().getAccountId());
+        orders.setUpdateDate(new Date());
+        orderRepository.save(orders);
+        FacesUtil.addSuccessMessage("Đã hủy đơn hàng.");
+        onSearch(orderType);
+    }
+
+    public void onChangeStatusToPaid(OrdersDto resultDto) {
+        Orders orders = orderRepository.getByOrdersId(resultDto.getOrdersId());
+        orders.setStatus(DbConstant.ORDER_TYPE_BILL);
+        String code = orders.getCode().replace(Constant.ACRONYM_ORDER, Constant.ACRONYM_BILL);
+        orders.setCode(code);
+        orders.setUpdateBy(authorizationController.getAccountDto().getAccountId());
+        orders.setUpdateDate(new Date());
+        orderRepository.save(orders);
+        FacesUtil.addSuccessMessage("Thanh toán thành công.");
+        onSearch(orderType);
     }
 }

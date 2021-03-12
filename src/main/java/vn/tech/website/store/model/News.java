@@ -13,11 +13,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "news")
-public class News {
+public class News extends BaseModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "news_id")
-    private Long colorId;
+    private Long newsId;
+
+    @Column(name = "category_id")
+    private Long categoryId;
 
     @Column(name = "title")
     private String title;
@@ -27,9 +30,6 @@ public class News {
 
     @Column(name = "content")
     private String content;
-
-    @Column(name = "category_id")
-    private Integer categoryId;
 
     @Column(name = "status")
     private Integer status;

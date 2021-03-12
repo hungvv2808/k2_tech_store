@@ -30,7 +30,7 @@
         </p:outputPanel>
 
         <div class="ui-fluid">
-            <p:dialog id="dlg" header="Thông tin loại tin tức" widgetVar="dialogInsertUpdate" modal="true" width="800">
+            <p:dialog id="dlg" header="Thông tin loại tin tức" widgetVar="dialogInsertUpdate" modal="true" width="1000">
                 <h:form id="dlForm">
                     <p:scrollPanel mode="native" style="width: 100%; max-height: 400px; border: none" id="panel">
                         <p:focus id="focus"/>
@@ -124,6 +124,7 @@
                                                              oncomplete="PF('dialogInsertUpdate').show();"
                                                              update="dlForm growl"
                                                              actionListener="#{categoryNewsController.showUpdatePopup(resultDto)}">
+                                                <i class="fa fa-edit"/>
                                             </p:commandLink>
                                         </div>
                                     </p:column>
@@ -133,10 +134,10 @@
                                         <div class="my-data-table">
                                             <p:commandLink styleClass="delete"
                                                              actionListener="#{categoryNewsController.onDelete(resultDto)}"
-                                                             update="tblSearchResult growl searchForm"
-                                                             style="background: #D9534F">
+                                                             update="tblSearchResult growl searchForm">
                                                 <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
                                                            icon="fa fa-question-circle"/>
+                                                <i class="fa fa-remove"/>
                                             </p:commandLink>
                                         </div>
                                     </p:column>

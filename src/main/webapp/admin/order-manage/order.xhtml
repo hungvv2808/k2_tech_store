@@ -45,8 +45,8 @@
                                              value="#{ordersController.ordersDto.accountId}">
                                 <f:selectItem itemLabel="Chọn khách hàng" itemValue=""/>
                                 <f:selectItems value="#{ordersController.accountList}"/>
-                                <f:ajax event="change" listener="#{ordersController.updatePanel}" process="@form"
-                                        update="@form" />
+                                <f:ajax event="change" listener="#{ordersController.updatePanel}"
+                                         />
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Tên khách hàng:" for="customerName" styleClass="requireLabel"/>
@@ -88,30 +88,39 @@
                                                      filterMatchMode="contains">
                                         <f:selectItem itemLabel="Chọn sản phẩm" itemValue=""/>
                                         <f:selectItems value="#{ordersController.productList}"/>
-                                        <f:ajax event="change" listener="#{ordersController.updatePrice(status.index)}" update="dlForm:panel"/>
+                                        <f:ajax event="change" listener="#{ordersController.updatePrice(status.index)}" />
                                     </p:selectOneMenu>
 
                                     <p:outputLabel value="Số lượng: " for="quantity"/>
-                                    <p:inputNumber value="#{ordersDetailDto.quantity}" id="quantity" decimalPlaces="0"
-                                                   thousandSeparator="." maxValue="99999999999"
+                                    <p:inputNumber value="#{ordersDetailDto.quantity}" id="quantity"
+                                                   maxValue="99999999999"
                                                    placeholder="Nhập số lượng">
-                                        <f:ajax listener="#{ordersController.updatePrice(status.index)}" update="dlForm:panel"/>
+                                        <f:ajax listener="#{ordersController.updatePrice(status.index)}" />
                                     </p:inputNumber>
 
                                     <p:outputLabel value="Đơn giá: " for="unitPrice"/>
-                                    <p:inputText value="#{ordersDetailDto.amount}" id="unitPrice" maxlength="200"
-                                                 readonly="true" decimalPlaces="0"
-                                                 thousandSeparator="." maxValue="99999999999"
-                                                 placeholder="Đơn giá"/>
+                                    <p:inputText value="#{ordersDetailDto.unitPrice}" id="unitPrice" maxlength="200"
+                                                 readonly="true"  maxValue="99999999999"
+                                                 placeholder="Đơn giá">
+                                        <f:convertNumber pattern="###,###"/>
+                                    </p:inputText>
+
+                                    <p:outputLabel value="Giảm giá: " for="discount"/>
+                                    <p:inputText value="#{ordersDetailDto.discount} %" id="discount" maxlength="200"
+                                                 readonly="true"  maxValue="99999999999"
+                                                 placeholder="Giảm giá"/>
 
                                     <p:outputLabel value="Thành tiền: " for="amount"/>
                                     <p:inputText value="#{ordersDetailDto.amount}" id="amount" maxlength="200"
-                                                 readonly="true" decimalPlaces="0"
-                                                 thousandSeparator="." maxValue="99999999999"
-                                                 placeholder="Thành tiền"/>
+                                                 readonly="true"  maxValue="99999999999"
+                                                 placeholder="Thành tiền">
+                                        <f:convertNumber pattern="###,###"/>
+                                    </p:inputText>
 
+                                    <p:outputLabel></p:outputLabel>
+                                    <p:outputLabel></p:outputLabel>
 
-                                    <p:commandButton value="Xóa sản phẩm" style="width: auto" styleClass="red-btn"
+                                <p:commandButton value="Xóa sản phẩm" style="width: auto" styleClass="red-btn"
                                                      process="@this"
                                                      actionListener="#{ordersController.onDeleteProduct(ordersDetailDto)}"
                                                      update="dlForm:panel"/>
@@ -126,10 +135,30 @@
                                              update="panel growl"/>
                         </p:panel>
 
+
+                        <p:panelGrid id="basicPanel2" columns="4"
+                                     columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                     styleClass="ui-panelgrid-blank" layout="grid">
+                            <p:outputLabel value="Tổng tiền: " for="totalAmount"/>
+                            <p:inputText value="#{ordersController.ordersDto.totalAmount}" id="totalAmount" maxlength="200"
+                                         readonly="true" decimalPlaces="0"
+                                         thousandSeparator="." maxValue="99999999999"
+                                         placeholder="Tổng tiền">
+                                <f:convertNumber pattern="###,###"/>
+                            </p:inputText>
+
+                            <p:outputLabel value="Tiền vận chuyển: " for="shipping"/>
+                            <p:inputText value="#{ordersController.ordersDto.shipping}" id="shipping" maxlength="200"
+                                         maxValue="99999999999"
+                                         placeholder="Nhập phí vận chuyển">
+                                <f:convertNumber pattern="###,###"/>
+                            </p:inputText>
+                        </p:panelGrid>
+
                         <p:panelGrid columns="2"
                                      columnClasses="ui-grid-col-6,ui-grid-col-6"
                                      styleClass="ui-panelgrid-blank">
-                            <p:commandButton value="Lưu" action="#{categoryNewsController.onSave}"
+                            <p:commandButton value="Lưu" action="#{ordersController.onSave}" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_NOT_APPROVED}"
                                              icon="fa fa-save" style="width: 80px;float:right"
                                              update="searchForm focus growl"/>
                             <p:commandButton value="Ðóng" styleClass="close"
@@ -152,8 +181,8 @@
                                              columnClasses="ui-grid-col-4,ui-grid-col-1.5,ui-grid-col-1.5"
                                              styleClass="ui-panelgrid-blank" layout="grid">
 
-                                    <p:inputText id="smanhomquyen" placeholder="Nhập tên đơn đặt hàng"
-                                                 value="#{categoryNewsController.searchDto.categoryName}"/>
+                                    <p:inputText id="customerSearch" placeholder="Nhập tên khách hàng"
+                                                 value="#{ordersController.searchDto.customerName}"/>
 
                                     <p:commandButton value="Tìm kiếm"
                                                      actionListener="#{ordersController.onSearch(DbConstant.ORDER_TYPE_ORDER)}"
@@ -214,12 +243,12 @@
                                     <p:column headerText="Sửa"
                                               exportable="false" style="width: 30px">
                                         <div class="my-data-table">
-                                            <p:commandButton styleClass="edit" value="Sửa"
+                                            <p:commandLink styleClass="edit"
                                                              oncomplete="PF('dialogInsertUpdate').show();"
                                                              update="dlForm growl"
                                                              actionListener="#{ordersController.onUpdate(resultDto)}">
                                                 <i class="fa fa-edit"/>
-                                            </p:commandButton>
+                                            </p:commandLink>
                                         </div>
                                     </p:column>
 
@@ -228,16 +257,20 @@
                                         <div class="my-data-table">
                                             <p:menuButton icon="fa fa-cogs">
                                                 <p:menuitem value="Phê duyệt" style="font-weight: bold;"
-                                                            update="dlForm growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_NOT_APPROVED}}"
-                                                            icon="fa fa-edit"
-                                                            actionListener="#{categoryNewsController.showUpdatePopup(resultDto)}"/>
+                                                            update="tblSearchResult growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_NOT_APPROVED}"
+                                                            icon="fa fa-times"
+                                                            actionListener="#{ordersController.onChangeStatusApproved(resultDto)}"/>
                                                 <p:menuitem value="Hủy phê duyệt" style="font-weight: bold;"
-                                                            update="dlForm growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}}"
-                                                            icon="fa fa-edit"
-                                                            actionListener="#{categoryNewsController.showUpdatePopup(resultDto)}"/>
+                                                            update="tblSearchResult growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}"
+                                                            icon="fa fa-check"
+                                                            actionListener="#{ordersController.onChangeStatusApproved(resultDto)}"/>
+                                                <p:menuitem value="Đã thanh toán" style="font-weight: bold;"
+                                                            update="tblSearchResult growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}"
+                                                            icon="fa fa-wallet"
+                                                            actionListener="#{ordersController.onChangeStatusToPaid(resultDto)}"/>
                                                 <p:menuitem value="Hủy đơn hàng" style="font-weight: bold;"
                                                             icon="fa fa-trash"
-                                                            actionListener="#{categoryNewsController.onDelete(resultDto)}"
+                                                            actionListener="#{ordersController.onCancelOrder(resultDto)}"
                                                             update="tblSearchResult growl">
                                                     <p:confirm header="Xác nhận hủy" message="Bạn chắc chắn muốn hủy ?"
                                                                icon="fa fa-question-circle"/>

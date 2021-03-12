@@ -29,7 +29,7 @@ public class DashboardController extends BaseController {
     @PostConstruct
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
-            init();
+            //init();
             resetAll();
         }
     }
@@ -39,6 +39,6 @@ public class DashboardController extends BaseController {
 
     @Override
     protected EScope getMenuId() {
-        return EScope.PUBLIC;
+        return null;
     }
 }

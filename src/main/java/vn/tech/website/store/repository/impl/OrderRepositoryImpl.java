@@ -105,7 +105,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     private void appendQueryFromAndWhereForSearch(StringBuilder sb, OrdersSearchDto searchDto) {
         sb.append(" FROM orders o " +
                 " LEFT JOIN account acc ON o.account_id = acc.account_id ");
-        sb.append(" WHERE 1=1 ");
+        sb.append(" WHERE 1=1 AND o.status <> " + DbConstant.ORDER_STATUS_CANCEL);
         if (searchDto.getStatusInit() == DbConstant.ORDER_TYPE_ORDER) {
             sb.append(" AND o.status <> :statusInit ");
         }

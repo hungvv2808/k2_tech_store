@@ -123,7 +123,12 @@ public class DbConstant {
     //order
     public static final int ORDER_STATUS_NOT_APPROVED = 0; public static final String ORDER_STATUS_NOT_APPROVED_STRING = "Chưa phê duyệt";
     public static final int ORDER_STATUS_APPROVED = 1; public static final String ORDER_STATUS_APPROVED_STRING = "Đã phê duyệt";
-    public static final int ORDER_STATUS_PAID = 2; public static final String ORDER_STATUS_PAID_STRING = "Đã thanh toán";
+    public static final int ORDER_STATUS_CANCEL = 2; public static final String ORDER_STATUS_CANCEL_STRING = "Hủy đơn hàng";
+    public static final int ORDER_STATUS_PAID = 3; public static final String ORDER_STATUS_PAID_STRING = "Đã thanh toán";
     public static final int ORDER_TYPE_ORDER = 0;
     public static final int ORDER_TYPE_BILL = 1;
+
+    //news
+    public static final int NEWS_STATUS_INACTIVE = 0;
+    public static final int NEWS_STATUS_ACTIVE = 1;
 }

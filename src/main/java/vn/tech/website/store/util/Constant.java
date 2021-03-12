@@ -121,5 +121,6 @@ public class Constant {
 
     //acronym for create code
     public static final String ACRONYM_PRODUCT = "SP";
+    public static final String ACRONYM_ORDER = "DH";
     public static final String ACRONYM_BILL = "HD";
 }
