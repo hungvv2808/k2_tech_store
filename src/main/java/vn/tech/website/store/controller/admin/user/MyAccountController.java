@@ -72,8 +72,8 @@ public class MyAccountController {
         accountDto = new AccountDto();
         account = new Account();
 //        account =  accountRepository.findAccountByAccountId(authorizationController.getAccountDto().getAccountId());
-        account =  accountRepository.findAccountByAccountId(1L);
-        BeanUtils.copyProperties(account,accountDto);
+        account = accountRepository.findAccountByAccountId(1L);
+        BeanUtils.copyProperties(account, accountDto);
         emailBackup = account.getEmail();
         accountList = new ArrayList<>();
 
@@ -109,7 +109,7 @@ public class MyAccountController {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập ngày sinh");
             return false;
         }
-        if (!accountDto.getDateOfBirth().before(new Date())){
+        if (!accountDto.getDateOfBirth().before(new Date())) {
             FacesUtil.addErrorMessage("Ngày sinh phải nhỏ hơn ngày hiện tại");
             return false;
         }
@@ -117,16 +117,20 @@ public class MyAccountController {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập số điện thoại");
             return false;
         }
-        if(!accountDto.getPhone().matches("^0[1-9]{1}[0-9]{8,9}$|")){
+        if (!accountDto.getPhone().matches("^0[1-9]{1}[0-9]{8,9}$|")) {
             FacesUtil.addErrorMessage("Số điện thoại không đúng định dạng");
             return false;
         }
         accountList = accountRepository.findAllAccountExpertId(authorizationController.getAccountDto().getAccountId());
-        for (Account account : accountList){
-            if (accountDto.getPhone().equals(account.getPhone())){
+        for (Account account : accountList) {
+            if (accountDto.getPhone().equals(account.getPhone())) {
                 FacesUtil.addErrorMessage("Số điện thoại đã tồn tại");
                 return false;
             }
+        }
+        if (StringUtils.isBlank(accountDto.getAddress())) {
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập địa chỉ");
+            return false;
         }
         return true;
     }
@@ -147,30 +151,30 @@ public class MyAccountController {
         }
     }
 
-    public boolean checkEmailChanged(){
-        if(newEmail.equals(emailBackup)){
+    public boolean checkEmailChanged() {
+        if (newEmail.equals(emailBackup)) {
             return false;
         }
         return true;
     }
 
-    public void onSendVerifyCode(){
+    public void onSendVerifyCode() {
         if (StringUtils.isBlank(newEmail)) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập email");
             return;
         }
-        if(!newEmail.matches("^\\s*[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})\\s*$")){
+        if (!newEmail.matches("^\\s*[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})\\s*$")) {
             FacesUtil.addErrorMessage("Email không đúng định dạng");
             return;
         }
-        if(!checkEmailChanged()){
+        if (!checkEmailChanged()) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập email mới");
             return;
         }
-        if(!newEmail.equals(emailBackup)){
+        if (!newEmail.equals(emailBackup)) {
             List<Account> accountList = accountRepository.getAllAccountExpertEmail(emailBackup);
-            for (Account account : accountList){
-                if (newEmail.equals(account.getEmail())){
+            for (Account account : accountList) {
+                if (newEmail.equals(account.getEmail())) {
                     FacesUtil.addErrorMessage("Email này đã tồn tại");
                     authorizationController.getAccountDto().setEmail(emailBackup);
                     return;
@@ -180,10 +184,10 @@ public class MyAccountController {
         account = accountRepository.save(account);
 //        EmailUtil.getInstance().sendConfirmChangeEmail(newEmail, account.getUserName(),account.getVerifyCode());
         FacesUtil.addSuccessMessage("Bạn vui lòng kiếm tra mail để lẩy mã xác nhận");
-        allowSendCode=true;
+        allowSendCode = true;
     }
 
-    public void onSaveEmail(){
+    public void onSaveEmail() {
 //        if(StringUtils.isBlank(accountDto.getVerifyCode())){
 //            FacesUtil.addErrorMessage("Bạn vui lòng kiểm tra email và nhập mã xác nhận");
 //            return;
@@ -201,7 +205,7 @@ public class MyAccountController {
         newEmail = "";
     }
 
-    public void onCancelSaveEmail(){
+    public void onCancelSaveEmail() {
         allowSendCode = false;
         newEmail = "";
     }

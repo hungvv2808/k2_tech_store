@@ -123,4 +123,7 @@ public class Constant {
     public static final String ACRONYM_PRODUCT = "SP";
     public static final String ACRONYM_ORDER = "DH";
     public static final String ACRONYM_BILL = "HD";
+
+    //Account
+    public static final String ACCOUNT_PASSWORD_DEFAULT = "123456a@";
 }

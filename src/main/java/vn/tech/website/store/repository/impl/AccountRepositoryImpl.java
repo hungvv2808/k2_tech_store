@@ -104,9 +104,9 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
 
     private void appendQueryFromAndWhereForSearch(StringBuilder sb, AccountSearchDto searchDto) {
         sb.append(" FROM account acc " +
-                "         INNER JOIN province p on acc.province_id = p.province_id " +
-                "         INNER JOIN district d on acc.district_id = d.district_id " +
-                "         INNER JOIN commune c on acc.commune_id = c.commune_id " +
+                "         LEFT JOIN province p on acc.province_id = p.province_id " +
+                "         LEFT JOIN district d on acc.district_id = d.district_id " +
+                "         LEFT JOIN commune c on acc.commune_id = c.commune_id " +
                 "         INNER JOIN role r on acc.role_id = r.role_id " +
                 " WHERE 1 = 1 ");
         if (searchDto.getRoleId() != null) {

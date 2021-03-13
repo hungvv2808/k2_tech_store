@@ -158,7 +158,8 @@
                         <p:panelGrid columns="2"
                                      columnClasses="ui-grid-col-6,ui-grid-col-6"
                                      styleClass="ui-panelgrid-blank">
-                            <p:commandButton value="Lưu" action="#{ordersController.onSave}" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_NOT_APPROVED}"
+                            <p:commandButton value="Lưu" action="#{ordersController.onSave}"
+                                             rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_NOT_APPROVED or resultDto.ordersId eq null }"
                                              icon="fa fa-save" style="width: 80px;float:right"
                                              update="searchForm focus growl"/>
                             <p:commandButton value="Ðóng" styleClass="close"
@@ -258,11 +259,11 @@
                                             <p:menuButton icon="fa fa-cogs">
                                                 <p:menuitem value="Phê duyệt" style="font-weight: bold;"
                                                             update="tblSearchResult growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_NOT_APPROVED}"
-                                                            icon="fa fa-times"
+                                                            icon="fa fa-check"
                                                             actionListener="#{ordersController.onChangeStatusApproved(resultDto)}"/>
                                                 <p:menuitem value="Hủy phê duyệt" style="font-weight: bold;"
                                                             update="tblSearchResult growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}"
-                                                            icon="fa fa-check"
+                                                            icon="fa fa-times"
                                                             actionListener="#{ordersController.onChangeStatusApproved(resultDto)}"/>
                                                 <p:menuitem value="Đã thanh toán" style="font-weight: bold;"
                                                             update="tblSearchResult growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}"

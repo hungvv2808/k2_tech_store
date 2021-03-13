@@ -207,7 +207,7 @@ public class OrdersController {
         BeanUtils.copyProperties(ordersDto, orders);
         if (orders.getOrdersId() == null) {
             orders.setCode(StringUtil.createCode(null, Constant.ACRONYM_ORDER, countCode));
-            orders.setCountCode(StringUtil.createCountCode(null, Constant.ACRONYM_ORDER));
+            orders.setCountCode(StringUtil.createCountCode(orders.getCode(), Constant.ACRONYM_ORDER));
             orders.setStatus(DbConstant.ORDER_STATUS_NOT_APPROVED);
             orders.setCreateBy(authorizationController.getAccountDto().getAccountId());
             orders.setCreateDate(new Date());
@@ -305,7 +305,7 @@ public class OrdersController {
 
     public void onChangeStatusToPaid(OrdersDto resultDto) {
         Orders orders = orderRepository.getByOrdersId(resultDto.getOrdersId());
-        orders.setStatus(DbConstant.ORDER_TYPE_BILL);
+        orders.setStatus(DbConstant.ORDER_STATUS_PAID);
         String code = orders.getCode().replace(Constant.ACRONYM_ORDER, Constant.ACRONYM_BILL);
         orders.setCode(code);
         orders.setUpdateBy(authorizationController.getAccountDto().getAccountId());
