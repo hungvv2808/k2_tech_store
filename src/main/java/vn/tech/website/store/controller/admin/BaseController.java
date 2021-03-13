@@ -51,10 +51,10 @@ public abstract class BaseController implements Serializable {
             return;
         }
         // Check permission
-        if (!authorizationController.hasRole(getMenuId())) {
-            // redirect to access denied page
-            FacesUtil.redirect("/admin/errors/access.xhtml");
-        }
+//        if (!authorizationController.hasRole(getMenuId())) {
+//            // redirect to access denied page
+//            FacesUtil.redirect("/admin/errors/access.xhtml");
+//        }
     }
 
     public void redirectToSuccessPage() {

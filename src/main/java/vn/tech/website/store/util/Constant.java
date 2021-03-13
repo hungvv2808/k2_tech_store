@@ -55,26 +55,6 @@ public class Constant {
     public static final String COOKIE_ACCOUNT = "_JCA";
     public static final String COOKIE_PASSWORD = "_JCP";
 
-    // ID components update
-    public static final String AREA_DESCRIPTION = "area-description";
-    public static final String AREA_BUTTON = "area-button";
-    public static final String AREA_BUTTON_BARGAIN = "area-button-bargain";
-    public static final String AREA_BUTTON_ACCEPT_PRICE = "area-button-accept-price";
-    public static final String AREA_BUTTON_REFUSE_WINNER = "area-button-refuse-winner";
-    public static final String AREA_COUNTDOWN = "area-countdown";
-    public static final String AREA_WINNER = "area-winner";
-    public static final String AREA_MODAL_CANCEL_ASSET = "area-modal-cancel-asset";
-    public static final String AREA_MODAL_DEPOSIT = "area-modal-deposit";
-    public static final String AREA_MODAL_REJECTED = "area-modal-rejected";
-    public static final String AREA_MODAL_RECEIPT_FILE_PATH = "area-modal-receipt-file-path";
-    public static final String AREA_MODAL_CHANGE_ROUND = "area-modal-change-round";
-    public static final String AREA_IMAGE_WINNER = "area-image-winner";
-    public static final String AREA_TABLE = "area-table";
-    public static final String AREA_TABLE_LIBRARY = "area-table-library";
-    public static final String AREA_TABLE_ACCOUNT_LIST = "area-table-account-list";
-    public static final String AREA_TABLE_AUCTION_HISTORY = "area-table-store-history";
-    public static final String AREA_INCLUDE = "area-include";
-
     //Url template export direct payment
     public static final String TEMPLETE_EXPORT_FILE_DIRECT_PAYMENT = "/WEB-INF/export/template_direct_payment.xlsx";
     public static final String REPORT_EXPORT_FILE_DIRECT_PAYMENT = "/WEB-INF/report/";
@@ -100,22 +80,6 @@ public class Constant {
     // Excel export report
     public static final String REPORT_ASSET_LIST_EXPORT_FILE = "/WEB-INF/report/PrintReportAssetList.xlsx";
     public static final String REPORT_REPORT_AND_STATISTICAL = "/WEB-INF/report/ReportAndStatistical.xlsx";
-
-    //API
-    public static final int BATCH_SIZE = 30;
-
-    //Trang dieu hanh
-    public static final String NO_IMAGE_NEWS_URL = "/frontend-layout/images/tintuc.png";
-
-    // status regulation property sale history
-    public static final int HIS_REFUSE_TO_PARTICIPATE_IN_AUCTION = 1;
-    public static final int HIS_INVALID_REGISTRATION = 2;
-    public static final int HIS_JOIN_THE_AUCTION = 3;
-    public static final int HIS_DO_NOT_PARTICIPATE_IN_THE_AUCTION = 4;
-    public static final int HIS_DISQUALIFIED_BY_THE_PROFESSORS = 5;
-    public static final int HIS_REFUSING_TO_WIN_THE_AUCTION = 6;
-    public static final int HIS_WINNING_THE_AUCTION = 7;
-    public static final int HIS_WITHDRAW_THE_PRICE_PAID = 8;
 
     public static final String TIME_ZONE_DEFAULT = "Asia/Ho_Chi_Minh";
 

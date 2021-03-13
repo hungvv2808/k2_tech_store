@@ -22,7 +22,7 @@ function showConfirm(data) {
     updateScopeModal(data);
     if (data.type === 'asset_started') {
         data.message = l_modal[data.type].message.replace('{0}', data.data.name);
-        if ((typeof assetDetail === "undefined" && (typeof myStore === "undefined" || !myStore)) || (typeof assetDetail !== "undefined" && assetDetail != data.data.assetId)) {
+        if ((typeof assetDetail === "undefined" && (typeof myAuction === "undefined" || !myAuction)) || (typeof assetDetail !== "undefined" && assetDetail != data.data.assetId)) {
             hideAllPopup();
             setTimeout(function() {
                 assetStarted(data);
@@ -35,7 +35,7 @@ function assetStarted(data) {
     bootbox.confirm({
         title: l_modal[data.type].title,
         message: data.message,
-        className: "confirmStore modal-login",
+        className: "confirmAuction modal-login",
         swapButtonOrder: true,
         buttons: {
             confirm: {
@@ -55,11 +55,11 @@ function assetStarted(data) {
     });
 }
 
-function storeCancelConfirm() {
+function auctionCancelConfirm() {
     bootbox.confirm({
         title: 'Xác nhận từ chối tham gia đấu giá',
         message: 'Bạn có chắc chắn muốn từ chối tham gia đấu giá không?<br/><br/><b style="color:red">Chú ý:</b> nếu nhấn vào Xác nhận, bạn sẽ không được hoàn lại tiền đặt trước.',
-        className: "confirmStore modal-login",
+        className: "confirmAuction modal-login",
         swapButtonOrder: true,
         buttons: {
             confirm: {
@@ -89,7 +89,7 @@ function updateScope(data) {
 
     jQuery('.modal.hide-at-update').modal('hide');
 
-    if (typeof myStore !== "undefined" || typeof assetDetail !== "undefined") {
+    if (typeof myAuction !== "undefined" || typeof assetDetail !== "undefined") {
         cmdRefreshData([{name: 'id', value: getUrlParameter('id')}]);
     }
 }
@@ -120,56 +120,56 @@ function showPopupChangeRound(data) {
     }
 }
 
-function showPopupStoreLost(data) {
+function showPopupAuctionLost(data) {
     if (typeof assetDetail !== "undefined" && assetDetail == data.data.assetId) {
         hideAllPopup();
-        jQuery('#modalStoreLost').modal('show');
+        jQuery('#modalAuctionLost').modal('show');
     }
 }
 
-function showModalStoreWinnerFinish(data) {
+function showModalAuctionWinnerFinish(data) {
     if (typeof assetDetail !== "undefined" && assetDetail == data.data.assetId) {
         hideAllPopup();
         cmdRefreshWinnerFinish();
     }
 }
 
-function showModalStoreRandom(data) {
+function showModalAuctionRandom(data) {
     if (typeof assetDetail !== "undefined" && assetDetail == data.data.assetId) {
         hideAllPopup();
         cmdRefreshRandom();
     }
 }
 
-function showModalStoreWinner(data) {
+function showModalAuctionWinner(data) {
     if (typeof assetDetail !== "undefined" && assetDetail == data.data.assetId) {
         hideAllPopup();
         cmdRefreshWinner();
     }
 }
 
-function showModalStoreOpportunityD0(data) {
+function showModalAuctionOpportunityD0(data) {
     if (typeof assetDetail !== "undefined" && assetDetail == data.data.assetId) {
         hideAllPopup();
         cmdRefreshOpportunityD0();
     }
 }
 
-function showModalStoreOpportunityD1(data) {
+function showModalAuctionOpportunityD1(data) {
     if (typeof assetDetail !== "undefined" && assetDetail == data.data.assetId) {
         hideAllPopup();
-        jQuery('#modalStoreOpportunityD1').modal('show');
+        jQuery('#modalAuctionOpportunityD1').modal('show');
     }
 }
 
-function showModalStoreOpportunity1(data) {
+function showModalAuctionOpportunity1(data) {
     if (typeof assetDetail !== "undefined" && assetDetail == data.data.assetId) {
         hideAllPopup();
         cmdRefreshOpportunity1();
     }
 }
 
-function showModalStoreOpportunity2(data) {
+function showModalAuctionOpportunity2(data) {
     if (typeof assetDetail !== "undefined" && assetDetail == data.data.assetId) {
         hideAllPopup();
         cmdRefreshOpportunity2();
@@ -181,7 +181,7 @@ function showModalDeposit(data) {
         hideAllPopup();
 
         updateScope(data);
-        if (typeof myStore !== "undefined") {
+        if (typeof myAuction !== "undefined") {
             return;
         }
         cmdRefreshDeposit();

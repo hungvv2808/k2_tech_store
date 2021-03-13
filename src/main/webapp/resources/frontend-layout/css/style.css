@@ -538,7 +538,7 @@ body.modal-open {
   padding: 13px 28px;
 }
 
-.store-form label {
+.auction-form label {
   line-height: 40px !important;
 }
 
@@ -717,14 +717,14 @@ th.hide-icon {
   position: relative;
 }
 
-.store-table-content tr:hover {
+.auction-table-content tr:hover {
   background-color: #fff !important;
 }
-.store-table-content tr td {
+.auction-table-content tr td {
   border-right: 1px solid #cdcdcd;
   padding: 8px 8px !important;
 }
-.store-table-content tr td:first-child {
+.auction-table-content tr td:first-child {
   border-left: 1px solid #cdcdcd;
 }
 
@@ -1982,16 +1982,16 @@ select::-ms-expand {
   margin-top: 0px;
 }
 
-.store-form .row {
+.auction-form .row {
   line-height: 20px;
 }
-.store-form .btn-custom {
+.auction-form .btn-custom {
   padding: 15px 30px;
 }
-.store-form input[type=button] {
+.auction-form input[type=button] {
   height: auto !important;
 }
-.store-form input[type=submit] {
+.auction-form input[type=submit] {
   height: auto !important;
 }
 
@@ -3103,7 +3103,7 @@ Product One Columns
     padding: 16px;
   }
 }
-.store-info .title-heading {
+.auction-info .title-heading {
   position: relative;
   margin-top: 30px;
   margin-bottom: 30px;
@@ -3239,44 +3239,44 @@ Product One Columns
   margin-left: 10px;
 }
 
-.confirmStore {
+.confirmAuction {
   overflow: hidden !important;
 }
-.confirmStore .modal-header {
+.confirmAuction .modal-header {
   border-bottom: none;
   padding: 40px 30px;
 }
-.confirmStore .modal-body {
+.confirmAuction .modal-body {
   padding: 0px 30px;
   font-size: 15px;
 }
-.confirmStore .modal-body span {
+.confirmAuction .modal-body span {
   color: #F19B40;
   font-family: "Roboto Condensed";
   font-style: normal;
   font-weight: bold;
 }
-.confirmStore .modal-footer {
+.confirmAuction .modal-footer {
   border-top: none;
   padding: 40px 30px;
   text-align: center;
 }
-.confirmStore .modal-footer button {
+.confirmAuction .modal-footer button {
   padding: 0px 32px;
   height: 47px;
   margin-left: 10px;
 }
-.confirmStore .modal-footer .btn.reset:hover {
+.confirmAuction .modal-footer .btn.reset:hover {
   background: #f7f7f7 !important;
   color: #F19B40 !important;
   border: 3px solid #F19B40;
   padding: 9px 28px;
 }
-.confirmStore .modal-dialog {
+.confirmAuction .modal-dialog {
   min-width: 480px;
   width: 400px;
 }
-.confirmStore .modal-title {
+.confirmAuction .modal-title {
   font-family: "Roboto Condensed";
   font-style: normal;
   font-weight: bold;
@@ -3285,19 +3285,19 @@ Product One Columns
   text-transform: none;
 }
 
-.store_register {
+.auction_register {
   margin-top: 0px !important;
   position: relative;
 }
-.store_register .row-info {
+.auction_register .row-info {
   margin-bottom: 10px;
 }
-.store_register .row-info label {
+.auction_register .row-info label {
   width: 100%;
   margin-bottom: 0px;
 }
 
-.store-form-register {
+.auction-form-register {
   width: 620px;
   min-width: 620px;
 }

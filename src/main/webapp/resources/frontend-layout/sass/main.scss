@@ -1,17 +1,9 @@
-@import './config';
-@import './header';
-@import './carousel';
-@import './content_introduce';
-@import './technology-life';
-@import './resolve-service';
-@import './projects';
-@import './project-slide';
-@import './my-partner';
-@import './feedback-slide';
-@import './footer';
-@import './theme-style';
+@import './configure/configure.scss';
+@import './body_content/body_content.scss';
+@import './theme_style';
 body {
     overflow-x: hidden;
+    background-color: $background-default;
     .container-fluid,
     .container {
         padding: 0;
