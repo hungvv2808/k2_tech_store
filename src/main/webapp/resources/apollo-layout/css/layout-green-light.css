@@ -4215,6 +4215,7 @@ body .my-data-table {
   float: right;
   padding: 0;
   height: 100%;
+  width: 100%;
 }
 body .my-data-table a {
   color: #7a7a7a;

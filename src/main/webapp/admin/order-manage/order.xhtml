@@ -267,7 +267,7 @@
                                                             actionListener="#{ordersController.onChangeStatusApproved(resultDto)}"/>
                                                 <p:menuitem value="Đã thanh toán" style="font-weight: bold;"
                                                             update="tblSearchResult growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}"
-                                                            icon="fa fa-wallet"
+                                                            icon="fa fa-credit-card"
                                                             actionListener="#{ordersController.onChangeStatusToPaid(resultDto)}"/>
                                                 <p:menuitem value="Hủy đơn hàng" style="font-weight: bold;"
                                                             icon="fa fa-trash"

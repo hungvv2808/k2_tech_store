@@ -71,8 +71,8 @@ public class MyAccountController {
         newEmail = "";
         accountDto = new AccountDto();
         account = new Account();
-//        account =  accountRepository.findAccountByAccountId(authorizationController.getAccountDto().getAccountId());
-        account = accountRepository.findAccountByAccountId(1L);
+        account =  accountRepository.findAccountByAccountId(authorizationController.getAccountDto().getAccountId());
+//        account = accountRepository.findAccountByAccountId(1L);
         BeanUtils.copyProperties(account, accountDto);
         emailBackup = account.getEmail();
         accountList = new ArrayList<>();
