@@ -110,6 +110,7 @@ public class DbConstant {
     public static final int OPTION_TYPE_SIZE = 0; public static final String OPTION_TYPE_SIZE_STRING = "Size";
     public static final int OPTION_TYPE_COLOR = 1; public static final String OPTION_TYPE_COLOR_STRING = "Màu";
     public static final int OPTION_TYPE_RELEASE = 2; public static final String OPTION_TYPE_RELEASE_STRING = "Năm sản xuất";
+    public static final int OPTION_TYPE_OTHER = 3; public static final String OPTION_TYPE_OTHER_STRING = "Khác";
 
     //type product
     public static final int PRODUCT_STATUS_INACTIVE = 0;

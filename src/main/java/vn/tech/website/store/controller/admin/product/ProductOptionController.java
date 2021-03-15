@@ -57,6 +57,7 @@ public class ProductOptionController extends BaseController {
         typeList.add(new SelectItem(DbConstant.OPTION_TYPE_SIZE, DbConstant.OPTION_TYPE_SIZE_STRING));
         typeList.add(new SelectItem(DbConstant.OPTION_TYPE_COLOR, DbConstant.OPTION_TYPE_COLOR_STRING));
         typeList.add(new SelectItem(DbConstant.OPTION_TYPE_RELEASE, DbConstant.OPTION_TYPE_RELEASE_STRING));
+        typeList.add(new SelectItem(DbConstant.OPTION_TYPE_OTHER, DbConstant.OPTION_TYPE_OTHER_STRING));
         onSearch();
     }
 

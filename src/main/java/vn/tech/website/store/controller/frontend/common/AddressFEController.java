@@ -67,11 +67,7 @@ public class AddressFEController implements Serializable {
         }
     }
 
-    public AccountDto getAddressForAccount(Long accountId) {
-        return null;
-    }
-
-    public void loadData(){
+    public void loadData() {
         if (cityDistrictDto.getProvinceId() != null) {
             listDistrict = districtRepository.findDistrictsByProvinceId(cityDistrictDto.getProvinceId());
         }

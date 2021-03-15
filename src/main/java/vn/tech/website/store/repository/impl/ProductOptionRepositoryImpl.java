@@ -71,14 +71,17 @@ public class ProductOptionRepositoryImpl implements ProductOptionRepositoryCusto
             ProductOptionDto dto = new ProductOptionDto();
             dto.setProductOptionId(ValueUtil.getLongByObject(obj[0]));
             dto.setType(ValueUtil.getIntegerByObject(obj[1]));
-            if (dto.getType() == DbConstant.OPTION_TYPE_SIZE){
+            if (dto.getType() == DbConstant.OPTION_TYPE_SIZE) {
                 dto.setTypeOptionString(DbConstant.OPTION_TYPE_SIZE_STRING);
             }
-            if (dto.getType() == DbConstant.OPTION_TYPE_COLOR){
+            if (dto.getType() == DbConstant.OPTION_TYPE_COLOR) {
                 dto.setTypeOptionString(DbConstant.OPTION_TYPE_COLOR_STRING);
             }
-            if (dto.getType() == DbConstant.OPTION_TYPE_RELEASE){
+            if (dto.getType() == DbConstant.OPTION_TYPE_RELEASE) {
                 dto.setTypeOptionString(DbConstant.OPTION_TYPE_RELEASE_STRING);
+            }
+            if (dto.getType() == DbConstant.OPTION_TYPE_OTHER) {
+                dto.setTypeOptionString(DbConstant.OPTION_TYPE_OTHER_STRING);
             }
             dto.setOptionName(ValueUtil.getStringByObject(obj[2]));
             dto.setOptionValue(ValueUtil.getStringByObject(obj[3]));
@@ -120,7 +123,7 @@ public class ProductOptionRepositoryImpl implements ProductOptionRepositoryCusto
         Query query = entityManager.createNativeQuery(sb.toString());
 
         if (searchDto.getType() != null) {
-            query.setParameter("type",  searchDto.getType());
+            query.setParameter("type", searchDto.getType());
         }
         if (StringUtils.isNotBlank(searchDto.getOptionName())) {
             query.setParameter("optionName", "%" + searchDto.getOptionName().trim() + "%");

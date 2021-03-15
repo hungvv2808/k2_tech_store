@@ -26,15 +26,12 @@ public class HomeFEController extends BaseFEController {
     @Inject
     private AuthorizationFEController authorizationFEController;
 
-
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private ProductImageRepository productImageRepository;
 
     private Date now;
-    private Boolean noLogin = true;
-    private Boolean hasLogin;
     private List<ProductDto> maleList;
     private List<ProductDto> femaleList;
     private List<ProductDto> kidList;
@@ -42,15 +39,13 @@ public class HomeFEController extends BaseFEController {
 
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
-//            init();
+            init();
             resetAll();
         }
     }
 
     public void resetAll() {
         now = new Date();
-        noLogin = true;
-        hasLogin = false;
         searchDto = new ProductSearchDto();
         maleList = new ArrayList<>();
         maleList = onSearchListProduct(Constant.CATE_MALE);

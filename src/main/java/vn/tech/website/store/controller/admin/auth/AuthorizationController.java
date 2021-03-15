@@ -292,9 +292,6 @@ public class AuthorizationController implements Serializable {
         accountDto.setRoleName(userRole.getName());
         setRole(account.getRoleId());
 
-        //account.setLoginFailed(0);
-        accountRepository.save(account);
-
         return true;
     }
 

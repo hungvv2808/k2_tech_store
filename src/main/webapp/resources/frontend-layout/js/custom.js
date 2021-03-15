@@ -1,7 +1,7 @@
-(function($) {
+(function() {
     "use strict";
     // Scroll top
-    $(window).load(function() {
+    $(window).on('load', function() {
         var wd = $(window).width();
         if ($('.scroll-to-top').length) {
             $(window).scroll(function() {
@@ -19,7 +19,7 @@
                 }
             });
 
-            $('.scroll-to-top').click(function() {
+            $('.scroll-to-top').on('click', function() {
                 $('html, body').animate({ scrollTop: '0px' }, 800);
                 return false;
             });
@@ -114,68 +114,6 @@
             $bdy.removeClass('show-menu');
         }
     }
-    $(".caret-dropdown").click(function() {
-        if ($(this).parent().hasClass('active')) {
-            $(this).parent().removeClass('active');
-        } else {
-            $(this).parent().addClass('active');
-        }
-    });
-    $(function() {
-        var $window = $(window),
-            $body = $("body"),
-            $modal = $(".modal"),
-            scrollDistance = 0;
-
-        $modal.on("show.bs.modal", function() {
-            // Get the scroll distance at the time the modal was opened
-            scrollDistance = $window.scrollTop();
-            if ($("#register_form").html() != undefined) {
-                $("#login-form").validate().resetForm();
-                $("#lostPass").validate().resetForm();
-                $("#register_form").validate().resetForm();
-            }
-            $("#auction_form_register").validate().resetForm();
-            var els = document.querySelectorAll('.has-error');
-            for (var i = 0; i < els.length; i++) {
-                els[i].classList.remove('has-error')
-            }
-            var sls = document.querySelectorAll('.has-success');
-            for (var i = 0; i < sls.length; i++) {
-                sls[i].classList.remove('has-success')
-            }
-            // Pull the top of the body up by that amount
-            $body.css("top", scrollDistance * -1);
-            var curModal;
-            curModal = this;
-            $(".modal").each(function() {
-                if (this !== curModal) {
-                    $(this).modal("hide");
-                }
-            });
-        });
-        $modal.on("hidden.bs.modal", function() {
-            // Remove the negative top value on the body
-            $body.css("top", "");
-            if ($("#register_form").html() != undefined) {
-                $("#login-form").validate().resetForm();
-                $("#lostPass").validate().resetForm();
-                $("#register_form").validate().resetForm();
-            }
-            $("#auction_form_register").validate().resetForm();
-            var els = document.querySelectorAll('.has-error');
-            for (var i = 0; i < els.length; i++) {
-                els[i].classList.remove('has-error')
-            }
-            var sls = document.querySelectorAll('.has-success');
-            for (var i = 0; i < sls.length; i++) {
-                sls[i].classList.remove('has-success')
-            }
-            // Set the window's scroll position back to what it was before the modal was opened
-            $window.scrollTop(scrollDistance);
-        });
-    });
-
 
     //Fancybox
     $(".fancybox").fancybox({
@@ -184,26 +122,26 @@
     });
     /* Active Menu List */
     var pgurl = window.location.href.substr(window.location.href.lastIndexOf("/") + 1);
-    $(".main-navigation ul li a").each(function() {
-        if ($(this).attr("href") == pgurl || $(this).attr("href") == '')
-            $(this).closest('.main-navigation > ul > li').addClass("active");
-        if ($(this).attr("href") == pgurl || $(this).attr("href") == '')
-            $(this).parent().addClass("active");
+    jQuery(".main-navigation ul li a").each(function() {
+        if (jQuery(this).attr("href") == pgurl || jQuery(this).attr("href") == '')
+            jQuery(this).closest('.main-navigation > ul > li').addClass("active");
+        if (jQuery(this).attr("href") == pgurl || jQuery(this).attr("href") == '')
+            jQuery(this).parent().addClass("active");
     })
 
-})($);
+})();
 
 function loadingScreen(x) {
-    $('.loading').show();
-    setTimeout(function() { $('.loading').hide(); }, x);
+    jQuery('.loading').show();
+    setTimeout(function() { jQuery('.loading').hide(); }, x);
 }
 
 function loadingScreen() {
-    $('.loading').show();
+    jQuery('.loading').show();
 }
 
 function stopLoadingScreen() {
-    $('.loading').hide();
+    jQuery('.loading').hide();
 }
 
 function addCommas(x) {
@@ -213,48 +151,48 @@ function addCommas(x) {
 }
 //Qty
 function increaseQty(priceStep) {
-    var qtya = $('.qty-input').val();
+    var qtya = jQuery('.qty-input').val();
     qtya = qtya.split(',').join("");
     var qtyb = qtya * 1 + priceStep * 1;
-    $('.qty-input').val(addCommas(qtyb));
+    jQuery('.qty-input').val(addCommas(qtyb));
     price_set = addCommas(qtyb);
 }
 
 function decreaseQty(priceStep, minPrice) {
-    var qtya = $('.qty-input').val();
+    var qtya = jQuery('.qty-input').val();
     qtya = qtya.split(',').join("");
     var qtyb = qtya * 1 - priceStep * 1;
     if (qtyb < minPrice) {
         qtyb = minPrice;
     }
 
-    //$('.qty-input').val(qtyb);
+    //jQuery('.qty-input').val(qtyb);
     // $(selector).autoNumeric('set', value)
-    $('.qty-input').val(addCommas(qtyb));
+    jQuery('.qty-input').val(addCommas(qtyb));
     price_set = addCommas(qtyb);
 }
 // Active Cart, Search
 function toggleFilter(obj) {
-    if ($(obj).parent().find('.content-filter').hasClass('active')) {
-        $(obj).parent().find('.content-filter').removeClass('active');
+    if (jQuery(obj).parent().find('.content-filter').hasClass('active')) {
+        jQuery(obj).parent().find('.content-filter').removeClass('active');
     } else {
-        $('.content-filter').removeClass('active');
-        $(obj).parent().find('.content-filter').addClass('active');
+        jQuery('.content-filter').removeClass('active');
+        jQuery(obj).parent().find('.content-filter').addClass('active');
     }
 }
 // Active Cart, Search
 function closeModal(obj) {
-    $(obj).modal("toggle");
+    jQuery(obj).modal("toggle");
 }
 
 // Active Cart, Search
 function openModal(obj) {
-    $(obj).modal("show");
+    jQuery(obj).modal("show");
 }
 
 function resetModal(e) {
-    let id = $(e).data("target");
-    $(id + " input, " + id + " textarea, " + id + " select").not(":input[type=submit], :input[type=button], :input[type=hidden], :input[type=radio], :input[id=recaptcha-token]").each(function(){
+    let id = jQuery(e).data("target");
+    jQuery(id + " input, " + id + " textarea, " + id + " select").not(":input[type=submit], :input[type=button], :input[type=hidden], :input[type=radio], :input[id=recaptcha-token]").each(function(){
         this.value = "";
     });
 }
@@ -266,7 +204,7 @@ function focusInput(id) {
 
 function focusInputSecond(id, seconds) {
     setTimeout(function () {
-        $("#" + id).focus();
+        jQuery("#" + id).focus();
     }, seconds);
 }
 
@@ -279,19 +217,19 @@ if(typeof(Event) === 'function') {
 }
 
 function resetRegister() {
-    $('#tinhThanhpho').val('');
+    jQuery('#tinhThanhpho').val('');
     document.getElementById('tinhThanhpho').dispatchEvent(event);
-    $('#tinhThanhPho').val('');
+    jQuery('#tinhThanhPho').val('');
     document.getElementById('tinhThanhPho').dispatchEvent(event);
-    $(".personal-content-form").show();
-    $(".radio #radioPersonal").attr("checked", "checked");
-    $(".company-content-form").hide();
-    $('#personal-form').validate().resetForm();
-    $('#company-form').validate().resetForm();
+    jQuery(".personal-content-form").show();
+    jQuery(".radio #radioPersonal").attr("checked", "checked");
+    jQuery(".company-content-form").hide();
+    jQuery('#personal-form').validate().resetForm();
+    jQuery('#company-form').validate().resetForm();
 }
 
 function processRandom(th) {
-    var $ = $;
+    var $ = jQuery;
 
     var maxRandCount = 10;
     var maxFlashCount = 3000;
@@ -335,15 +273,15 @@ function resetGoogleCaptcha(e) {
     try {
         var formId = "#" + e + " ";
 
-        $(formId + ".g-recaptcha").each(function (i, e) {
-            $(e).html('');
+        jQuery(formId + ".g-recaptcha").each(function (i, e) {
+            jQuery(e).html('');
         });
 
-        $(formId + ".g-recaptcha").each(function (i, e) {
+        jQuery(formId + ".g-recaptcha").each(function (i, e) {
             grecaptcha.render(
-                $(e).attr('id'),
+                jQuery(e).attr('id'),
                 {
-                    sitekey: $(e).data('sitekey')
+                    sitekey: jQuery(e).data('sitekey')
                 });
         });
     } catch (e) {

@@ -42,13 +42,13 @@
                                 </label>
                             </div>
                             <div class="lost-password-btn">
-                                <a href="#" onclick="closeModal('#login-modal');resetModal(this);onShowLostPassword();" data-toggle="modal" data-target="#lost-pass-modal">Quên mật khẩu ?</a>
+                                <a href="#" onclick="closeModal('#login-modal');resetModal(this);" data-toggle="modal" data-target="#lost-pass-modal">Quên mật khẩu ?</a>
                             </div>
                         </div>
                         <div class="form-group">
                             <h:commandButton id="loginButton"
                                              value="Đăng nhập"
-                                             styleClass="btn btn-custom main-color"
+                                             styleClass="btn btn-custom main-color no-processing"
                                              action="#{authorizationFEController.login}">
                                 <f:ajax execute="@form" render="resend recaptcha loginButton #{Constant.ERROR_FE_GROWL_ID}"/>
                             </h:commandButton>

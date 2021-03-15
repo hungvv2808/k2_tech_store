@@ -51,26 +51,12 @@ public abstract class BaseFEController implements Serializable {
                 FacesUtil.redirect("/frontend/index.xhtml");
                 return;
             }
-
-            // check first time login
-//            if (!authorizationFEController.getAccountDto().isFirstTimeLogin() && authorizationFEController.getAccountDto().getAccountId() != null) {
-//                facesNoticeController.addErrorMessage("Vui lòng đổi mật khẩu trong lần đăng nhập đầu tiên !");
-//                facesNoticeController.openModal("changePassword");
-//            }
-//
-//            // check time to change password
-//            if (authorizationFEController.getAccountDto().getTimeToChangePassword() != null) {
-//                if (DateUtil.plusDay(authorizationFEController.getAccountDto().getTimeToChangePassword(), DbConstant.ACCOUNT_TIME_TO_CHANGE_PASSWORD).getTime() <= (new Date()).getTime() && authorizationFEController.getAccountDto().getAccountId() != null) {
-//                    facesNoticeController.addErrorMessage("Mật khẩu của bạn đã được sử dụng trong " + DbConstant.ACCOUNT_TIME_TO_CHANGE_PASSWORD + " ngày vui lòng đổi mật khẩu để đảm bảo an toàn !");
-//                    facesNoticeController.openModal("changePassword");
-//                }
-//            }
         }
 
-        if (!authorizationFEController.hasRole(getMenuId())) {
-            FacesUtil.redirect("/frontend/index.xhtml");
-            return;
-        }
+//        if (!authorizationFEController.hasRole(getMenuId())) {
+//            FacesUtil.redirect("/frontend/index.xhtml");
+//            return;
+//        }
     }
 
     public FacesNoticeController facesNotice() {

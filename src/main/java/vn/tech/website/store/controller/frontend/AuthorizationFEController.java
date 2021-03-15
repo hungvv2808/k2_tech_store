@@ -81,9 +81,6 @@ public class AuthorizationFEController implements Serializable {
     private Integer numberWrongShowCaptcha;
     private boolean requiredCaptcha;
     private int numberWrongPassword = 1;
-    private Long regulationId;
-    private Long assetId;
-    private Long assId;
     private boolean check;
     private FilterConfig config = null;
     private Part avatarImagePart;
@@ -97,7 +94,6 @@ public class AuthorizationFEController implements Serializable {
         // TODO: We have to check postback at herea
         updateMenuByRole();
         resetAll();
-        // For testing
     }
 
     public void initLoginModal() {
@@ -195,18 +191,6 @@ public class AuthorizationFEController implements Serializable {
 
         facesNoticeController.addSuccessMessage("Cập nhật thành công");
 
-        if (assetId != null) {
-            FacesUtil.redirect("/frontend/asset/asset_detail.xhtml?id=" + assetId);
-            facesNoticeController.openModal("storeRegisterPopup");
-            assetId = null;
-        }
-        if (regulationId != null) {
-            FacesUtil.redirect("/frontend/regulation/regulation_detail.xhtml?id=" + regulationId + "&assId=" + assId);
-            check = false;
-            regulationId = null;
-            assId = null;
-        }
-
         resetMyAccount();
     }
 
@@ -235,7 +219,6 @@ public class AuthorizationFEController implements Serializable {
         String username = StringUtils.isBlank(accountDto.getUserName()) ? "" : AES.decrypt(accountDto.getUserName(), cryptoSecretKey);
         String password = StringUtils.isBlank(accountDto.getPassword()) ? "" : AES.decrypt(accountDto.getPassword(), cryptoSecretKey);
 
-        checkActiveStatus = false;
         if (StringUtils.isBlank(username.trim())) {
             facesNoticeController.addErrorMessage("Bạn vui lòng nhập tên đăng nhập");
             return;
@@ -259,18 +242,6 @@ public class AuthorizationFEController implements Serializable {
             return;
         }
 
-        if (account.getStatus().equals(DbConstant.ACCOUNT_INACTIVE_STATUS)) {
-            String[] codeEmail = account.getEmail().split("@");
-            StringBuilder inEmail = new StringBuilder();
-            for (int i = 2; i < codeEmail[0].length() - 1; i++) {
-                inEmail.append("*");
-            }
-            encodeEmail = account.getEmail().substring(0, 2) + inEmail.toString() + codeEmail[0].charAt(codeEmail[0].length() - 1) + codeEmail[1];
-            facesNoticeController.addErrorMessage("Tài khoản chưa được kích hoạt");
-            checkActiveStatus = true;
-            return;
-        }
-
         if (account.getStatus().equals(DbConstant.ACCOUNT_LOCK_STATUS)) {
             facesNoticeController.addErrorMessage("Tài khoản đang bị khóa");
             return;
@@ -279,39 +250,24 @@ public class AuthorizationFEController implements Serializable {
 
         //PROCESS LOGIN
         processLogin(account);
-
         if (rememberLogin) {
             //save to cookie
             CookieHelper.setCookie(Constant.COOKIE_ACCOUNT, account.getUserName());
             CookieHelper.setCookie(Constant.COOKIE_PASSWORD, StringUtil.encryptPassword(account.getPassword(), account.getSalt() + account.getCreateDate()));
         }
-
-        facesNoticeController.closeModal("loginModal");
-        facesNoticeController.addSuccessMessage("Đăng nhập thành công!");
-
+        facesNoticeController.closeModal("login-modal");
         // Redirect to home page
         facesNoticeController.reload();
+        facesNoticeController.addSuccessMessage("Đăng nhập thành công!");
     }
 
     public void processLogin(Account account) {
-
-        AccountDto accountDtoAddress = addressFEController.getAddressForAccount(account.getAccountId());
-
-        if (accountDtoAddress != null) {
-            accountDto.setProvinceName(accountDtoAddress.getProvinceName());
-            accountDto.setDistrictName(accountDtoAddress.getDistrictName());
-            accountDto.setCommuneName(accountDtoAddress.getCommuneName());
-        }
-
         BeanUtils.copyProperties(account, accountDto);
-//        Role userRole = roleRepository.findRoleByRoleId(accountDto.getRoleId());
-//        accountDto.setRoleName(userRole.getName());
+        Role userRole = roleRepository.findRoleByRoleId(accountDto.getRoleId());
+        accountDto.setRoleName(userRole.getName());
 
         this.role = account.getRoleId();
-        updateMenuByRole();
-
-        //account.setLoginFailed(0);
-        accountRepository.save(account);
+//        updateMenuByRole();
     }
 
     public void logout() {

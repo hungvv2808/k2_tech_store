@@ -2,27 +2,28 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:h="http://java.sun.com/jsf/html"
         xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
         xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" id="navbar">
-        <a class="navbar-brand" href="./index.html">
+        <h:link styleClass="navbar-brand" outcome="/frontend/index.html">
             <img src="#{resource['frontend-layout:img/logo.png']}" class="d-inline-block align-top" alt="logo"
                  style="width: 100%; height: 50px; object-fit: cover;"/>
-        </a>
+        </h:link>
         <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="icon-bar" />
-            <span class="icon-bar" />
-            <span class="icon-bar" />
+            <span class="icon-bar"/>
+            <span class="icon-bar"/>
+            <span class="icon-bar"/>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="nav navbar-nav navbar-primary ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-link nav-link__home" href="./index.html">
+                    <h:link styleClass="nav-link nav-link__home" outcome="/frontend/index.html">
                         <span class="uppercase">Trang chủ</span>
                         <span class="sr-only">(current)</span>
-                    </a>
+                    </h:link>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarNews" role="button" data-toggle="dropdown"
@@ -53,58 +54,27 @@
                         <span class="uppercase">Sản phẩm</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarProducts">
-                        <h:link class="dropdown-item" value="Tất cả sản phẩm" outcome="/frontend/product/product.xhtml"/>
-                        <h:link class="dropdown-item" value="Danh sách điện thoại" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_PHONE}"/>
-                        <h:link class="dropdown-item"  value="Danh sách máy tính" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_LAPTOP}"/>
-                        <h:link class="dropdown-item" value="Danh sách đồng hồ" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_WATCH}"/>
-                        <h:link class="dropdown-item" value="Danh sách tai nghe" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_HEADPHONE}"/>
+                        <h:link class="dropdown-item" value="Tất cả sản phẩm"
+                                outcome="/frontend/product/product.xhtml"/>
+                        <h:link class="dropdown-item" value="Danh sách điện thoại"
+                                outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_PHONE}"/>
+                        <h:link class="dropdown-item" value="Danh sách máy tính"
+                                outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_LAPTOP}"/>
+                        <h:link class="dropdown-item" value="Danh sách đồng hồ"
+                                outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_WATCH}"/>
+                        <h:link class="dropdown-item" value="Danh sách tai nghe"
+                                outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_HEADPHONE}"/>
                     </div>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarBrands" role="button" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
+                <li class="nav-item">
+                    <a class="nav-link nav-link__home" href="#" id="navbarBrands">
                         <span class="uppercase">Nhãn hiệu</span>
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarBrands">
-                        <a class="dropdown-item" href="#">
-                            <span>Apple</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Xiaomi</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Samsung</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Huawei</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Sony</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>LG</span>
-                        </a>
-                    </div>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <li class="nav-item">
+                    <a class="nav-link nav-link__home" href="#" id="navbarCates">
                         <span class="uppercase">Loại sản phẩm</span>
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">
-                            <span>Điện thoại</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Máy tính</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Đồng hồ</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Tai nghe</span>
-                        </a>
-                    </div>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarOrders" role="button" data-toggle="dropdown"
@@ -121,7 +91,7 @@
                     </div>
                 </li>
 
-                <h:panelGroup rendered="#{homeFEController.noLogin}">
+                <h:panelGroup rendered="#{!authorizationFEController.hasLogged()}">
                     <li class="nav-item">
                         <a class="nav-link nav-link__login" data-toggle="modal" data-target="#login-modal">
                             <span class="uppercase">Đăng nhập</span>
@@ -129,27 +99,30 @@
                     </li>
                 </h:panelGroup>
 
-                <h:panelGroup rendered="#{homeFEController.hasLogin}">
+                <h:panelGroup rendered="#{authorizationFEController.hasLogged()}">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle dropdown-toggle__profile" href="#" id="navbarProfile"
                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <div class="profile">
-                                <img src="#{resource['frontend-layout:img/founder.jpg']}" alt="my_profile"
-                                     class="profile__avatar"/>
-                                <span class="profile__name">Vũ Văn Hùng</span>
+                                <p:graphicImage styleClass="profile__avatar"
+                                                name="#{authorizationFEController.accountDto.imagePath == null ? resource['frontend-layout:img/founder.jpg'] : authorizationFEController.accountDto.imagePath}"/>
+                                <span class="profile__name">#{authorizationFEController.accountDto.fullName == null ? 'Vũ Văn Hùng' : authorizationFEController.accountDto.fullName}</span>
                             </div>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarProfile">
                             <a class="dropdown-item" href="#">
                                 <span>Thông tin cá nhân</span>
                             </a>
-                            <a class="dropdown-item" href="#">
-                                <span>Đăng xuất</span>
-                            </a>
+                            <h:form>
+                                <h:commandLink styleClass="dropdown-item" onclick="logout();" actionListener="#{authorizationFEController.logout}">
+                                    <span>Đăng xuất</span>
+                                </h:commandLink>
+                            </h:form>
                         </div>
                     </li>
                     <li class="nav-item nav-item__last-child dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarNotis" role="button" data-toggle="dropdown"
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarNotis" role="button"
+                           data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
                             <div class="noti">
                                 <i class="far fa-bell fa-lg noti__bell"/>
