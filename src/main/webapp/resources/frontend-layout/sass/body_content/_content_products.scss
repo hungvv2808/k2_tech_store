@@ -1,66 +1,116 @@
 .content-products {
-    margin-top: 5rem;
-    .title-products {
-        h1 {
-            text-align: center;
-            width: 100%;
-            padding-bottom: 2rem;
-            color: $primary-color;
-            text-transform: uppercase;
-        }
+  margin-top: 5rem;
+
+  .title-products {
+    h1 {
+      text-align: center;
+      width: 100%;
+      padding-bottom: 2rem;
+      color: $primary-color;
+      text-transform: uppercase;
+
+      &._product {
+        padding-top: 2rem;
+      }
     }
-    .highlight-products,
-    .mobile-products,
-    .laptop-products,
-    .watch-products,
-    .wireless-products {
-        .row {
-            margin-left: 7rem;
-        }
-        .grid-style {
-            padding: 1rem;
-            text-align: center;
-            border: 1px solid $primary-color;
-            background-color: $third-color;
-            border-radius: 1rem;
-            margin: 0 1.5rem 1.5rem 0;
-        }
-        a {
-            text-decoration: none;
-        }
-        &__img {
-            width: 200px;
-            height: 250px;
-            object-fit: cover;
-        }
-        p {
-            margin: 0;
-            padding: 6px 0;
-        }
-        &__title {
-            color: $primary-color;
-        }
-        &__price {
-            color: $red-color;
-        }
+  }
+
+  .all-products,
+  .highlight-products,
+  .mobile-products,
+  .laptop-products,
+  .watch-products,
+  .wireless-products {
+    .row {
+      margin-left: 7rem;
     }
-    .more-products {
-        &>.row {
-            margin-top: 1rem;
+
+    .grid-style {
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid $primary-color;
+      background-color: $third-color;
+      border-radius: 1rem;
+      margin: 0 1.5rem 1.5rem 0;
+
+      &:hover {
+        background-color: $red-color;
+
+        .all-products__title,
+        .highlight-products__title,
+        .mobile-products__title,
+        .laptop-products__title,
+        .watch-products__title,
+        .wireless-products__title,
+        .all-products__price,
+        .highlight-products__price,
+        .mobile-products__price,
+        .laptop-products__price,
+        .watch-products__price,
+        .wireless-products__price,
+        .add-to-cart {
+          color: $third-color;
         }
-        a {
-            width: 100%;
-            text-align: right;
-            text-decoration: none;
-            span {
-                color: $primary-color;
-                font-size: 18px;
-                padding-right: 7rem;
-                &:hover {
-                    color: $primary-color-blur;
-                    text-decoration: underline;
-                }
-            }
-        }
+      }
     }
+
+    a {
+      text-decoration: none;
+    }
+
+    &__img {
+      width: 200px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 1rem;
+    }
+
+    p {
+      margin: 0;
+      padding: 6px 0;
+    }
+
+    &__title {
+      color: $primary-color;
+    }
+
+    &__price {
+      color: $red-color;
+    }
+
+    .add-to-cart {
+      color: $primary-color;
+
+      &:hover {
+        color: $primary-color-blur;
+      }
+
+      i, span {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .more-products {
+    & > .row {
+      margin-top: 1rem;
+    }
+
+    a {
+      width: 100%;
+      text-align: right;
+      text-decoration: none;
+
+      span {
+        color: $primary-color;
+        font-size: 18px;
+        padding-right: 7rem;
+
+        &:hover {
+          color: $primary-color-blur;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
 }

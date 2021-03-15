@@ -1,6 +1,5 @@
 package vn.tech.website.store.controller.frontend;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +31,10 @@ public class HomeFEController extends BaseFEController {
     private ProductImageRepository productImageRepository;
 
     private Date now;
-    private List<ProductDto> maleList;
-    private List<ProductDto> femaleList;
-    private List<ProductDto> kidList;
+    private List<ProductDto> mobileList;
+    private List<ProductDto> laptopList;
+    private List<ProductDto> watchList;
+    private List<ProductDto> airList;
     private ProductSearchDto searchDto;
 
     public void initData() {
@@ -47,12 +47,14 @@ public class HomeFEController extends BaseFEController {
     public void resetAll() {
         now = new Date();
         searchDto = new ProductSearchDto();
-        maleList = new ArrayList<>();
-        maleList = onSearchListProduct(Constant.CATE_MALE);
-        femaleList = new ArrayList<>();
-        femaleList = onSearchListProduct(Constant.CATE_FEMALE);
-        kidList = new ArrayList<>();
-        kidList = onSearchListProduct(Constant.CATE_KID);
+        mobileList = new ArrayList<>();
+        mobileList = onSearchListProduct(Constant.CATE_PHONE);
+        laptopList = new ArrayList<>();
+        laptopList = onSearchListProduct(Constant.CATE_LAPTOP);
+        watchList = new ArrayList<>();
+        watchList = onSearchListProduct(Constant.CATE_WATCH);
+        airList = new ArrayList<>();
+        airList = onSearchListProduct(Constant.CATE_HEADPHONE);
     }
 
     private List<ProductDto> onSearchListProduct(Integer categoryId) {

@@ -38,11 +38,15 @@
                             <div class="checkbox">
                                 <label>
                                     <h:selectBooleanCheckbox type="checkbox" value="#{authorizationFEController.rememberLogin}"/>
-                                    <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"/></span>Nhớ tài khoản
+                                    <span class="save">
+                                        Nhớ tài khoản
+                                        <i class="far fa-check-circle"/>
+                                    </span>
                                 </label>
                             </div>
                             <div class="lost-password-btn">
-                                <a href="#" onclick="closeModal('#login-modal');resetModal(this);" data-toggle="modal" data-target="#lost-pass-modal">Quên mật khẩu ?</a>
+                                <a href="#" onclick="closeModal('#login-modal');resetModal(this);" data-toggle="modal"
+                                   data-target="#lost-pass-modal">Quên mật khẩu ?</a>
                             </div>
                         </div>
                         <div class="form-group">
@@ -50,7 +54,8 @@
                                              value="Đăng nhập"
                                              styleClass="btn btn-custom main-color no-processing"
                                              action="#{authorizationFEController.login}">
-                                <f:ajax execute="@form" render="resend recaptcha loginButton #{Constant.ERROR_FE_GROWL_ID}"/>
+                                <f:ajax execute="@form"
+                                        render="resend recaptcha loginButton #{Constant.ERROR_FE_GROWL_ID}"/>
                             </h:commandButton>
                         </div>
                     </h:form>
