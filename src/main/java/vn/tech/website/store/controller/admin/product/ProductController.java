@@ -235,10 +235,6 @@ public class ProductController extends BaseController {
                 FacesUtil.addErrorMessage("Bạn vui lòng nhập đơn giá");
                 return false;
             }
-            if (productDto.getDiscount() == null) {
-                FacesUtil.addErrorMessage("Bạn vui lòng nhập giảm giá");
-                return false;
-            }
             if (listOptionSelect.size() == 0) {
                 FacesUtil.addErrorMessage("Bạn vui lòng chọn thuộc tính cho sản phẩm");
                 return false;

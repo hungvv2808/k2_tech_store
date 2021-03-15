@@ -240,54 +240,53 @@
                     </div>
                 </div>
                 <div class="mobile-products">
-                    <div class="row">
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="mobile-products__img"
-                                     src="../resources/frontend-layout/img/demo/phone_1.png" alt="highlight product"/>
-                                <p class="mobile-products__title">Apple iPhone 12 Pro Max - 512GB - Chính hãng VN/A</p>
-                                <p class="mobile-products__price">37,690,000 ₫</p>
-                            </a>
+                    <h:form>
+                        <div class="row">
+                            <p:repeat value="#{homeFEController.maleList}" var="productDto">
+                                <div class="col-lg-3 grid-style">
+                                    <p:commandLink >
+                                        <p:graphicImage styleClass="mobile-products__img"
+                                                        rendered="#{not empty productDto.imageToShow}"
+                                                        name="#{productDto.imageToShow}"/>
+                                        <p:graphicImage styleClass="mobile-products__img"
+                                                        rendered="#{empty productDto.imageToShow}"
+                                                        name="images/test-avatar.svg"/>
+                                        <p:outputLabel styleClass="mobile-products__title" value="#{productDto.productName}"/>
+                                        <br/>
+                                        <h:outputText styleClass="mobile-products__price"
+                                                      value="#{productDto.priceAfterDiscount}">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
+                                        <h:outputText styleClass="mobile-products__price" value="#{productDto.price}"
+                                                      rendered="#{productDto.discount ne null and productDto.discount ne 0}"
+                                                      style="text-decoration: line-through #acacac;background: red;color:white;">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
+                                        <br/>
+                                        <p:outputLabel value="#{-productDto.discount}"
+                                                       rendered="#{productDto.discount ne null or productDto.discount == 0}">
+                                            <f:convertNumber type="currency" currencySymbol="%" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </p:outputLabel>
+                                        <br/>
+                                        <p:commandLink actionListener="#{productFEController.addToCart(productDto)}"
+                                                       update="#{Constant.ERROR_FE_GROWL_ID}">
+                                            <i class="fa fa-cart-plus"/>
+                                        </p:commandLink>
+                                    </p:commandLink>
+                                </div>
+                            </p:repeat>
                         </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="mobile-products__img"
-                                     src="../resources/frontend-layout/img/demo/phone_2.png" alt="highlight product"/>
-                                <p class="mobile-products__title">Apple iPhone 12 Pro Max - 512GB - Chính hãng VN/A</p>
-                                <p class="mobile-products__price">37,690,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="mobile-products__img"
-                                     src="../resources/frontend-layout/img/demo/phone_3.png" alt="highlight product"/>
-                                <p class="mobile-products__title">Apple iPhone 12 Pro Max - 512GB - Chính hãng VN/A</p>
-                                <p class="mobile-products__price">37,690,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="mobile-products__img"
-                                     src="../resources/frontend-layout/img/demo/phone_4.png" alt="highlight product"/>
-                                <p class="mobile-products__title">Apple iPhone 12 Pro Max - 512GB - Chính hãng VN/A</p>
-                                <p class="mobile-products__price">37,690,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="mobile-products__img"
-                                     src="../resources/frontend-layout/img/demo/phone_5.png" alt="highlight product"/>
-                                <p class="mobile-products__title">Apple iPhone 12 Pro Max - 512GB - Chính hãng VN/A</p>
-                                <p class="mobile-products__price">37,690,000 ₫</p>
-                            </a>
-                        </div>
-                    </div>
+
+                    </h:form>
                 </div>
                 <div class="more-products">
                     <div class="row">
-                        <a href="#">
-                            <span>Xem thêm <i class="fas fa-angle-double-right"/></span>
-                        </a>
+                        <h:link  value="Xem thêm" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_MALE}">
+                            <i class="fas fa-angle-double-right"/>
+                        </h:link>
                     </div>
                 </div>
             </div>
@@ -301,46 +300,53 @@
                     </div>
                 </div>
                 <div class="laptop-products">
-                    <div class="row">
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="laptop-products__img" src="../resources/frontend-layout/img/demo/mac1.png"
-                                     alt="highlight product"/>
-                                <p class="laptop-products__title">MacBook Air 13" - M1 256GB 2020 - Chính hãng Apple Việt Nam</p>
-                                <p class="laptop-products__price">24,990,000 ₫</p>
-                            </a>
+                    <h:form>
+                        <div class="row">
+                            <p:repeat value="#{homeFEController.femaleList}" var="productDto">
+                                <div class="col-lg-3 grid-style">
+                                    <p:commandLink >
+                                        <p:graphicImage styleClass="mobile-products__img"
+                                                        rendered="#{not empty productDto.imageToShow}"
+                                                        name="#{productDto.imageToShow}"/>
+                                        <p:graphicImage styleClass="mobile-products__img"
+                                                        rendered="#{empty productDto.imageToShow}"
+                                                        name="images/test-avatar.svg"/>
+                                        <p:outputLabel styleClass="mobile-products__title" value="#{productDto.productName}"/>
+                                        <br/>
+                                        <h:outputText styleClass="mobile-products__price"
+                                                      value="#{productDto.priceAfterDiscount}">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
+                                        <h:outputText styleClass="mobile-products__price" value="#{productDto.price}"
+                                                      rendered="#{productDto.discount ne null and productDto.discount ne 0}"
+                                                      style="text-decoration: line-through #acacac;background: red;color:white;">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
+                                        <br/>
+                                        <p:outputLabel value="#{-productDto.discount}"
+                                                       rendered="#{productDto.discount ne null or productDto.discount == 0}">
+                                            <f:convertNumber type="currency" currencySymbol="%" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </p:outputLabel>
+                                        <br/>
+                                        <p:commandLink actionListener="#{productFEController.addToCart(productDto)}"
+                                                       update="#{Constant.ERROR_FE_GROWL_ID}">
+                                            <i class="fa fa-cart-plus"/>
+                                        </p:commandLink>
+                                    </p:commandLink>
+                                </div>
+                            </p:repeat>
                         </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="laptop-products__img" src="../resources/frontend-layout/img/demo/mac2.png"
-                                     alt="highlight product"/>
-                                <p class="laptop-products__title">MacBook Air 13" - M1 512GB 2020 - Chính hãng Apple Việt Nam</p>
-                                <p class="laptop-products__price">30,790,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="laptop-products__img" src="../resources/frontend-layout/img/demo/mac3.png"
-                                     alt="highlight product"/>
-                                <p class="laptop-products__title">MacBook Pro 13" - M1 512GB 2020 - Chính hãng Apple Việt Nam</p>
-                                <p class="laptop-products__price">36,490,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="laptop-products__img" src="../resources/frontend-layout/img/demo/mac3.png"
-                                     alt="highlight product"/>
-                                <p class="laptop-products__title">MacBook Pro 13" - M1 256GB 2020 - Chính hãng Apple Việt Nam</p>
-                                <p class="laptop-products__price">31,790,000 ₫</p>
-                            </a>
-                        </div>
-                    </div>
+
+                    </h:form>
                 </div>
                 <div class="more-products">
                     <div class="row">
-                        <a href="#">
-                            <span>Xem thêm <i class="fas fa-angle-double-right"/></span>
-                        </a>
+                        <h:link  value="Xem thêm" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_FEMALE}">
+                            <i class="fas fa-angle-double-right"/>
+                        </h:link>
                     </div>
                 </div>
             </div>
@@ -354,54 +360,53 @@
                     </div>
                 </div>
                 <div class="watch-products">
-                    <div class="row">
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="watch-products__img" src="../resources/frontend-layout/img/demo/watch1.png"
-                                     alt="highlight product"/>
-                                <p class="watch-products__title">Đồng hồ thông minh Huami Amazfit GTR 2 Silicon - Chính hãng</p>
-                                <p class="watch-products__price">3,990,000 ₫</p>
-                            </a>
+                    <h:form>
+                        <div class="row">
+                            <p:repeat value="#{homeFEController.kidList}" var="productDto">
+                                <div class="col-lg-3 grid-style">
+                                    <p:commandLink >
+                                        <p:graphicImage styleClass="mobile-products__img"
+                                                        rendered="#{not empty productDto.imageToShow}"
+                                                        name="#{productDto.imageToShow}"/>
+                                        <p:graphicImage styleClass="mobile-products__img"
+                                                        rendered="#{empty productDto.imageToShow}"
+                                                        name="images/test-avatar.svg"/>
+                                        <p:outputLabel styleClass="mobile-products__title" value="#{productDto.productName}"/>
+                                        <br/>
+                                        <h:outputText styleClass="mobile-products__price"
+                                                      value="#{productDto.priceAfterDiscount}">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
+                                        <h:outputText styleClass="mobile-products__price" value="#{productDto.price}"
+                                                      rendered="#{productDto.discount ne null and productDto.discount ne 0}"
+                                                      style="text-decoration: line-through #acacac;background: red;color:white;">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
+                                        <br/>
+                                        <p:outputLabel value="#{-productDto.discount}"
+                                                       rendered="#{productDto.discount ne null or productDto.discount == 0}">
+                                            <f:convertNumber type="currency" currencySymbol="%" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </p:outputLabel>
+                                        <br/>
+                                        <p:commandLink actionListener="#{productFEController.addToCart(productDto)}"
+                                                       update="#{Constant.ERROR_FE_GROWL_ID}">
+                                            <i class="fa fa-cart-plus"/>
+                                        </p:commandLink>
+                                    </p:commandLink>
+                                </div>
+                            </p:repeat>
                         </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="watch-products__img" src="../resources/frontend-layout/img/demo/watch2.png"
-                                     alt="highlight product"/>
-                                <p class="watch-products__title">Đồng hồ thông minh Huami Amazfit GTR 2 Leather - Chính hãng</p>
-                                <p class="watch-products__price">4,290,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="watch-products__img" src="../resources/frontend-layout/img/demo/watch3.png"
-                                     alt="highlight product"/>
-                                <p class="watch-products__title">Đồng hồ thông minh Xiaomi Mi Watch Lite - Chính hãng</p>
-                                <p class="watch-products__price">1,450,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="watch-products__img" src="../resources/frontend-layout/img/demo/watch4.png"
-                                     alt="highlight product"/>
-                                <p class="watch-products__title">Đồng hồ thông minh Garmin Lily- Bản dây silicon - Chính hãng</p>
-                                <p class="watch-products__price">4,990,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="watch-products__img" src="../resources/frontend-layout/img/demo/watch5.png"
-                                     alt="highlight product"/>
-                                <p class="watch-products__title">Huami Amazfit Stratos 3 - Chính hãng DGW</p>
-                                <p class="watch-products__price">3,290,000 ₫</p>
-                            </a>
-                        </div>
-                    </div>
+
+                    </h:form>
                 </div>
                 <div class="more-products">
                     <div class="row">
-                        <a href="#">
-                            <span>Xem thêm <i class="fas fa-angle-double-right"/></span>
-                        </a>
+                        <h:link  value="Xem thêm" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_PHONE}">
+                            <i class="fas fa-angle-double-right"/>
+                        </h:link>
                     </div>
                 </div>
             </div>
@@ -415,62 +420,51 @@
                     </div>
                 </div>
                 <div class="wireless-products">
-                    <div class="row">
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air1.png"
-                                     alt="highlight product"/>
-                                <p class="wireless-products__title">Tai nghe Apple AirPods 2 - Wireless Charging Case - chính hãng VN/A</p>
-                                <p class="wireless-products__price">4,990,000 ₫</p>
-                            </a>
+                    <h:form>
+                        <div class="row">
+                            <p:repeat value="#{homeFEController.maleList}" var="productDto">
+                                <div class="col-lg-3 grid-style">
+                                    <p:commandLink >
+                                        <p:graphicImage styleClass="mobile-products__img"
+                                                        rendered="#{not empty productDto.imageToShow}"
+                                                        name="#{productDto.imageToShow}"/>
+                                        <p:graphicImage styleClass="mobile-products__img"
+                                                        rendered="#{empty productDto.imageToShow}"
+                                                        name="images/test-avatar.svg"/>
+                                        <p:outputLabel styleClass="mobile-products__title" value="#{productDto.productName}"/>
+                                        <br/>
+                                        <h:outputText styleClass="mobile-products__price"
+                                                      value="#{productDto.priceAfterDiscount}">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
+                                        <h:outputText styleClass="mobile-products__price" value="#{productDto.price}"
+                                                      rendered="#{productDto.discount ne null and productDto.discount ne 0}"
+                                                      style="text-decoration: line-through #acacac;background: red;color:white;">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
+                                        <br/>
+                                        <p:outputLabel value="#{-productDto.discount}"
+                                                       rendered="#{productDto.discount ne null or productDto.discount == 0}">
+                                            <f:convertNumber type="currency" currencySymbol="%" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </p:outputLabel>
+                                        <br/>
+                                        <p:commandLink actionListener="#{productFEController.addToCart(productDto)}"
+                                                       update="#{Constant.ERROR_FE_GROWL_ID}">
+                                            <i class="fa fa-cart-plus"/>
+                                        </p:commandLink>
+                                    </p:commandLink>
+                                </div>
+                            </p:repeat>
                         </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air2.png"
-                                     alt="highlight product"/>
-                                <p class="wireless-products__title">Apple AirPods 2 - Case sạc thường (MV7N2VN/A)</p>
-                                <p class="wireless-products__price">3,350,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air3.png"
-                                     alt="highlight product"/>
-                                <p class="wireless-products__title">Tai nghe Apple AirPods Pro - Chính Hãng VN/A (MWP22VN/A)</p>
-                                <p class="wireless-products__price">4,190,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air4.png"
-                                     alt="highlight product"/>
-                                <p class="wireless-products__title">Tai nghe Apple AirPods Max - Chính hãng VN/A</p>
-                                <p class="wireless-products__price">11,990,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air5.png"
-                                     alt="highlight product"/>
-                                <p class="wireless-products__title">Loa Sony SRS-XB01 Chính hãng</p>
-                                <p class="wireless-products__price">450,000 ₫</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-3 grid-style">
-                            <a href="#">
-                                <img class="wireless-products__img" src="../resources/frontend-layout/img/demo/air6.png"
-                                     alt="highlight product"/>
-                                <p class="wireless-products__title">Loa JBL Clip 4 - chính hãng</p>
-                                <p class="wireless-products__price">1,590,000 ₫</p>
-                            </a>
-                        </div>
-                    </div>
+
+                    </h:form>
                 </div>
                 <div class="more-products">
                     <div class="row">
-                        <a href="#">
-                            <span>Xem thêm <i class="fas fa-angle-double-right"/></span>
-                        </a>
+                        <h:link class="dropdown-item" value="Xem thêm" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_HEADPHONE}"/>
                     </div>
                 </div>
             </div>

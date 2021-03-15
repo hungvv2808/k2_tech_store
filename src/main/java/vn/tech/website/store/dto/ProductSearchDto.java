@@ -18,4 +18,5 @@ public class ProductSearchDto extends BaseSearchDto {
     private Long brandId;
     private Long categoryId;
     private Integer type;
+    private Integer expertType;
 }

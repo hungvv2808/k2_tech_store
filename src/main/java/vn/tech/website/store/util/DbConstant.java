@@ -90,6 +90,9 @@ public class DbConstant {
     public static final int NOTIFY_PAYMENT_STATUS_NON_CREATE = 0;
     public static final int NOTIFY_PAYMENT_STATUS_CREATED = 1;
 
+    //limit value to show FE
+    public static final int LIMIT_SHOW_FE = 6;
+
     //status brand
     public static final int BRAND_STATUS_INACTIVE = 0;
     public static final int BRAND_STATUS_ACTIVE = 1;

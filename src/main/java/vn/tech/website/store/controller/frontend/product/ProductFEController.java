@@ -3,15 +3,13 @@ package vn.tech.website.store.controller.frontend.product;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.docx4j.wml.P;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.frontend.AuthorizationFEController;
 import vn.tech.website.store.controller.frontend.BaseFEController;
-import vn.tech.website.store.dto.BrandDto;
-import vn.tech.website.store.dto.BrandSearchDto;
-import vn.tech.website.store.dto.OrdersDetailDto;
-import vn.tech.website.store.dto.ProductDto;
+import vn.tech.website.store.dto.*;
 import vn.tech.website.store.model.OrdersDetail;
 import vn.tech.website.store.model.Product;
 import vn.tech.website.store.model.ProductImage;
@@ -50,24 +48,39 @@ public class ProductFEController extends BaseFEController {
     private ProductImageRepository productImageRepository;
 
     private List<ProductDto> productDtoList;
-    private String categoryId;
+    private String cateId;
     private List<OrdersDetailDto> listAddToCart;
+    private ProductSearchDto searchDto;
 
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
             //init();
-            categoryId = request.getParameter("catid");
-            resetAll();
+            cateId = request.getParameter("catid");
+            resetAll(null);
         }
     }
 
-    public void resetAll() {
+    public void resetAll(Long categoryId) {
         productDtoList = new ArrayList<>();
+        searchDto = new ProductSearchDto();
+        onSearch(categoryId);
+    }
+
+    public void onSearch(Long categoryId){
+        List<ProductDto> showList = productRepository.search(searchDto);
+        for (ProductDto dto : showList){
+            dto.setProductImages(new LinkedHashSet<>());
+            dto.setProductImages(productImageRepository.getImagePathByProductId(dto.getProductId()));
+            if (dto.getProductImages().size() != 0) {
+                dto.setImageToShow(dto.getProductImages().iterator().next());
+            }
+        }
+
         List<Product> products = new ArrayList<>();
         if (categoryId == null) {
             products = productRepository.getAllExpertType(DbConstant.PRODUCT_TYPE_CHILD);
         } else {
-            products = productRepository.getByCategoryIdExpertType(Long.valueOf(categoryId), DbConstant.PRODUCT_TYPE_CHILD);
+            products = productRepository.getByCategoryIdExpertType(Long.valueOf(cateId), DbConstant.PRODUCT_TYPE_CHILD);
         }
         for (Product obj : products) {
             ProductDto dto = new ProductDto();

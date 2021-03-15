@@ -99,6 +99,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             dto.setCreateBy(ValueUtil.getLongByObject(obj[15]));
             dto.setUpdateDate(ValueUtil.getDateByObject(obj[16]));
             dto.setUpdateBy(ValueUtil.getLongByObject(obj[17]));
+            if (dto.getDiscount() == null) {
+                dto.setPriceAfterDiscount(dto.getPrice());
+            } else {
+                dto.setPriceAfterDiscount(dto.getPrice() - dto.getPrice() * dto.getDiscount() / 100);
+            }
             dtoList.add(dto);
         }
 
@@ -135,6 +140,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         if (searchDto.getType() != null) {
             sb.append(" AND p.type = :type ");
         }
+        if (searchDto.getExpertType() != null) {
+            sb.append(" AND p.type <> :expertType ");
+        }
     }
 
     private Query createQueryObjForSearch(StringBuilder sb, ProductSearchDto searchDto) {
@@ -152,7 +160,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             query.setParameter("code", "%" + searchDto.getCode().trim() + "%");
         }
         if (searchDto.getType() != null) {
-            query.setParameter("ttype", searchDto.getType());
+            query.setParameter("type", searchDto.getType());
+        }
+        if (searchDto.getExpertType() != null) {
+            query.setParameter("expertType", searchDto.getExpertType());
         }
 
         return query;
