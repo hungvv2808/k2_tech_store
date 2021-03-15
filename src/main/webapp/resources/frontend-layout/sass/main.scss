@@ -1,5 +1,6 @@
-@import './configure/configure.scss';
-@import './body_content/body_content.scss';
+@import './configure/configure';
+@import './body_content/body_content';
+@import './modal/modal';
 @import './theme_style';
 body {
     overflow-x: hidden;

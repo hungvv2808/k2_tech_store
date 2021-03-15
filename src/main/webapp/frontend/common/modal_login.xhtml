@@ -38,7 +38,7 @@
                                                onkeyup="_inf_c_th(this, 'npt_accnt', 'scrt_login');"
                                                onchange="_inf_c_th(this, 'npt_accnt', 'scrt_login');"
                                                id="login_account"/>
-                                        <h:inputHidden id="npt_accnt" value="#{authorizationFEController.accountDto.username}"/>
+                                        <h:inputHidden id="npt_accnt" value="#{authorizationFEController.accountDto.userName}"/>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label" for="login_password">Mật khẩu</label>
@@ -67,7 +67,6 @@
                                         <div class="lost-password-btn">
                                             <a href="#" onclick="closeModal('#loginPopup');resetModal(this);onShowLostPassword();" data-toggle="modal" data-target="#lostPassPopup">Quên mật khẩu</a>
                                         </div>
-                                        <p style="color: red; font-size: small">Nếu đăng nhập sai mật khẩu #{authorizationFEController.systemConfigLoginFailed.value.intValue()} lần tài khoản sẽ bị khóa</p>
                                     </div>
                                     <div class="form-group">
                                         <h:commandButton id="loginButton"
@@ -76,10 +75,6 @@
                                                          action="#{authorizationFEController.login}">
                                             <f:ajax execute="@form" render="resend recaptcha loginButton #{Constant.ERROR_FE_GROWL_ID}"/>
                                         </h:commandButton>
-                                    </div>
-                                    <div class="form-group">
-                                        hoặc đăng nhập bằng
-                                        <p:link outcome="/frontend/login-cas-danang.xhtml" style="display: inline">Hệ thống thông tin chính quyền điện tử</p:link>
                                     </div>
                                 </div>
                             </h:form>

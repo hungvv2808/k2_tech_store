@@ -1,0 +1,28 @@
+#login-modal {
+  .modal-dialog {
+    .modal-content {
+      .modal-header {
+        .modal-title {
+          width: 100%;
+          text-align: center;
+        }
+        .close {
+          margin-top: -1.5rem;
+        }
+      }
+      .modal-body {
+        .btn-custom {
+          background-color: $primary-color !important;
+          color: $third-color !important;
+          width: 100%;
+        }
+      }
+      .modal-footer {
+        text-align: center;
+        .signup {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

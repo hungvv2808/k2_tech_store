@@ -19,10 +19,11 @@ import java.util.Date;
 @Getter
 @Setter
 public class HomeFEController extends BaseFEController {
-
     @Inject
     private AuthorizationFEController authorizationFEController;
     private Date now;
+    private Boolean noLogin = true;
+    private Boolean hasLogin;
 
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
@@ -33,6 +34,8 @@ public class HomeFEController extends BaseFEController {
 
     public void resetAll() {
         now = new Date();
+        noLogin = true;
+        hasLogin = false;
     }
 
     public void onSearch() {

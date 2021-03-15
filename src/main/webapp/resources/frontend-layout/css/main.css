@@ -135,8 +135,11 @@
 .navbar .collapse .navbar-nav .nav-item .nav-link:hover {
   color: #3aaf29;
 }
-.navbar .collapse .navbar-nav .nav-item .nav-link.nav-link__home {
+.navbar .collapse .navbar-nav .nav-item .nav-link.nav-link__home, .navbar .collapse .navbar-nav .nav-item .nav-link.nav-link__login {
   padding-top: 1.45rem;
+}
+.navbar .collapse .navbar-nav .nav-item .nav-link.nav-link__login {
+  padding-bottom: 1.45rem;
 }
 .navbar .collapse .navbar-nav .nav-item .nav-link .profile {
   display: inline-block;
@@ -936,6 +939,25 @@
 .technology-life .container > .row .btn-link i {
   margin-left: 0.2rem;
   margin-top: 0.19rem;
+}
+
+#loginModal .modal-dialog .modal-content .modal-header .modal-title {
+  width: 100%;
+  text-align: center;
+}
+#loginModal .modal-dialog .modal-content .modal-header .close {
+  margin-top: -1.5rem;
+}
+#loginModal .modal-dialog .modal-content .modal-body .btn-custom {
+  background-color: #3aaf29 !important;
+  color: #ffffff !important;
+  width: 100%;
+}
+#loginModal .modal-dialog .modal-content .modal-footer {
+  text-align: center;
+}
+#loginModal .modal-dialog .modal-content .modal-footer .signup {
+  width: 100%;
 }
 
 .no-padding {

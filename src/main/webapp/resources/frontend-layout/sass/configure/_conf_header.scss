@@ -157,8 +157,11 @@
                     &:hover {
                         color: $primary-color;
                     }
-                    &.nav-link__home {
+                    &.nav-link__home, &.nav-link__login {
                         padding-top: 1.45rem;
+                    }
+                    &.nav-link__login {
+                        padding-bottom: 1.45rem;
                     }
                     .profile {
                         display: inline-block;
