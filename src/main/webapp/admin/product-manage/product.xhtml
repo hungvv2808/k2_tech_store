@@ -133,8 +133,6 @@
                         </p:panelGrid>
 
                         <p:panelGrid columns="4" id="panelDetail"
-                                     rendered="#{productController.productDto.type eq DbConstant.PRODUCT_TYPE_CHILD
-                                                or productController.productDto.type eq DbConstant.PRODUCT_TYPE_NONE}"
                                      columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
                                      styleClass="ui-panelgrid-blank" layout="grid">
 
@@ -142,16 +140,30 @@
                             <p:inputText id="price" placeholder="Nhập đơn giá(VNĐ)"
                                          onkeyup="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                                          onchange="this.value = this.value.trim()"
-                                         value="#{productController.productDto.price}"/>
+                                         value="#{productController.productDto.price}">
+                                <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                 minFractionDigits="0" locale="vi_VN"/>
+                            </p:inputText>
 
-                            <p:outputLabel value="Giảm giá:" for="discount"/>
+                            <p:outputLabel value="Giảm giá:" for="discount"
+                                           rendered="#{productController.productDto.type eq DbConstant.PRODUCT_TYPE_CHILD
+                                                or productController.productDto.type eq DbConstant.PRODUCT_TYPE_NONE}"/>
                             <p:inputText id="discount" placeholder="Nhập giảm giá(%)"
+                                         rendered="#{productController.productDto.type eq DbConstant.PRODUCT_TYPE_CHILD
+                                                or productController.productDto.type eq DbConstant.PRODUCT_TYPE_NONE}"
                                          onkeyup="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                                          onchange="this.value = this.value.trim()"
-                                         value="#{productController.productDto.discount}"/>
+                                         value="#{productController.productDto.discount}">
+                                <f:convertNumber type="currency" currencySymbol="%" maxFractionDigits="6"
+                                                 minFractionDigits="0" locale="vi_VN"/>
+                            </p:inputText>
 
-                            <p:outputLabel value="Thuộc tính:" for="attribute"/>
+                            <p:outputLabel value="Thuộc tính:" for="attribute"
+                                           rendered="#{productController.productDto.type eq DbConstant.PRODUCT_TYPE_CHILD
+                                                or productController.productDto.type eq DbConstant.PRODUCT_TYPE_NONE}"/>
                             <p:selectCheckboxMenu id="attribute"
+                                                  rendered="#{productController.productDto.type eq DbConstant.PRODUCT_TYPE_CHILD
+                                                or productController.productDto.type eq DbConstant.PRODUCT_TYPE_NONE}"
                                                   styleClass="checkBoxMenuClass tag input-new-style-no-border"
                                                   scrollHeight="#{productController.optionList.size() lt 5 ? 0 : 150}"
                                                   panelStyle="width:250px"

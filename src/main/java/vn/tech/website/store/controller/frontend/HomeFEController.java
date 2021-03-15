@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.DbConstant;
+import vn.tech.website.store.util.FacesUtil;
 
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -36,6 +37,11 @@ public class HomeFEController extends BaseFEController {
 
     public void onSearch() {
 
+    }
+
+    public void redirectProduct(Integer cateId) {
+        String request = FacesUtil.getContextPath();
+        FacesUtil.redirect(request + "frontend/product/product.xhtml?catid=" + cateId);
     }
 
     @Override

@@ -102,19 +102,24 @@
                                     <p:inputText value="#{ordersDetailDto.unitPrice}" id="unitPrice" maxlength="200"
                                                  readonly="true"  maxValue="99999999999"
                                                  placeholder="Đơn giá">
-                                        <f:convertNumber pattern="###,###"/>
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                         minFractionDigits="0" locale="vi_VN"/>
                                     </p:inputText>
 
                                     <p:outputLabel value="Giảm giá: " for="discount"/>
-                                    <p:inputText value="#{ordersDetailDto.discount} %" id="discount" maxlength="200"
+                                    <p:inputText value="#{ordersDetailDto.discount}" id="discount" maxlength="200"
                                                  readonly="true"  maxValue="99999999999"
-                                                 placeholder="Giảm giá"/>
+                                                 placeholder="Giảm giá">
+                                        <f:convertNumber type="currency" currencySymbol="%" maxFractionDigits="6"
+                                                         minFractionDigits="0" locale="vi_VN"/>
+                                    </p:inputText>
 
                                     <p:outputLabel value="Thành tiền: " for="amount"/>
                                     <p:inputText value="#{ordersDetailDto.amount}" id="amount" maxlength="200"
                                                  readonly="true"  maxValue="99999999999"
                                                  placeholder="Thành tiền">
-                                        <f:convertNumber pattern="###,###"/>
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                         minFractionDigits="0" locale="vi_VN"/>
                                     </p:inputText>
 
                                     <p:outputLabel></p:outputLabel>
@@ -144,14 +149,16 @@
                                          readonly="true" decimalPlaces="0"
                                          thousandSeparator="." maxValue="99999999999"
                                          placeholder="Tổng tiền">
-                                <f:convertNumber pattern="###,###"/>
+                                <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                 minFractionDigits="0" locale="vi_VN"/>
                             </p:inputText>
 
                             <p:outputLabel value="Tiền vận chuyển: " for="shipping"/>
                             <p:inputText value="#{ordersController.ordersDto.shipping}" id="shipping" maxlength="200"
                                          maxValue="99999999999"
                                          placeholder="Nhập phí vận chuyển">
-                                <f:convertNumber pattern="###,###"/>
+                                <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                 minFractionDigits="0" locale="vi_VN"/>
                             </p:inputText>
                         </p:panelGrid>
 

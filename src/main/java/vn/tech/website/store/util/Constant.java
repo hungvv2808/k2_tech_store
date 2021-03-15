@@ -90,4 +90,16 @@ public class Constant {
 
     //Account
     public static final String ACCOUNT_PASSWORD_DEFAULT = "123456a@";
+
+    //resources
+    public static final String RESOURCES_FE = "../frontend";
+
+    //param cate search product FE
+    public static final int CATE_PHONE = 1;
+    public static final int CATE_LAPTOP = 2;
+    public static final int CATE_WATCH = 3;
+    public static final int CATE_HEADPHONE = 4;
+    public static final int CATE_MALE = 1;
+    public static final int CATE_FEMALE = 2;
+    public static final int CATE_KID = 3;
 }

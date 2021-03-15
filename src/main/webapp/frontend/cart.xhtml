@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                template="/frontend/template/template.xhtml">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{productFEController.initData}"/>
+    </f:metadata>
+    <ui:define name="title">Giỏ hàng</ui:define>
+
+
+    <ui:define name="body-content">
+
+    </ui:define>
+
+</ui:composition>

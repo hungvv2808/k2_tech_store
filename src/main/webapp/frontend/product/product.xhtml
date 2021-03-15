@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                template="/frontend/template/template.xhtml">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{productFEController.initData}"/>
+    </f:metadata>
+    <ui:define name="title">Danh sách sản phẩm</ui:define>
+
+
+    <ui:define name="body-content">
+        <div class="content-products">
+            <div class="container">
+                <div class="title-products">
+                    <div class="row">
+                        <h1>Danh sách sản phấm</h1>
+                    </div>
+                </div>
+                <div class="mobile-products">
+                    <h:form>
+                    <div class="row">
+                        <p:repeat value="#{productFEController.productDtoList}" var="productDto">
+                            <div class="col-lg-3 grid-style">
+                                <p:commandLink >
+                                    <p:graphicImage styleClass="mobile-products__img"
+                                                    rendered="#{not empty productDto.imageToShow}"
+                                                    name="#{productDto.imageToShow}"/>
+                                    <p:graphicImage styleClass="mobile-products__img"
+                                                    rendered="#{empty productDto.imageToShow}"
+                                                    name="images/test-avatar.svg"/>
+                                    <p:outputLabel styleClass="mobile-products__title" value="#{productDto.productName}"/>
+                                    <br/>
+                                    <h:outputText styleClass="mobile-products__price"
+                                                  value="#{productDto.priceAfterDiscount}">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                         minFractionDigits="0" locale="vi_VN"/>
+                                    </h:outputText>
+                                    <h:outputText styleClass="mobile-products__price" value="#{productDto.price}"
+                                                  rendered="#{productDto.discount ne null and productDto.discount ne 0}"
+                                                  style="text-decoration: line-through #acacac;background: red;color:white;">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                         minFractionDigits="0" locale="vi_VN"/>
+                                    </h:outputText>
+                                    <br/>
+                                    <p:outputLabel value="#{-productDto.discount}"
+                                                   rendered="#{productDto.discount ne null or productDto.discount == 0}">
+                                        <f:convertNumber type="currency" currencySymbol="%" maxFractionDigits="6"
+                                                         minFractionDigits="0" locale="vi_VN"/>
+                                    </p:outputLabel>
+                                    <br/>
+                                    <p:commandLink actionListener="#{productFEController.addToCart(productDto)}"
+                                                   update="#{Constant.ERROR_FE_GROWL_ID}">
+                                        <i class="fa fa-cart-plus"/>
+                                    </p:commandLink>
+                                </p:commandLink>
+                            </div>
+                        </p:repeat>
+                    </div>
+
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

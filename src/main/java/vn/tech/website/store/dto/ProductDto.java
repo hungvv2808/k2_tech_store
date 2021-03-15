@@ -21,4 +21,6 @@ public class ProductDto extends Product {
     private Long productParentId;
     private List<ProductOptionDetail> optionDetails;
     private Set<String> productImages;
+    private String imageToShow;
+    private Double priceAfterDiscount;
 }
