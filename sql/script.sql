@@ -117,6 +117,7 @@ create table if not exists news
     content       text          null comment 'Chi tiết bài viết',
     category_id   int           null comment 'cate',
     status        int(1)        null comment 'Trạng thái hiển thị tin tức: 0: active / 1: disable',
+    img_path      varchar(200),
     create_date   datetime      null comment 'Ngày tạo',
     create_by     int           null comment 'Nười tạo',
     update_date   datetime      null comment 'Ngày cập nhật',

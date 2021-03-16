@@ -35,7 +35,8 @@
         </p:outputPanel>
 
         <div class="ui-fluid">
-            <p:dialog id="dlg" header="Thông tin sản phẩm" widgetVar="dialogInsertUpdate" modal="true" width="60%" height="600">
+            <p:dialog id="dlg" header="Thông tin sản phẩm" widgetVar="dialogInsertUpdate" modal="true" width="60%"
+                      height="600">
                 <h:form id="dlForm">
                     <p:scrollPanel mode="native" style="width: 100%; max-height: 560px; border: none" id="scrollPanel">
                         <p:focus id="focus"/>
@@ -111,24 +112,11 @@
                             <p:outputLabel value="Mô tả:" for="description" styleClass="required-label"/>
                             <p:textEditor id="description" widgetVar="editor2"
                                           value="#{productController.productDto.description}" height="300"
-                                          placeholder="Nhập mô tả">
-                                <f:facet name="toolbar">
-                                    <span class="ql-formats">
-                                        <button class="ql-bold" />
-                                        <button class="ql-italic" />
-                                        <button class="ql-underline" />
-                                        <button class="ql-strike" />
-                                    </span>
-                                    <span class="ql-formats">
-                                        <select class="ql-font" />
-                                        <select class="ql-size" />
-                                    </span>
-                                </f:facet>
-                            </p:textEditor>
+                                          placeholder="Nhập mô tả"/>
 
-                            <p:outputLabel value="Hình ảnh:" for="hinhAnh" />
+                            <p:outputLabel value="Hình ảnh:" for="hinhAnh"/>
                             <p:panelGrid>
-                                <ui:include src="/common/upload-multiple-image.xhtml" />
+                                <ui:include src="/common/upload-multiple-image.xhtml"/>
                             </p:panelGrid>
                         </p:panelGrid>
 
@@ -137,22 +125,23 @@
                                      styleClass="ui-panelgrid-blank" layout="grid">
 
                             <p:outputLabel value="Đơn giá:" for="price" styleClass="required-label"/>
-                            <p:inputText id="price" placeholder="Nhập đơn giá(VNĐ)"
-                                         onkeyup="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                                         onchange="this.value = this.value.trim()"
-                                         value="#{productController.productDto.price}">
-                            </p:inputText>
+                            <p:inputNumber id="price" placeholder="Nhập đơn giá(VNĐ)"
+                                           decimalPlaces="0"
+                                           thousandSeparator="."
+                                           maxValue="99999999999"
+                                           onkeyup="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                           onchange="this.value = this.value.trim()"
+                                           value="#{productController.productDto.price}"/>
 
-                            <p:outputLabel value="Giảm giá:" for="discount"
+                            <p:outputLabel value="Giảm giá (%):" for="discount"
                                            rendered="#{productController.productDto.type eq DbConstant.PRODUCT_TYPE_CHILD
                                                 or productController.productDto.type eq DbConstant.PRODUCT_TYPE_NONE}"/>
-                            <p:inputText id="discount" placeholder="Nhập giảm giá(%)"
-                                         rendered="#{productController.productDto.type eq DbConstant.PRODUCT_TYPE_CHILD
+                            <p:inputNumber id="discount" placeholder="Nhập giảm giá(%)"
+                                           rendered="#{productController.productDto.type eq DbConstant.PRODUCT_TYPE_CHILD
                                                 or productController.productDto.type eq DbConstant.PRODUCT_TYPE_NONE}"
-                                         onkeyup="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                                         onchange="this.value = this.value.trim()"
-                                         value="#{productController.productDto.discount}">
-                            </p:inputText>
+                                           onkeyup="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                           onchange="this.value = this.value.trim()"
+                                           value="#{productController.productDto.discount}"/>
 
                             <p:outputLabel value="Thuộc tính:" for="attribute" styleClass="requireLabel"
                                            rendered="#{productController.productDto.type eq DbConstant.PRODUCT_TYPE_CHILD
@@ -182,12 +171,11 @@
                                          icon="fa fa-save"
                                          update="searchForm focus growl"/>
                         <p:commandButton value="Ðóng" styleClass="center close"
-                                         oncomplete="PF('dialogInsertUpdate').hide()" icon="fa fa-close" />
+                                         oncomplete="PF('dialogInsertUpdate').hide()" icon="fa fa-close"/>
                     </p:panelGrid>
                 </h:form>
             </p:dialog>
         </div>
-
 
         <h:form id="searchForm">
             <div class="ui-fluid">
@@ -232,14 +220,13 @@
 
                                 </p:panelGrid>
 
-                                <p:panelGrid columns="4"
-                                             columnClasses="ui-grid-col-2, ui-grid-col-2, ui-grid-col-4,ui-grid-col-4"
+                                <p:panelGrid columns="2"
+                                             columnClasses="ui-grid-col-1, ui-grid-col-1"
                                              styleClass="ui-panelgrid-blank width-100">
                                     <p:commandButton value="Tìm kiếm"
                                                      actionListener="#{productController.onSearch()}"
                                                      update="searchForm tblSearchResult" icon="fa fa-search"
                                                      style="width: auto"/>
-
                                     <p:commandButton value="Làm mới"
                                                      actionListener="#{productController.resetAll()}"
                                                      update="searchForm tblSearchResult" icon="fa fa-refresh"
@@ -265,12 +252,30 @@
                                         <h:outputText value="#{rowIndex + 1}"/>
                                     </p:column>
 
+                                    <p:column headerText="Hình ảnh" styleClass="text-center">
+                                        <p:graphicImage styleClass="image-grid" name="#{resultDto.imageToShow}"/>
+                                    </p:column>
+
                                     <p:column headerText="Mã sản phẩm " sortBy="#{resultDto.code}">
                                         <h:outputText value="#{resultDto.code}"/>
                                     </p:column>
 
-                                    <p:column headerText="Tên sản phẩm " sortBy="#{resultDto.productName}">
+                                    <p:column headerText="Tên sản phẩm" sortBy="#{resultDto.productName}">
                                         <h:outputText value="#{resultDto.productName}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Đơn giá" styleClass="text-center">
+                                        <h:outputText value="#{resultDto.price}">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Giảm giá" styleClass="text-center">
+                                        <h:outputText value="#{resultDto.discount}">
+                                            <f:convertNumber type="currency" currencySymbol="%" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
                                     </p:column>
 
                                     <p:column headerText="Loại sản phẩm " sortBy="#{resultDto.categoryName}">
@@ -282,9 +287,12 @@
                                     </p:column>
 
                                     <p:column headerText="Kiểu sản phẩm " sortBy="#{resultDto.type}">
-                                        <h:outputText value="#{DbConstant.PRODUCT_TYPE_PARENT_STRING}" rendered="#{resultDto.type eq DbConstant.PRODUCT_TYPE_PARENT}"/>
-                                        <h:outputText value="#{DbConstant.PRODUCT_TYPE_CHILD_STRING}" rendered="#{resultDto.type eq DbConstant.PRODUCT_TYPE_CHILD}"/>
-                                        <h:outputText value="#{DbConstant.PRODUCT_TYPE_NONE_STRING}" rendered="#{resultDto.type eq DbConstant.PRODUCT_TYPE_NONE}"/>
+                                        <h:outputText value="#{DbConstant.PRODUCT_TYPE_PARENT_STRING}"
+                                                      rendered="#{resultDto.type eq DbConstant.PRODUCT_TYPE_PARENT}"/>
+                                        <h:outputText value="#{DbConstant.PRODUCT_TYPE_CHILD_STRING}"
+                                                      rendered="#{resultDto.type eq DbConstant.PRODUCT_TYPE_CHILD}"/>
+                                        <h:outputText value="#{DbConstant.PRODUCT_TYPE_NONE_STRING}"
+                                                      rendered="#{resultDto.type eq DbConstant.PRODUCT_TYPE_NONE}"/>
                                     </p:column>
 
 
@@ -292,9 +300,9 @@
                                               exportable="false" style="width: 30px">
                                         <div class="my-data-table">
                                             <p:commandLink styleClass="edit"
-                                                             oncomplete="PF('dialogInsertUpdate').show();"
-                                                             update="dlForm growl"
-                                                             actionListener="#{productController.showUpdatePopup(resultDto)}">
+                                                           oncomplete="PF('dialogInsertUpdate').show();"
+                                                           update="dlForm growl"
+                                                           actionListener="#{productController.showUpdatePopup(resultDto)}">
                                                 <i class="fa fa-edit"/>
                                             </p:commandLink>
                                         </div>
@@ -304,8 +312,8 @@
                                               exportable="false" style="width: 30px">
                                         <div class="my-data-table">
                                             <p:commandLink styleClass="delete"
-                                                             actionListener="#{productController.onDelete(resultDto)}"
-                                                             update="tblSearchResult growl searchForm">
+                                                           actionListener="#{productController.onDelete(resultDto)}"
+                                                           update="tblSearchResult growl searchForm">
                                                 <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
                                                            icon="fa fa-question-circle"/>
                                                 <i class="fa fa-remove"/>

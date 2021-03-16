@@ -191,7 +191,7 @@ public class ProductController extends BaseController {
             uploadMultipleImageController.getUploadMultipleFileDto().setListToAdd(uploadMultipleImageController.getUploadMultipleFileDto().getListToShow());
         } else {
             productDto.setCode(StringUtil.createCode(productDto.getCode(), Constant.ACRONYM_PRODUCT, countCode));
-            if (productDto.getCode() == "") {
+            if (productDto.getCode().equals("")) {
                 FacesUtil.addErrorMessage("Mã sản phẩm không hợp lệ");
                 return false;
             }
@@ -313,7 +313,7 @@ public class ProductController extends BaseController {
         }
         if (productDto.getType() == DbConstant.PRODUCT_TYPE_CHILD){
             ProductLink productLink = productLinkRepository.getByChildId(productDto.getProductId());
-            productDto.setProductParentId(productLink.getParentId());
+            productDto.setProductParentId(productLink != null ? productLink.getParentId() : null);
         }
     }
 

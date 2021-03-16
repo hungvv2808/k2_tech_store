@@ -30,7 +30,8 @@
         </p:outputPanel>
 
         <div class="ui-fluid">
-            <p:dialog id="dlg" header="Thông tin danh sách tin tức" widgetVar="dialogInsertUpdate" modal="true" width="1000">
+            <p:dialog id="dlg" header="Thông tin danh sách tin tức" widgetVar="dialogInsertUpdate" modal="true"
+                      width="1000">
                 <h:form id="dlForm">
                     <p:scrollPanel mode="native" style="width: 100%; max-height: 600px; border: none" id="panel">
                         <p:focus id="focus"/>
@@ -46,6 +47,12 @@
                                 <f:selectItems value="#{newsController.categoryList}"/>
                             </p:selectOneMenu>
 
+                            <p:outputLabel value="Hình ảnh:" for="singleImage" styleClass="requireLabel"/>
+                            <p:panelGrid>
+                                <ui:include src="/common/upload-single-image.xhtml"/>
+                            </p:panelGrid>
+
+
                             <p:outputLabel value="Tiêu đề:" for="title" styleClass="requireLabel"/>
                             <p:inputText id="title" placeholder="Nhập tiêu đề"
                                          value="#{newsController.newsDto.title}"
@@ -59,20 +66,7 @@
                             <p:outputLabel value="Nội dung chi tiết:" for="content" styleClass="required-label"/>
                             <p:textEditor id="content" widgetVar="editor2"
                                           value="#{newsController.newsDto.content}" height="300"
-                                          placeholder="Nhập nội dung">
-                                <f:facet name="toolbar">
-                                    <span class="ql-formats">
-                                        <button class="ql-bold" />
-                                        <button class="ql-italic" />
-                                        <button class="ql-underline" />
-                                        <button class="ql-strike" />
-                                    </span>
-                                    <span class="ql-formats">
-                                        <select class="ql-font" />
-                                        <select class="ql-size" />
-                                    </span>
-                                </f:facet>
-                            </p:textEditor>
+                                          placeholder="Nhập nội dung"/>
                         </p:panelGrid>
                         <p:panelGrid columns="2"
                                      columnClasses="ui-grid-col-6,ui-grid-col-6"
@@ -137,6 +131,10 @@
                                         <h:outputText value="#{resultDto.categoryName}"/>
                                     </p:column>
 
+                                    <p:column headerText="Hình ảnh">
+                                        <p:graphicImage styleClass="image-grid" name="#{resultDto.imgPath}"/>
+                                    </p:column>
+
                                     <p:column headerText="Tiêu đề" sortBy="#{resultDto.title}">
                                         <h:outputText value="#{resultDto.title}"/>
                                     </p:column>
@@ -160,9 +158,9 @@
                                               exportable="false" style="width: 30px">
                                         <div class="my-data-table">
                                             <p:commandLink styleClass="edit"
-                                                             oncomplete="PF('dialogInsertUpdate').show();"
-                                                             update="dlForm growl"
-                                                             actionListener="#{newsController.showUpdatePopup(resultDto)}">
+                                                           oncomplete="PF('dialogInsertUpdate').show();"
+                                                           update="dlForm growl"
+                                                           actionListener="#{newsController.showUpdatePopup(resultDto)}">
                                                 <i class="fa fa-edit"/>
                                             </p:commandLink>
                                         </div>
@@ -172,8 +170,8 @@
                                               exportable="false" style="width: 30px">
                                         <div class="my-data-table">
                                             <p:commandLink styleClass="delete"
-                                                             actionListener="#{newsController.onDelete(resultDto)}"
-                                                             update="tblSearchResult growl searchForm">
+                                                           actionListener="#{newsController.onDelete(resultDto)}"
+                                                           update="tblSearchResult growl searchForm">
                                                 <p:confirm header="Xác nhận xóa" message="Bạn chắc chắn muốn xóa ?"
                                                            icon="fa fa-question-circle"/>
                                                 <i class="fa fa-remove"/>

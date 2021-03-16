@@ -33,4 +33,7 @@ public class News extends BaseModel{
 
     @Column(name = "status")
     private Integer status;
+
+    @Column(name = "img_path")
+    private String imgPath;
 }

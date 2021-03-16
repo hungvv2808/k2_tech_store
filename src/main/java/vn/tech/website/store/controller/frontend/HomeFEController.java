@@ -4,8 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import vn.tech.website.store.dto.NewsDto;
+import vn.tech.website.store.dto.NewsSearchDto;
 import vn.tech.website.store.dto.ProductDto;
 import vn.tech.website.store.dto.ProductSearchDto;
+import vn.tech.website.store.repository.NewsRepository;
 import vn.tech.website.store.repository.ProductImageRepository;
 import vn.tech.website.store.repository.ProductRepository;
 import vn.tech.website.store.util.Constant;
@@ -26,11 +29,14 @@ public class HomeFEController extends BaseFEController {
     private AuthorizationFEController authorizationFEController;
 
     @Autowired
+    private NewsRepository newsRepository;
+    @Autowired
     private ProductRepository productRepository;
     @Autowired
     private ProductImageRepository productImageRepository;
 
     private Date now;
+    private List<NewsDto> newsDtoList;
     private List<ProductDto> mobileList;
     private List<ProductDto> laptopList;
     private List<ProductDto> watchList;
@@ -47,6 +53,14 @@ public class HomeFEController extends BaseFEController {
     public void resetAll() {
         now = new Date();
         searchDto = new ProductSearchDto();
+
+        // list news
+        NewsSearchDto newsSearchDto = new NewsSearchDto();
+        newsSearchDto.setPageSize(DbConstant.LIMIT_SHOW_FE);
+        newsDtoList = new ArrayList<>();
+        newsDtoList = newsRepository.search(newsSearchDto);
+
+        // list products
         mobileList = new ArrayList<>();
         mobileList = onSearchListProduct(Constant.CATE_PHONE);
         laptopList = new ArrayList<>();
@@ -59,7 +73,7 @@ public class HomeFEController extends BaseFEController {
 
     private List<ProductDto> onSearchListProduct(Integer categoryId) {
         searchDto.setPageSize(DbConstant.LIMIT_SHOW_FE);
-        searchDto.setExpertType(DbConstant.PRODUCT_TYPE_CHILD);
+//        searchDto.setExpertType(DbConstant.PRODUCT_TYPE_CHILD);
         searchDto.setCategoryId(Long.valueOf(categoryId));
         List<ProductDto> showList = productRepository.search(searchDto);
         for (ProductDto dto : showList){

@@ -217,7 +217,7 @@ public class StringUtil {
 
     public static String createCode(String code, String twoFirstChar, Long countCode) {
         //không nhập
-        if (code == null || code == "") {
+        if (code == null || code.equals("")) {
             if (countCode == Long.parseLong(maxValueCodeDefault)) {
                 return String.format(twoFirstChar + Long.toString(Long.parseLong(maxValueCodeDefault) + 2));
             }

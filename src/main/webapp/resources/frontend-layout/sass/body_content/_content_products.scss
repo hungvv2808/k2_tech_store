@@ -74,8 +74,26 @@
       color: $primary-color;
     }
 
+    &__discount {
+      color: $red-color;
+      font-size: 20px;
+      font-weight: bold;
+      background: $yellow-color;
+      margin: 0 !important;
+      padding: 1.5rem 0.5rem !important;
+      position: absolute;
+      top: 25%;
+      left: 0;
+      width: 100%;
+    }
+
     &__price {
       color: $red-color;
+      &.special-price {
+        text-decoration: line-through $third-color;
+        background: $red-color;
+        color: $third-color;
+      }
     }
 
     .add-to-cart {

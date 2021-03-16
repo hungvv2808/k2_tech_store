@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.admin.BaseController;
 import vn.tech.website.store.controller.admin.auth.AuthorizationController;
+import vn.tech.website.store.controller.admin.common.UploadSingleImageController;
 import vn.tech.website.store.dto.CategoryDto;
 import vn.tech.website.store.dto.CategorySearchDto;
 import vn.tech.website.store.dto.NewsDto;
@@ -38,6 +39,8 @@ import java.util.Map;
 public class NewsController extends BaseController {
     @Inject
     private AuthorizationController authorizationController;
+    @Inject
+    private UploadSingleImageController uploadSingleImageController;
 
     @Autowired
     private NewsRepository newsRepository;
@@ -60,6 +63,7 @@ public class NewsController extends BaseController {
         newsDto = new NewsDto();
         searchDto = new NewsSearchDto();
         categoryList = new ArrayList<>();
+        uploadSingleImageController.resetAll(null);
         List<Category> categories = categoryRepository.findAllCategoryNews();
         for (Category obj : categories) {
             categoryList.add(new SelectItem(obj.getCategoryId(), obj.getCategoryName()));
@@ -107,6 +111,11 @@ public class NewsController extends BaseController {
             FacesUtil.addErrorMessage("Bạn vui lòng chọn loại tin tức");
             return false;
         }
+        newsDto.setImgPath(uploadSingleImageController.getImagePath());
+        if (newsDto.getImgPath() == null){
+            FacesUtil.addErrorMessage("Bạn vui lòng tải ảnh cho tin tức");
+            return false;
+        }
         if (StringUtils.isBlank(newsDto.getTitle())){
             FacesUtil.addErrorMessage("Bạn vui lòng nhập tiêu đề");
             return false;
@@ -129,8 +138,10 @@ public class NewsController extends BaseController {
         News news = new News();
         BeanUtils.copyProperties(newsDto, news);
         news.setStatus(DbConstant.NEWS_STATUS_ACTIVE);
+        news.setCreateDate(new Date());
+        news.setCreateBy(authorizationController.getAccountDto().getAccountId());
         news.setUpdateDate(new Date());
-        news.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
+        news.setUpdateBy(authorizationController.getAccountDto().getAccountId());
         newsRepository.save(news);
         FacesUtil.addSuccessMessage("Lưu thành công.");
         FacesUtil.closeDialog("dialogInsertUpdate");
@@ -138,6 +149,7 @@ public class NewsController extends BaseController {
     }
 
     public void showUpdatePopup(NewsDto resultDto) {
+        uploadSingleImageController.resetAll(resultDto.getImgPath());
         BeanUtils.copyProperties(resultDto, newsDto);
     }
 
@@ -152,6 +164,7 @@ public class NewsController extends BaseController {
 
     public void resetDialog() {
         newsDto = new NewsDto();
+        uploadSingleImageController.resetAll(null);
     }
 
     public String removeSpaceOfString(String str) {

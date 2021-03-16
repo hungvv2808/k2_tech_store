@@ -23,27 +23,29 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<ProductDto> search(ProductSearchDto searchDto) {
+    public List search(ProductSearchDto searchDto) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT "
-                + "p.product_id as productId, "
-                + "p.name as productName, "
-                + "p.brand_id as brandId, "
-                + "b.name as brandName, "
-                + "p.category_id as categoryId, "
-                + "c.name as categoryName, "
-                + "p.type as type, "
-                + "p.code as code, "
-                + "p.count_code as countCode, "
-                + "p.description as description, "
-                + "p.quantity as quantity, "
-                + "p.price as price, "
-                + "p.discount as discount, "
-                + "p.status as status, "
-                + "p.create_date as createDate, "
-                + "p.create_by as createBy, "
-                + "p.update_date as updateDate, "
-                + "p.update_by as updateBy ");
+                + "p.product_id AS productId, "
+                + "p.name AS productName, "
+                + "p.brand_id AS brandId, "
+                + "b.name AS brandName, "
+                + "p.category_id AS categoryId, "
+                + "c.name AS categoryName, "
+                + "p.type AS type, "
+                + "p.code AS code, "
+                + "p.count_code AS countCode, "
+                + "p.description AS description, "
+                + "p.quantity AS quantity, "
+                + "p.price AS price, "
+                + "p.discount AS discount, "
+                + "p.status AS status, "
+                + "p.create_date AS createDate, "
+                + "p.create_by AS createBy, "
+                + "p.update_date AS updateDate, "
+                + "p.update_by AS updateBy, "
+                + "p.price - p.price * p.discount / 100 AS priceAfterDiscount, "
+                + "(SELECT pi.image_path FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS imageToShow ");
         appendQueryFromAndWhereForSearch(sb, searchDto);
         sb.append(" GROUP BY p.product_id ");
         if (searchDto.getSortField() != null) {
@@ -77,37 +79,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             query.setMaxResults(Integer.MAX_VALUE);
         }
 
-        List<ProductDto> dtoList = new ArrayList<>();
-        List<Object[]> result = query.getResultList();
-        for (Object[] obj : result) {
-            ProductDto dto = new ProductDto();
-            dto.setProductId(ValueUtil.getLongByObject(obj[0]));
-            dto.setProductName(ValueUtil.getStringByObject(obj[1]));
-            dto.setBrandId(ValueUtil.getLongByObject(obj[2]));
-            dto.setBrandName(ValueUtil.getStringByObject(obj[3]));
-            dto.setCategoryId(ValueUtil.getLongByObject(obj[4]));
-            dto.setCategoryName(ValueUtil.getStringByObject(obj[5]));
-            dto.setType(ValueUtil.getIntegerByObject(obj[6]));
-            dto.setCode(ValueUtil.getStringByObject(obj[7]));
-            dto.setCountCode(ValueUtil.getLongByObject(obj[8]));
-            dto.setDescription(ValueUtil.getStringByObject(obj[9]));
-            dto.setQuantity(ValueUtil.getLongByObject(obj[10]));
-            dto.setPrice(ValueUtil.getDoubleByObject(obj[11]));
-            dto.setDiscount(ValueUtil.getFloatByObject(obj[12]));
-            dto.setStatus(ValueUtil.getIntegerByObject(obj[13]));
-            dto.setCreateDate(ValueUtil.getDateByObject(obj[14]));
-            dto.setCreateBy(ValueUtil.getLongByObject(obj[15]));
-            dto.setUpdateDate(ValueUtil.getDateByObject(obj[16]));
-            dto.setUpdateBy(ValueUtil.getLongByObject(obj[17]));
-            if (dto.getDiscount() == null) {
-                dto.setPriceAfterDiscount(dto.getPrice());
-            } else {
-                dto.setPriceAfterDiscount(dto.getPrice() - dto.getPrice() * dto.getDiscount() / 100);
-            }
-            dtoList.add(dto);
-        }
-
-        return dtoList;
+        return EntityMapper.mapper(query, sb.toString(), ProductDto.class);
     }
 
     @Override
@@ -123,7 +95,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         sb.append("FROM product p " +
                 " INNER JOIN category c on p.category_id = c. category_id " +
                 " INNER JOIN brand b on p.brand_id = b.brand_id ");
-        sb.append(" WHERE 1=1  ");
+        sb.append(" WHERE 1=1 ");
 
         if (StringUtils.isNotBlank(searchDto.getProductName())) {
             sb.append(" AND p.name LIKE :productName ");

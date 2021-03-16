@@ -7,6 +7,8 @@ import vn.tech.website.store.dto.NewsDto;
 import vn.tech.website.store.dto.NewsSearchDto;
 import vn.tech.website.store.entity.EntityMapper;
 import vn.tech.website.store.repository.NewsRepositoryCustom;
+import vn.tech.website.store.util.Constant;
+import vn.tech.website.store.util.DbConstant;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,6 +31,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
                 + "n.short_content AS shortContent, "
                 + "n.content AS content, "
                 + "n.status AS status, "
+                + "n.img_path AS imgPath, "
                 + "n.create_date AS createDate, "
                 + "n.create_by AS createBy, "
                 + "n.update_date AS updateDate, "
@@ -79,7 +82,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
         sb.append(" FROM news n " +
                 " INNER JOIN category c on n.category_id = c.category_id " +
                 " LEFT JOIN account acc on n.update_by = acc.account_id ");
-        sb.append(" WHERE 1 = 1 ");
+        sb.append(" WHERE 1 = 1 AND n.status = " + DbConstant.NEWS_STATUS_ACTIVE + " ");
 
         if (StringUtils.isNotBlank(searchDto.getKeyword())) {
             sb.append(" AND (n.title LIKE :keyword OR n.short_content LIKE :keyword) ");
