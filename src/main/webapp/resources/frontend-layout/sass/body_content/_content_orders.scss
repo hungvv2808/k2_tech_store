@@ -1,0 +1,83 @@
+.content-orders {
+  margin-top: 5rem;
+
+  .title-orders {
+    h1 {
+      text-align: center;
+      width: 100%;
+      padding-bottom: 2rem;
+      color: $primary-color;
+      text-transform: uppercase;
+      padding-top: 2rem;
+    }
+  }
+
+  .orders-infor {
+    &__empty {
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .order-product {
+      &__header {
+        background-color: $primary-color;
+        color: $third-color;
+        border-radius: 1rem;
+
+        th {
+          text-align: center;
+
+          &:first-child {
+            border-top-left-radius: 1rem;
+            border-bottom-left-radius: 1rem;
+          }
+
+          &:last-child {
+            border-top-right-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+          }
+        }
+      }
+
+      td {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      &__img {
+        img {
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+          border-radius: 1rem;
+        }
+      }
+
+      &__action {
+        i {
+          color: $primary-color;
+          &:hover {
+            color: $red-color;
+          }
+        }
+      }
+    }
+
+    &__total {
+      border-top: 3px solid $red-color;
+      .row {
+        padding-top: 1rem;
+        p {
+          width: 100%;
+          text-align: right;
+        }
+        .qty, .money {
+          color: $red-color;
+        }
+        .btn-custom {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
