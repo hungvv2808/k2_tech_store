@@ -12,4 +12,5 @@ import lombok.Setter;
 public class CategorySearchDto extends BaseSearchDto {
     private String categoryName;
     private Integer type;
+    private Integer status;
 }

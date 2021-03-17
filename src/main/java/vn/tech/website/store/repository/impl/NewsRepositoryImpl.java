@@ -87,6 +87,9 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
         if (StringUtils.isNotBlank(searchDto.getKeyword())) {
             sb.append(" AND (n.title LIKE :keyword OR n.short_content LIKE :keyword) ");
         }
+        if (searchDto.getCategoryId() != null){
+            sb.append(" AND n.category_id = :categoryId ");
+        }
     }
 
     private Query createQueryObjForSearch(StringBuilder sb, NewsSearchDto searchDto) {
@@ -94,7 +97,9 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
         if (StringUtils.isNotBlank(searchDto.getKeyword())) {
             query.setParameter("keyword", "%" + searchDto.getKeyword().trim() + "%");
         }
-
+        if (searchDto.getCategoryId() != null){
+            query.setParameter("categoryId", searchDto.getCategoryId());
+        }
         return query;
     }
 }

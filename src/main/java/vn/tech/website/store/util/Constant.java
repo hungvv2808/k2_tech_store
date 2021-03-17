@@ -99,7 +99,11 @@ public class Constant {
     public static final int CATE_LAPTOP = 7;
     public static final int CATE_WATCH = 2;
     public static final int CATE_HEADPHONE = 6;
+
     public static final int CATE_MALE = 1;
     public static final int CATE_FEMALE = 2;
     public static final int CATE_KID = 3;
+    public static final int CATE_FASHION = 5;
+    public static final int CATE_FOOTWARE = 6;
+
 }

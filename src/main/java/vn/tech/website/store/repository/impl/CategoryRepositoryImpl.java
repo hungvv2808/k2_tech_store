@@ -80,6 +80,9 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
         if (StringUtils.isNotBlank(searchDto.getCategoryName())) {
             sb.append(" AND (c.code LIKE :keyword OR c.name LIKE :keyword) ");
         }
+        if (searchDto.getStatus() != null){
+            sb.append(" AND c.status = :status ");
+        }
     }
 
     private Query createQueryObjForSearch(StringBuilder sb, CategorySearchDto searchDto) {
@@ -87,7 +90,9 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
         if (StringUtils.isNotBlank(searchDto.getCategoryName())) {
             query.setParameter("keyword", "%" + searchDto.getKeyword().trim() + "%");
         }
-
+        if (searchDto.getStatus() != null){
+            query.setParameter("status", searchDto.getStatus());
+        }
         return query;
     }
 }

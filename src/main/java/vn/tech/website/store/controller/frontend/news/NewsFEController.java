@@ -3,15 +3,19 @@ package vn.tech.website.store.controller.frontend.news;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.frontend.AuthorizationFEController;
 import vn.tech.website.store.controller.frontend.BaseFEController;
+import vn.tech.website.store.controller.frontend.common.PaginationController;
 import vn.tech.website.store.dto.*;
 import vn.tech.website.store.model.Product;
 import vn.tech.website.store.repository.*;
 import vn.tech.website.store.util.DbConstant;
+import vn.tech.website.store.util.FacesUtil;
 
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -21,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 @Named
 @Scope(value = "session")
@@ -45,52 +50,58 @@ public class NewsFEController extends BaseFEController {
     private String cateId;
     private List<OrdersDetailDto> listAddToCart;
     private NewsSearchDto searchDto;
+    private PaginationController<NewsDto> pagination;
+    private NewsDto newsDto;
+
+    public NewsFEController(){
+        pagination = new PaginationController<>();
+    }
 
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
             init();
             cateId = request.getParameter("catid");
-            resetAll(null);
+            resetAll(cateId == null ? null : Long.parseLong(cateId));
         }
     }
 
     public void resetAll(Long categoryId) {
         newsDtoList = new ArrayList<>();
         searchDto = new NewsSearchDto();
+        pagination.setRequest(request);
         onSearch(categoryId);
     }
 
     public void onSearch(Long categoryId) {
-        List<NewsDto> showList = newsRepository.search(searchDto);
-//        for (NewsDto dto : showList) {
-//            dto.setProductImages(new LinkedHashSet<>());
-//            dto.setProductImages(productImageRepository.getImagePathByProductId(dto.getProductId()));
-//            if (dto.getProductImages().size() != 0) {
-//                dto.setImageToShow(dto.getProductImages().iterator().next());
-//            }
-//        }
-//
-//        List<Product> products = new ArrayList<>();
-//        if (categoryId == null) {
-//            products = productRepository.getAllExpertType(DbConstant.PRODUCT_TYPE_CHILD);
-//        } else {
-//            products = productRepository.getByCategoryIdExpertType(Long.valueOf(cateId), DbConstant.PRODUCT_TYPE_CHILD);
-//        }
-//        for (Product obj : products) {
-//            NewsDto dto = new NewsDto();
-//            BeanUtils.copyProperties(obj, dto);
-//            dto.setProductImages(new LinkedHashSet<>());
-//            dto.setProductImages(productImageRepository.getImagePathByProductId(dto.getProductId()));
-//            if (dto.getProductImages().size() != 0) {
-//                dto.setImageToShow(dto.getProductImages().iterator().next());
-//            }
-//            if (dto.getDiscount() != null) {
-//                dto.setPriceAfterDiscount(dto.getPrice() - dto.getPrice() * dto.getDiscount() / 100);
-//            } else {
-//                dto.setPriceAfterDiscount(dto.getPrice());
-//            }
-//            productDtoList.add(dto);
-//        }
+        searchDto.setCategoryId(categoryId);
+        pagination.setLazyDataModel(new LazyDataModel<NewsDto>() {
+            @Override
+            public List<NewsDto> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+                searchDto.setPageIndex(first);
+                searchDto.setPageSize(pageSize);
+                searchDto.setSortField(sortField);
+                String sort = "";
+                if (sortOrder == null || sortOrder.equals(SortOrder.DESCENDING)) {
+                    sort = "DESC";
+                } else {
+                    sort = "ASC";
+                }
+                searchDto.setSortOrder(sort);
+                return newsRepository.search(searchDto);
+            }
+
+            @Override
+            public int getRowCount() {
+                return newsRepository.countSearch(searchDto).intValue();
+            }
+        });
+        pagination.loadData();
+    }
+
+    public void viewNewsDetail(NewsDto resultDto){
+        newsDto = new NewsDto();
+        BeanUtils.copyProperties(resultDto,newsDto);
+        FacesUtil.redirect("/frontend/news/news.xhtml");
     }
 
     @Override

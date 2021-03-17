@@ -1,0 +1,34 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                template="/frontend/template/template.xhtml">
+
+    <ui:define name="title">Danh sách tin tức</ui:define>
+
+    <ui:define name="body-content">
+        <div class="content-news">
+            <div class="container">
+                <div class="title-news">
+                    <div class="row">
+                        <div class="col-md-9 col-sm-12 col-xs-12" style="text-align: justify">
+                            <h1>#{newsFEController.newsDto.title}</h1>
+                            <div class="image-news" style="margin-bottom: 15px;">
+                                <a data-fancybox="gallery"
+                                   href="#{resource[newsFEController.newsDto.imgPath]}">
+                                    <h:panelGroup rendered="#{newsFEController.newsDto.imgPath ne null}">
+                                        <div class="image-single-bg"
+                                             style="background-image: url('#{resource[newsFEController.newsDto.imgPath]}');"></div>
+                                    </h:panelGroup>
+                                </a>
+                            </div>
+                            <h:outputText escape="false" value="#{newsFEController.newsDto.content}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

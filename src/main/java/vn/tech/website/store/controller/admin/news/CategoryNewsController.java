@@ -56,6 +56,7 @@ public class CategoryNewsController extends BaseController {
 
     public void onSearch() {
         searchDto.setType(DbConstant.CATEGORY_TYPE_NEWS);
+        searchDto.setStatus(DbConstant.CATEGORY_STATUS_ACTIVE);
         FacesUtil.resetDataTable("searchForm", "tblSearchResult");
         lazyDataModel = new LazyDataModel<CategoryDto>() {
             @Override
@@ -120,7 +121,7 @@ public class CategoryNewsController extends BaseController {
         category.setType(DbConstant.CATEGORY_TYPE_NEWS);
         category.setStatus(DbConstant.CATEGORY_STATUS_ACTIVE);
         category.setUpdateDate(new Date());
-        category.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
+        category.setUpdateBy(authorizationController.getAccountDto().getAccountId());
         categoryRepository.save(category);
         FacesUtil.addSuccessMessage("Lưu thành công.");
         FacesUtil.closeDialog("dialogInsertUpdate");
