@@ -13,4 +13,7 @@ import vn.tech.website.store.model.OrdersDetail;
 public class OrdersDetailDto extends OrdersDetail {
     private Double unitPrice;
     private Float discount;
+    private Integer positionProduct;
+    private String codeProduct;
+    private ProductDto productDto = new ProductDto();
 }

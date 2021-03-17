@@ -3,7 +3,6 @@ package vn.tech.website.store.controller.frontend.product;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.docx4j.wml.P;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import org.springframework.beans.BeanUtils;
@@ -12,15 +11,13 @@ import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.frontend.AuthorizationFEController;
 import vn.tech.website.store.controller.frontend.BaseFEController;
 import vn.tech.website.store.controller.frontend.common.PaginationController;
-import vn.tech.website.store.dto.*;
-import vn.tech.website.store.model.OrdersDetail;
-import vn.tech.website.store.model.Product;
-import vn.tech.website.store.model.ProductImage;
+import vn.tech.website.store.dto.OrdersDetailDto;
+import vn.tech.website.store.dto.ProductDto;
+import vn.tech.website.store.dto.ProductSearchDto;
 import vn.tech.website.store.repository.BrandRepository;
 import vn.tech.website.store.repository.CategoryRepository;
 import vn.tech.website.store.repository.ProductImageRepository;
 import vn.tech.website.store.repository.ProductRepository;
-import vn.tech.website.store.util.DbConstant;
 
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -28,7 +25,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +51,7 @@ public class ProductFEController extends BaseFEController {
     private PaginationController<ProductDto> pagination;
     private List<ProductDto> productDtoList;
     private String cateId;
-    private List<OrdersDetailDto> listAddToCart;
+    private Map<String, OrdersDetailDto> mapAddToCart;
     private ProductSearchDto searchDto;
 
     public ProductFEController() {
@@ -104,34 +101,36 @@ public class ProductFEController extends BaseFEController {
 
     public void addToCart(ProductDto resultDto) {
         HttpSession session = request.getSession(false);
-        if (listAddToCart == null) {
-            listAddToCart = new ArrayList<>();
-            session.setAttribute("cartList", listAddToCart);
+        if (session.getAttribute("cartList") == null) {
+            mapAddToCart = new LinkedHashMap<>();
+            session.setAttribute("cartList", mapAddToCart);
         }
-        listAddToCart = (List<OrdersDetailDto>) session.getAttribute("cartList");
+        mapAddToCart = (Map<String, OrdersDetailDto>) session.getAttribute("cartList");
 
         OrdersDetailDto dto = new OrdersDetailDto();
         BeanUtils.copyProperties(resultDto, dto);
         dto.setQuantity(1L);
-        dto.setAmount(resultDto.getPriceAfterDiscount());
+        dto.setAmount(resultDto.getPrice() == null ? resultDto.getPriceAfterDiscount() : resultDto.getPrice());
+        dto.setCodeProduct(resultDto.getCode());
+        dto.setProductDto(resultDto);
 
-        if (listAddToCart.size() == 0) {
-            listAddToCart.add(dto);
+        if (mapAddToCart.size() == 0) {
+            mapAddToCart.put(resultDto.getCode(), dto);
         } else {
             boolean checkExits = true;
-            for (OrdersDetailDto obj : listAddToCart) {
-                if (dto.getProductId() == obj.getProductId()) {
+            for (OrdersDetailDto obj : mapAddToCart.values()) {
+                if (dto.getProductId().equals(obj.getProductId())) {
                     obj.setQuantity(obj.getQuantity() + 1);
                     checkExits = false;
                     break;
                 }
             }
             if (checkExits){
-                listAddToCart.add(dto);
+                mapAddToCart.put(resultDto.getCode(), dto);
             }
         }
-        session.setAttribute("cartList", listAddToCart);
-        setSuccessForm("Thêm vào giỏ hàng thành công");
+        session.setAttribute("cartList", mapAddToCart);
+        setSuccessForm("Thêm sản phẩm \"" + resultDto.getProductName() + "\" vào giỏ hàng thành công");
     }
 
     @Override

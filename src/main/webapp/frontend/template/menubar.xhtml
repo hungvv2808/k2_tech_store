@@ -82,12 +82,10 @@
                         <span class="uppercase">Đơn hàng</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarOders">
-                        <a class="dropdown-item" href="#">
-                            <span>Giỏ hàng</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Hoá đơn</span>
-                        </a>
+                        <h:link class="dropdown-item" value="Giỏ hàng"
+                                outcome="/frontend/order/my-orders.xhtml"/>
+                        <h:link class="dropdown-item" value="Hoá đơn"
+                                outcome="/frontend/order/my-orders.xhtml"/>
                     </div>
                 </li>
 
