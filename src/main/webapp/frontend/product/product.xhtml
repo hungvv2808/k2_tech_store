@@ -19,9 +19,9 @@
                     </div>
                 </div>
                 <div class="all-products">
-                    <h:form>
+                    <h:form id="productList" prependId="false">
                         <div class="row">
-                            <p:repeat value="#{productFEController.productDtoList}" var="productDto">
+                            <p:repeat value="#{productFEController.pagination.data}" var="productDto">
                                 <div class="col-lg-3 grid-style">
                                     <p:commandLink>
                                         <p:graphicImage styleClass="all-products__img"
@@ -60,16 +60,10 @@
                             </p:repeat>
                         </div>
                     </h:form>
-                    <div class="more-products">
-                        <div class="row">
-                            <h:link outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_HEADPHONE}">
-                            <span>
-                                Xem thêm
-                                <i class="fas fa-angle-double-right"/>
-                            </span>
-                            </h:link>
-                        </div>
-                    </div>
+
+                    <ui:include src="../template/paginate/pagination.xhtml">
+                        <ui:param name="pagination" value="#{productFEController.pagination}"/>
+                    </ui:include>
                 </div>
             </div>
         </div>

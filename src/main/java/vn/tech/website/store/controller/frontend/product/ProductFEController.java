@@ -4,11 +4,14 @@ package vn.tech.website.store.controller.frontend.product;
 import lombok.Getter;
 import lombok.Setter;
 import org.docx4j.wml.P;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.frontend.AuthorizationFEController;
 import vn.tech.website.store.controller.frontend.BaseFEController;
+import vn.tech.website.store.controller.frontend.common.PaginationController;
 import vn.tech.website.store.dto.*;
 import vn.tech.website.store.model.OrdersDetail;
 import vn.tech.website.store.model.Product;
@@ -27,6 +30,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 @Named
 @Scope(value = "session")
@@ -47,58 +51,56 @@ public class ProductFEController extends BaseFEController {
     @Autowired
     private ProductImageRepository productImageRepository;
 
+    private PaginationController<ProductDto> pagination;
     private List<ProductDto> productDtoList;
     private String cateId;
     private List<OrdersDetailDto> listAddToCart;
     private ProductSearchDto searchDto;
 
+    public ProductFEController() {
+        pagination = new PaginationController<>();
+    }
+
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
-            //init();
+            init();
             cateId = request.getParameter("catid");
-            resetAll(null);
+            resetAll(cateId == null ? null : Long.parseLong(cateId));
         }
     }
 
     public void resetAll(Long categoryId) {
         productDtoList = new ArrayList<>();
         searchDto = new ProductSearchDto();
+        pagination.setRequest(request);
         onSearch(categoryId);
     }
 
     public void onSearch(Long categoryId){
-        List<ProductDto> showList = productRepository.search(searchDto);
-        for (ProductDto dto : showList){
-            dto.setProductImages(new LinkedHashSet<>());
-            dto.setProductImages(productImageRepository.getImagePathByProductId(dto.getProductId()));
-            if (dto.getProductImages().size() != 0) {
-                dto.setImageToShow(dto.getProductImages().iterator().next());
+        searchDto.setCategoryId(categoryId);
+        pagination.setLazyDataModel(new LazyDataModel<ProductDto>() {
+            @Override
+            public List<ProductDto> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+                searchDto.setPageIndex(first);
+                searchDto.setPageSize(pageSize);
+                searchDto.setSortField(sortField);
+                String sort = "";
+                if (sortOrder == null || sortOrder.equals(SortOrder.DESCENDING)) {
+                    sort = "DESC";
+                } else {
+                    sort = "ASC";
+                }
+                searchDto.setSortOrder(sort);
+                return productRepository.search(searchDto);
             }
-        }
 
-        List<Product> products = new ArrayList<>();
-        if (categoryId == null) {
-            products = productRepository.getAllExpertType(DbConstant.PRODUCT_TYPE_CHILD);
-        } else {
-            products = productRepository.getByCategoryIdExpertType(Long.valueOf(cateId), DbConstant.PRODUCT_TYPE_CHILD);
-        }
-        for (Product obj : products) {
-            ProductDto dto = new ProductDto();
-            BeanUtils.copyProperties(obj, dto);
-            dto.setProductImages(new LinkedHashSet<>());
-            dto.setProductImages(productImageRepository.getImagePathByProductId(dto.getProductId()));
-            if (dto.getProductImages().size() != 0) {
-                dto.setImageToShow(dto.getProductImages().iterator().next());
+            @Override
+            public int getRowCount() {
+                return productRepository.countSearch(searchDto).intValue();
             }
-            if (dto.getDiscount() != null) {
-                dto.setPriceAfterDiscount(dto.getPrice() - dto.getPrice() * dto.getDiscount() / 100);
-            } else {
-                dto.setPriceAfterDiscount(dto.getPrice());
-            }
-            productDtoList.add(dto);
-        }
+        });
+        pagination.loadData();
     }
-
 
     public void addToCart(ProductDto resultDto) {
         HttpSession session = request.getSession(false);
