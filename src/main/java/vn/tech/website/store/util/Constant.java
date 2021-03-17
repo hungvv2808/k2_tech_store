@@ -100,6 +100,12 @@ public class Constant {
     public static final int CATE_WATCH = 2;
     public static final int CATE_HEADPHONE = 6;
 
+    public static final int CATE_NEWS_DISCOUNT = 9;
+    public static final int CATE_NEWS_PRODUCT = 8;
+    public static final int CATE_NEWS_TECH = 5;
+    public static final int CATE_NEWS_HOT = 3;
+    public static final int CATE_NEWS_HIGHLIGHT = 4;
+
     public static final int CATE_MALE = 1;
     public static final int CATE_FEMALE = 2;
     public static final int CATE_KID = 3;

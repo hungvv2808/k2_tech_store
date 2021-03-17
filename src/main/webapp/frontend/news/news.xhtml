@@ -13,20 +13,14 @@
             <div class="container">
                 <div class="title-news">
                     <div class="row">
-                        <div class="col-md-9 col-sm-12 col-xs-12" style="text-align: justify">
-                            <h1>#{newsFEController.newsDto.title}</h1>
-                            <div class="image-news" style="margin-bottom: 15px;">
-                                <a data-fancybox="gallery"
-                                   href="#{resource[newsFEController.newsDto.imgPath]}">
-                                    <h:panelGroup rendered="#{newsFEController.newsDto.imgPath ne null}">
-                                        <div class="image-single-bg"
-                                             style="background-image: url('#{resource[newsFEController.newsDto.imgPath]}');"></div>
-                                    </h:panelGroup>
-                                </a>
-                            </div>
-                            <h:outputText escape="false" value="#{newsFEController.newsDto.content}"/>
-                        </div>
+                        <h1 class="_news">#{newsFEController.newsDto.title}</h1>
                     </div>
+                </div>
+                <div class="content">
+                    <div class="image-news">
+                        <p:graphicImage name="#{newsFEController.newsDto.imgPath}"/>
+                    </div>
+                    <h:outputText escape="false" value="#{newsFEController.newsDto.content}"/>
                 </div>
             </div>
         </div>

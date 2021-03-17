@@ -92,11 +92,11 @@
                             <p:outputPanel id="singleImage" style="width: 245px; margin: auto; margin-bottom: 10px;">
                                 <div class="my-card-image-border row parent-image-file">
                                     <p:graphicImage styleClass="image-file"
-                                                    style="width:200px;height: 200px;border-radius: 50%"
+                                                    style="width:200px;height: 200px;border-radius: 1rem; object-fit: cover"
                                                     rendered="#{not empty uploadSingleImageController.imagePath}"
                                                     name="#{uploadSingleImageController.imagePath}"/>
                                     <p:graphicImage styleClass="image-file"
-                                                    style="width:200px;height: 200px;border-radius: 50%"
+                                                    style="width:200px;height: 200px;border-radius: 1rem; object-fit: cover"
                                                     rendered="#{empty uploadSingleImageController.imagePath}"
                                                     name="images/noavatar.png" library="apollo-layout"/>
                                     <p:commandLink

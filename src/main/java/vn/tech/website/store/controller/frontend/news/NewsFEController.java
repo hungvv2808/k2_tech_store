@@ -98,9 +98,9 @@ public class NewsFEController extends BaseFEController {
         pagination.loadData();
     }
 
-    public void viewNewsDetail(NewsDto resultDto){
+    public void viewNewsDetail(NewsDto resultDto) {
         newsDto = new NewsDto();
-        BeanUtils.copyProperties(resultDto,newsDto);
+        BeanUtils.copyProperties(resultDto, newsDto);
         FacesUtil.redirect("/frontend/news/news.xhtml");
     }
 

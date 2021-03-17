@@ -2,8 +2,10 @@ package vn.tech.website.store.controller.frontend;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import vn.tech.website.store.controller.frontend.news.NewsFEController;
 import vn.tech.website.store.dto.NewsDto;
 import vn.tech.website.store.dto.NewsSearchDto;
 import vn.tech.website.store.dto.ProductDto;
@@ -27,6 +29,8 @@ import java.util.*;
 public class HomeFEController extends BaseFEController {
     @Inject
     private AuthorizationFEController authorizationFEController;
+    @Inject
+    private NewsFEController newsFEController;
 
     @Autowired
     private NewsRepository newsRepository;
@@ -90,9 +94,11 @@ public class HomeFEController extends BaseFEController {
 
     }
 
-    public void redirectProduct(Integer cateId) {
-        String request = FacesUtil.getContextPath();
-        FacesUtil.redirect(request + "frontend/product/product.xhtml?catid=" + cateId);
+    public void viewNewsDetail(NewsDto resultDto) {
+        NewsDto newsDto = new NewsDto();
+        BeanUtils.copyProperties(resultDto, newsDto);
+        newsFEController.setNewsDto(newsDto);
+        FacesUtil.redirect("/frontend/news/news.xhtml");
     }
 
     @Override

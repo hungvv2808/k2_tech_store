@@ -31,21 +31,18 @@
                         <span class="uppercase">Tin tức</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarNews">
-                        <a class="dropdown-item" href="#">
-                            <span>Tin tức điện thoại</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Tin tức máy tính</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Tin tức đồng hồ</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Tin tức tai nghe</span>
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span>Tin tức công nghệ</span>
-                        </a>
+                        <h:link class="dropdown-item" value="Tất cả tin tức"
+                                outcome="/frontend/news/list-news.xhtml"/>
+                        <h:link class="dropdown-item" value="Tin tức nóng"
+                                outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_HOT}"/>
+                        <h:link class="dropdown-item" value="Tin tức nổi bật"
+                                outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_HIGHLIGHT}"/>
+                        <h:link class="dropdown-item" value="Tin tức công nghệ"
+                                outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_TECH}"/>
+                        <h:link class="dropdown-item" value="Tin tức sản phẩm mới"
+                                outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_PRODUCT}"/>
+                        <h:link class="dropdown-item" value="Tin tức khuyến mãi"
+                                outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_DISCOUNT}"/>
                     </div>
                 </li>
                 <li class="nav-item dropdown">

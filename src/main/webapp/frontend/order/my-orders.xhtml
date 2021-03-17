@@ -42,10 +42,10 @@
                                 <h:outputScript>var index = 1;</h:outputScript>
                                 <p:repeat value="#{orderFEController.productCartMap.values()}" var="ordersDetailDto">
                                     <tr>
-                                        <th scope="row" class="order-product__id">
+                                        <td scope="row" class="order-product__id">
                                             <p class="id-#{ordersDetailDto.productDto.productId}"/>
                                             <h:outputScript>$('.id-#{ordersDetailDto.productDto.productId}').text(index)</h:outputScript>
-                                        </th>
+                                        </td>
                                         <td class="order-product__img">
                                             <p:graphicImage styleClass="profile__avatar" name="#{ordersDetailDto.productDto.imageToShow}"/>
                                         </td>

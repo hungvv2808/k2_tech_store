@@ -17,7 +17,7 @@
                                     name="images/noavatar.png" library="apollo-layout"/>
                     <p:graphicImage rendered="#{not empty authorizationController.accountDto.imagePath}"
                                     name="#{authorizationController.accountDto.imagePath}"
-                                    style="width: 40px; height: 40px;border-radius: 50%"/>
+                                    style="width: 40px; height: 40px;border-radius: 50%; object-fit: cover;"/>
                     <span class="username">Xin chào: #{authorizationController.accountDto.fullName}</span>
                     <i class="fa fa-angle-double-down"/>
                 </h:form>

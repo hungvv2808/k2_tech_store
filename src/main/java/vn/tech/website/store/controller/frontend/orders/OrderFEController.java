@@ -95,7 +95,9 @@ public class OrderFEController extends BaseFEController {
     }
 
     public void redirectFillInfo() {
-        FacesUtil.redirect("/frontend/order/my-orders-info.xhtml");
+        setSuccessForm("Đặt hàng thành công");
+        FacesUtil.redirect("/frontend/index.xhtml");
+        //FacesUtil.redirect("/frontend/order/my-orders-info.xhtml");
     }
 
     @Override

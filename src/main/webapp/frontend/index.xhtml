@@ -36,7 +36,7 @@
                                 </div>
                                 <div class="detail">
                                     <p>
-                                        Cung cấp các dịch vụ, sản phẩm đa dạng - chất lượng - uy tín.
+                                        Cung cấp các dịch vụ, sản phẩm đa dạng - chất lượng - uy tín đa nền tảng như: Mobile Phone, Desktop, Laptop, Smart Watch, Wireless Headphone.
                                     </p>
                                 </div>
                             </div>
@@ -86,18 +86,18 @@
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <h1 class="title">
-                            Zeus Shop
+                            Công nghệ cho cuộc sống
                         </h1>
                     </div>
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <p class="detail">
-                            Trẻ trung và phong độ
-                            <br/> Thời trang và phong cách.
+                            K2 Store cung cấp cho bạn các sản phẩm công nghệ
+                            <br/> đem lại cảm giác tối ưu nhất cho bạn trong mọi tác vụ, công việc của bạn.
                         </p>
                     </div>
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <button type="button" class="btn btn-link hvr-sweep-to-right">
-                            Xem thêm về Zeus
+                            Xem thêm về K2 Store
                             <i class="fas fa-arrow-circle-right fa-lg"/>
                         </button>
                     </div>
@@ -114,19 +114,16 @@
                 </div>
                 <div class="top-news">
                     <p:repeat value="#{homeFEController.newsDtoList}" var="newsDto">
+                        <p:remoteCommand name="cmdViewNews#{newsDto.newsId}" actionListener="#{homeFEController.viewNewsDetail(newsDto)}"/>
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="top-news__img">
-                                    <p:commandLink actionListener="#{newsFEController.viewNewsDetail(newsDto)}">
-                                        <p:graphicImage name="#{newsDto.imgPath}"/>
-                                    </p:commandLink>
+                                    <p:graphicImage onclick="cmdViewNews#{newsDto.newsId}();" name="#{newsDto.imgPath}"/>
                                 </div>
                             </div>
                             <div class="col-lg-9">
                                 <div class="top-news__detail">
-                                    <p:commandLink actionListener="#{newsFEController.viewNewsDetail(newsDto)}">
-                                        <p>#{newsDto.title}</p>
-                                    </p:commandLink>
+                                    <p onclick="cmdViewNews#{newsDto.newsId}();">#{newsDto.title}</p>
                                     <p>
                                         <h:link outcome="/frontend/news/list-news.xhtml?catid=#{newsDto.categoryId}">
                                             <span>#{newsDto.categoryName}</span>
@@ -144,7 +141,7 @@
                 <div class="more-news">
                     <div class="row">
                         <h:link outcome="/frontend/news/list-news.xhtml">
-                            <span> Xem thêm<i class="fas fa-angle-double-right"/></span>
+                            <span>Xem thêm <i class="fas fa-angle-double-right"/></span>
                         </h:link>
                     </div>
                 </div>
@@ -156,14 +153,14 @@
                 <div class="row">
                     <h1>Thương hiệu của chúng tôi</h1>
                     <div class="owl-carousel owl-theme content-brands-slides">
-                        <img src="../resources/frontend-layout/img/demo/brand-prada.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand-adidas.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand-zara.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand-nike.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/gucci-brand.png" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/zeus_brand.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/ysl-brand.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/lacoste-brand.jpg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_apple.jpg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_asus.jpg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_huawei.jpeg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_lg.jpg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_samsung.jpg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_sony.jpg" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_vin.png" alt="k2-demo"/>
+                        <img src="../resources/frontend-layout/img/demo/brand_xiaomi.jpg" alt="k2-demo"/>
                     </div>
                     <p>Xem thêm <i class="fas fa-angle-double-right"/></p>
                 </div>
@@ -189,7 +186,7 @@
                                                             name="#{productDto.imageToShow}"/>
 
                                             <p class="mobile-products__title">#{productDto.productName}</p>
-                                            <p class="mobile-products__discount #{productDto.discount eq 0 ? 'display-none' : ''}">
+                                            <p class="mobile-products__discount #{productDto.discount eq null ? 'display-none' : ''}">
                                                 Giảm
                                                 <h:outputText value="#{productDto.discount}">
                                                     <f:convertNumber pattern="#####,00%"/>
@@ -422,6 +419,129 @@
                     </div>
                 </div>
             </h:panelGroup>
+        </div>
+
+        <div class="feedbacks-slide">
+            <div class="container">
+                <div class="feedback-slide">
+                    <div class="feedback-slide__title">
+                        <div class="row">
+                            <h1>Khách hàng nói gì về chúng tôi ?</h1>
+                        </div>
+                    </div>
+                    <div class="feedback-slide__contents">
+                        <div class="carousel-wrap">
+                            <div class="owl-carousel owl-theme my-feedback-slide">
+                                <div class="item">
+                                    <div class="item__details">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 no-padding-left">
+                                                <img src="../resources/frontend-layout/img/founder.jpg"
+                                                     alt="customer-demo-1"/>
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 no-padding">
+                                                <div class="customer-infor">
+                                                    <p class="no-margin customer-name">Parker Frankie</p>
+                                                    <p class="no-margin customer-position">CEO, Founder K2 Store</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <p>
+                                                K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại. K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item__details">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 no-padding-left">
+                                                <img src="../resources/frontend-layout/img/founder.jpg"
+                                                     alt="customer-demo-1"/>
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 no-padding">
+                                                <div class="customer-infor">
+                                                    <p class="no-margin customer-name">Parker Frankie</p>
+                                                    <p class="no-margin customer-position">CEO, Founder K2 Store</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <p>
+                                                K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại. K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item__details">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 no-padding-left">
+                                                <img src="../resources/frontend-layout/img/founder.jpg"
+                                                     alt="customer-demo-1"/>
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 no-padding">
+                                                <div class="customer-infor">
+                                                    <p class="no-margin customer-name">Parker Frankie</p>
+                                                    <p class="no-margin customer-position">CEO, Founder K2 Store</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <p>
+                                                K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại. K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item__details">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 no-padding-left">
+                                                <img src="../resources/frontend-layout/img/founder.jpg"
+                                                     alt="customer-demo-1"/>
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 no-padding">
+                                                <div class="customer-infor">
+                                                    <p class="no-margin customer-name">Parker Frankie</p>
+                                                    <p class="no-margin customer-position">CEO, Founder K2 Store</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <p>
+                                                K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại. K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item__details">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 no-padding-left">
+                                                <img src="../resources/frontend-layout/img/founder.jpg"
+                                                     alt="customer-demo-1"/>
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 no-padding">
+                                                <div class="customer-infor">
+                                                    <p class="no-margin customer-name">Parker Frankie</p>
+                                                    <p class="no-margin customer-position">CEO, Founder K2 Store</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <p>
+                                                K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại. K2 Store cung cấp các sản phẩm công nghệ chất lượng, uy tín. Tôi tin tưởng vào các sản phẩm công nghệ mà K2 Store mang lại.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </ui:define>
 </ui:composition>

@@ -7,6 +7,21 @@
             padding-bottom: 2rem;
             color: $primary-color;
             text-transform: uppercase;
+
+            &._news {
+                padding-top: 2rem;
+            }
+        }
+    }
+    .content {
+        img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            margin-bottom: 2rem;
+        }
+        p {
+            padding: 1rem 0;
         }
     }
     .top-news {

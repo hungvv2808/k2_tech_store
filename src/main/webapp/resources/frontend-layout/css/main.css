@@ -491,6 +491,18 @@
   color: #3aaf29;
   text-transform: uppercase;
 }
+.content-news .title-news h1._news {
+  padding-top: 2rem;
+}
+.content-news .content img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin-bottom: 2rem;
+}
+.content-news .content p {
+  padding: 1rem 0;
+}
 .content-news .top-news .row {
   margin-bottom: 1.5rem;
 }
