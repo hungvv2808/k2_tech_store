@@ -37,21 +37,21 @@
                         <p:panelGrid id="basicPanel1" columns="2"
                                      columnClasses="ui-grid-col-3,ui-grid-col-9"
                                      styleClass="ui-panelgrid-blank" layout="grid">
-                            <p:outputLabel value="Mã loại sản phẩm:" for="code" styleClass="requireLabel"/>
-                            <p:inputText id="code" placeholder="Nhập mã loại sản phẩm"
-                                         value="#{categoryController.categoryDto.code}"
-                                         maxlength="100"/>
+<!--                            <p:outputLabel value="Mã loại sản phẩm:" for="code" styleClass="requireLabel"/>-->
+<!--                            <p:inputText id="code" placeholder="Nhập mã loại sản phẩm"-->
+<!--                                         value="#{categoryController.categoryDto.code}"-->
+<!--                                         maxlength="100"/>-->
 
                             <p:outputLabel value="Tên loại sản phẩm:" for="name" styleClass="requireLabel"/>
                             <p:inputText id="name" placeholder="Nhập tên loại sản phẩm"
                                          value="#{categoryController.categoryDto.categoryName}"
                                          maxlength="100"/>
 
-                            <p:outputLabel value="Kiểu loại sản phẩm:" for="type" styleClass="requireLabel"/>
-                            <p:selectOneMenu id="type" value="#{categoryController.categoryDto.type}" disabled="true">
-                                <f:selectItem itemLabel="Sản phẩm" itemValue="#{DbConstant.CATEGORY_TYPE_PRODUCT}"/>
-                                <f:selectItem itemLabel="Tin tức" itemValue="#{DbConstant.CATEGORY_TYPE_NEWS}"/>
-                            </p:selectOneMenu>
+<!--                            <p:outputLabel value="Kiểu loại sản phẩm:" for="type" styleClass="requireLabel"/>-->
+<!--                            <p:selectOneMenu id="type" value="#{categoryController.categoryDto.type}" disabled="true">-->
+<!--                                <f:selectItem itemLabel="Sản phẩm" itemValue="#{DbConstant.CATEGORY_TYPE_PRODUCT}"/>-->
+<!--                                <f:selectItem itemLabel="Tin tức" itemValue="#{DbConstant.CATEGORY_TYPE_NEWS}"/>-->
+<!--                            </p:selectOneMenu>-->
 
                             <p:outputLabel value="Trạng thái loại sản phẩm:" for="status" styleClass="requireLabel"/>
                             <p:selectOneMenu id="status" value="#{categoryController.categoryDto.status}">
@@ -66,7 +66,7 @@
                             <p:outputLabel/>
                             <p:commandButton value="Lưu" action="#{categoryController.onSave}"
                                              icon="fa fa-save"
-                                             update="searchForm focus growl code name status"/>
+                                             update="searchForm focus growl name status"/>
                             <p:commandButton value="Ðóng" styleClass="close"
                                              oncomplete="PF('dialogInsertUpdate').hide()" icon="fa fa-close"/>
                         </p:panelGrid>
@@ -119,16 +119,9 @@
                                         <h:outputText value="#{rowIndex + 1}"/>
                                     </p:column>
 
-                                    <p:column styleClass="text-center" headerText="Mã loại sản phẩm" sortBy="#{resultDto.code}">
-                                        <h:outputText value="#{resultDto.code}"/>
-                                    </p:column>
 
                                     <p:column styleClass="text-center" headerText="Tên loại sản phẩm" sortBy="#{resultDto.categoryName}">
                                         <h:outputText value="#{resultDto.categoryName}"/>
-                                    </p:column>
-
-                                    <p:column styleClass="text-center" headerText="Kiểu loại sản phẩm">
-                                        <h:outputText value="#{resultDto.type == DbConstant.CATEGORY_TYPE_PRODUCT ? 'Sản phẩm' : 'Tin tức'}"/>
                                     </p:column>
 
                                     <p:column styleClass="text-center" headerText="Trạng thái loại sản phẩm">

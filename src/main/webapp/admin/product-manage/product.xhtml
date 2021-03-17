@@ -81,6 +81,7 @@
                                              value="#{productController.productDto.productParentId}">
                                 <f:selectItem itemLabel="Chọn sản phẩm cha" itemValue=""/>
                                 <f:selectItems value="#{productController.productParentList}"/>
+                                <f:ajax event="change" listener="#{productController.onChangeParentMenu(productController.productDto.productParentId)}"/>
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Mã sản phẩm:" for="code"/>

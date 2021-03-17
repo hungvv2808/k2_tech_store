@@ -217,7 +217,10 @@
                                     </p:column>
 
                                     <p:column headerText="Tổng tiền " sortBy="#{resultDto.totalAmount}">
-                                        <h:outputText value="#{resultDto.totalAmount}"/>
+                                        <h:outputText value="#{resultDto.totalAmount}">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
                                     </p:column>
 
                                     <p:column headerText="Ngày tạo" sortBy="#{resultDto.updateDate}"

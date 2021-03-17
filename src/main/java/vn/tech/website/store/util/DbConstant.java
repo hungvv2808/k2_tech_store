@@ -135,4 +135,10 @@ public class DbConstant {
     //news
     public static final int NEWS_STATUS_INACTIVE = 0;
     public static final int NEWS_STATUS_ACTIVE = 1;
+
+    //payment
+    public static final int PAYMENTS_STATUS_UNPAID = 0;
+    public static final int PAYMENTS_STATUS_PAID = 1;
+    public static final int PAYMENTS_TYPE_OFFLINE = 0;
+    public static final int PAYMENTS_TYPE_ONLINE = 1;
 }

@@ -11,14 +11,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.util.CollectionUtils;
 import vn.tech.website.store.controller.admin.auth.AuthorizationController;
 import vn.tech.website.store.dto.*;
-import vn.tech.website.store.model.Account;
-import vn.tech.website.store.model.Orders;
-import vn.tech.website.store.model.OrdersDetail;
-import vn.tech.website.store.model.Product;
-import vn.tech.website.store.repository.AccountRepository;
-import vn.tech.website.store.repository.OrderDetailRepository;
-import vn.tech.website.store.repository.OrderRepository;
-import vn.tech.website.store.repository.ProductRepository;
+import vn.tech.website.store.model.*;
+import vn.tech.website.store.repository.*;
 import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
@@ -49,6 +43,8 @@ public class OrdersController {
     private AccountRepository accountRepository;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+    @Autowired
+    private PaymentsRepository paymentsRepository;
 
     private LazyDataModel<OrdersDto> lazyDataModel;
     private OrdersDto ordersDto;
@@ -61,6 +57,7 @@ public class OrdersController {
     private OrdersDto ordersDtoBak;
     private OrdersDetailDto ordersDetailDto;
     private OrdersDetailDto ordersDetailDtoBak;
+    private int paymentMethod;
 
     public void initDataOrder() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
@@ -159,9 +156,9 @@ public class OrdersController {
         if (ordersDetailDtoList.get(index).getQuantity() != null) {
             Double amount = (unitPrice - unitPrice * discount / 100) * ordersDetailDtoList.get(index).getQuantity();
             ordersDetailDtoList.get(index).setAmount(amount);
-            if (index == 0){
+            if (index == 0) {
                 ordersDto.setTotalAmount(amount);
-            }else {
+            } else {
                 ordersDto.setTotalAmount(ordersDto.getTotalAmount() + amount);
             }
             FacesUtil.updateView("dlForm");
@@ -212,6 +209,7 @@ public class OrdersController {
             orders.setCreateBy(authorizationController.getAccountDto().getAccountId());
             orders.setCreateDate(new Date());
         }
+        orders.setShipping(ordersDto.getShipping() != null ? ordersDto.getShipping() : 0);
         orders.setUpdateBy(authorizationController.getAccountDto().getAccountId());
         orders.setUpdateDate(new Date());
         orderRepository.save(orders);
@@ -304,6 +302,9 @@ public class OrdersController {
     }
 
     public void onChangeStatusToPaid(OrdersDto resultDto) {
+        if (paymentMethod == 2) {
+            return;
+        }
         Orders orders = orderRepository.getByOrdersId(resultDto.getOrdersId());
         orders.setStatus(DbConstant.ORDER_STATUS_PAID);
         String code = orders.getCode().replace(Constant.ACRONYM_ORDER, Constant.ACRONYM_BILL);
@@ -311,7 +312,19 @@ public class OrdersController {
         orders.setUpdateBy(authorizationController.getAccountDto().getAccountId());
         orders.setUpdateDate(new Date());
         orderRepository.save(orders);
+        Payments payments = new Payments();
+        BeanUtils.copyProperties(orders, payments);
+        payments.setType(paymentMethod);
+        payments.setTotalAmount(orders.getTotalAmount() + ordersDto.getShipping());
+        payments.setStatus(DbConstant.PAYMENT_STATUS_PAID);
+        paymentsRepository.save(payments);
         FacesUtil.addSuccessMessage("Thanh toán thành công.");
+        FacesUtil.closeDialog("dialogPaymentMethod");
         onSearch(orderType);
+    }
+
+    public void showChoosePaymentMethod(OrdersDto resultDto) {
+        paymentMethod = 2;
+        BeanUtils.copyProperties(resultDto, ordersDto);
     }
 }

@@ -32,7 +32,7 @@
         <div class="ui-fluid">
             <p:dialog id="dlg" header="Thông tin đơn đặt hàng" widgetVar="dialogInsertUpdate" modal="true" width="1000">
                 <h:form id="dlForm">
-                    <p:scrollPanel  mode="native" style="width: 100%; max-height: 400px; border: none">
+                    <p:scrollPanel mode="native" style="width: 100%; max-height: 400px; border: none">
                         <p:focus id="focus"/>
                         <p:panelGrid id="basicPanel1" columns="4"
                                      columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
@@ -46,7 +46,7 @@
                                 <f:selectItem itemLabel="Chọn khách hàng" itemValue=""/>
                                 <f:selectItems value="#{ordersController.accountList}"/>
                                 <f:ajax event="change" listener="#{ordersController.updatePanel}"
-                                         />
+                                />
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Tên khách hàng:" for="customerName" styleClass="requireLabel"/>
@@ -88,19 +88,20 @@
                                                      filterMatchMode="contains">
                                         <f:selectItem itemLabel="Chọn sản phẩm" itemValue=""/>
                                         <f:selectItems value="#{ordersController.productList}"/>
-                                        <f:ajax event="change" listener="#{ordersController.updatePrice(status.index)}" />
+                                        <f:ajax event="change"
+                                                listener="#{ordersController.updatePrice(status.index)}"/>
                                     </p:selectOneMenu>
 
                                     <p:outputLabel value="Số lượng: " for="quantity"/>
                                     <p:inputNumber value="#{ordersDetailDto.quantity}" id="quantity"
                                                    maxValue="99999999999"
                                                    placeholder="Nhập số lượng">
-                                        <f:ajax listener="#{ordersController.updatePrice(status.index)}" />
+                                        <f:ajax listener="#{ordersController.updatePrice(status.index)}"/>
                                     </p:inputNumber>
 
                                     <p:outputLabel value="Đơn giá: " for="unitPrice"/>
                                     <p:inputText value="#{ordersDetailDto.unitPrice}" id="unitPrice" maxlength="200"
-                                                 readonly="true"  maxValue="99999999999"
+                                                 readonly="true" maxValue="99999999999"
                                                  placeholder="Đơn giá">
                                         <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
                                                          minFractionDigits="0" locale="vi_VN"/>
@@ -108,7 +109,7 @@
 
                                     <p:outputLabel value="Giảm giá: " for="discount"/>
                                     <p:inputText value="#{ordersDetailDto.discount}" id="discount" maxlength="200"
-                                                 readonly="true"  maxValue="99999999999"
+                                                 readonly="true" maxValue="99999999999"
                                                  placeholder="Giảm giá">
                                         <f:convertNumber type="currency" currencySymbol="%" maxFractionDigits="6"
                                                          minFractionDigits="0" locale="vi_VN"/>
@@ -116,7 +117,7 @@
 
                                     <p:outputLabel value="Thành tiền: " for="amount"/>
                                     <p:inputText value="#{ordersDetailDto.amount}" id="amount" maxlength="200"
-                                                 readonly="true"  maxValue="99999999999"
+                                                 readonly="true" maxValue="99999999999"
                                                  placeholder="Thành tiền">
                                         <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
                                                          minFractionDigits="0" locale="vi_VN"/>
@@ -125,7 +126,7 @@
                                     <p:outputLabel></p:outputLabel>
                                     <p:outputLabel></p:outputLabel>
 
-                                <p:commandButton value="Xóa sản phẩm" style="width: auto" styleClass="red-btn"
+                                    <p:commandButton value="Xóa sản phẩm" style="width: auto" styleClass="red-btn"
                                                      process="@this"
                                                      actionListener="#{ordersController.onDeleteProduct(ordersDetailDto)}"
                                                      update="dlForm:panel"/>
@@ -145,7 +146,8 @@
                                      columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
                                      styleClass="ui-panelgrid-blank" layout="grid">
                             <p:outputLabel value="Tổng tiền: " for="totalAmount"/>
-                            <p:inputText value="#{ordersController.ordersDto.totalAmount}" id="totalAmount" maxlength="200"
+                            <p:inputText value="#{ordersController.ordersDto.totalAmount}" id="totalAmount"
+                                         maxlength="200"
                                          readonly="true" decimalPlaces="0"
                                          thousandSeparator="." maxValue="99999999999"
                                          placeholder="Tổng tiền">
@@ -157,8 +159,6 @@
                             <p:inputText value="#{ordersController.ordersDto.shipping}" id="shipping" maxlength="200"
                                          maxValue="99999999999"
                                          placeholder="Nhập phí vận chuyển">
-                                <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
-                                                 minFractionDigits="0" locale="vi_VN"/>
                             </p:inputText>
                         </p:panelGrid>
 
@@ -178,6 +178,34 @@
             </p:dialog>
         </div>
 
+        <div class="ui-fluid">
+            <p:dialog id="dlg2" header="Chọn phương thức thanh toán" widgetVar="dialogPaymentMethod" modal="true"
+                      width="800">
+                <h:form id="PaymentMethodForm">
+                    <p:panelGrid columns="2"
+                                 columnClasses="ui-grid-col-4,ui-grid-col-8"
+                                 styleClass="ui-panelgrid-blank" layout="grid">
+                        <p:outputLabel value="Phương thức thanh toán:" for="payment" styleClass="requireLabel"/>
+                        <p:selectOneRadio id="payment" value="#{ordersController.paymentMethod}" unselectable="false">
+                                <f:selectItem itemLabel="Offline" itemValue="#{DbConstant.PAYMENTS_TYPE_OFFLINE}"/>
+                                <f:selectItem itemLabel="Online" itemValue="#{DbConstant.PAYMENTS_TYPE_ONLINE}"/>
+                        </p:selectOneRadio>
+                    </p:panelGrid>
+
+                    <p:panelGrid columns="2"
+                                 columnClasses="ui-grid-col-6,ui-grid-col-6"
+                                 styleClass="ui-panelgrid-blank">
+                        <p:commandButton value="Lưu" action="#{ordersController.onChangeStatusToPaid(ordersController.ordersDto)}"
+                                         icon="fa fa-save" style="width: 80px;float:right"
+                                         update="dlg2 searchForm growl"/>
+                        <p:commandButton value="Ðóng" styleClass="close"
+                                         oncomplete="PF('dialogPaymentMethod').hide()" icon="fa fa-close"
+                                         style="width: 80px"/>
+                    </p:panelGrid>
+
+                </h:form>
+            </p:dialog>
+        </div>
 
         <h:form id="searchForm">
             <div class="ui-fluid">
@@ -231,7 +259,10 @@
                                     </p:column>
 
                                     <p:column headerText="Tổng tiền" sortBy="#{resultDto.totalAmount}">
-                                        <h:outputText value="#{resultDto.totalAmount}"/>
+                                        <h:outputText value="#{resultDto.totalAmount}">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                        </h:outputText>
                                     </p:column>
 
                                     <p:column headerText="Trạng thái" sortBy="#{resultDto.status}">
@@ -252,9 +283,9 @@
                                               exportable="false" style="width: 30px">
                                         <div class="my-data-table">
                                             <p:commandLink styleClass="edit"
-                                                             oncomplete="PF('dialogInsertUpdate').show();"
-                                                             update="dlForm growl"
-                                                             actionListener="#{ordersController.onUpdate(resultDto)}">
+                                                           oncomplete="PF('dialogInsertUpdate').show();"
+                                                           update="dlForm growl"
+                                                           actionListener="#{ordersController.onUpdate(resultDto)}">
                                                 <i class="fa fa-edit"/>
                                             </p:commandLink>
                                         </div>
@@ -265,17 +296,20 @@
                                         <div class="my-data-table">
                                             <p:menuButton icon="fa fa-cogs">
                                                 <p:menuitem value="Phê duyệt" style="font-weight: bold;"
-                                                            update="tblSearchResult growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_NOT_APPROVED}"
+                                                            update="tblSearchResult growl"
+                                                            rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_NOT_APPROVED}"
                                                             icon="fa fa-check"
                                                             actionListener="#{ordersController.onChangeStatusApproved(resultDto)}"/>
                                                 <p:menuitem value="Hủy phê duyệt" style="font-weight: bold;"
-                                                            update="tblSearchResult growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}"
+                                                            update="tblSearchResult growl"
+                                                            rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}"
                                                             icon="fa fa-times"
                                                             actionListener="#{ordersController.onChangeStatusApproved(resultDto)}"/>
                                                 <p:menuitem value="Đã thanh toán" style="font-weight: bold;"
-                                                            update="tblSearchResult growl" rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}"
+                                                            rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}"
                                                             icon="fa fa-credit-card"
-                                                            actionListener="#{ordersController.onChangeStatusToPaid(resultDto)}"/>
+                                                            actionListener="#{ordersController.showChoosePaymentMethod(resultDto)}"
+                                                            oncomplete="PF('dialogPaymentMethod').show();"/>
                                                 <p:menuitem value="Hủy đơn hàng" style="font-weight: bold;"
                                                             icon="fa fa-trash"
                                                             actionListener="#{ordersController.onCancelOrder(resultDto)}"

@@ -209,7 +209,7 @@ public class ProductController extends BaseController {
         }
 
         if (productDto.getType() == DbConstant.PRODUCT_TYPE_PARENT) {
-            List<Product> productList = productRepository.getAllByTypeAndExpertId(DbConstant.PRODUCT_TYPE_PARENT,productDto.getProductId() != null ? productDto.getProductId() : 0 );
+            List<Product> productList = productRepository.getAllByTypeAndExpertId(DbConstant.PRODUCT_TYPE_PARENT, productDto.getProductId() != null ? productDto.getProductId() : 0);
             for (Product product : productList) {
                 if (productDto.getProductName().equalsIgnoreCase(product.getProductName())) {
                     FacesUtil.addErrorMessage("Sản phẩm đã tồn tại");
@@ -255,9 +255,9 @@ public class ProductController extends BaseController {
         product.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
         product = productRepository.save(product);
         //save image product
-        if (productDto.getProductId() != null){
+        if (productDto.getProductId() != null) {
             List<ProductImage> imageList = productImageRepository.getByProductId(productDto.getProductId());
-            for(ProductImage obj : imageList){
+            for (ProductImage obj : imageList) {
                 productImageRepository.deleteById(obj.getProductImageId());
             }
         }
@@ -301,7 +301,7 @@ public class ProductController extends BaseController {
         resetAll();
     }
 
-    public void showUpdatePopup(ProductDto resultDto){
+    public void showUpdatePopup(ProductDto resultDto) {
         BeanUtils.copyProperties(resultDto, productDto);
         productDto.setProductImages(new LinkedHashSet<>());
         productDto.setProductImages(productImageRepository.getImagePathByProductId(productDto.getProductId()));
@@ -311,19 +311,26 @@ public class ProductController extends BaseController {
         for (ProductOptionDetail obj : productDto.getOptionDetails()) {
             listOptionSelect.add(obj.getProductOptionId());
         }
-        if (productDto.getType() == DbConstant.PRODUCT_TYPE_CHILD){
+        if (productDto.getType() == DbConstant.PRODUCT_TYPE_CHILD) {
             ProductLink productLink = productLinkRepository.getByChildId(productDto.getProductId());
             productDto.setProductParentId(productLink != null ? productLink.getParentId() : null);
         }
     }
 
-    public void onDelete(ProductDto resultDto){
+    public void onDelete(ProductDto resultDto) {
         resultDto.setStatus(DbConstant.PRODUCT_STATUS_INACTIVE);
-        Product product = new ProductDto();
+        Product product = new Product();
         BeanUtils.copyProperties(resultDto, product);
         productRepository.save(product);
         FacesUtil.addSuccessMessage("Xóa thành công.");
         resetAll();
+    }
+
+    public void onChangeParentMenu(Long parentId) {
+        Product parent = productRepository.getByProductId(parentId);
+        productDto.setCategoryId(parent.getCategoryId());
+        productDto.setBrandId(parent.getBrandId());
+        FacesUtil.updateView("dlForm");
     }
 
     public String removeSpaceOfString(String str) {
