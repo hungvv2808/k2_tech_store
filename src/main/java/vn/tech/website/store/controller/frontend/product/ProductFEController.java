@@ -111,7 +111,7 @@ public class ProductFEController extends BaseFEController {
         BeanUtils.copyProperties(resultDto, dto);
         dto.setProductId(resultDto.getProductId());
         dto.setQuantity(1L);
-        dto.setAmount(resultDto.getPrice() == null ? resultDto.getPriceAfterDiscount() : resultDto.getPrice());
+        dto.setAmount(resultDto.getPriceAfterDiscount() == null ? resultDto.getPrice() : resultDto.getPriceAfterDiscount());
         dto.setCodeProduct(resultDto.getCode());
         dto.setProductDto(resultDto);
 
