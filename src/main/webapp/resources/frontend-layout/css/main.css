@@ -1184,6 +1184,16 @@
   text-align: center;
   font-size: 18px;
 }
+.content-orders .orders-infor__info {
+  border-bottom: 3px solid #F42F4C;
+  margin-bottom: 1rem !important;
+}
+.content-orders .orders-infor__info .form-group {
+  width: 100%;
+}
+.content-orders .orders-infor__info .form-group:last-child {
+  margin-bottom: 1rem;
+}
 .content-orders .orders-infor .order-product__header {
   background-color: #3aaf29;
   color: #ffffff;
@@ -1231,6 +1241,7 @@
 }
 .content-orders .orders-infor__total .row .btn-custom {
   width: 100%;
+  color: #ffffff;
 }
 
 #login-modal .modal-dialog .modal-content {
@@ -1402,4 +1413,9 @@ body .container .row {
 .footer {
   position: relative;
   overflow-x: hidden;
+}
+
+.required-label:after {
+  content: " *";
+  color: #F42F4C;
 }

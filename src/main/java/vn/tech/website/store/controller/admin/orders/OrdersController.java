@@ -9,8 +9,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.util.CollectionUtils;
+import vn.tech.website.store.controller.admin.BaseController;
 import vn.tech.website.store.controller.admin.auth.AuthorizationController;
 import vn.tech.website.store.dto.*;
+import vn.tech.website.store.entity.EScope;
 import vn.tech.website.store.model.*;
 import vn.tech.website.store.repository.*;
 import vn.tech.website.store.util.Constant;
@@ -31,7 +33,7 @@ import java.util.Map;
 @Scope(value = "session")
 @Getter
 @Setter
-public class OrdersController {
+public class OrdersController extends BaseController {
     @Inject
     private AuthorizationController authorizationController;
 
@@ -61,7 +63,7 @@ public class OrdersController {
 
     public void initDataOrder() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
-            //init();
+            init();
             orderType = DbConstant.ORDER_TYPE_ORDER;
             resetAll(orderType);
         }
@@ -69,7 +71,7 @@ public class OrdersController {
 
     public void initDataBill() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
-            //init();
+            init();
             orderType = DbConstant.ORDER_TYPE_BILL;
             resetAll(orderType);
         }
@@ -326,5 +328,10 @@ public class OrdersController {
     public void showChoosePaymentMethod(OrdersDto resultDto) {
         paymentMethod = 2;
         BeanUtils.copyProperties(resultDto, ordersDto);
+    }
+
+    @Override
+    protected EScope getMenuId() {
+        return null;
     }
 }

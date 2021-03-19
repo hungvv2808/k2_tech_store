@@ -14,6 +14,7 @@ import vn.tech.website.store.controller.frontend.common.FacesNoticeController;
 import vn.tech.website.store.crypto.AES;
 import vn.tech.website.store.dto.common.CityDistrictDto;
 import vn.tech.website.store.dto.user.AccountDto;
+import vn.tech.website.store.dto.user.AccountSearchDto;
 import vn.tech.website.store.jsf.CookieHelper;
 import vn.tech.website.store.jsf.GoogleRecaptcha;
 import vn.tech.website.store.model.Account;
@@ -228,7 +229,8 @@ public class AuthorizationFEController implements Serializable {
             return;
         }
 
-        Account account = accountRepository.findAccountByUserNameAndRoleId(username.trim(), DbConstant.ROLE_ID_USER);
+        AccountSearchDto searchDto = new AccountSearchDto(DbConstant.ROLE_ID_USER, username.trim());
+        AccountDto account = accountRepository.search(searchDto).get(0);
         if (account == null) {
             facesNoticeController.addErrorMessage("Tên đăng nhập hoặc mật khẩu không chính xác");
             return;

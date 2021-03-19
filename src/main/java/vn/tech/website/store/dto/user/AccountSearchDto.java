@@ -23,4 +23,9 @@ public class AccountSearchDto extends BaseSearchDto {
     private String phone;
     private String email;
     private Integer accountStatus;
+
+    public AccountSearchDto(Integer roleId, String username) {
+        this.roleId = roleId;
+        this.username = username;
+    }
 }

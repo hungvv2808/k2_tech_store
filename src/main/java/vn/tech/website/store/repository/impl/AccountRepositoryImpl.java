@@ -111,8 +111,6 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
                 " WHERE 1 = 1 ");
         if (searchDto.getRoleId() != null) {
             sb.append("AND acc.role_id = :roleId ");
-        } else {
-            sb.append("AND acc.role_id = 1 ");
         }
         if (StringUtils.isNotBlank(searchDto.getKeyword())) {
             sb.append(" AND (acc.user_name LIKE :keyword OR acc.full_name LIKE :keyword OR acc.email LIKE :keyword OR acc.address LIKE :keyword) ");
@@ -121,7 +119,7 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
             sb.append(" AND acc.phone LIKE :phone ");
         }
         if (StringUtils.isNotBlank(searchDto.getUsername())) {
-            sb.append(" AND acc.username LIKE :username ");
+            sb.append(" AND acc.user_name LIKE :username ");
         }
         if (StringUtils.isNotBlank(searchDto.getEmail())) {
             sb.append(" AND acc.email LIKE :email ");

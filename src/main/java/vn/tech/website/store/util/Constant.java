@@ -112,4 +112,6 @@ public class Constant {
     public static final int CATE_FASHION = 5;
     public static final int CATE_FOOTWARE = 6;
 
+    public static final Double SHIPPING = 30000D;
+
 }

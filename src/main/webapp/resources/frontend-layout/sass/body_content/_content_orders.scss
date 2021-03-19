@@ -18,6 +18,18 @@
       font-size: 18px;
     }
 
+    &__info {
+      border-bottom: 3px solid $red-color;
+      margin-bottom: 1rem !important;
+      .form-group {
+        width: 100%;
+
+        &:last-child {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+
     .order-product {
       &__header {
         background-color: $primary-color;
@@ -76,6 +88,7 @@
         }
         .btn-custom {
           width: 100%;
+          color: $third-color;
         }
       }
     }

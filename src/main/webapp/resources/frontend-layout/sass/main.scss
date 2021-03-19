@@ -32,3 +32,8 @@ body {
     position: relative;
     overflow-x: hidden;
 }
+
+.required-label:after {
+    content: " *";
+    color: $red-color;
+}
