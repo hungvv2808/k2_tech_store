@@ -114,4 +114,12 @@ public class Constant {
 
     public static final Double SHIPPING = 30000D;
 
+    public static final int BRAND_APPLE_ID = 1;
+    public static final int BRAND_XIAOMI_ID = 2;
+    public static final int BRAND_ASUS_ID = 3;
+    public static final int BRAND_HUAWEI_ID = 4;
+    public static final int BRAND_LG_ID = 5;
+    public static final int BRAND_SAMSUNG_ID = 6;
+    public static final int BRAND_SONY_ID = 7;
+    public static final int BRAND_VINFAST_ID = 8;
 }

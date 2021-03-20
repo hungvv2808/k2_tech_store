@@ -9,7 +9,7 @@
                 text-transform: uppercase;
             }
             h1,
-            p {
+            a {
                 color: $third-color;
                 text-align: center;
                 width: 100%;
@@ -38,7 +38,7 @@
                     display: none;
                 }
             }
-            p {
+            a {
                 font-size: 18px;
                 i {
                     padding: 0 0.7rem;

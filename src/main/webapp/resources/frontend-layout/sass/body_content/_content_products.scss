@@ -59,6 +59,11 @@
       text-decoration: none;
     }
 
+    &__empty {
+      text-align: center;
+      font-size: 18px;
+    }
+
     &__img {
       width: 200px;
       height: 250px;
@@ -118,6 +123,7 @@
   }
 
   .more-products {
+    margin-bottom: 2rem;
     & > .row {
       margin-top: 1rem;
     }

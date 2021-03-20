@@ -15,15 +15,18 @@
             <div class="container">
                 <div class="title-products">
                     <div class="row">
-                        <h1 class="_product">Danh sách sản phấm</h1>
+                        <h1 class="_product">Danh sách sản phẩm</h1>
                     </div>
                 </div>
                 <div class="all-products">
-                    <h:form id="productList" prependId="false">
+                    <h:panelGroup layout="block" rendered="#{empty productFEController.pagination.data}">
+                        <p class="all-products__empty">Không có sản phẩm nào.</p>
+                    </h:panelGroup>
+                    <h:form id="productList" prependId="false" rendered="#{not empty productFEController.pagination.data}">
                         <div class="row">
                             <p:repeat value="#{productFEController.pagination.data}" var="productDto">
                                 <div class="col-lg-3 grid-style">
-                                    <p:commandLink>
+                                    <p:commandLink actionListener="#{productFEController.viewDetailProduct(productDto)}">
                                         <p:graphicImage styleClass="all-products__img"
                                                         rendered="#{not empty productDto.imageToShow}"
                                                         name="#{productDto.imageToShow}"/>
@@ -66,9 +69,11 @@
                         </div>
                     </h:form>
 
-                    <ui:include src="../template/paginate/pagination.xhtml">
-                        <ui:param name="pagination" value="#{productFEController.pagination}"/>
-                    </ui:include>
+                    <div class="#{empty productFEController.pagination.data ? 'display-none' : ''}">
+                        <ui:include src="../template/paginate/pagination.xhtml">
+                            <ui:param name="pagination" value="#{productFEController.pagination}"/>
+                        </ui:include>
+                    </div>
                 </div>
             </div>
         </div>

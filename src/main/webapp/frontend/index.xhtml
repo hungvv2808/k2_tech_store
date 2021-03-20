@@ -115,11 +115,13 @@
                 <div class="top-news">
                     <h:form>
                         <p:repeat value="#{homeFEController.newsDtoList}" var="newsDto">
-                            <p:remoteCommand name="cmdViewNews#{newsDto.newsId}" actionListener="#{homeFEController.viewNewsDetail(newsDto)}"/>
+                            <p:remoteCommand name="cmdViewNews#{newsDto.newsId}"
+                                             actionListener="#{homeFEController.viewNewsDetail(newsDto)}"/>
                             <div class="row">
                                 <div class="col-lg-3">
                                     <div class="top-news__img">
-                                        <p:graphicImage onclick="cmdViewNews#{newsDto.newsId}();" name="#{newsDto.imgPath}"/>
+                                        <p:graphicImage onclick="cmdViewNews#{newsDto.newsId}();"
+                                                        name="#{newsDto.imgPath}"/>
                                     </div>
                                 </div>
                                 <div class="col-lg-9">
@@ -130,7 +132,7 @@
                                                 <span>#{newsDto.categoryName}</span>
                                             </h:link>
                                             <h:outputText value="#{newsDto.updateDate}">
-                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
                                             </h:outputText>
                                         </p>
                                         <p>#{commonController.abbreviate(newsDto.shortContent, 100)}</p>
@@ -155,16 +157,35 @@
                 <div class="row">
                     <h1>Thương hiệu của chúng tôi</h1>
                     <div class="owl-carousel owl-theme content-brands-slides">
-                        <img src="../resources/frontend-layout/img/demo/brand_apple.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand_asus.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand_huawei.jpeg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand_lg.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand_samsung.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand_sony.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand_vin.png" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand_xiaomi.jpg" alt="k2-demo"/>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_APPLE_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand_apple.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_XIAOMI_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand_xiaomi.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_ASUS_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand_asus.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_HUAWEI_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand_huawei.jpeg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_LG_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand_lg.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_SAMSUNG_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand_samsung.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_SONY_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand_sony.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_VINFAST_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand_vin.png" alt="k2-demo"/>
+                        </h:link>
                     </div>
-                    <p>Xem thêm <i class="fas fa-angle-double-right"/></p>
+                    <h:link outcome="/frontend/product/product.xhtml">
+                        <span>Xem thêm</span>
+                        <i class="fas fa-angle-double-right"/>
+                    </h:link>
                 </div>
             </div>
         </div>
@@ -208,12 +229,20 @@
                                                                      minFractionDigits="0" locale="vi_VN"/>
                                                 </h:outputText>
                                             </p>
-                                            <p:commandLink styleClass="add-to-cart" actionListener="#{productFEController.addToCart(productDto)}"
-                                                           update="#{Constant.ERROR_FE_GROWL_ID}">
+                                            <p:commandLink styleClass="add-to-cart"
+                                                           actionListener="#{productFEController.addToCart(productDto)}"
+                                                           update="#{Constant.ERROR_FE_GROWL_ID}"
+                                                           rendered="#{productDto.quantity ne 0}">
                                                 <i class="fa fa-cart-plus"/>
                                                 <span>Thêm vào giỏ hàng</span>
                                                 <i class="fas fa-caret-right"/>
                                             </p:commandLink>
+                                            <p:outputLabel styleClass="out-of-stock"
+                                                           rendered="#{productDto.quantity eq 0}">
+                                                <i class="fas fa-cart-arrow-down"/>
+                                                <span>Hết hàng</span>
+                                                <i class="fas fa-times"/>
+                                            </p:outputLabel>
                                         </p:commandLink>
                                     </div>
                                 </p:repeat>
@@ -223,10 +252,10 @@
                     <div class="more-products">
                         <div class="row">
                             <h:link outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_PHONE}">
-                            <span>
-                                Xem thêm
-                                <i class="fas fa-angle-double-right"/>
-                            </span>
+                                <span>
+                                    Xem thêm
+                                    <i class="fas fa-angle-double-right"/>
+                                </span>
                             </h:link>
                         </div>
                     </div>
@@ -271,12 +300,20 @@
                                                                      minFractionDigits="0" locale="vi_VN"/>
                                                 </h:outputText>
                                             </p>
-                                            <p:commandLink styleClass="add-to-cart" actionListener="#{productFEController.addToCart(productDto)}"
-                                                           update="#{Constant.ERROR_FE_GROWL_ID}">
+                                            <p:commandLink styleClass="add-to-cart"
+                                                           actionListener="#{productFEController.addToCart(productDto)}"
+                                                           update="#{Constant.ERROR_FE_GROWL_ID}"
+                                                           rendered="#{productDto.quantity ne 0}">
                                                 <i class="fa fa-cart-plus"/>
                                                 <span>Thêm vào giỏ hàng</span>
                                                 <i class="fas fa-caret-right"/>
                                             </p:commandLink>
+                                            <p:outputLabel styleClass="out-of-stock"
+                                                           rendered="#{productDto.quantity eq 0}">
+                                                <i class="fas fa-cart-arrow-down"/>
+                                                <span>Hết hàng</span>
+                                                <i class="fas fa-times"/>
+                                            </p:outputLabel>
                                         </p:commandLink>
                                     </div>
                                 </p:repeat>
@@ -334,12 +371,20 @@
                                                                      minFractionDigits="0" locale="vi_VN"/>
                                                 </h:outputText>
                                             </p>
-                                            <p:commandLink styleClass="add-to-cart" actionListener="#{productFEController.addToCart(productDto)}"
-                                                           update="#{Constant.ERROR_FE_GROWL_ID}">
+                                            <p:commandLink styleClass="add-to-cart"
+                                                           actionListener="#{productFEController.addToCart(productDto)}"
+                                                           update="#{Constant.ERROR_FE_GROWL_ID}"
+                                                           rendered="#{productDto.quantity ne 0}">
                                                 <i class="fa fa-cart-plus"/>
                                                 <span>Thêm vào giỏ hàng</span>
                                                 <i class="fas fa-caret-right"/>
                                             </p:commandLink>
+                                            <p:outputLabel styleClass="out-of-stock"
+                                                           rendered="#{productDto.quantity eq 0}">
+                                                <i class="fas fa-cart-arrow-down"/>
+                                                <span>Hết hàng</span>
+                                                <i class="fas fa-times"/>
+                                            </p:outputLabel>
                                         </p:commandLink>
                                     </div>
                                 </p:repeat>
@@ -397,12 +442,20 @@
                                                                      minFractionDigits="0" locale="vi_VN"/>
                                                 </h:outputText>
                                             </p>
-                                            <p:commandLink styleClass="add-to-cart" actionListener="#{productFEController.addToCart(productDto)}"
-                                                           update="#{Constant.ERROR_FE_GROWL_ID}">
+                                            <p:commandLink styleClass="add-to-cart"
+                                                           actionListener="#{productFEController.addToCart(productDto)}"
+                                                           update="#{Constant.ERROR_FE_GROWL_ID}"
+                                                           rendered="#{productDto.quantity ne 0}">
                                                 <i class="fa fa-cart-plus"/>
                                                 <span>Thêm vào giỏ hàng</span>
                                                 <i class="fas fa-caret-right"/>
                                             </p:commandLink>
+                                            <p:outputLabel styleClass="out-of-stock"
+                                                           rendered="#{productDto.quantity eq 0}">
+                                                <i class="fas fa-cart-arrow-down"/>
+                                                <span>Hết hàng</span>
+                                                <i class="fas fa-times"/>
+                                            </p:outputLabel>
                                         </p:commandLink>
                                     </div>
                                 </p:repeat>

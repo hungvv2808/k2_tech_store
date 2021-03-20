@@ -63,13 +63,16 @@
   padding: 0;
 }
 .navbar .collapse .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item {
-  padding: 0.7rem 2rem;
+  padding: 0.7rem 1rem;
   text-align: left;
 }
 .navbar .collapse .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item:hover {
   background-color: #3aaf29;
   color: #ffffff;
   border-radius: 0.5rem;
+}
+.navbar .collapse .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item i {
+  padding-right: 0.5rem;
 }
 .navbar .collapse .navbar-nav .nav-item:not(.navbar .collapse .navbar-nav .nav-item__last-child):hover::before {
   width: 100%;
@@ -701,6 +704,15 @@
 .content-products .wireless-products a {
   text-decoration: none;
 }
+.content-products .all-products__empty,
+.content-products .highlight-products__empty,
+.content-products .mobile-products__empty,
+.content-products .laptop-products__empty,
+.content-products .watch-products__empty,
+.content-products .wireless-products__empty {
+  text-align: center;
+  font-size: 18px;
+}
 .content-products .all-products__img,
 .content-products .highlight-products__img,
 .content-products .mobile-products__img,
@@ -813,6 +825,9 @@
   background-color: #F42F4C;
   color: #ffffff;
   padding: 0.3rem 0;
+}
+.content-products .more-products {
+  margin-bottom: 2rem;
 }
 .content-products .more-products > .row {
   margin-top: 1rem;
@@ -941,7 +956,7 @@
   text-transform: uppercase;
 }
 .content-brands .container-fluid > .row h1,
-.content-brands .container-fluid > .row p {
+.content-brands .container-fluid > .row a {
   color: #ffffff;
   text-align: center;
   width: 100%;
@@ -968,13 +983,13 @@
 .content-brands .container-fluid > .row .owl-carousel .owl-dots {
   display: none;
 }
-.content-brands .container-fluid > .row p {
+.content-brands .container-fluid > .row a {
   font-size: 18px;
 }
-.content-brands .container-fluid > .row p i {
+.content-brands .container-fluid > .row a i {
   padding: 0 0.7rem;
 }
-.content-brands .container-fluid > .row p:hover {
+.content-brands .container-fluid > .row a:hover {
   color: #3aaf29;
   cursor: pointer;
   text-decoration: underline;
@@ -1445,4 +1460,21 @@ body .container .row {
 .required-label:after {
   content: " *";
   color: #F42F4C;
+}
+
+.scroll-to-top {
+  background-color: #F42F4C;
+  color: #ffffff !important;
+  cursor: pointer;
+  height: 3rem;
+  padding: 5px;
+  position: fixed;
+  right: 15px;
+  text-align: center;
+  width: 3rem;
+  border-radius: 1rem;
+}
+.scroll-to-top i {
+  font-size: 1.5rem;
+  margin-top: 0.4rem;
 }

@@ -37,3 +37,20 @@ body {
     content: " *";
     color: $red-color;
 }
+
+.scroll-to-top {
+    background-color: $red-color;
+    color: $third-color !important;
+    cursor: pointer;
+    height: 3rem;
+    padding: 5px;
+    position: fixed;
+    right: 15px;
+    text-align: center;
+    width: 3rem;
+    border-radius: 1rem;
+    i {
+        font-size: 1.5rem;
+        margin-top: 0.4rem;
+    }
+}

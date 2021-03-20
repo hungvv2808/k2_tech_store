@@ -3,6 +3,7 @@ package vn.tech.website.store.controller.frontend.product;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.docx4j.wml.P;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +19,7 @@ import vn.tech.website.store.repository.BrandRepository;
 import vn.tech.website.store.repository.CategoryRepository;
 import vn.tech.website.store.repository.ProductImageRepository;
 import vn.tech.website.store.repository.ProductRepository;
+import vn.tech.website.store.util.FacesUtil;
 
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -35,7 +37,7 @@ import java.util.Map;
 @Setter
 public class ProductFEController extends BaseFEController {
     @Inject
-    private AuthorizationFEController authorizationFEController;
+    private ProductDetailFEController productDetailFEController;
     @Inject
     private HttpServletRequest request;
 
@@ -50,7 +52,8 @@ public class ProductFEController extends BaseFEController {
 
     private PaginationController<ProductDto> pagination;
     private List<ProductDto> productDtoList;
-    private String cateId;
+    private Long categoryId;
+    private Long brandId;
     private Map<String, OrdersDetailDto> mapAddToCart;
     private ProductSearchDto searchDto;
 
@@ -61,20 +64,24 @@ public class ProductFEController extends BaseFEController {
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
             init();
-            cateId = request.getParameter("catid");
-            resetAll(cateId == null ? null : Long.parseLong(cateId));
+            String cateId = request.getParameter("catid");
+            categoryId = cateId == null ? null : Long.parseLong(cateId);
+            String braId = request.getParameter("braid");
+            brandId = braId == null ? null : Long.parseLong(braId);
+            resetAll();
         }
     }
 
-    public void resetAll(Long categoryId) {
+    public void resetAll() {
         productDtoList = new ArrayList<>();
         searchDto = new ProductSearchDto();
         pagination.setRequest(request);
-        onSearch(categoryId);
+        onSearch(categoryId, brandId);
     }
 
-    public void onSearch(Long categoryId){
+    public void onSearch(Long categoryId, Long brandId){
         searchDto.setCategoryId(categoryId);
+        searchDto.setBrandId(brandId);
         pagination.setLazyDataModel(new LazyDataModel<ProductDto>() {
             @Override
             public List<ProductDto> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
@@ -137,6 +144,12 @@ public class ProductFEController extends BaseFEController {
         }
         session.setAttribute("cartList", mapAddToCart);
         setSuccessForm("Thêm sản phẩm \"" + resultDto.getProductName() + "\" vào giỏ hàng thành công");
+    }
+
+    public void viewDetailProduct(ProductDto productDto) {
+        productDetailFEController.setDto(new ProductDto());
+        productDetailFEController.setDto(productDto);
+        FacesUtil.redirect("/frontend/product/detail.xhtml");
     }
 
     @Override

@@ -75,12 +75,15 @@
                         border-radius: 0.5rem;
                         padding: 0;
                         .dropdown-item {
-                            padding: 0.7rem 2rem;
+                            padding: 0.7rem 1rem;
                             text-align: left;
                             &:hover {
                                 background-color: $primary-color;
                                 color: $background-header-default;
                                 border-radius: 0.5rem;
+                            }
+                            i {
+                                padding-right: 0.5rem;
                             }
                         }
                     }
