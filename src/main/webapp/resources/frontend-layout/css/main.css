@@ -620,6 +620,7 @@
 .content-products .all-products .grid-style:hover .watch-products__price,
 .content-products .all-products .grid-style:hover .wireless-products__price,
 .content-products .all-products .grid-style:hover .add-to-cart,
+.content-products .all-products .grid-style:hover .out-of-stock,
 .content-products .highlight-products .grid-style:hover .all-products__title,
 .content-products .highlight-products .grid-style:hover .highlight-products__title,
 .content-products .highlight-products .grid-style:hover .mobile-products__title,
@@ -633,6 +634,7 @@
 .content-products .highlight-products .grid-style:hover .watch-products__price,
 .content-products .highlight-products .grid-style:hover .wireless-products__price,
 .content-products .highlight-products .grid-style:hover .add-to-cart,
+.content-products .highlight-products .grid-style:hover .out-of-stock,
 .content-products .mobile-products .grid-style:hover .all-products__title,
 .content-products .mobile-products .grid-style:hover .highlight-products__title,
 .content-products .mobile-products .grid-style:hover .mobile-products__title,
@@ -646,6 +648,7 @@
 .content-products .mobile-products .grid-style:hover .watch-products__price,
 .content-products .mobile-products .grid-style:hover .wireless-products__price,
 .content-products .mobile-products .grid-style:hover .add-to-cart,
+.content-products .mobile-products .grid-style:hover .out-of-stock,
 .content-products .laptop-products .grid-style:hover .all-products__title,
 .content-products .laptop-products .grid-style:hover .highlight-products__title,
 .content-products .laptop-products .grid-style:hover .mobile-products__title,
@@ -659,6 +662,7 @@
 .content-products .laptop-products .grid-style:hover .watch-products__price,
 .content-products .laptop-products .grid-style:hover .wireless-products__price,
 .content-products .laptop-products .grid-style:hover .add-to-cart,
+.content-products .laptop-products .grid-style:hover .out-of-stock,
 .content-products .watch-products .grid-style:hover .all-products__title,
 .content-products .watch-products .grid-style:hover .highlight-products__title,
 .content-products .watch-products .grid-style:hover .mobile-products__title,
@@ -672,6 +676,7 @@
 .content-products .watch-products .grid-style:hover .watch-products__price,
 .content-products .watch-products .grid-style:hover .wireless-products__price,
 .content-products .watch-products .grid-style:hover .add-to-cart,
+.content-products .watch-products .grid-style:hover .out-of-stock,
 .content-products .wireless-products .grid-style:hover .all-products__title,
 .content-products .wireless-products .grid-style:hover .highlight-products__title,
 .content-products .wireless-products .grid-style:hover .mobile-products__title,
@@ -684,7 +689,8 @@
 .content-products .wireless-products .grid-style:hover .laptop-products__price,
 .content-products .wireless-products .grid-style:hover .watch-products__price,
 .content-products .wireless-products .grid-style:hover .wireless-products__price,
-.content-products .wireless-products .grid-style:hover .add-to-cart {
+.content-products .wireless-products .grid-style:hover .add-to-cart,
+.content-products .wireless-products .grid-style:hover .out-of-stock {
   color: #ffffff;
 }
 .content-products .all-products a,
@@ -758,6 +764,29 @@
   background: #F42F4C;
   color: #ffffff;
 }
+.content-products .all-products .add-to-cart i, .content-products .all-products .add-to-cart span, .content-products .all-products .out-of-stock i, .content-products .all-products .out-of-stock span,
+.content-products .highlight-products .add-to-cart i,
+.content-products .highlight-products .add-to-cart span,
+.content-products .highlight-products .out-of-stock i,
+.content-products .highlight-products .out-of-stock span,
+.content-products .mobile-products .add-to-cart i,
+.content-products .mobile-products .add-to-cart span,
+.content-products .mobile-products .out-of-stock i,
+.content-products .mobile-products .out-of-stock span,
+.content-products .laptop-products .add-to-cart i,
+.content-products .laptop-products .add-to-cart span,
+.content-products .laptop-products .out-of-stock i,
+.content-products .laptop-products .out-of-stock span,
+.content-products .watch-products .add-to-cart i,
+.content-products .watch-products .add-to-cart span,
+.content-products .watch-products .out-of-stock i,
+.content-products .watch-products .out-of-stock span,
+.content-products .wireless-products .add-to-cart i,
+.content-products .wireless-products .add-to-cart span,
+.content-products .wireless-products .out-of-stock i,
+.content-products .wireless-products .out-of-stock span {
+  font-size: 18px;
+}
 .content-products .all-products .add-to-cart,
 .content-products .highlight-products .add-to-cart,
 .content-products .mobile-products .add-to-cart,
@@ -774,18 +803,16 @@
 .content-products .wireless-products .add-to-cart:hover {
   color: #02ff3985;
 }
-.content-products .all-products .add-to-cart i, .content-products .all-products .add-to-cart span,
-.content-products .highlight-products .add-to-cart i,
-.content-products .highlight-products .add-to-cart span,
-.content-products .mobile-products .add-to-cart i,
-.content-products .mobile-products .add-to-cart span,
-.content-products .laptop-products .add-to-cart i,
-.content-products .laptop-products .add-to-cart span,
-.content-products .watch-products .add-to-cart i,
-.content-products .watch-products .add-to-cart span,
-.content-products .wireless-products .add-to-cart i,
-.content-products .wireless-products .add-to-cart span {
-  font-size: 18px;
+.content-products .all-products .out-of-stock,
+.content-products .highlight-products .out-of-stock,
+.content-products .mobile-products .out-of-stock,
+.content-products .laptop-products .out-of-stock,
+.content-products .watch-products .out-of-stock,
+.content-products .wireless-products .out-of-stock {
+  width: 100%;
+  background-color: #F42F4C;
+  color: #ffffff;
+  padding: 0.3rem 0;
 }
 .content-products .more-products > .row {
   margin-top: 1rem;

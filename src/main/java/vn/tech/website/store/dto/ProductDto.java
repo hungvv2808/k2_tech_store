@@ -23,4 +23,5 @@ public class ProductDto extends Product {
     private Set<String> productImages;
     private String imageToShow;
     private Double priceAfterDiscount;
+    private Long totalQtyParent;
 }

@@ -50,11 +50,16 @@
                                             </h:outputText>
                                         </p>
                                         <p:commandLink styleClass="add-to-cart" actionListener="#{productFEController.addToCart(productDto)}"
-                                                       update="#{Constant.ERROR_FE_GROWL_ID}">
+                                                       update="#{Constant.ERROR_FE_GROWL_ID}" rendered="#{productDto.quantity ne 0}">
                                             <i class="fa fa-cart-plus"/>
                                             <span>Thêm vào giỏ hàng</span>
                                             <i class="fas fa-caret-right"/>
                                         </p:commandLink>
+                                        <p:outputLabel styleClass="out-of-stock" rendered="#{productDto.quantity eq 0}">
+                                            <i class="fas fa-cart-arrow-down"/>
+                                            <span>Hết hàng</span>
+                                            <i class="fas fa-times"/>
+                                        </p:outputLabel>
                                     </p:commandLink>
                                 </div>
                             </p:repeat>

@@ -48,7 +48,8 @@
         .laptop-products__price,
         .watch-products__price,
         .wireless-products__price,
-        .add-to-cart {
+        .add-to-cart,
+        .out-of-stock {
           color: $third-color;
         }
       }
@@ -96,16 +97,23 @@
       }
     }
 
+    .add-to-cart, .out-of-stock {
+      i, span {
+        font-size: 18px;
+      }
+    }
     .add-to-cart {
       color: $primary-color;
 
       &:hover {
         color: $primary-color-blur;
       }
-
-      i, span {
-        font-size: 18px;
-      }
+    }
+    .out-of-stock {
+      width: 100%;
+      background-color: $red-color;
+      color: $third-color;
+      padding: 0.3rem 0;
     }
   }
 

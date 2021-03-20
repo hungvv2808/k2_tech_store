@@ -113,30 +113,32 @@
                     </div>
                 </div>
                 <div class="top-news">
-                    <p:repeat value="#{homeFEController.newsDtoList}" var="newsDto">
-                        <p:remoteCommand name="cmdViewNews#{newsDto.newsId}" actionListener="#{homeFEController.viewNewsDetail(newsDto)}"/>
-                        <div class="row">
-                            <div class="col-lg-3">
-                                <div class="top-news__img">
-                                    <p:graphicImage onclick="cmdViewNews#{newsDto.newsId}();" name="#{newsDto.imgPath}"/>
+                    <h:form>
+                        <p:repeat value="#{homeFEController.newsDtoList}" var="newsDto">
+                            <p:remoteCommand name="cmdViewNews#{newsDto.newsId}" actionListener="#{homeFEController.viewNewsDetail(newsDto)}"/>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="top-news__img">
+                                        <p:graphicImage onclick="cmdViewNews#{newsDto.newsId}();" name="#{newsDto.imgPath}"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-9">
+                                    <div class="top-news__detail">
+                                        <p onclick="cmdViewNews#{newsDto.newsId}();">#{newsDto.title}</p>
+                                        <p>
+                                            <h:link outcome="/frontend/news/list-news.xhtml?catid=#{newsDto.categoryId}">
+                                                <span>#{newsDto.categoryName}</span>
+                                            </h:link>
+                                            <h:outputText value="#{newsDto.updateDate}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:outputText>
+                                        </p>
+                                        <p>#{commonController.abbreviate(newsDto.shortContent, 100)}</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-lg-9">
-                                <div class="top-news__detail">
-                                    <p onclick="cmdViewNews#{newsDto.newsId}();">#{newsDto.title}</p>
-                                    <p>
-                                        <h:link outcome="/frontend/news/list-news.xhtml?catid=#{newsDto.categoryId}">
-                                            <span>#{newsDto.categoryName}</span>
-                                        </h:link>
-                                        <h:outputText value="#{newsDto.updateDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                                        </h:outputText>
-                                    </p>
-                                    <p>#{commonController.abbreviate(newsDto.shortContent, 100)}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </p:repeat>
+                        </p:repeat>
+                    </h:form>
                 </div>
                 <div class="more-news">
                     <div class="row">

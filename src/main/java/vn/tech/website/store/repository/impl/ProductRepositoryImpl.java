@@ -45,7 +45,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 + "p.update_date AS updateDate, "
                 + "p.update_by AS updateBy, "
                 + "p.price - p.price * p.discount / 100 AS priceAfterDiscount, "
-                + "(SELECT pi.image_path FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS imageToShow ");
+                + "(SELECT pi.image_path FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS imageToShow, "
+                + "(SELECT sum(p_v.quantity) FROM product_link pl INNER JOIN product p_v ON pl.child_id = p_v.product_id WHERE pl.parent_id = p.product_id) AS totalQtyParent ");
         appendQueryFromAndWhereForSearch(sb, searchDto);
         sb.append(" GROUP BY p.product_id ");
         if (searchDto.getSortField() != null) {
@@ -95,7 +96,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         sb.append("FROM product p " +
                 " INNER JOIN category c on p.category_id = c. category_id " +
                 " INNER JOIN brand b on p.brand_id = b.brand_id ");
-        sb.append(" WHERE 1=1 ");
+        sb.append(" WHERE 1 = 1 ");
 
         if (StringUtils.isNotBlank(searchDto.getProductName())) {
             sb.append(" AND p.name LIKE :productName ");

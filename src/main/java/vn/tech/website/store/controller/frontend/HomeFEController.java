@@ -77,7 +77,7 @@ public class HomeFEController extends BaseFEController {
 
     private List<ProductDto> onSearchListProduct(Integer categoryId) {
         searchDto.setPageSize(DbConstant.LIMIT_SHOW_FE);
-//        searchDto.setExpertType(DbConstant.PRODUCT_TYPE_CHILD);
+        searchDto.setType(DbConstant.PRODUCT_TYPE_CHILD);
         searchDto.setCategoryId(Long.valueOf(categoryId));
         List<ProductDto> showList = productRepository.search(searchDto);
         for (ProductDto dto : showList){

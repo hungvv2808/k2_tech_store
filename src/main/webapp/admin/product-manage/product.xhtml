@@ -254,7 +254,8 @@
                                     </p:column>
 
                                     <p:column headerText="Hình ảnh" styleClass="text-center">
-                                        <p:graphicImage styleClass="image-grid" name="#{resultDto.imageToShow}"/>
+                                        <p:graphicImage styleClass="image-grid" rendered="#{not empty resultDto.imageToShow}" name="#{resultDto.imageToShow}"/>
+                                        <p:graphicImage styleClass="image-grid" rendered="#{empty resultDto.imageToShow}" name="images/no-image.png" library="apollo-layout" />
                                     </p:column>
 
                                     <p:column headerText="Mã sản phẩm " sortBy="#{resultDto.code}">
@@ -265,6 +266,10 @@
                                         <h:outputText value="#{resultDto.productName}"/>
                                     </p:column>
 
+                                    <p:column headerText="Số lượng" styleClass="text-center">
+                                        <h:outputText value="#{resultDto.type eq DbConstant.PRODUCT_TYPE_PARENT ? resultDto.totalQtyParent : resultDto.quantity}"/>
+                                    </p:column>
+
                                     <p:column headerText="Đơn giá" styleClass="text-center">
                                         <h:outputText value="#{resultDto.price}">
                                             <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
@@ -273,7 +278,7 @@
                                     </p:column>
 
                                     <p:column headerText="Giảm giá" styleClass="text-center">
-                                        <h:outputText value="#{resultDto.discount}">
+                                        <h:outputText value="#{resultDto.discount eq null ? 0 : resultDto.discount}">
                                             <f:convertNumber type="currency" currencySymbol="%" maxFractionDigits="6"
                                                              minFractionDigits="0" locale="vi_VN"/>
                                         </h:outputText>

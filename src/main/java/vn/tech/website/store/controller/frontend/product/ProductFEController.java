@@ -121,12 +121,17 @@ public class ProductFEController extends BaseFEController {
             boolean checkExits = true;
             for (OrdersDetailDto obj : mapAddToCart.values()) {
                 if (dto.getProductId().equals(obj.getProductId())) {
-                    obj.setQuantity(obj.getQuantity() + 1);
+                    Long qty = obj.getQuantity() + 1;
+                    if (qty > resultDto.getQuantity()) {
+                        setErrorForm("Số lượng trong kho không đủ để mua thêm, vui lòng quay lại sau.");
+                        return;
+                    }
+                    obj.setQuantity(qty);
                     checkExits = false;
                     break;
                 }
             }
-            if (checkExits){
+            if (checkExits) {
                 mapAddToCart.put(resultDto.getCode(), dto);
             }
         }
