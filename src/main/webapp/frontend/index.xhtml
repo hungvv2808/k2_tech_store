@@ -203,7 +203,7 @@
                             <div class="row">
                                 <p:repeat value="#{homeFEController.mobileList}" var="productDto">
                                     <div class="col-lg-3 grid-style">
-                                        <p:commandLink>
+                                        <p:commandLink actionListener="#{productFEController.viewDetailProduct(productDto)}">
                                             <p:graphicImage styleClass="mobile-products__img"
                                                             rendered="#{not empty productDto.imageToShow}"
                                                             name="#{productDto.imageToShow}"/>
@@ -274,7 +274,7 @@
                             <div class="row">
                                 <p:repeat value="#{homeFEController.laptopList}" var="productDto">
                                     <div class="col-lg-3 grid-style">
-                                        <p:commandLink>
+                                        <p:commandLink actionListener="#{productFEController.viewDetailProduct(productDto)}">
                                             <p:graphicImage styleClass="laptop-products__img"
                                                             rendered="#{not empty productDto.imageToShow}"
                                                             name="#{productDto.imageToShow}"/>
@@ -345,7 +345,7 @@
                             <div class="row">
                                 <p:repeat value="#{homeFEController.watchList}" var="productDto">
                                     <div class="col-lg-3 grid-style">
-                                        <p:commandLink>
+                                        <p:commandLink actionListener="#{productFEController.viewDetailProduct(productDto)}">
                                             <p:graphicImage styleClass="watch-products__img"
                                                             rendered="#{not empty productDto.imageToShow}"
                                                             name="#{productDto.imageToShow}"/>
@@ -416,7 +416,7 @@
                             <div class="row">
                                 <p:repeat value="#{homeFEController.airList}" var="productDto">
                                     <div class="col-lg-3 grid-style">
-                                        <p:commandLink>
+                                        <p:commandLink actionListener="#{productFEController.viewDetailProduct(productDto)}">
                                             <p:graphicImage styleClass="wireless-products__img"
                                                             rendered="#{not empty productDto.imageToShow}"
                                                             name="#{productDto.imageToShow}"/>

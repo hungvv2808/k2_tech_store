@@ -42,6 +42,7 @@ public class ProductDetailFEController extends BaseFEController {
         productImageList = new ArrayList<>();
         if (dto != null) {
             BeanUtils.copyProperties(dto, productDtoView);
+            productImageList = productImageRepository.findAllByProductId(dto.getProductId());
         }
     }
 
