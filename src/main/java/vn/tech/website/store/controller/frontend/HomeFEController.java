@@ -44,6 +44,9 @@ public class HomeFEController extends BaseFEController {
     private List<ProductDto> mobileList;
     private List<ProductDto> laptopList;
     private List<ProductDto> watchList;
+    private List<ProductDto> maleList;
+    private List<ProductDto> femaleList;
+    private List<ProductDto> kidList;
     private List<ProductDto> airList;
     private ProductSearchDto searchDto;
 
@@ -73,11 +76,17 @@ public class HomeFEController extends BaseFEController {
         watchList = onSearchListProduct(Constant.CATE_WATCH);
         airList = new ArrayList<>();
         airList = onSearchListProduct(Constant.CATE_HEADPHONE);
+        maleList = new ArrayList<>();
+        maleList = onSearchListProduct(Constant.CATE_MALE);
+        femaleList = new ArrayList<>();
+        femaleList = onSearchListProduct(Constant.CATE_FEMALE);
+        kidList = new ArrayList<>();
+        kidList = onSearchListProduct(Constant.CATE_KID);
     }
 
     private List<ProductDto> onSearchListProduct(Integer categoryId) {
         searchDto.setPageSize(DbConstant.LIMIT_SHOW_FE);
-        searchDto.setType(DbConstant.PRODUCT_TYPE_CHILD);
+        //searchDto.setType(DbConstant.PRODUCT_TYPE_CHILD);
         searchDto.setCategoryId(Long.valueOf(categoryId));
         List<ProductDto> showList = productRepository.search(searchDto);
         for (ProductDto dto : showList){

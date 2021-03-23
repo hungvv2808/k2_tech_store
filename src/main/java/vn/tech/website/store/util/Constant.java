@@ -122,4 +122,7 @@ public class Constant {
     public static final int BRAND_SAMSUNG_ID = 6;
     public static final int BRAND_SONY_ID = 7;
     public static final int BRAND_VINFAST_ID = 8;
+
+    // Min length of password
+    public static final int ACCOUNT_MINLENGTH_PASSWORD_USER = 6;
 }

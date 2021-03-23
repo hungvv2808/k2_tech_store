@@ -511,6 +511,52 @@ public class AuthorizationFEController implements Serializable {
         return httpUrl;
     }
 
+    public void register(){
+        String username = StringUtils.isBlank(accountDto.getUserName()) ? "" : AES.decrypt(accountDto.getUserName(), cryptoSecretKey);
+        String password = StringUtils.isBlank(accountDto.getPassword()) ? "" : AES.decrypt(accountDto.getPassword(), cryptoSecretKey);
+        String rePassword = StringUtils.isBlank(accountDto.getRePassword()) ? "" : AES.decrypt(accountDto.getRePassword(), cryptoSecretKey);
+
+        if (StringUtils.isBlank(username)){
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập tên đăng nhập");
+            return;
+        }
+        Account account = accountRepository.findAccountByUserNameAndRoleId(username,DbConstant.ROLE_ID_USER);
+        if (account != null){
+            FacesUtil.addErrorMessage("Tên đăng nhập đã tồn tại");
+            return;
+        }
+        if (StringUtils.isBlank(password)){
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập mật khẩu");
+            return;
+        }
+        if (password.length() < Constant.ACCOUNT_MINLENGTH_PASSWORD_USER) {
+            FacesUtil.addErrorMessage("Mật khẩu phải có ít nhất " + Constant.ACCOUNT_MINLENGTH_PASSWORD_USER + " ký tự");
+            return;
+        }
+
+        if (StringUtils.isBlank(rePassword)){
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập lại mật khẩu");
+            return;
+        }
+        if (!rePassword.equals(password)){
+            FacesUtil.addErrorMessage("Mật khẩu nhập lại không trùng khớp");
+            return;
+        }
+
+
+        Account accountRegister = new Account();
+        accountRegister.setUserName(username);
+        accountRegister.setRoleId(DbConstant.ROLE_ID_USER);
+        accountRegister.setSalt(StringUtil.generateSalt());
+        accountRegister.setPassword(StringUtil.encryptPassword(password,accountRegister.getSalt()));
+        accountRegister.setStatus(DbConstant.ACCOUNT_ACTIVE_STATUS);
+        accountRepository.save(accountRegister);
+        resetAll();
+        FacesUtil.redirect("/frontend/index.xhtml");
+        FacesUtil.addSuccessMessage("Đăng ký thành công");
+        FacesUtil.updateView(Constant.ERROR_GROWL_ID);
+    }
+
     public void setAccountDto(AccountDto accountDto) {
         this.accountDto = accountDto;
     }
