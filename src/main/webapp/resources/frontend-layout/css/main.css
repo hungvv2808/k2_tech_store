@@ -846,6 +846,21 @@
   color: #02ff3985;
   text-decoration: underline;
 }
+.content-products .detail-products .row p {
+  width: 100%;
+  text-align: justify;
+}
+.content-products .detail-products .row h1, .content-products .detail-products .row h2, .content-products .detail-products .row h3, .content-products .detail-products .row h4, .content-products .detail-products .row h5, .content-products .detail-products .row h6 {
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+  padding-bottom: 2rem;
+}
+.content-products .detail-products .row img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
 
 .feedbacks-slide .container {
   padding: 0;

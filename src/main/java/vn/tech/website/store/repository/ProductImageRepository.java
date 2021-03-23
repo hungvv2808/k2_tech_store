@@ -14,4 +14,5 @@ public interface ProductImageRepository extends CrudRepository<ProductImage, Lon
     @Query("select pi.imagePath from ProductImage pi where pi.productId = :productId")
     Set<String> getImagePathByProductId(@Param("productId")Long productId);
 
+    List<ProductImage> findAllByProductId(Long productId);
 }
