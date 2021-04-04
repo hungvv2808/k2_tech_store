@@ -20,7 +20,7 @@
         <p:repeat value="#{uploadMultipleImageController.uploadMultipleFileDto.listToShow}" var="itemVar1" varStatus="status">
             <div class="ui-g-12 ui-lg-3 my-card-image-border" style="text-align: center;">
                 <p:graphicImage id="galery_image_#{status.index}"
-                                style="height: 150px; width: 150px; object-fit: cover; border-radius: 10px;"
+                                style="height: 150px; width: 150px; object-fit: contain; border-radius: 10px;"
                                 name="#{itemVar1}"/>
                 <br/>
                 <p:commandButton

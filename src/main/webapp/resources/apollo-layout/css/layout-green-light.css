@@ -8297,5 +8297,5 @@ i.custom-icon.offline:after {
   width: 60px;
   height: 60px;
   border-radius: 1rem;
-  object-fit: cover;
+  object-fit: contain;
 }

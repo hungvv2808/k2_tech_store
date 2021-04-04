@@ -5,6 +5,6 @@ import vn.tech.website.store.model.ProductOptionDetail;
 
 import java.util.List;
 
-public interface ProductOptionDetailRepository extends CrudRepository<ProductOptionDetail, Long> {
+public interface ProductOptionDetailRepository extends CrudRepository<ProductOptionDetail, Long>, ProductOptionDetailRepositoryCustom {
     List<ProductOptionDetail> findAllByProductId(Long productId);
 }

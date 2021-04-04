@@ -94,8 +94,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     private void appendQueryFromAndWhereForSearch(StringBuilder sb, ProductSearchDto searchDto) {
         sb.append("FROM product p " +
-                " INNER JOIN category c on p.category_id = c. category_id " +
-                " INNER JOIN brand b on p.brand_id = b.brand_id ");
+                " INNER JOIN category c ON p.category_id = c. category_id " +
+                " INNER JOIN brand b ON p.brand_id = b.brand_id ");
+        if (searchDto.getParentId() != null) {
+            sb.append(" INNER JOIN product_link pl ON p.product_id = pl.child_id ");
+        }
         sb.append(" WHERE 1 = 1 ");
 
         if (StringUtils.isNotBlank(searchDto.getProductName())) {
@@ -115,6 +118,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
         if (searchDto.getExpertType() != null) {
             sb.append(" AND p.type <> :expertType ");
+        }
+
+        if (searchDto.getProductId() != null) {
+            sb.append(" AND p.product_id = :productId ");
+        }
+        if (searchDto.getParentId() != null) {
+            sb.append(" AND pl.parent_id = :parentId ");
         }
     }
 
@@ -137,6 +147,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
         if (searchDto.getExpertType() != null) {
             query.setParameter("expertType", searchDto.getExpertType());
+        }
+
+        if (searchDto.getProductId() != null) {
+            query.setParameter("productId", searchDto.getProductId());
+        }
+        if (searchDto.getParentId() != null) {
+            query.setParameter("parentId", searchDto.getParentId());
         }
 
         return query;

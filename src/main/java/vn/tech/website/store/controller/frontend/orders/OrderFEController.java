@@ -6,11 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.util.CollectionUtils;
-import vn.tech.website.store.controller.frontend.AuthorizationFEController;
 import vn.tech.website.store.controller.frontend.BaseFEController;
 import vn.tech.website.store.controller.frontend.common.PaginationController;
-import vn.tech.website.store.controller.frontend.product.ProductFEController;
+import vn.tech.website.store.controller.frontend.product.ProductDetailFEController;
 import vn.tech.website.store.dto.OrdersDetailDto;
 import vn.tech.website.store.dto.OrdersDto;
 import vn.tech.website.store.dto.user.AccountDto;
@@ -30,7 +28,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Named
 @Scope(value = "session")
@@ -40,7 +40,7 @@ public class OrderFEController extends BaseFEController {
     @Inject
     private HttpServletRequest request;
     @Inject
-    private ProductFEController productFEController;
+    private ProductDetailFEController productDetailFEController;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -81,7 +81,7 @@ public class OrderFEController extends BaseFEController {
         if (session.getAttribute("cartList") == null) {
             productCartMap = new LinkedHashMap<>();
         } else {
-            productCartMap = new LinkedHashMap<>(productFEController.getMapAddToCart());
+            productCartMap = new LinkedHashMap<>(productDetailFEController.getMapAddToCart());
             for (OrdersDetailDto dto : productCartMap.values()) {
                 totalQty += dto.getQuantity();
                 totalMoney += dto.getAmount() * dto.getQuantity();
@@ -130,8 +130,8 @@ public class OrderFEController extends BaseFEController {
         }
 
         productCartMap.remove(dto.getCodeProduct());
-        productFEController.getMapAddToCart().remove(dto.getCodeProduct());
-        session.setAttribute("cartList", productFEController.getMapAddToCart());
+        productDetailFEController.getMapAddToCart().remove(dto.getCodeProduct());
+        session.setAttribute("cartList", productDetailFEController.getMapAddToCart());
         setSuccessForm("Xoá sản phẩm \"" + dto.getProductDto().getProductName() + "\" khỏi giỏ hàng thành công.");
         FacesUtil.updateView("orderList");
     }
