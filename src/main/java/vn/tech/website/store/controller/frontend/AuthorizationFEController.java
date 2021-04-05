@@ -9,12 +9,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
+import vn.tech.website.store.controller.admin.BaseController;
 import vn.tech.website.store.controller.frontend.common.AddressFEController;
 import vn.tech.website.store.controller.frontend.common.FacesNoticeController;
 import vn.tech.website.store.crypto.AES;
 import vn.tech.website.store.dto.common.CityDistrictDto;
 import vn.tech.website.store.dto.user.AccountDto;
 import vn.tech.website.store.dto.user.AccountSearchDto;
+import vn.tech.website.store.entity.EScope;
 import vn.tech.website.store.jsf.CookieHelper;
 import vn.tech.website.store.jsf.GoogleRecaptcha;
 import vn.tech.website.store.model.Account;
@@ -40,7 +42,7 @@ import java.util.*;
 @Scope(value = "session")
 @Getter
 @Setter
-public class AuthorizationFEController implements Serializable {
+public class AuthorizationFEController extends BaseController implements Serializable{
     @Inject
     HttpServletRequest request;
     @Inject
@@ -89,6 +91,11 @@ public class AuthorizationFEController implements Serializable {
 
     @Value("${LOGIN_SECRET_KEY}")
     private String cryptoSecretKey;
+
+    @Override
+    protected EScope getMenuId() {
+        return null;
+    }
 
     @PostConstruct
     public void init() {
@@ -553,8 +560,7 @@ public class AuthorizationFEController implements Serializable {
         accountRepository.save(accountRegister);
         resetAll();
         FacesUtil.redirect("/frontend/index.xhtml");
-        FacesUtil.addSuccessMessage("Đăng ký thành công");
-        FacesUtil.updateView(Constant.ERROR_GROWL_ID);
+        setSuccessForm("Đăng ký thành công");
     }
 
     public void setAccountDto(AccountDto accountDto) {

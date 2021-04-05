@@ -114,6 +114,7 @@ public class Constant {
 
     public static final Double SHIPPING = 30000D;
 
+    //brand K2
     public static final int BRAND_APPLE_ID = 1;
     public static final int BRAND_XIAOMI_ID = 2;
     public static final int BRAND_ASUS_ID = 3;
@@ -122,6 +123,16 @@ public class Constant {
     public static final int BRAND_SAMSUNG_ID = 6;
     public static final int BRAND_SONY_ID = 7;
     public static final int BRAND_VINFAST_ID = 8;
+
+    //brand Niet
+    public static final int BRAND_NIKE_ID = 1;
+    public static final int BRAND_ADIDAS_ID = 2;
+    public static final int BRAND_PRADA_ID = 3;
+    public static final int BRAND_LACOSTE_ID = 4;
+    public static final int BRAND_GUCCI_ID = 6;
+    public static final int BRAND_YSL_ID = 7;
+    public static final int BRAND_ZARA_ID = 8;
+    public static final int BRAND_ZEUS_ID = 12;
 
     // Min length of password
     public static final int ACCOUNT_MINLENGTH_PASSWORD_USER = 6;

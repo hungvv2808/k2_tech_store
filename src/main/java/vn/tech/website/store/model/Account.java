@@ -66,4 +66,6 @@ public class Account extends BaseModel {
     @Column(name = "commune_id")
     private Long communeId;
 
+    @Column(name = "verify_code")
+    private String verifyCode;
 }

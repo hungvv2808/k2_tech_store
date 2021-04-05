@@ -144,7 +144,7 @@ public class OrderFEController extends BaseFEController {
 
     public boolean validateDataFE() {
         if (StringUtils.isBlank(ordersDto.getCustomerName())) {
-            setErrorForm("Bạn vui lòng nhập tên khách hàng hoặc chọn khách hàng");
+            setErrorForm("Bạn vui lòng nhập tên họ tên");
             return false;
         }
         if (StringUtils.isBlank(ordersDto.getPhone())) {
@@ -152,7 +152,7 @@ public class OrderFEController extends BaseFEController {
             return false;
         }
         if (StringUtils.isBlank(ordersDto.getAddress())) {
-            setErrorForm("Bạn vui lòng nhập địa chỉ");
+            setErrorForm("Bạn vui lòng nhập địa chỉ nhận hàng");
             return false;
         }
         return true;

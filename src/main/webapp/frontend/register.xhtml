@@ -26,6 +26,40 @@
 </h:head>
 
 <h:body styleClass="login-body">
+    <h:panelGroup id="notification">
+        <script>
+            //<![CDATA[
+            $('.btn').not('.no-processing').on('click', function() {
+                var $this = $(this);
+                if ("BUTTON,A".indexOf($this.prop("tagName")) > -1) {
+                    $this.data('loading-text', "<i class='fa fa-circle-o-notch fa-spin'></i> Đang xử lý...");
+                } else {
+                    $this.data('loading-text', "ĐANG XỬ LÝ...");
+                }
+                $this.button('loading');
+                setTimeout(function() {
+                    $this.button('reset');
+                }, 2000);
+            });
+            $(document).on('show.bs.modal', '.modal', function (event) {
+                var zIndex = 1040 + (10 * $('.modal:visible').length);
+                $(this).css('z-index', zIndex);
+                setTimeout(function() {
+                    $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+                }, 0);
+            });
+
+            $(document).ready(function () {
+                $('input').tooltip({
+                    placement: 'right'
+                });
+            });
+            //]]>
+        </script>
+        <h:outputScript rendered="#{not empty facesNoticeController.script}">
+            #{facesNoticeController.output()}
+        </h:outputScript>
+    </h:panelGroup>
     <h:form id="register" prependId="false">
         <input id="scrt_login" type="hidden" value="#{authorizationFEController.cryptoSecretKey}"/>
         <div class="body-container">
@@ -72,7 +106,7 @@
                                 <div class="ui-g-6">
                                     <p:commandButton value="Đăng ký"
                                                      actionListener="#{authorizationFEController.register}"
-                                                     update="#{Constant.ERROR_GROWL_ID} register"
+                                                     update="#{Constant.ERROR_FE_GROWL_ID} register"
                                                      onclick="document.getElementById('account').focus()"
                                                      icon="fa fa-check"/>
                                 </div>

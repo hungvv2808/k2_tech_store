@@ -1020,7 +1020,7 @@
   }
 }
 .content-brands {
-  background-image: url("#{resource['frontend-layout:img/brand_background1.jpg']}");
+  background-image: url("#{resource['frontend-layout:img/after-brand.jpg']}");
   background-size: contain;
   margin-top: 5rem;
 }
@@ -1186,7 +1186,7 @@
   }
 }
 .technology-life {
-  background-image: url("#{resource['frontend-layout:img/technology1.jpg']}");
+  background-image: url("#{resource['frontend-layout:img/banner1.jpg']}");
   background-size: 100%;
   margin-top: 5rem;
 }

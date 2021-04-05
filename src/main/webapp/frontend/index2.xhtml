@@ -113,38 +113,39 @@
                     </div>
                 </div>
                 <div class="top-news">
-                    <p:repeat value="#{homeFEController.newsDtoList}" var="newsDto">
-                        <div class="row">
-                            <div class="col-lg-3">
-                                <div class="top-news__img">
-                                    <p:commandLink actionListener="#{newsFEController.viewNewsDetail(newsDto)}">
-                                        <p:graphicImage name="#{newsDto.imgPath}"/>
-                                    </p:commandLink>
+                    <h:form>
+                        <p:repeat value="#{homeFEController.newsDtoList}" var="newsDto">
+                            <p:remoteCommand name="cmdViewNews#{newsDto.newsId}"
+                                             actionListener="#{homeFEController.viewNewsDetail(newsDto)}"/>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="top-news__img">
+                                        <p:graphicImage onclick="cmdViewNews#{newsDto.newsId}();"
+                                                        name="#{newsDto.imgPath}"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-9">
+                                    <div class="top-news__detail">
+                                        <p onclick="cmdViewNews#{newsDto.newsId}();">#{newsDto.title}</p>
+                                        <p>
+                                            <h:link outcome="/frontend/news/list-news.xhtml?catid=#{newsDto.categoryId}">
+                                                <span>#{newsDto.categoryName}</span>
+                                            </h:link>
+                                            <h:outputText value="#{newsDto.updateDate}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p>
+                                        <p>#{commonController.abbreviate(newsDto.shortContent, 100)}</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-lg-9">
-                                <div class="top-news__detail">
-                                    <p:commandLink actionListener="#{newsFEController.viewNewsDetail(newsDto)}">
-                                        <p>#{newsDto.title}</p>
-                                    </p:commandLink>
-                                    <p>
-                                        <h:link outcome="/frontend/news/list-news.xhtml?catid=#{newsDto.categoryId}">
-                                            <span>#{newsDto.categoryName}</span>
-                                        </h:link>
-                                        <h:outputText value="#{newsDto.updateDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                                        </h:outputText>
-                                    </p>
-                                    <p>#{commonController.abbreviate(newsDto.shortContent, 100)}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </p:repeat>
+                        </p:repeat>
+                    </h:form>
                 </div>
                 <div class="more-news">
                     <div class="row">
                         <h:link outcome="/frontend/news/list-news.xhtml">
-                            <span> Xem thêm<i class="fas fa-angle-double-right"/></span>
+                            <span>Xem thêm <i class="fas fa-angle-double-right"/></span>
                         </h:link>
                     </div>
                 </div>
@@ -156,16 +157,35 @@
                 <div class="row">
                     <h1>Thương hiệu của chúng tôi</h1>
                     <div class="owl-carousel owl-theme content-brands-slides">
-                        <img src="../resources/frontend-layout/img/demo/brand-prada.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand-adidas.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand-zara.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/brand-nike.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/gucci-brand.png" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/zeus_brand.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/ysl-brand.jpg" alt="k2-demo"/>
-                        <img src="../resources/frontend-layout/img/demo/lacoste-brand.jpg" alt="k2-demo"/>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_PRADA_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand-prada.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_ADIDAS_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand-adidas.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_ZARA_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand-zara.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_NIKE_ID}">
+                            <img src="../resources/frontend-layout/img/demo/brand-nike.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_GUCCI_ID}">
+                            <img src="../resources/frontend-layout/img/demo/gucci-brand.png" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_ZEUS_ID}">
+                            <img src="../resources/frontend-layout/img/demo/zeus_brand.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_YSL_ID}">
+                            <img src="../resources/frontend-layout/img/demo/ysl-brand.jpg" alt="k2-demo"/>
+                        </h:link>
+                        <h:link outcome="/frontend/product/product.xhtml?braid=#{Constant.BRAND_LACOSTE_ID}">
+                            <img src="../resources/frontend-layout/img/demo/lacoste-brand.jpg" alt="k2-demo"/>
+                        </h:link>
                     </div>
-                    <p>Xem thêm <i class="fas fa-angle-double-right"/></p>
+                    <h:link outcome="/frontend/product/product.xhtml">
+                        <span>Xem thêm</span>
+                        <i class="fas fa-angle-double-right"/>
+                    </h:link>
                 </div>
             </div>
         </div>
@@ -181,15 +201,15 @@
                     <div class="mobile-products">
                         <h:form prependId="false">
                             <div class="row">
-                                <p:repeat value="#{homeFEController.mobileList}" var="productDto">
+                                <p:repeat value="#{homeFEController.maleList}" var="productDto">
                                     <div class="col-lg-3 grid-style">
-                                        <p:commandLink>
+                                        <p:commandLink actionListener="#{productFEController.viewDetailProduct(productDto)}">
                                             <p:graphicImage styleClass="mobile-products__img"
                                                             rendered="#{not empty productDto.imageToShow}"
                                                             name="#{productDto.imageToShow}"/>
 
                                             <p class="mobile-products__title">#{productDto.productName}</p>
-                                            <p class="mobile-products__discount #{productDto.discount eq 0 ? 'display-none' : ''}">
+                                            <p class="mobile-products__discount #{productDto.discount eq null ? 'display-none' : ''}">
                                                 Giảm
                                                 <h:outputText value="#{productDto.discount}">
                                                     <f:convertNumber pattern="#####,00%"/>
@@ -209,12 +229,20 @@
                                                                      minFractionDigits="0" locale="vi_VN"/>
                                                 </h:outputText>
                                             </p>
-                                            <p:commandLink styleClass="add-to-cart" actionListener="#{productDetailFEController.addToCartCommon(productDto)}"
-                                                           update="#{Constant.ERROR_FE_GROWL_ID}">
+                                            <p:commandLink styleClass="add-to-cart"
+                                                           actionListener="#{productFEController.addToCart(productDto)}"
+                                                           update="#{Constant.ERROR_FE_GROWL_ID}"
+                                                           rendered="#{productDto.quantity ne 0}">
                                                 <i class="fa fa-cart-plus"/>
                                                 <span>Thêm vào giỏ hàng</span>
                                                 <i class="fas fa-caret-right"/>
                                             </p:commandLink>
+                                            <p:outputLabel styleClass="out-of-stock"
+                                                           rendered="#{productDto.quantity eq 0}">
+                                                <i class="fas fa-cart-arrow-down"/>
+                                                <span>Hết hàng</span>
+                                                <i class="fas fa-times"/>
+                                            </p:outputLabel>
                                         </p:commandLink>
                                     </div>
                                 </p:repeat>
@@ -223,7 +251,7 @@
                     </div>
                     <div class="more-products">
                         <div class="row">
-                            <h:link outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_PHONE}">
+                            <h:link outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_MALE}">
                             <span>
                                 Xem thêm
                                 <i class="fas fa-angle-double-right"/>
@@ -234,19 +262,19 @@
                 </div>
             </h:panelGroup>
 
-            <h:panelGroup layout="block" rendered="#{not empty homeFEController.laptopList}">
+            <h:panelGroup layout="block" rendered="#{not empty homeFEController.femaleList}">
                 <div class="container">
                     <div class="title-products">
                         <div class="row">
-                            <h1>Laptop - Desktop mới nhất</h1>
+                            <h1>Thời trang nữ</h1>
                         </div>
                     </div>
                     <div class="laptop-products">
                         <h:form prependId="false">
                             <div class="row">
-                                <p:repeat value="#{homeFEController.laptopList}" var="productDto">
+                                <p:repeat value="#{homeFEController.femaleList}" var="productDto">
                                     <div class="col-lg-3 grid-style">
-                                        <p:commandLink>
+                                        <p:commandLink actionListener="#{productFEController.viewDetailProduct(productDto)}">
                                             <p:graphicImage styleClass="laptop-products__img"
                                                             rendered="#{not empty productDto.imageToShow}"
                                                             name="#{productDto.imageToShow}"/>
@@ -272,12 +300,20 @@
                                                                      minFractionDigits="0" locale="vi_VN"/>
                                                 </h:outputText>
                                             </p>
-                                            <p:commandLink styleClass="add-to-cart" actionListener="#{productDetailFEController.addToCartCommon(productDto)}"
-                                                           update="#{Constant.ERROR_FE_GROWL_ID}">
+                                            <p:commandLink styleClass="add-to-cart"
+                                                           actionListener="#{productFEController.addToCart(productDto)}"
+                                                           update="#{Constant.ERROR_FE_GROWL_ID}"
+                                                           rendered="#{productDto.quantity ne 0}">
                                                 <i class="fa fa-cart-plus"/>
                                                 <span>Thêm vào giỏ hàng</span>
                                                 <i class="fas fa-caret-right"/>
                                             </p:commandLink>
+                                            <p:outputLabel styleClass="out-of-stock"
+                                                           rendered="#{productDto.quantity eq 0}">
+                                                <i class="fas fa-cart-arrow-down"/>
+                                                <span>Hết hàng</span>
+                                                <i class="fas fa-times"/>
+                                            </p:outputLabel>
                                         </p:commandLink>
                                     </div>
                                 </p:repeat>
@@ -286,7 +322,7 @@
                     </div>
                     <div class="more-products">
                         <div class="row">
-                            <h:link outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_LAPTOP}">
+                            <h:link outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_FEMALE}">
                             <span>
                                 Xem thêm
                                 <i class="fas fa-angle-double-right"/>
@@ -297,19 +333,19 @@
                 </div>
             </h:panelGroup>
 
-            <h:panelGroup layout="block" rendered="#{not empty homeFEController.watchList}">
+            <h:panelGroup layout="block" rendered="#{not empty homeFEController.kidList}">
                 <div class="container">
                     <div class="title-products">
                         <div class="row">
-                            <h1>Đồng hồ thông minh mới nhất</h1>
+                            <h1>Thời trang trẻ em</h1>
                         </div>
                     </div>
                     <div class="watch-products">
                         <h:form prependId="false">
                             <div class="row">
-                                <p:repeat value="#{homeFEController.watchList}" var="productDto">
+                                <p:repeat value="#{homeFEController.kidList}" var="productDto">
                                     <div class="col-lg-3 grid-style">
-                                        <p:commandLink>
+                                        <p:commandLink actionListener="#{productFEController.viewDetailProduct(productDto)}">
                                             <p:graphicImage styleClass="watch-products__img"
                                                             rendered="#{not empty productDto.imageToShow}"
                                                             name="#{productDto.imageToShow}"/>
@@ -335,12 +371,20 @@
                                                                      minFractionDigits="0" locale="vi_VN"/>
                                                 </h:outputText>
                                             </p>
-                                            <p:commandLink styleClass="add-to-cart" actionListener="#{productDetailFEController.addToCartCommon(productDto)}"
-                                                           update="#{Constant.ERROR_FE_GROWL_ID}">
+                                            <p:commandLink styleClass="add-to-cart"
+                                                           actionListener="#{productFEController.addToCart(productDto)}"
+                                                           update="#{Constant.ERROR_FE_GROWL_ID}"
+                                                           rendered="#{productDto.quantity ne 0}">
                                                 <i class="fa fa-cart-plus"/>
                                                 <span>Thêm vào giỏ hàng</span>
                                                 <i class="fas fa-caret-right"/>
                                             </p:commandLink>
+                                            <p:outputLabel styleClass="out-of-stock"
+                                                           rendered="#{productDto.quantity eq 0}">
+                                                <i class="fas fa-cart-arrow-down"/>
+                                                <span>Hết hàng</span>
+                                                <i class="fas fa-times"/>
+                                            </p:outputLabel>
                                         </p:commandLink>
                                     </div>
                                 </p:repeat>
@@ -349,70 +393,7 @@
                     </div>
                     <div class="more-products">
                         <div class="row">
-                            <h:link outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_WATCH}">
-                            <span>
-                                Xem thêm
-                                <i class="fas fa-angle-double-right"/>
-                            </span>
-                            </h:link>
-                        </div>
-                    </div>
-                </div>
-            </h:panelGroup>
-
-            <h:panelGroup layout="block" rendered="#{not empty homeFEController.airList}">
-                <div class="container">
-                    <div class="title-products">
-                        <div class="row">
-                            <h1>Tai nghe - Loa mới nhất</h1>
-                        </div>
-                    </div>
-                    <div class="wireless-products">
-                        <h:form prependId="false">
-                            <div class="row">
-                                <p:repeat value="#{homeFEController.airList}" var="productDto">
-                                    <div class="col-lg-3 grid-style">
-                                        <p:commandLink>
-                                            <p:graphicImage styleClass="wireless-products__img"
-                                                            rendered="#{not empty productDto.imageToShow}"
-                                                            name="#{productDto.imageToShow}"/>
-
-                                            <p class="wireless-products__title">#{productDto.productName}</p>
-                                            <p class="wireless-products__discount #{productDto.discount eq null ? 'display-none' : ''}">
-                                                Giảm
-                                                <h:outputText value="#{productDto.discount}">
-                                                    <f:convertNumber pattern="#####,00%"/>
-                                                </h:outputText>
-                                            </p>
-                                            <p class="wireless-products__price #{productDto.discount eq null ? '' : 'special-price'}">
-                                                <h:outputText value="#{productDto.price}">
-                                                    <f:convertNumber type="currency" currencySymbol="VNĐ"
-                                                                     maxFractionDigits="6"
-                                                                     minFractionDigits="0" locale="vi_VN"/>
-                                                </h:outputText>
-                                            </p>
-                                            <p class="wireless-products__price #{productDto.discount eq null ? 'display-none' : ''}">
-                                                <h:outputText value="#{productDto.priceAfterDiscount}">
-                                                    <f:convertNumber type="currency" currencySymbol="VNĐ"
-                                                                     maxFractionDigits="6"
-                                                                     minFractionDigits="0" locale="vi_VN"/>
-                                                </h:outputText>
-                                            </p>
-                                            <p:commandLink styleClass="add-to-cart" actionListener="#{productDetailFEController.addToCartCommon(productDto)}"
-                                                           update="#{Constant.ERROR_FE_GROWL_ID}">
-                                                <i class="fa fa-cart-plus"/>
-                                                <span>Thêm vào giỏ hàng</span>
-                                                <i class="fas fa-caret-right"/>
-                                            </p:commandLink>
-                                        </p:commandLink>
-                                    </div>
-                                </p:repeat>
-                            </div>
-                        </h:form>
-                    </div>
-                    <div class="more-products">
-                        <div class="row">
-                            <h:link outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_HEADPHONE}">
+                            <h:link outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_KID}">
                             <span>
                                 Xem thêm
                                 <i class="fas fa-angle-double-right"/>
