@@ -65,7 +65,7 @@ public class ProductFEController extends BaseFEController {
     public void onSearch(Long categoryId, Long brandId){
         searchDto.setCategoryId(categoryId);
         searchDto.setBrandId(brandId);
-        searchDto.setType(DbConstant.PRODUCT_TYPE_PARENT);
+        searchDto.setType(DbConstant.PRODUCT_TYPE_CHILD);
         pagination.setLazyDataModel(new LazyDataModel<ProductDto>() {
             @Override
             public List<ProductDto> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {

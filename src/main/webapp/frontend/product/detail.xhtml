@@ -22,7 +22,20 @@
                     <div class="detail-products">
                         <div class="row detail-products__option">
                             <div class="col-lg-5 option-img">
-                                <p:graphicImage name="#{productDetailFEController.productImageList.get(0).imagePath}"/>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <a id="mainImgHref" href="#{resource[productDetailFEController.productImageList.get(0).imagePath]}" data-fancybox="gallery">
+                                            <p:graphicImage id="mainImg" styleClass="main-img" name="#{productDetailFEController.productImageList.get(0).imagePath}"/>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <p:repeat value="#{productDetailFEController.productImageList}" var="img">
+                                            <a href="#{resource[img.imagePath]}" data-fancybox="gallery">
+                                                <p:graphicImage styleClass="child-img _id#{img.productImageId}" name="#{img.imagePath}" onclick="onChangeImage('#{img.productImageId}', '#{resource[img.imagePath]}');"/>
+                                            </a>
+                                        </p:repeat>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-lg-7 option-detail">
                                 <div class="row">
@@ -91,5 +104,39 @@
                 </div>
             </div>
         </h:form>
+
+        <style>
+            .fancybox-thumbs__list a {
+                background-size: contain;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="jslibrary">
+        <script>
+            //<![CDATA[
+            $('[data-fancybox]').fancybox({
+                animationEffect: "slide",
+                loop: true,
+            });
+
+            (function() {
+                onSelected('#{productDetailFEController.productImageList.get(0).productImageId}');
+            })();
+
+            function onChangeImage(index, path) {
+                const img = document.getElementById('mainImg');
+                img.src = path;
+                onSelected(index);
+                const mainHref = document.getElementById('mainImgHref');
+                mainHref.href = path;
+            }
+
+            function onSelected(index) {
+                $('.child-img').removeClass('selected');
+                $('._id' + index).addClass('selected');
+            }
+            //]]>
+        </script>
     </ui:define>
 </ui:composition>

@@ -849,6 +849,25 @@
 .content-products .detail-products__option {
   padding: 1rem 0;
 }
+.content-products .detail-products__option .option-img .main-img {
+  width: 250px;
+  height: 350px;
+  object-fit: contain;
+  margin: 2rem 4rem 3rem 4rem;
+}
+.content-products .detail-products__option .option-img .child-img {
+  width: 70px;
+  height: 90px;
+  object-fit: contain;
+  margin: 0 2px;
+  opacity: 0.6;
+}
+.content-products .detail-products__option .option-img .child-img.selected, .content-products .detail-products__option .option-img .child-img:hover {
+  border: 4px solid #F42F4C;
+  cursor: pointer;
+  border-radius: 10px;
+  opacity: 1;
+}
 .content-products .detail-products__option .option-detail__price, .content-products .detail-products__option .option-detail__price-discount {
   color: #F42F4C;
   padding: 1rem;
