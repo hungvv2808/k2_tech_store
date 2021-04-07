@@ -190,6 +190,15 @@ public class EmailUtil implements Runnable {
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
+    public boolean sendVerifyCodeToRegister(String emailTo,String userName,String code) {
+        String subject = PropertiesUtil.getProperty("email.register.subject");
+        String content = PropertiesUtil.getProperty("email.register.content")
+                .replace("{TEN_TAI_KHOAN}", userName)
+                .replace("{EMAIL}",emailTo)
+                .replace("{CODE}", code);
+        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
+    }
+
     public boolean sendResultStore(String emailTo, String userName, Boolean status, String regulationCode, String assetName, Date startTime, Date endTime, Long price, Date timeAccept){
         String content;
         if (status == DbConstant.ASSET_MANAGEMENT_ENDING_GOOD) {

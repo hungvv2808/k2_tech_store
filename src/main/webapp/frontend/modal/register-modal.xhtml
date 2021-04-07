@@ -97,6 +97,14 @@
                                              maxlength="50"/>
                             </div>
                         </div>
+                        <div id="verify" class="form-group" style="display: none">
+                            <label class="control-label" for="verifyCode">Mã xác nhận</label>
+                            <div class="ui-g-12">
+                                <p:inputText id="verifyCode" placeholder="Nhập mã xác nhận"
+                                             value="#{authorizationFEController.accountDto.verifyCode}"
+                                             maxlength="50"/>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <h:commandButton id="registerButton"
                                              value="Đăng ký"
@@ -110,7 +118,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="signup">Đã có tài khoản?
-                        <span class="text-success" onclick="useModal(false)">Đăng nhập</span>
+                        <span class="text-success" onclick="useModal(false);resetModal(this);">Đăng nhập</span>
                     </div>
                 </div>
             </div>

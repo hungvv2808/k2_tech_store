@@ -42,7 +42,7 @@ import java.util.*;
 @Scope(value = "session")
 @Getter
 @Setter
-public class AuthorizationFEController extends BaseController implements Serializable{
+public class AuthorizationFEController extends BaseController implements Serializable {
     @Inject
     HttpServletRequest request;
     @Inject
@@ -88,6 +88,10 @@ public class AuthorizationFEController extends BaseController implements Seriali
     private FilterConfig config = null;
     private Part avatarImagePart;
     private List<SelectItem> apiSexList;
+
+    private String verifyCodeRegister;
+    private boolean isFirstClick = true;
+    private String emailBak;
 
     @Value("${LOGIN_SECRET_KEY}")
     private String cryptoSecretKey;
@@ -224,6 +228,7 @@ public class AuthorizationFEController extends BaseController implements Seriali
     }
 
     public void login() {
+        isFirstClick = true;
         String username = StringUtils.isBlank(accountDto.getUserName()) ? "" : AES.decrypt(accountDto.getUserName(), cryptoSecretKey);
         String password = StringUtils.isBlank(accountDto.getPassword()) ? "" : AES.decrypt(accountDto.getPassword(), cryptoSecretKey);
 
@@ -408,23 +413,23 @@ public class AuthorizationFEController extends BaseController implements Seriali
     }
 
     public void onCheckEmail() {
-            if (StringUtils.isBlank(accountDto.getEmail().trim())) {
-                facesNoticeController.addErrorMessage("Bạn vui lòng nhập email đã đăng ký");
-                return;
-            }
-            if (!accountDto.getEmail().trim().matches("^\\s*[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})\\s*$")) {
-                facesNoticeController.addErrorMessage("Email không đúng định dạng");
-                return;
-            }
-            account = accountRepository.findAccountByEmail(accountDto.getEmail().trim());
-            if (account == null || account.getRoleId() != DbConstant.ROLE_ID_USER) {
-                facesNoticeController.addErrorMessage("Email không tồn tại");
-                return;
-            }
-            if (account.getStatus().equals(DbConstant.ACCOUNT_LOCK_STATUS)) {
-                facesNoticeController.addErrorMessage("Tài khoản của bạn đã bị khóa vui lòng mở khóa đề đổi mật khẩu");
-                return;
-            }
+        if (StringUtils.isBlank(accountDto.getEmail().trim())) {
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập email đã đăng ký");
+            return;
+        }
+        if (!accountDto.getEmail().trim().matches("^\\s*[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})\\s*$")) {
+            facesNoticeController.addErrorMessage("Email không đúng định dạng");
+            return;
+        }
+        account = accountRepository.findAccountByEmail(accountDto.getEmail().trim());
+        if (account == null || account.getRoleId() != DbConstant.ROLE_ID_USER) {
+            facesNoticeController.addErrorMessage("Email không tồn tại");
+            return;
+        }
+        if (account.getStatus().equals(DbConstant.ACCOUNT_LOCK_STATUS)) {
+            facesNoticeController.addErrorMessage("Tài khoản của bạn đã bị khóa vui lòng mở khóa đề đổi mật khẩu");
+            return;
+        }
         code = StringUtil.generateSalt();
         EmailUtil.getInstance().sendLostPasswordEmail(account.getEmail(), code, account.getFullName());
         facesNoticeController.addSuccessMessage("Mã xác nhận đã được gửi về tài khoản email của bạn");
@@ -503,7 +508,7 @@ public class AuthorizationFEController extends BaseController implements Seriali
 //        }
         accountRepository.save(account);
         link = buildHttpURI() + "/frontend/account/activation.xhtml?token=" + "abcdefgh";
-        EmailUtil.getInstance().sendCreateUserEmail(account.getEmail(), link , account.getUserName());
+        EmailUtil.getInstance().sendCreateUserEmail(account.getEmail(), link, account.getUserName());
         facesNoticeController.addSuccessMessage("Email đã được gửi về tài khoản: " + encodeEmail + " vui lòng kiểm tra email để kích hoạt tài khoản");
         checkActiveStatus = false;
     }
@@ -518,25 +523,25 @@ public class AuthorizationFEController extends BaseController implements Seriali
         return httpUrl;
     }
 
-    public void register(){
+    public void register() {
         String username = StringUtils.isBlank(accountDto.getUserName()) ? "" : AES.decrypt(accountDto.getUserName(), cryptoSecretKey);
         String password = StringUtils.isBlank(accountDto.getPassword()) ? "" : AES.decrypt(accountDto.getPassword(), cryptoSecretKey);
         String rePassword = StringUtils.isBlank(accountDto.getRePassword()) ? "" : AES.decrypt(accountDto.getRePassword(), cryptoSecretKey);
 
-        if (StringUtils.isBlank(accountDto.getFullName())){
+        if (StringUtils.isBlank(accountDto.getFullName())) {
             facesNoticeController.addErrorMessage("Bạn vui lòng nhập họ tên");
             return;
         }
-        if (StringUtils.isBlank(username)){
+        if (StringUtils.isBlank(username)) {
             facesNoticeController.addErrorMessage("Bạn vui lòng nhập tên đăng nhập");
             return;
         }
-        Account account = accountRepository.findAccountByUserNameAndRoleId(username,DbConstant.ROLE_ID_USER);
-        if (account != null){
+        Account account = accountRepository.findAccountByUserNameAndRoleId(username, DbConstant.ROLE_ID_USER);
+        if (account != null) {
             facesNoticeController.addErrorMessage("Tên đăng nhập đã tồn tại");
             return;
         }
-        if (StringUtils.isBlank(password)){
+        if (StringUtils.isBlank(password)) {
             facesNoticeController.addErrorMessage("Bạn vui lòng nhập mật khẩu");
             return;
         }
@@ -545,11 +550,11 @@ public class AuthorizationFEController extends BaseController implements Seriali
             return;
         }
 
-        if (StringUtils.isBlank(rePassword)){
+        if (StringUtils.isBlank(rePassword)) {
             facesNoticeController.addErrorMessage("Bạn vui lòng nhập lại mật khẩu");
             return;
         }
-        if (!rePassword.equals(password)){
+        if (!rePassword.equals(password)) {
             facesNoticeController.addErrorMessage("Mật khẩu nhập lại không trùng khớp");
             return;
         }
@@ -559,7 +564,7 @@ public class AuthorizationFEController extends BaseController implements Seriali
         if (!accountDto.getPhone().matches("^0[1-9]{1}[0-9]{8,9}$|")) {
             facesNoticeController.addErrorMessage("Số điện thoại không đúng định dạng");
         }
-        if (StringUtils.isBlank(accountDto.getEmail())){
+        if (StringUtils.isBlank(accountDto.getEmail())) {
             facesNoticeController.addErrorMessage("Bạn vui lòng nhập email");
             return;
         }
@@ -567,26 +572,51 @@ public class AuthorizationFEController extends BaseController implements Seriali
             facesNoticeController.addErrorMessage("Email không đúng định dạng");
             return;
         }
-        account = accountRepository.findAccountByEmailAndRoleId(accountDto.getEmail().trim(),DbConstant.ROLE_ID_USER);
-        if (account != null){
+        accountDto.setEmail(accountDto.getEmail().trim());
+        account = accountRepository.findAccountByEmailAndRoleId(accountDto.getEmail().trim(), DbConstant.ROLE_ID_USER);
+        if (account != null) {
             facesNoticeController.addErrorMessage("Email đăng ký đã tồn tại");
             return;
         }
+        if (isFirstClick) {
+            emailBak = accountDto.getEmail();
+            isFirstClick = false;
+            verifyCodeRegister = StringUtil.generateSalt();
+            EmailUtil.getInstance().sendVerifyCodeToRegister(accountDto.getEmail(), accountDto.getFullName(), verifyCodeRegister);
+            facesNoticeController.addSuccessMessage("Bạn vui lòng kiểm tra email và nhập mã xác nhận");
+            facesNoticeController.showVerifyRegister();
+            return;
+        }
+        if (!isFirstClick) {
+            if (!accountDto.getEmail().equals(emailBak)) {
+                verifyCodeRegister = StringUtil.generateSalt();
+                EmailUtil.getInstance().sendVerifyCodeToRegister(accountDto.getEmail(), accountDto.getFullName(), verifyCodeRegister);
+            }
+            if (StringUtils.isBlank(accountDto.getVerifyCode())) {
+                facesNoticeController.addErrorMessage("Bạn vui lòng kiểm tra email và nhập mã xác nhận");
+                return;
+            }
+            if (!accountDto.getVerifyCode().equals(verifyCodeRegister)) {
+                facesNoticeController.addErrorMessage("Mã xác nhận không khớp");
+                return;
+            }
 
-        Account accountRegister = new Account();
-        accountRegister.setUserName(username);
-        accountRegister.setRoleId(DbConstant.ROLE_ID_USER);
-        accountRegister.setSalt(StringUtil.generateSalt());
-        accountRegister.setPassword(StringUtil.encryptPassword(password,accountRegister.getSalt()));
-        accountRegister.setEmail(accountDto.getEmail().trim());
-        accountRegister.setStatus(DbConstant.ACCOUNT_ACTIVE_STATUS);
-        accountRepository.save(accountRegister);
-        resetAll();
-        facesNoticeController.closeModal("register-modal");
-        // Redirect to home page
-        facesNoticeController.reload();
-        facesNoticeController.addSuccessMessage("Đăng ký thành công!");
-        facesNoticeController.openModal("login-modal");
+            Account accountRegister = new Account();
+            accountRegister.setFullName(accountDto.getFullName());
+            accountRegister.setUserName(username);
+            accountRegister.setRoleId(DbConstant.ROLE_ID_USER);
+            accountRegister.setSalt(StringUtil.generateSalt());
+            accountRegister.setPassword(StringUtil.encryptPassword(password, accountRegister.getSalt()));
+            accountRegister.setEmail(accountDto.getEmail().trim());
+            accountRegister.setStatus(DbConstant.ACCOUNT_ACTIVE_STATUS);
+            accountRepository.save(accountRegister);
+            resetAll();
+            facesNoticeController.closeModal("register-modal");
+            // Redirect to home page
+            facesNoticeController.reload();
+            facesNoticeController.openModal("login-modal");
+            facesNoticeController.addSuccessMessage("Đăng ký thành công!");
+        }
     }
 
     public void setAccountDto(AccountDto accountDto) {

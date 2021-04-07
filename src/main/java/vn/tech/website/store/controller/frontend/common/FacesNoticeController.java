@@ -106,4 +106,8 @@ public class FacesNoticeController implements Serializable {
         s += "} catch (e) { console.error(e); }";
         return s;
     }
+
+    public void showVerifyRegister(){
+        script += "showVerifyRegister();";
+    }
 }

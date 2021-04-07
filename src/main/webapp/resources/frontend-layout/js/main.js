@@ -166,12 +166,14 @@ function useModal(e) {
     if(e === true){
         $('#login-modal').modal('hide');
         $('#register-modal').modal('show');
+        $('#verify').css('display','none')
         $('#fullName').val(null);
         $('#register_account').val(null);
         $('#register_password').val(null);
         $('#rePassword').val(null);
         $('#phone').val(null);
         $('#email').val(null);
+        $('#verify').val(null);
     }
     else {
         $('#register-modal').modal('hide');
@@ -179,4 +181,9 @@ function useModal(e) {
         $('#login_account').val(null);
         $('#login_password').val(null);
     }
+}
+
+//show verify register
+function showVerifyRegister() {
+    $('#verify').attr('style','display: block');
 }
