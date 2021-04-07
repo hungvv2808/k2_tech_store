@@ -7,4 +7,6 @@ public interface ProductLinkRepository extends CrudRepository<ProductLink, Long>
     ProductLink getByChildId(Long childId);
 
     ProductLink getByChildIdAndParentId(Long childId, Long parentId);
+
+    ProductLink findProductLinkByChildId(Long childId);
 }

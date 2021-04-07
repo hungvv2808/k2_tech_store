@@ -571,6 +571,9 @@
 .content-products {
   margin-top: 5rem;
 }
+.content-products .pagination-bottom {
+  margin-right: 35%;
+}
 .content-products .title-products h1 {
   text-align: center;
   width: 100%;
@@ -578,16 +581,22 @@
   color: #3aaf29;
   text-transform: uppercase;
 }
-.content-products .title-products h1._product {
+.content-products .title-products h1._product, .content-products .title-products h1._search {
   padding-top: 2rem;
 }
-.content-products .all-products .row,
-.content-products .highlight-products .row,
-.content-products .mobile-products .row,
-.content-products .laptop-products .row,
-.content-products .watch-products .row,
-.content-products .wireless-products .row {
-  margin-left: 7rem;
+.content-products .title-products h1._product {
+  padding-top: 2rem;
+  text-align: inherit;
+  padding-left: 21%;
+}
+.content-products .all-products.container,
+.content-products .highlight-products.container,
+.content-products .mobile-products.container,
+.content-products .laptop-products.container,
+.content-products .watch-products.container,
+.content-products .wireless-products.container {
+  max-width: 1200px !important;
+  margin-left: 5rem;
 }
 .content-products .all-products .grid-style,
 .content-products .highlight-products .grid-style,
@@ -849,6 +858,25 @@
 .content-products .detail-products__option {
   padding: 1rem 0;
 }
+.content-products .detail-products__option .option-img .main-img {
+  width: 250px;
+  height: 350px;
+  object-fit: contain;
+  margin: 2rem 4rem 3rem 4rem;
+}
+.content-products .detail-products__option .option-img .child-img {
+  width: 70px;
+  height: 90px;
+  object-fit: contain;
+  margin: 0 2px;
+  opacity: 0.6;
+}
+.content-products .detail-products__option .option-img .child-img.selected, .content-products .detail-products__option .option-img .child-img:hover {
+  border: 4px solid #F42F4C;
+  cursor: pointer;
+  border-radius: 10px;
+  opacity: 1;
+}
 .content-products .detail-products__option .option-detail__price, .content-products .detail-products__option .option-detail__price-discount {
   color: #F42F4C;
   padding: 1rem;
@@ -1020,7 +1048,7 @@
   }
 }
 .content-brands {
-  background-image: url("#{resource['frontend-layout:img/after-brand.jpg']}");
+  background-image: url("#{resource['frontend-layout:img/brand_background1.jpg']}");
   background-size: contain;
   margin-top: 5rem;
 }
@@ -1186,7 +1214,7 @@
   }
 }
 .technology-life {
-  background-image: url("#{resource['frontend-layout:img/banner1.jpg']}");
+  background-image: url("#{resource['frontend-layout:img/technology1.jpg']}");
   background-size: 100%;
   margin-top: 5rem;
 }

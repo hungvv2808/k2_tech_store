@@ -103,6 +103,7 @@ public class ProductDetailFEController extends BaseFEController {
 
     public void onChangeItem(Long productId) {
         productDtoView = childProductMap.get(productId);
+        productImageList = productImageRepository.findAllByProductId(productId);
         FacesUtil.updateView("content-detail");
     }
 

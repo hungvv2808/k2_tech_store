@@ -11,6 +11,8 @@ import vn.tech.website.store.controller.frontend.BaseFEController;
 import vn.tech.website.store.controller.frontend.common.PaginationController;
 import vn.tech.website.store.dto.ProductDto;
 import vn.tech.website.store.dto.ProductSearchDto;
+import vn.tech.website.store.model.ProductLink;
+import vn.tech.website.store.repository.ProductLinkRepository;
 import vn.tech.website.store.repository.ProductRepository;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
@@ -35,11 +37,14 @@ public class ProductFEController extends BaseFEController {
     private HttpServletRequest request;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductLinkRepository productLinkRepository;
 
     private PaginationController<ProductDto> pagination;
     private Long categoryId;
     private Long brandId;
     private ProductSearchDto searchDto;
+    private boolean checkType = false;
 
     public ProductFEController() {
         pagination = new PaginationController<>();
@@ -60,12 +65,13 @@ public class ProductFEController extends BaseFEController {
         searchDto = new ProductSearchDto();
         pagination.setRequest(request);
         onSearch(categoryId, brandId);
+        checkType = true;
     }
 
     public void onSearch(Long categoryId, Long brandId){
         searchDto.setCategoryId(categoryId);
         searchDto.setBrandId(brandId);
-        searchDto.setType(DbConstant.PRODUCT_TYPE_PARENT);
+        searchDto.setType(DbConstant.PRODUCT_TYPE_CHILD);
         pagination.setLazyDataModel(new LazyDataModel<ProductDto>() {
             @Override
             public List<ProductDto> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
@@ -91,10 +97,19 @@ public class ProductFEController extends BaseFEController {
     }
 
     public void viewDetailProduct(ProductDto productDto) {
-        productDetailFEController.setParentId(productDto.getProductId());
-
         ProductSearchDto searchDto = new ProductSearchDto();
-        searchDto.setParentId(productDto.getProductId());
+        if (!checkType) {
+            productDetailFEController.setParentId(productDto.getProductId());
+            searchDto.setParentId(productDto.getProductId());
+        } else {
+            productDetailFEController.setProductId(productDto.getProductId());
+
+            ProductLink productLink = productLinkRepository.findProductLinkByChildId(productDto.getProductId());
+            Long parentId = productLink.getParentId();
+            productDetailFEController.setParentId(parentId);
+            searchDto.setParentId(parentId);
+        }
+
         List<ProductDto> childProducts = productRepository.search(searchDto);
         Map<Long, ProductDto> childProductMap = new HashMap<>();
         for (ProductDto child : childProducts) {
