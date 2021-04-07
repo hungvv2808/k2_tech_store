@@ -91,6 +91,10 @@ public class BrandController extends BaseController {
     }
 
     public boolean validateData() {
+        if (StringUtils.isBlank(brandDto.getCode())) {
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập mã thương hiệu");
+            return false;
+        }
         if (StringUtils.isBlank(brandDto.getBrandName())) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập tên thương hiệu");
             return false;
@@ -102,7 +106,12 @@ public class BrandController extends BaseController {
             brandList = brandRepository.findAllExpertId(brandDto.getBrandId());
         }
         brandDto.setBrandName(removeSpaceOfString(brandDto.getBrandName()));
+        brandDto.setCode(removeSpaceOfString(brandDto.getCode()));
         for (Brand brand : brandList) {
+            if (brandDto.getCode().equalsIgnoreCase(removeSpaceOfString(brand.getCode()))) {
+                FacesUtil.addErrorMessage("Mã thương hiệu này đã tồn tại");
+                return false;
+            }
             if (brandDto.getBrandName().equalsIgnoreCase(removeSpaceOfString(brand.getBrandName()))) {
                 FacesUtil.addErrorMessage("Tên thương hiệu này đã tồn tại");
                 return false;
@@ -131,10 +140,6 @@ public class BrandController extends BaseController {
     }
 
     public void onDelete(BrandDto resultDto) {
-//        if (brandRepository.checkUseGood(resultDto.getGoodsId())) {
-//            FacesUtil.addErrorMessage("Không thể xóa vì " + resultDto.getTitle() + " đang được sử dụng");
-//            return;
-//        }
         resultDto.setStatus(DbConstant.BRAND_STATUS_INACTIVE);
         Brand brand = new Brand();
         BeanUtils.copyProperties(resultDto, brand);

@@ -24,6 +24,7 @@ public class BrandRepositoryImpl implements BrandRepositoryCustom {
         sb.append("SELECT "
                 + "b.brand_id, "
                 + "b.name, "
+                + "b.code, "
                 + "b.status, "
                 + "b.create_date, "
                 + "b.create_by, "
@@ -37,6 +38,8 @@ public class BrandRepositoryImpl implements BrandRepositoryCustom {
                 sb.append(" b.brand_id ");
             } else if (searchDto.getSortField().equals("brandName")) {
                 sb.append(" b.name collate utf8mb4_vietnamese_ci ");
+            } else if (searchDto.getSortField().equals("code")) {
+                sb.append(" b.code  ");
             } else if (searchDto.getSortField().equals("status")) {
                 sb.append(" b.status ");
             }  else if (searchDto.getSortField().equals("updateDate")) {
@@ -64,11 +67,12 @@ public class BrandRepositoryImpl implements BrandRepositoryCustom {
             BrandDto dto = new BrandDto();
             dto.setBrandId(ValueUtil.getLongByObject(obj[0]));
             dto.setBrandName(ValueUtil.getStringByObject(obj[1]));
-            dto.setStatus(ValueUtil.getIntegerByObject(obj[2]));
-            dto.setCreateDate(ValueUtil.getDateByObject(obj[3]));
-            dto.setCreateBy(ValueUtil.getLongByObject(obj[4]));
-            dto.setUpdateDate(ValueUtil.getDateByObject(obj[5]));
-            dto.setNameUpdate(ValueUtil.getStringByObject(obj[6]));
+            dto.setCode(ValueUtil.getStringByObject(obj[2]));
+            dto.setStatus(ValueUtil.getIntegerByObject(obj[3]));
+            dto.setCreateDate(ValueUtil.getDateByObject(obj[4]));
+            dto.setCreateBy(ValueUtil.getLongByObject(obj[5]));
+            dto.setUpdateDate(ValueUtil.getDateByObject(obj[6]));
+            dto.setNameUpdate(ValueUtil.getStringByObject(obj[7]));
             dtoList.add(dto);
         }
         return dtoList;
@@ -91,12 +95,18 @@ public class BrandRepositoryImpl implements BrandRepositoryCustom {
         if (StringUtils.isNotBlank(searchDto.getBrandName())) {
             sb.append(" AND b.name LIKE :brandName ");
         }
+        if (StringUtils.isNotBlank(searchDto.getKeyword())) {
+            sb.append(" AND (b.name LIKE :keyword OR b.code LIKE :keyword) ");
+        }
     }
 
     private Query createQueryObjForSearch(StringBuilder sb, BrandSearchDto searchDto) {
         Query query = entityManager.createNativeQuery(sb.toString());
         if (StringUtils.isNotBlank(searchDto.getBrandName())) {
             query.setParameter("brandName", "%" + searchDto.getBrandName().trim() + "%");
+        }
+        if (StringUtils.isNotBlank(searchDto.getKeyword())) {
+            query.setParameter("keyword", "%" + searchDto.getKeyword().trim() + "%");
         }
 
         return query;

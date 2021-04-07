@@ -38,6 +38,12 @@
                                      columnClasses="ui-grid-col-3,ui-grid-col-9"
                                      styleClass="ui-panelgrid-blank" layout="grid">
 
+
+                            <p:outputLabel value="Mã thương hiệu:" for="code" styleClass="requireLabel"/>
+                            <p:inputText id="code" placeholder="Nhập mã thương hiệu"
+                                         value="#{brandController.brandDto.brandName}"
+                                         maxlength="200"/>
+
                             <p:outputLabel value="Tên thương hiệu:" for="title" styleClass="requireLabel"/>
                             <p:inputText id="title" placeholder="Nhập tên thương hiệu"
                                          value="#{brandController.brandDto.brandName}"
@@ -69,8 +75,8 @@
                                              columnClasses="ui-grid-col-4,ui-grid-col-1.5,ui-grid-col-1.5"
                                              styleClass="ui-panelgrid-blank" layout="grid">
 
-                                    <p:inputText id="smanhomquyen" placeholder="Nhập tên thương hiệu"
-                                                 value="#{brandController.searchDto.brandName}"/>
+                                    <p:inputText id="smanhomquyen" placeholder="Nhập tên/mã thương hiệu"
+                                                 value="#{brandController.searchDto.keyword}"/>
 
                                     <p:commandButton value="Tìm kiếm"
                                                      actionListener="#{brandController.onSearch()}"
@@ -104,6 +110,10 @@
 
                                     <p:column headerText="Tên thương hiệu " sortBy="#{resultDto.brandName}">
                                         <h:outputText value="#{resultDto.brandName}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Mã thương hiệu " sortBy="#{resultDto.code}">
+                                        <h:outputText value="#{resultDto.code}"/>
                                     </p:column>
 
                                     <p:column headerText="Người cập nhật" sortBy="#{resultDto.nameUpdate}">

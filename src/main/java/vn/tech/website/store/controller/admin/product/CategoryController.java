@@ -94,6 +94,10 @@ public class CategoryController extends BaseController {
     }
 
     public boolean validateData() {
+        if (StringUtils.isBlank(categoryDto.getCode())) {
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập mã loại sản phẩm");
+            return false;
+        }
         if (StringUtils.isBlank(categoryDto.getCategoryName())) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập tên loại sản phẩm");
             return false;
@@ -105,7 +109,12 @@ public class CategoryController extends BaseController {
             categoryList = categoryRepository.findAllCategoryProductExpertId(categoryDto.getCategoryId());
         }
         categoryDto.setCategoryName(removeSpaceOfString(categoryDto.getCategoryName()));
+        categoryDto.setCode(removeSpaceOfString(categoryDto.getCode()));
         for (Category category : categoryList) {
+            if (categoryDto.getCode().equalsIgnoreCase(removeSpaceOfString(category.getCode()))) {
+                FacesUtil.addErrorMessage("Mã loại sản phẩm này đã tồn tại");
+                return false;
+            }
             if (categoryDto.getCategoryName().equalsIgnoreCase(removeSpaceOfString(category.getCategoryName()))) {
                 FacesUtil.addErrorMessage("Tên loại sản phẩm này đã tồn tại");
                 return false;
@@ -120,6 +129,7 @@ public class CategoryController extends BaseController {
         }
         Category category = new Category();
         BeanUtils.copyProperties(categoryDto, category);
+        category.setType(DbConstant.CATEGORY_TYPE_PRODUCT);
         category.setUpdateDate(new Date());
         category.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
         categoryRepository.save(category);

@@ -57,16 +57,16 @@
                                 outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_KID}"/>
                     </div>
                 </li>
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link nav-link__home" href="#" id="navbarBrands">-->
-<!--                        <span class="uppercase">Thương hiệu</span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link nav-link__home" href="#" id="navbarCates">-->
-<!--                        <span class="uppercase">Loại sản phẩm</span>-->
-<!--                    </a>-->
-<!--                </li>-->
+                <!--                <li class="nav-item">-->
+                <!--                    <a class="nav-link nav-link__home" href="#" id="navbarBrands">-->
+                <!--                        <span class="uppercase">Thương hiệu</span>-->
+                <!--                    </a>-->
+                <!--                </li>-->
+                <!--                <li class="nav-item">-->
+                <!--                    <a class="nav-link nav-link__home" href="#" id="navbarCates">-->
+                <!--                        <span class="uppercase">Loại sản phẩm</span>-->
+                <!--                    </a>-->
+                <!--                </li>-->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarOrders" role="button" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
@@ -110,7 +110,8 @@
                                 <span>Thông tin cá nhân</span>
                             </p:link>
                             <h:form>
-                                <h:commandLink styleClass="dropdown-item" onclick="logout();" actionListener="#{authorizationFEController.logout}">
+                                <h:commandLink styleClass="dropdown-item" onclick="logout();"
+                                               actionListener="#{authorizationFEController.logout}">
                                     <i class="fas fa-sign-out-alt"/>
                                     <span>Đăng xuất</span>
                                 </h:commandLink>
@@ -135,12 +136,13 @@
             <form class="form-inline">
                 <i class="fas fa-search fa-sm search-function" onclick="searchClick(true);"/>
                 <div class="search-function__input">
-                    <input class="form-control mr-sm-2 nav-search" type="search" placeholder="Tìm kiếm"
-                           aria-label="Tìm kiếm"/>
+                    <p:inputText id="txtSearch" class="form-control mr-sm-2 nav-search" type="search" placeholder="Tìm kiếm"
+                                 aria-label="Tìm kiếm" value="#{productFEController.searchDto.keyword}"
+                                 onkeyup="searchEnter(e);"/>
+                    <p:commandButton id="btnSearch" actionListener="#{productFEController.initData}" style="display: none"/>
                     <i class="fas fa-times fa-sm search-cancel" onclick="searchClick(false);"/>
                 </div>
             </form>
         </div>
     </nav>
-
 </ui:composition>

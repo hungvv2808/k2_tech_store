@@ -15,6 +15,8 @@ public interface AccountRepository extends CrudRepository<Account, Long>, Accoun
 
     Account findAccountByUserNameAndRoleId(String username, Integer roleId);
 
+    Account findAccountByEmailAndRoleId(String email, Integer roleId);
+
     Account findByPhone(String phone);
 
     Account findAccountByEmail(String email);

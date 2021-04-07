@@ -93,7 +93,7 @@ public class CategoryNewsController extends BaseController {
 
     public boolean validateData() {
         if (StringUtils.isBlank(categoryDto.getCategoryName())) {
-            FacesUtil.addErrorMessage("Bạn vui lòng nhập tên loại sản phẩm");
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập tên loại tin tức");
             return false;
         }
         List<Category> categoryList = new ArrayList<>();

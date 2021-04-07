@@ -159,6 +159,7 @@ public class MyAccountController {
     }
 
     public void onSendVerifyCode() {
+        accountDto.setVerifyCode(null);
         if (StringUtils.isBlank(newEmail)) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập email");
             return;
@@ -181,21 +182,22 @@ public class MyAccountController {
                 }
             }
         }
+        account.setVerifyCode(StringUtil.generateSalt());
         account = accountRepository.save(account);
-//        EmailUtil.getInstance().sendConfirmChangeEmail(newEmail, account.getUserName(),account.getVerifyCode());
+        EmailUtil.getInstance().sendConfirmChangeEmail(newEmail, account.getUserName(),account.getVerifyCode());
         FacesUtil.addSuccessMessage("Bạn vui lòng kiếm tra mail để lẩy mã xác nhận");
         allowSendCode = true;
     }
 
     public void onSaveEmail() {
-//        if(StringUtils.isBlank(accountDto.getVerifyCode())){
-//            FacesUtil.addErrorMessage("Bạn vui lòng kiểm tra email và nhập mã xác nhận");
-//            return;
-//        }
-//        if(!accountDto.getVerifyCode().equals(account.getVerifyCode())){
-//            FacesUtil.addErrorMessage("Mã xác nhận không đúng. Vui lòng kiểm tra lại");
-//            return;
-//        }
+        if(StringUtils.isBlank(accountDto.getVerifyCode())){
+            FacesUtil.addErrorMessage("Bạn vui lòng kiểm tra email và nhập mã xác nhận");
+            return;
+        }
+        if(!accountDto.getVerifyCode().equals(account.getVerifyCode())){
+            FacesUtil.addErrorMessage("Mã xác nhận không đúng. Vui lòng kiểm tra lại");
+            return;
+        }
         account.setEmail(newEmail);
         account = accountRepository.save(account);
         FacesUtil.addSuccessMessage("Cập nhật thành công.");

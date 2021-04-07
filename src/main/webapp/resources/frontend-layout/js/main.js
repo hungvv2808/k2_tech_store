@@ -62,7 +62,7 @@ function searchClick(e) {
             $('.nav').addClass('display-none');
             // $('.navbar-brand').addClass('display-none');
             // $('.collapse').addClass('padding-1rem');
-            $('.form-inline').css('width', '100%').css('left', '26rem');
+            $('.form-inline').css('width', '100%').css('left', '20rem');
             $('.search-function__input').css('width', '100%').css('padding', '10px 0');
             $('.nav-search').css('width', '97%');
         }
@@ -82,6 +82,13 @@ function searchClick(e) {
         }
 
         $('.search-function__input').hide();
+    }
+}
+//enter search
+function searchEnter(e) {
+    if (e.keyCode == 13){
+        $('btnSearch').click();
+        alert("dá");
     }
 }
 
@@ -152,4 +159,24 @@ function hoverToDiaplayContent(className) {
         $(item).children('.item__img').removeClass('display-none');
         $(item).children('.item__detail').addClass('display-none');
     });
+}
+
+//close modal
+function useModal(e) {
+    if(e === true){
+        $('#login-modal').modal('hide');
+        $('#register-modal').modal('show');
+        $('#fullName').val(null);
+        $('#register_account').val(null);
+        $('#register_password').val(null);
+        $('#rePassword').val(null);
+        $('#phone').val(null);
+        $('#email').val(null);
+    }
+    else {
+        $('#register-modal').modal('hide');
+        $('#login-modal').modal('show');
+        $('#login_account').val(null);
+        $('#login_password').val(null);
+    }
 }

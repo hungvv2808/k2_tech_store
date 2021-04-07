@@ -1361,46 +1361,46 @@
   color: #ffffff;
 }
 
-#login-modal .modal-dialog .modal-content {
+#login-modal .modal-dialog .modal-content, #register-modal .modal-dialog .modal-content {
   border: 1px solid #ffffff;
   border-radius: 1rem;
 }
-#login-modal .modal-dialog .modal-content .modal-header {
+#login-modal .modal-dialog .modal-content .modal-header, #register-modal .modal-dialog .modal-content .modal-header{
   background-color: #3aaf29;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
 }
-#login-modal .modal-dialog .modal-content .modal-header .modal-title {
+#login-modal .modal-dialog .modal-content .modal-header .modal-title, #register-modal .modal-dialog .modal-content .modal-header .modal-title {
   width: 100%;
   text-align: center;
   color: #ffffff;
 }
-#login-modal .modal-dialog .modal-content .modal-header .close {
+#login-modal .modal-dialog .modal-content .modal-header .close, #register-modal .modal-dialog .modal-content .modal-header .close {
   color: #ffffff;
 }
-#login-modal .modal-dialog .modal-content .modal-body .lost-password-btn {
+#login-modal .modal-dialog .modal-content .modal-body .lost-password-btn{
   text-align: right;
   font-style: italic;
   font-size: 14px;
 }
-#login-modal .modal-dialog .modal-content .modal-body .lost-password-btn a {
+#login-modal .modal-dialog .modal-content .modal-body .lost-password-btn a{
   color: #3aaf29;
 }
-#login-modal .modal-dialog .modal-content .modal-body .lost-password-btn a:hover {
+#login-modal .modal-dialog .modal-content .modal-body .lost-password-btn a:hover{
   color: #02ff3985;
 }
-#login-modal .modal-dialog .modal-content .modal-body .btn-custom {
+#login-modal .modal-dialog .modal-content .modal-body .btn-custom, #register-modal .modal-dialog .modal-content .modal-body .btn-custom {
   background-color: #3aaf29 !important;
   color: #ffffff !important;
   width: 100%;
 }
-#login-modal .modal-dialog .modal-content .modal-body .btn-custom:hover {
+#login-modal .modal-dialog .modal-content .modal-body .btn-custom:hover, #register-modal .modal-dialog .modal-content .modal-body .btn-custom:hover {
   background-color: #02ff3985;
 }
-#login-modal .modal-dialog .modal-content .modal-footer {
+#login-modal .modal-dialog .modal-content .modal-footer, #register-modal .modal-dialog .modal-content .modal-footer {
   text-align: center;
 }
-#login-modal .modal-dialog .modal-content .modal-footer .signup {
+#login-modal .modal-dialog .modal-content .modal-footer .signup, #register-modal .modal-dialog .modal-content .modal-footer .signup {
   width: 100%;
 }
 

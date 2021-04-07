@@ -72,6 +72,7 @@
 
         <c:if test="#{!authorizationFEController.hasLogged()}">
             <ui:include src="/frontend/modal/login-modal.xhtml"/>
+            <ui:include src="/frontend/modal/register-modal.xhtml"/>
             <ui:include src="/frontend/modal/lost-password-modal.xhtml"/>
             <ui:include src="/frontend/common/modal_register.xhtml"/>
             <ui:include src="/frontend/common/create_new_password.xhtml"/>

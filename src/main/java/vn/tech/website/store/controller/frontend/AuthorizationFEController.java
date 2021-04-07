@@ -523,44 +523,70 @@ public class AuthorizationFEController extends BaseController implements Seriali
         String password = StringUtils.isBlank(accountDto.getPassword()) ? "" : AES.decrypt(accountDto.getPassword(), cryptoSecretKey);
         String rePassword = StringUtils.isBlank(accountDto.getRePassword()) ? "" : AES.decrypt(accountDto.getRePassword(), cryptoSecretKey);
 
+        if (StringUtils.isBlank(accountDto.getFullName())){
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập họ tên");
+            return;
+        }
         if (StringUtils.isBlank(username)){
-            FacesUtil.addErrorMessage("Bạn vui lòng nhập tên đăng nhập");
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập tên đăng nhập");
             return;
         }
         Account account = accountRepository.findAccountByUserNameAndRoleId(username,DbConstant.ROLE_ID_USER);
         if (account != null){
-            FacesUtil.addErrorMessage("Tên đăng nhập đã tồn tại");
+            facesNoticeController.addErrorMessage("Tên đăng nhập đã tồn tại");
             return;
         }
         if (StringUtils.isBlank(password)){
-            FacesUtil.addErrorMessage("Bạn vui lòng nhập mật khẩu");
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập mật khẩu");
             return;
         }
         if (password.length() < Constant.ACCOUNT_MINLENGTH_PASSWORD_USER) {
-            FacesUtil.addErrorMessage("Mật khẩu phải có ít nhất " + Constant.ACCOUNT_MINLENGTH_PASSWORD_USER + " ký tự");
+            facesNoticeController.addErrorMessage("Mật khẩu phải có ít nhất " + Constant.ACCOUNT_MINLENGTH_PASSWORD_USER + " ký tự");
             return;
         }
 
         if (StringUtils.isBlank(rePassword)){
-            FacesUtil.addErrorMessage("Bạn vui lòng nhập lại mật khẩu");
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập lại mật khẩu");
             return;
         }
         if (!rePassword.equals(password)){
-            FacesUtil.addErrorMessage("Mật khẩu nhập lại không trùng khớp");
+            facesNoticeController.addErrorMessage("Mật khẩu nhập lại không trùng khớp");
             return;
         }
-
+        if (StringUtils.isBlank(accountDto.getPhone())) {
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập số điện thoại");
+        }
+        if (!accountDto.getPhone().matches("^0[1-9]{1}[0-9]{8,9}$|")) {
+            facesNoticeController.addErrorMessage("Số điện thoại không đúng định dạng");
+        }
+        if (StringUtils.isBlank(accountDto.getEmail())){
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập email");
+            return;
+        }
+        if (!accountDto.getEmail().matches("^\\s*[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})\\s*$")) {
+            facesNoticeController.addErrorMessage("Email không đúng định dạng");
+            return;
+        }
+        account = accountRepository.findAccountByEmailAndRoleId(accountDto.getEmail().trim(),DbConstant.ROLE_ID_USER);
+        if (account != null){
+            facesNoticeController.addErrorMessage("Email đăng ký đã tồn tại");
+            return;
+        }
 
         Account accountRegister = new Account();
         accountRegister.setUserName(username);
         accountRegister.setRoleId(DbConstant.ROLE_ID_USER);
         accountRegister.setSalt(StringUtil.generateSalt());
         accountRegister.setPassword(StringUtil.encryptPassword(password,accountRegister.getSalt()));
+        accountRegister.setEmail(accountDto.getEmail().trim());
         accountRegister.setStatus(DbConstant.ACCOUNT_ACTIVE_STATUS);
         accountRepository.save(accountRegister);
         resetAll();
-        FacesUtil.redirect("/frontend/index.xhtml");
-        setSuccessForm("Đăng ký thành công");
+        facesNoticeController.closeModal("register-modal");
+        // Redirect to home page
+        facesNoticeController.reload();
+        facesNoticeController.addSuccessMessage("Đăng ký thành công!");
+        facesNoticeController.openModal("login-modal");
     }
 
     public void setAccountDto(AccountDto accountDto) {
