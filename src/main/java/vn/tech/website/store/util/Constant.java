@@ -136,4 +136,8 @@ public class Constant {
 
     // Min length of password
     public static final int ACCOUNT_MINLENGTH_PASSWORD_USER = 6;
+
+    public static final int MIN_PRICE = 0;
+    public static final int MAX_PRICE = 100000000;
+    public static final int STEP_PRICE = 500000;
 }

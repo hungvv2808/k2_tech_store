@@ -20,8 +20,42 @@
                                 <h1 class="_search">Tìm kiếm</h1>
                             </div>
                         </div>
-                        <div class="search-product container">
+                        <div class="search-product">
+                            <h:form id="searchForm" prependId="false">
+                                <div class="form-group">
+                                    <h:outputLabel value="Mã sản phẩm:" for="codeSearch"/>
+                                    <h:inputText styleClass="form-control" name="codeSearch" id="codeSearch" type="text" maxlength="100" placeholder="Mã sản phẩm"
+                                                 onblur="this.value = this.value.trim()" value="#{productFEController.productSearchDto.code}"/>
+                                </div>
+                                <div class="form-group">
+                                    <h:outputLabel value="Tên sản phẩm:" for="nameSearch"/>
+                                    <h:inputText styleClass="form-control" name="codeSearch" id="nameSearch" type="text" maxlength="200" placeholder="Tên sản phẩm"
+                                                 onblur="this.value = this.value.trim()" value="#{productFEController.productSearchDto.productName}"/>
+                                </div>
 
+                                <div class="form-group">
+                                    <p:remoteCommand name="enableSearchPrice" update="searchForm" actionListener="#{productFEController.onChangeStatusSearchPrice(true)}"/>
+                                    <p:remoteCommand name="disableSearchPrice" update="searchForm" actionListener="#{productFEController.onChangeStatusSearchPrice(false)}"/>
+                                    <input type="checkbox" id="checkPrice" onclick="onChangeVisible();"/>
+                                    <label for="checkPrice">Tìm kiếm theo giá sản phẩm</label>
+                                </div>
+                                <div class="form-group">
+                                    <h:outputLabel value="Mức giá tối thiểu: " for="minPrice">
+                                        <h:outputText id="currentMinPrice" value="" />
+                                    </h:outputLabel>
+                                    <h:inputText id="minPrice" styleClass="form-control" type="range" min="#{Constant.MIN_PRICE}" max="#{Constant.MAX_PRICE}" step="#{Constant.STEP_PRICE}" value="#{productFEController.productSearchDto.minPrice}" />
+                                </div>
+                                <div class="form-group">
+                                    <h:outputLabel value="Mức giá tối đa: " for="maxPrice">
+                                        <h:outputText id="currentMaxPrice" value="" />
+                                    </h:outputLabel>
+                                    <h:inputText id="maxPrice" styleClass="form-control" type="range" min="#{Constant.MIN_PRICE}" max="#{Constant.MAX_PRICE}" step="#{Constant.STEP_PRICE}" value="#{productFEController.productSearchDto.maxPrice}" />
+                                </div>
+
+                                <div class="row">
+                                    <button class="btn btn-success">Tìm kiếm</button>
+                                </div>
+                            </h:form>
                         </div>
                     </div>
                     <div class="col-lg-9">
@@ -91,6 +125,36 @@
                 </div>
             </div>
         </div>
+    </ui:define>
+
+    <ui:define name="jslibrary">
+        <script>
+            function onChangeVisible() {
+                const check = document.getElementById('checkPrice');
+                if (check.checked) {
+                    enableSearchPrice();
+                } else {
+                    disableSearchPrice();
+                }
+            }
+
+            function onChangeValuePrice(value, valueOn) {
+                const v_df = (parseInt($(value).val())).toLocaleString('it-IT', {style: 'currency', currency: 'VND'});
+                $(valueOn).html(v_df);
+                $(value).change(function () {
+                    const v_up = (parseInt($(value).val())).toLocaleString('it-IT', {
+                        style: 'currency',
+                        currency: 'VND'
+                    });
+                    $(valueOn).html(v_up);
+                })
+            }
+
+            $(document).ready(function(){
+                onChangeValuePrice('#minPrice', '#currentMinPrice');
+                onChangeValuePrice('#maxPrice', '#currentMaxPrice');
+            });
+        </script>
     </ui:define>
 
 </ui:composition>

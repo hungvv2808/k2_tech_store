@@ -22,4 +22,7 @@ public class ProductSearchDto extends BaseSearchDto {
 
     private Long productId;
     private Long parentId;
+
+    private Long minPrice;
+    private Long maxPrice;
 }

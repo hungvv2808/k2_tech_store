@@ -10,14 +10,18 @@ import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.frontend.BaseFEController;
 import vn.tech.website.store.controller.frontend.common.PaginationController;
 import vn.tech.website.store.dto.ProductDto;
+import vn.tech.website.store.dto.ProductOptionDto;
+import vn.tech.website.store.dto.ProductOptionSearchDto;
 import vn.tech.website.store.dto.ProductSearchDto;
 import vn.tech.website.store.model.ProductLink;
 import vn.tech.website.store.repository.ProductLinkRepository;
+import vn.tech.website.store.repository.ProductOptionRepository;
 import vn.tech.website.store.repository.ProductRepository;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
 
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -39,12 +43,21 @@ public class ProductFEController extends BaseFEController {
     private ProductRepository productRepository;
     @Autowired
     private ProductLinkRepository productLinkRepository;
+    @Autowired
+    private ProductOptionRepository productOptionRepository;
 
-    private PaginationController<ProductDto> pagination;
     private Long categoryId;
     private Long brandId;
     private ProductSearchDto searchDto;
+    private ProductSearchDto productSearchDto;
+    private List<ProductOptionDto> productOptionDtoList;
+    private List<SelectItem> colorOptions;
+    private List<SelectItem> sizeOptions;
+    private List<SelectItem> releaseOptions;
+    private List<SelectItem> otherOptions;
+    private PaginationController<ProductDto> pagination;
     private boolean checkType = false;
+    private boolean enableSearchPrice = false;
 
     public ProductFEController() {
         pagination = new PaginationController<>();
@@ -63,12 +76,31 @@ public class ProductFEController extends BaseFEController {
 
     public void resetAll() {
         searchDto = new ProductSearchDto();
+        productSearchDto = new ProductSearchDto();
         pagination.setRequest(request);
         onSearch(categoryId, brandId);
         checkType = true;
+
+        colorOptions = new ArrayList<>();
+        sizeOptions = new ArrayList<>();
+        releaseOptions = new ArrayList<>();
+        otherOptions = new ArrayList<>();
+        productOptionDtoList = productOptionRepository.search(new ProductOptionSearchDto());
+        for (ProductOptionDto option : productOptionDtoList) {
+            switch (option.getType()) {
+                case DbConstant.OPTION_TYPE_COLOR:
+                    colorOptions.add(new SelectItem(option.getProductOptionId(), option.getOptionName()));
+                case DbConstant.OPTION_TYPE_SIZE:
+                    sizeOptions.add(new SelectItem(option.getProductOptionId(), option.getOptionName()));
+                case DbConstant.OPTION_TYPE_RELEASE:
+                    releaseOptions.add(new SelectItem(option.getProductOptionId(), option.getOptionName()));
+                case DbConstant.OPTION_TYPE_OTHER:
+                    otherOptions.add(new SelectItem(option.getProductOptionId(), option.getOptionName()));
+            }
+        }
     }
 
-    public void onSearch(Long categoryId, Long brandId){
+    public void onSearch(Long categoryId, Long brandId) {
         searchDto.setCategoryId(categoryId);
         searchDto.setBrandId(brandId);
         searchDto.setType(DbConstant.PRODUCT_TYPE_CHILD);
@@ -119,6 +151,10 @@ public class ProductFEController extends BaseFEController {
         productDetailFEController.setChildProductMap(childProductMap);
 
         FacesUtil.redirect("/frontend/product/detail.xhtml");
+    }
+
+    public void onChangeStatusSearchPrice(boolean status) {
+        enableSearchPrice = status;
     }
 
     @Override
