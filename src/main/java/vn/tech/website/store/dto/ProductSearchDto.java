@@ -23,6 +23,13 @@ public class ProductSearchDto extends BaseSearchDto {
     private Long productId;
     private Long parentId;
 
+    private boolean enableSearchPrice;
     private Long minPrice;
     private Long maxPrice;
+
+    private Long optionColorId;
+    private Long optionSizeId;
+    private Long optionReleaseId;
+    private Long optionOtherId;
+    private String optionCondition;
 }

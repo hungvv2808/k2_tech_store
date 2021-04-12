@@ -17,6 +17,7 @@ import vn.tech.website.store.model.ProductLink;
 import vn.tech.website.store.repository.ProductLinkRepository;
 import vn.tech.website.store.repository.ProductOptionRepository;
 import vn.tech.website.store.repository.ProductRepository;
+import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
 
@@ -56,8 +57,7 @@ public class ProductFEController extends BaseFEController {
     private List<SelectItem> releaseOptions;
     private List<SelectItem> otherOptions;
     private PaginationController<ProductDto> pagination;
-    private boolean checkType = false;
-    private boolean enableSearchPrice = false;
+    private boolean checkType;
 
     public ProductFEController() {
         pagination = new PaginationController<>();
@@ -75,11 +75,17 @@ public class ProductFEController extends BaseFEController {
     }
 
     public void resetAll() {
-        searchDto = new ProductSearchDto();
         productSearchDto = new ProductSearchDto();
-        pagination.setRequest(request);
-        onSearch(categoryId, brandId);
+        productSearchDto.setMinPrice(0L);
+        productSearchDto.setMaxPrice(0L);
+        productSearchDto.setEnableSearchPrice(false);
         checkType = true;
+
+        pagination.setRequest(request);
+        searchDto = new ProductSearchDto();
+        searchDto.setCategoryId(categoryId);
+        searchDto.setBrandId(brandId);
+        onSearch(searchDto);
 
         colorOptions = new ArrayList<>();
         sizeOptions = new ArrayList<>();
@@ -90,19 +96,23 @@ public class ProductFEController extends BaseFEController {
             switch (option.getType()) {
                 case DbConstant.OPTION_TYPE_COLOR:
                     colorOptions.add(new SelectItem(option.getProductOptionId(), option.getOptionName()));
+                    break;
                 case DbConstant.OPTION_TYPE_SIZE:
                     sizeOptions.add(new SelectItem(option.getProductOptionId(), option.getOptionName()));
+                    break;
                 case DbConstant.OPTION_TYPE_RELEASE:
                     releaseOptions.add(new SelectItem(option.getProductOptionId(), option.getOptionName()));
+                    break;
                 case DbConstant.OPTION_TYPE_OTHER:
                     otherOptions.add(new SelectItem(option.getProductOptionId(), option.getOptionName()));
+                    break;
+                default:
+                    break;
             }
         }
     }
 
-    public void onSearch(Long categoryId, Long brandId) {
-        searchDto.setCategoryId(categoryId);
-        searchDto.setBrandId(brandId);
+    public void onSearch(ProductSearchDto searchDto) {
         searchDto.setType(DbConstant.PRODUCT_TYPE_CHILD);
         pagination.setLazyDataModel(new LazyDataModel<ProductDto>() {
             @Override
@@ -131,6 +141,8 @@ public class ProductFEController extends BaseFEController {
     public void viewDetailProduct(ProductDto productDto) {
         ProductSearchDto searchDto = new ProductSearchDto();
         if (!checkType) {
+            productDetailFEController.setProductId(null);
+
             productDetailFEController.setParentId(productDto.getProductId());
             searchDto.setParentId(productDto.getProductId());
         } else {
@@ -153,8 +165,35 @@ public class ProductFEController extends BaseFEController {
         FacesUtil.redirect("/frontend/product/detail.xhtml");
     }
 
-    public void onChangeStatusSearchPrice(boolean status) {
-        enableSearchPrice = status;
+    public void resetDialog() {
+        resetAll();
+        FacesUtil.updateView("searchForm");
+        FacesUtil.updateView("productList");
+    }
+
+    public void onSearchDialog() {
+        if (productSearchDto.getMaxPrice() < productSearchDto.getMinPrice()) {
+            setErrorForm("Giá tối đa không được nhỏ hơn giá tối thiểu.");
+            FacesUtil.updateView(Constant.ERROR_FE_GROWL_ID);
+            return;
+        }
+
+        productSearchDto.setCategoryId(categoryId);
+        productSearchDto.setBrandId(brandId);
+        if (productSearchDto.getOptionColorId() == -1 && productSearchDto.getOptionSizeId() == -1 && productSearchDto.getOptionReleaseId() == -1 && productSearchDto.getOptionOtherId() == -1) {
+            productSearchDto.setOptionCondition(null);
+        } else {
+            String condition = "("
+                    + (productSearchDto.getOptionColorId() != -1 ? (productSearchDto.getOptionColorId()) : "")
+                    + (productSearchDto.getOptionSizeId() != -1 ? (", " + productSearchDto.getOptionSizeId()) : "")
+                    + (productSearchDto.getOptionReleaseId() != -1 ? (", " + productSearchDto.getOptionReleaseId()) : "")
+                    + (productSearchDto.getOptionOtherId() != -1 ? (", " + productSearchDto.getOptionOtherId()) : "")
+                    + ")";
+            productSearchDto.setOptionCondition(condition);
+        }
+
+        onSearch(productSearchDto);
+        FacesUtil.updateView("productList");
     }
 
     @Override

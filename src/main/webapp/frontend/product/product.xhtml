@@ -32,28 +32,72 @@
                                     <h:inputText styleClass="form-control" name="codeSearch" id="nameSearch" type="text" maxlength="200" placeholder="Tên sản phẩm"
                                                  onblur="this.value = this.value.trim()" value="#{productFEController.productSearchDto.productName}"/>
                                 </div>
+                                <div class="form-group">
+                                    <h:outputLabel value="Chọn màu sản phẩm:" />
+                                    <h:selectOneMenu styleClass="form-control" value="#{productFEController.productSearchDto.optionColorId}">
+                                        <f:selectItem itemValue="-1" itemLabel="Chọn màu" />
+                                        <f:selectItems value="#{productFEController.colorOptions}" var="color"
+                                                       itemValue="#{color.value}"
+                                                       itemLabel="#{color.label}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                                <div class="form-group">
+                                    <h:outputLabel value="Chọn dung lượng sản phẩm:" />
+                                    <h:selectOneMenu styleClass="form-control" value="#{productFEController.productSearchDto.optionSizeId}">
+                                        <f:selectItem itemValue="-1" itemLabel="Chọn dung lượng" />
+                                        <f:selectItems value="#{productFEController.sizeOptions}" var="size"
+                                                       itemValue="#{size.value}"
+                                                       itemLabel="#{size.label}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                                <div class="form-group">
+                                    <h:outputLabel value="Chọn phiên bản sản phẩm:" />
+                                    <h:selectOneMenu styleClass="form-control" value="#{productFEController.productSearchDto.optionReleaseId}">
+                                        <f:selectItem itemValue="-1" itemLabel="Chọn phiên bản" />
+                                        <f:selectItems value="#{productFEController.releaseOptions}" var="release"
+                                                       itemValue="#{release.value}"
+                                                       itemLabel="#{release.label}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                                <div class="form-group">
+                                    <h:outputLabel value="Chọn thông tin khác:" />
+                                    <h:selectOneMenu styleClass="form-control" value="#{productFEController.productSearchDto.optionOtherId}">
+                                        <f:selectItem itemValue="-1" itemLabel="Chọn khác" />
+                                        <f:selectItems value="#{productFEController.otherOptions}" var="other"
+                                                       itemValue="#{other.value}"
+                                                       itemLabel="#{other.label}"/>
+                                    </h:selectOneMenu>
+                                </div>
 
                                 <div class="form-group">
-                                    <p:remoteCommand name="enableSearchPrice" update="searchForm" actionListener="#{productFEController.onChangeStatusSearchPrice(true)}"/>
-                                    <p:remoteCommand name="disableSearchPrice" update="searchForm" actionListener="#{productFEController.onChangeStatusSearchPrice(false)}"/>
-                                    <input type="checkbox" id="checkPrice" onclick="onChangeVisible();"/>
-                                    <label for="checkPrice">Tìm kiếm theo giá sản phẩm</label>
+                                    <h:selectBooleanCheckbox value="#{productFEController.productSearchDto.enableSearchPrice}" id="enablePrice" />
+                                    <h:outputLabel value="Tìm kiếm theo mức giá" for="enablePrice" styleClass="search-by-price" />
                                 </div>
                                 <div class="form-group">
                                     <h:outputLabel value="Mức giá tối thiểu: " for="minPrice">
                                         <h:outputText id="currentMinPrice" value="" />
                                     </h:outputLabel>
-                                    <h:inputText id="minPrice" styleClass="form-control" type="range" min="#{Constant.MIN_PRICE}" max="#{Constant.MAX_PRICE}" step="#{Constant.STEP_PRICE}" value="#{productFEController.productSearchDto.minPrice}" />
+                                    <h:inputText id="minPrice" styleClass="form-control search-price" type="range" min="#{Constant.MIN_PRICE}" max="#{Constant.MAX_PRICE}" step="#{Constant.STEP_PRICE}" value="#{productFEController.productSearchDto.minPrice}" />
                                 </div>
                                 <div class="form-group">
                                     <h:outputLabel value="Mức giá tối đa: " for="maxPrice">
                                         <h:outputText id="currentMaxPrice" value="" />
                                     </h:outputLabel>
-                                    <h:inputText id="maxPrice" styleClass="form-control" type="range" min="#{Constant.MIN_PRICE}" max="#{Constant.MAX_PRICE}" step="#{Constant.STEP_PRICE}" value="#{productFEController.productSearchDto.maxPrice}" />
+                                    <h:inputText id="maxPrice" styleClass="form-control search-price" type="range" min="#{Constant.MIN_PRICE}" max="#{Constant.MAX_PRICE}" step="#{Constant.STEP_PRICE}" value="#{productFEController.productSearchDto.maxPrice}" />
                                 </div>
 
                                 <div class="row">
-                                    <button class="btn btn-success">Tìm kiếm</button>
+                                    <div class="col-lg-6" style="text-align: right;">
+                                        <h:commandButton type="button" action="#{productFEController.resetDialog()}"
+                                                         onclick="window.location.reload();"
+                                                         class="btn btn-warning btn-clear" value="Làm mới">
+                                            <f:ajax execute="@form" render="#{Constant.ERROR_FE_GROWL_ID}"/>
+                                        </h:commandButton>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p:remoteCommand name="search" actionListener="#{productFEController.onSearchDialog}" update="#{Constant.ERROR_FE_GROWL_ID}"/>
+                                        <button class="btn btn-success btn-search" type="submit" onclick="search();">Tìm kiếm</button>
+                                    </div>
                                 </div>
                             </h:form>
                         </div>
@@ -129,15 +173,6 @@
 
     <ui:define name="jslibrary">
         <script>
-            function onChangeVisible() {
-                const check = document.getElementById('checkPrice');
-                if (check.checked) {
-                    enableSearchPrice();
-                } else {
-                    disableSearchPrice();
-                }
-            }
-
             function onChangeValuePrice(value, valueOn) {
                 const v_df = (parseInt($(value).val())).toLocaleString('it-IT', {style: 'currency', currency: 'VND'});
                 $(valueOn).html(v_df);

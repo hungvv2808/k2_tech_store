@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.frontend.news.NewsFEController;
+import vn.tech.website.store.controller.frontend.product.ProductFEController;
 import vn.tech.website.store.dto.NewsDto;
 import vn.tech.website.store.dto.NewsSearchDto;
 import vn.tech.website.store.dto.ProductDto;
@@ -31,6 +32,8 @@ public class HomeFEController extends BaseFEController {
     private AuthorizationFEController authorizationFEController;
     @Inject
     private NewsFEController newsFEController;
+    @Inject
+    private ProductFEController productFEController;
 
     @Autowired
     private NewsRepository newsRepository;
@@ -60,6 +63,8 @@ public class HomeFEController extends BaseFEController {
     public void resetAll() {
         now = new Date();
         searchDto = new ProductSearchDto();
+
+        productFEController.setCheckType(false);
 
         // list news
         NewsSearchDto newsSearchDto = new NewsSearchDto();

@@ -99,6 +99,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         if (searchDto.getParentId() != null) {
             sb.append(" INNER JOIN product_link pl ON p.product_id = pl.child_id ");
         }
+        if (searchDto.getOptionCondition() != null) {
+            sb.append(" LEFT JOIN product_option_detail pod ON p.product_id = pod.product_id ");
+        }
         sb.append(" WHERE 1 = 1 ");
 
         if (StringUtils.isNotBlank(searchDto.getProductName())) {
@@ -125,6 +128,17 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
         if (searchDto.getParentId() != null) {
             sb.append(" AND pl.parent_id = :parentId ");
+        }
+
+        if (searchDto.isEnableSearchPrice()) {
+            sb.append(" AND :minPrice <= p.price ");
+            if (searchDto.getMaxPrice() != null) {
+                sb.append(" AND p.price <= :maxPrice ");
+            }
+        }
+
+        if (searchDto.getOptionCondition() != null) {
+            sb.append(" AND pod.product_option_id IN ").append(searchDto.getOptionCondition()).append(" ");
         }
     }
 
@@ -154,6 +168,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
         if (searchDto.getParentId() != null) {
             query.setParameter("parentId", searchDto.getParentId());
+        }
+
+        if (searchDto.isEnableSearchPrice()) {
+            query.setParameter("minPrice", searchDto.getMinPrice());
+            if (searchDto.getMaxPrice() != null) {
+                query.setParameter("maxPrice", searchDto.getMaxPrice());
+            }
         }
 
         return query;

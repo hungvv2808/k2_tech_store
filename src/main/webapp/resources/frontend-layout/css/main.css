@@ -592,6 +592,14 @@
 .content-products .search-product {
   margin: 0 2.5rem;
 }
+.content-products .search-product .search-by-price {
+  padding-left: 0.5rem;
+}
+.content-products .search-product .btn-clear, .content-products .search-product .btn-search {
+  color: #ffffff;
+  width: 120px;
+  height: 50px;
+}
 .content-products .all-products.container {
   max-width: 1200px !important;
   margin-left: 5rem;
