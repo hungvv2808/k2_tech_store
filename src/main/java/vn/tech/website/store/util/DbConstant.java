@@ -141,4 +141,14 @@ public class DbConstant {
     public static final int PAYMENTS_STATUS_PAID = 1;
     public static final int PAYMENTS_TYPE_OFFLINE = 0;
     public static final int PAYMENTS_TYPE_ONLINE = 1;
+
+    //send notification
+    public static final int SNOTIFICATION_STATUS_INACTIVE = 0;
+    public static final int SNOTIFICATION_STATUS_ACTIVE = 1;
+
+    //receive notification
+    public static final boolean RNOTIFICATION_STATUS_NOT_SEEN = false;
+    public static final boolean RNOTIFICATION_STATUS_SEEN = true;
+    public static final boolean RNOTIFICATION_STATUS_BELL_NOT_SEEN = false;
+    public static final boolean RNOTIFICATION_STATUS_BELL_SEEN = true;
 }

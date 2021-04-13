@@ -199,6 +199,16 @@ public class EmailUtil implements Runnable {
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
+    public boolean sendNotificationApprovedOrder(String emailTo,String userName,String orderCode,Date orderTime) {
+        String subject = PropertiesUtil.getProperty("email.changeEmail.subject");
+        String content = PropertiesUtil.getProperty("email.changeEmail.content")
+                .replace("{TEN_TAI_KHOAN}", userName)
+                .replace("{EMAIL}",emailTo)
+                .replace("{ORDER_CODE}", orderCode)
+                .replace("{ORDER_TIME}", Objects.requireNonNull(DateUtil.formatToPattern(orderTime, DateUtil.DATE_FORMAT)));
+        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
+    }
+
     public boolean sendResultStore(String emailTo, String userName, Boolean status, String regulationCode, String assetName, Date startTime, Date endTime, Long price, Date timeAccept){
         String content;
         if (status == DbConstant.ASSET_MANAGEMENT_ENDING_GOOD) {

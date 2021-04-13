@@ -140,7 +140,7 @@ public class ProductFEController extends BaseFEController {
 
     public void viewDetailProduct(ProductDto productDto) {
         ProductSearchDto searchDto = new ProductSearchDto();
-        if (!checkType) {
+        if (productDto.getType() == DbConstant.PRODUCT_TYPE_PARENT) {
             productDetailFEController.setProductId(null);
 
             productDetailFEController.setParentId(productDto.getProductId());

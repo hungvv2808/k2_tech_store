@@ -15,10 +15,7 @@ import vn.tech.website.store.dto.*;
 import vn.tech.website.store.entity.EScope;
 import vn.tech.website.store.model.*;
 import vn.tech.website.store.repository.*;
-import vn.tech.website.store.util.Constant;
-import vn.tech.website.store.util.DbConstant;
-import vn.tech.website.store.util.FacesUtil;
-import vn.tech.website.store.util.StringUtil;
+import vn.tech.website.store.util.*;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -47,6 +44,10 @@ public class OrdersController extends BaseController {
     private OrderDetailRepository orderDetailRepository;
     @Autowired
     private PaymentsRepository paymentsRepository;
+    @Autowired
+    private SendNotificationRepository sendNotificationRepository;
+    @Autowired
+    private ReceiveNotificationRepository receiveNotificationRepository;
 
     private LazyDataModel<OrdersDto> lazyDataModel;
     private OrdersDto ordersDto;
@@ -281,6 +282,29 @@ public class OrdersController extends BaseController {
             orders.setUpdateBy(authorizationController.getAccountDto().getAccountId());
             orders.setUpdateDate(new Date());
             orderRepository.save(orders);
+
+            if (orders.getAccountId() != null) {
+                SendNotification sendNotification = new SendNotification();
+                sendNotification.setAccountId(authorizationController.getAccountDto().getAccountId());
+                sendNotification.setContent("Đơn hàng của bạn đã được duyệt");
+                sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
+                sendNotification.setCreateDate(new Date());
+                sendNotification.setUpdateDate(new Date());
+                sendNotificationRepository.save(sendNotification);
+
+                //receive notification
+                ReceiveNotification receiveNotification = new ReceiveNotification();
+                receiveNotification.setAccountId(orders.getAccountId());
+                receiveNotification.setSendNotificationId(sendNotification.getSendNotificationId());
+                receiveNotification.setStatus(DbConstant.RNOTIFICATION_STATUS_NOT_SEEN);
+                receiveNotification.setStatusBell(DbConstant.RNOTIFICATION_STATUS_BELL_NOT_SEEN);
+                receiveNotification.setCreateDate(new Date());
+                receiveNotification.setUpdateDate(new Date());
+                receiveNotificationRepository.save(receiveNotification);
+            } else {
+                EmailUtil.getInstance().sendNotificationApprovedOrder(orders.getEmail(), orders.getCustomerName(), orders.getCode(), orders.getCreateDate());
+            }
+
         }
         if (resultDto.getStatus() == DbConstant.ORDER_STATUS_APPROVED) {
             Orders orders = orderRepository.getByOrdersId(resultDto.getOrdersId());

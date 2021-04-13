@@ -37,6 +37,9 @@ public class Orders extends BaseModel {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "note")
     private String note;
 

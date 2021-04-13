@@ -103,6 +103,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             sb.append(" LEFT JOIN product_option_detail pod ON p.product_id = pod.product_id ");
         }
         sb.append(" WHERE 1 = 1 ");
+        sb.append(" AND p.status = " + DbConstant.PRODUCT_STATUS_ACTIVE);
 
         if (StringUtils.isNotBlank(searchDto.getProductName())) {
             sb.append(" AND p.name LIKE :productName ");

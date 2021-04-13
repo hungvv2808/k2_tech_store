@@ -12,12 +12,8 @@ import vn.tech.website.store.controller.frontend.product.ProductDetailFEControll
 import vn.tech.website.store.dto.OrdersDetailDto;
 import vn.tech.website.store.dto.OrdersDto;
 import vn.tech.website.store.dto.user.AccountDto;
-import vn.tech.website.store.model.Orders;
-import vn.tech.website.store.model.OrdersDetail;
-import vn.tech.website.store.model.Product;
-import vn.tech.website.store.repository.OrderDetailRepository;
-import vn.tech.website.store.repository.OrderRepository;
-import vn.tech.website.store.repository.ProductRepository;
+import vn.tech.website.store.model.*;
+import vn.tech.website.store.repository.*;
 import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
@@ -48,6 +44,12 @@ public class OrderFEController extends BaseFEController {
     private OrderDetailRepository orderDetailRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private SendNotificationRepository sendNotificationRepository;
+    @Autowired
+    private ReceiveNotificationRepository receiveNotificationRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
     private PaginationController<OrdersDto> pagination;
     private Map<String, OrdersDetailDto> productCartMap;
@@ -151,6 +153,18 @@ public class OrderFEController extends BaseFEController {
             setErrorForm("Bạn vui lòng nhập số điện thoại");
             return false;
         }
+        if (!ordersDto.getPhone().matches("^0[1-9]{1}[0-9]{8,9}$|")) {
+            FacesUtil.addErrorMessage("Số điện thoại không đúng định dạng");
+            return false;
+        }
+        if (StringUtils.isBlank(ordersDto.getEmail())) {
+            setErrorForm("Bạn vui lòng nhập email");
+            return false;
+        }
+        if (!ordersDto.getEmail().matches("^\\s*[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})\\s*$")) {
+            FacesUtil.addErrorMessage("Email không đúng định dạng");
+            return false;
+        }
         if (StringUtils.isBlank(ordersDto.getAddress())) {
             setErrorForm("Bạn vui lòng nhập địa chỉ nhận hàng");
             return false;
@@ -185,6 +199,26 @@ public class OrderFEController extends BaseFEController {
             productRepository.save(product);
         }
         session.removeAttribute("cartList");
+
+        //send notification
+        SendNotification sendNotification = new SendNotification();
+        sendNotification.setAccountId(orders.getAccountId() != null ? orders.getAccountId() : null);
+        sendNotification.setContent("Có đơn hàng mới");
+        sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
+        sendNotification.setCreateDate(new Date());
+        sendNotification.setUpdateDate(new Date());
+        sendNotificationRepository.save(sendNotification);
+        //receive notification
+        Account accountAdmin = accountRepository.findAccountByUserNameAndRoleId("admin",DbConstant.ROLE_ID_ADMIN);
+        ReceiveNotification receiveNotification = new ReceiveNotification();
+        receiveNotification.setAccountId(accountAdmin.getAccountId());
+        receiveNotification.setSendNotificationId(sendNotification.getSendNotificationId());
+        receiveNotification.setStatus(DbConstant.RNOTIFICATION_STATUS_NOT_SEEN);
+        receiveNotification.setStatusBell(DbConstant.RNOTIFICATION_STATUS_BELL_NOT_SEEN);
+        receiveNotification.setCreateDate(new Date());
+        receiveNotification.setUpdateDate(new Date());
+        receiveNotificationRepository.save(receiveNotification);
+
         setSuccessForm("Đặt hàng thành công, vui lòng chờ thông báo từ cửa hàng.");
         FacesUtil.redirect("/frontend/index.xhtml");
     }
