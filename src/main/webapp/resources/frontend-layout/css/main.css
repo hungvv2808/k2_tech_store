@@ -1375,7 +1375,7 @@
 .content-orders .orders-infor .order-product__img img {
   width: 100px;
   height: 100px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 1rem;
 }
 .content-orders .orders-infor .order-product__action i {

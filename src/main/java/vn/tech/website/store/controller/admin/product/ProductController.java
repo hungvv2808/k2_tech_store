@@ -3,6 +3,7 @@ package vn.tech.website.store.controller.admin.product;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.docx4j.docProps.variantTypes.Null;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import org.springframework.beans.BeanUtils;
@@ -48,6 +49,8 @@ public class ProductController extends BaseController {
     private ProductOptionDetailRepository productOptionDetailRepository;
     @Autowired
     private ProductImageRepository productImageRepository;
+    @Autowired
+    private ProductHighLightRepository productHighLightRepository;
 
     private LazyDataModel<ProductDto> lazyDataModel;
     private ProductDto productDto;
@@ -254,6 +257,14 @@ public class ProductController extends BaseController {
         product.setUpdateDate(new Date());
         product.setUpdateBy(authorizationController.getAccountDto() == null ? authorizationController.getAccountDto().getAccountId() : 1);
         product = productRepository.save(product);
+
+        // create df prod high light
+        if (product.getType() == DbConstant.PRODUCT_TYPE_CHILD) {
+            ProductHighLight productHighLight = new ProductHighLight();
+            productHighLight.setProductId(product.getProductId());
+            productHighLightRepository.save(productHighLight);
+        }
+
         //save image product
         if (productDto.getProductId() != null) {
             List<ProductImage> imageList = productImageRepository.getByProductId(productDto.getProductId());

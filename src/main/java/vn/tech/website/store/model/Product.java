@@ -14,7 +14,7 @@ import java.math.BigInteger;
 @AllArgsConstructor
 @Entity
 @Table(name = "product")
-public class Product extends BaseModel{
+public class Product extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")

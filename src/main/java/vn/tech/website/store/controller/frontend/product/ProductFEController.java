@@ -13,10 +13,10 @@ import vn.tech.website.store.dto.ProductDto;
 import vn.tech.website.store.dto.ProductOptionDto;
 import vn.tech.website.store.dto.ProductOptionSearchDto;
 import vn.tech.website.store.dto.ProductSearchDto;
+import vn.tech.website.store.model.Brand;
+import vn.tech.website.store.model.Category;
 import vn.tech.website.store.model.ProductLink;
-import vn.tech.website.store.repository.ProductLinkRepository;
-import vn.tech.website.store.repository.ProductOptionRepository;
-import vn.tech.website.store.repository.ProductRepository;
+import vn.tech.website.store.repository.*;
 import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
@@ -41,6 +41,10 @@ public class ProductFEController extends BaseFEController {
     @Inject
     private HttpServletRequest request;
     @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private BrandRepository brandRepository;
+    @Autowired
     private ProductRepository productRepository;
     @Autowired
     private ProductLinkRepository productLinkRepository;
@@ -52,6 +56,8 @@ public class ProductFEController extends BaseFEController {
     private ProductSearchDto searchDto;
     private ProductSearchDto productSearchDto;
     private List<ProductOptionDto> productOptionDtoList;
+    private List<SelectItem> categories;
+    private List<SelectItem> brands;
     private List<SelectItem> colorOptions;
     private List<SelectItem> sizeOptions;
     private List<SelectItem> releaseOptions;
@@ -86,6 +92,17 @@ public class ProductFEController extends BaseFEController {
         searchDto.setCategoryId(categoryId);
         searchDto.setBrandId(brandId);
         onSearch(searchDto);
+
+        categories = new ArrayList<>();
+        List<Category> categoryList = categoryRepository.findAllCategoryProduct();
+        for (Category c : categoryList) {
+            categories.add(new SelectItem(c.getCategoryId(), c.getCategoryName()));
+        }
+        brands = new ArrayList<>();
+        List<Brand> brandList = brandRepository.findAll();
+        for (Brand b : brandList) {
+            brands.add(new SelectItem(b.getBrandId(), b.getBrandName()));
+        }
 
         colorOptions = new ArrayList<>();
         sizeOptions = new ArrayList<>();
