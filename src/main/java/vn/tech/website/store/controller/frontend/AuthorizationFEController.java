@@ -49,6 +49,8 @@ public class AuthorizationFEController extends BaseController implements Seriali
     private FacesNoticeController facesNoticeController;
     @Inject
     private AddressFEController addressFEController;
+
+    private NotificationFEController notificationFEController;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired

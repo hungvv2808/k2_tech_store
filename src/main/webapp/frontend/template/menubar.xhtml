@@ -3,7 +3,12 @@
         xmlns:h="http://java.sun.com/jsf/html"
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:p="http://primefaces.org/ui"
-        xmlns:c="http://java.sun.com/jsp/jstl/core">
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{notificationFEController.initData}"/>
+    </f:metadata>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" id="navbar">
         <h:link styleClass="navbar-brand" outcome="/frontend/index.html">
@@ -139,16 +144,24 @@
                         </div>
                     </li>
                     <li class="nav-item nav-item__last-child dropdown">
+                        <div>
                         <a class="nav-link dropdown-toggle" href="#" id="navbarNotis" role="button"
                            data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
                             <div class="noti">
                                 <i class="far fa-bell fa-lg noti__bell"/>
-                                <span class="noti__count">100+</span>
+                                <h:outputText class="noti__count" value="#{notificationFEController.countRecord}"/>
                             </div>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarNotis">
-
+                            <ui:repeat value="#{notificationFEController.notificationDtoList}" var="dto">
+                                <h:commandLink class="dropdown-item">
+                                    <h:outputText value="#{dto.content}"/>
+                                    <br/>
+                                    <h:outputText style="font-style: italic" value="#{dto.dateBeforeNow}"/>
+                                </h:commandLink>
+                            </ui:repeat >
+                        </div>
                         </div>
                     </li>
                 </h:panelGroup>

@@ -29,6 +29,7 @@ public class DateUtil {
     public static final String DATE_FORMAT_HOUR = "dd/MM/yyyy HH:00:00";
     public static final String HOUR_DATE_FORMAT = "HH:mm:ss dd/MM/yyyy";
     public static final SimpleDateFormat cmdateFormat = new SimpleDateFormat(DATE_FORMAT);
+    public static String typeTime;
 
     public static Date formatFromDate(Date fromDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(FROM_DATE_FORMAT);
@@ -204,5 +205,28 @@ public class DateUtil {
 
     public static LocalDateTime convertDateToLocalDate(Date date) {
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    public static long countTimeBefore(Date dateBefore) {
+        Date nowDate = new Date();
+        long diff = nowDate.getTime() - dateBefore.getTime();
+        long days = TimeUnit.MILLISECONDS.toDays(diff);
+        long hours = TimeUnit.MILLISECONDS.toHours(diff);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(diff);
+
+        if (days != 0) {
+            typeTime = "ngày";
+            return days;
+        } else if (hours != 0) {
+            typeTime = "giờ";
+            return hours;
+        } else if (minutes != 0) {
+            typeTime = "phút";
+            return minutes;
+        } else {
+            typeTime = "giây";
+            return seconds;
+        }
     }
 }

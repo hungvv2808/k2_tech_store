@@ -13,4 +13,6 @@ import vn.tech.website.store.model.ReceiveNotification;
 public class ReceiveNotificationDto extends ReceiveNotification {
     private String receiverName;
     private String senderName;
+    private String content;
+    private String dateBeforeNow;
 }

@@ -140,4 +140,6 @@ public class Constant {
     public static final int MIN_PRICE = 0;
     public static final int MAX_PRICE = 100000000;
     public static final int STEP_PRICE = 500000;
+
+    public static final int NOTIFICATION_PAGE_SIZE = 10;
 }
