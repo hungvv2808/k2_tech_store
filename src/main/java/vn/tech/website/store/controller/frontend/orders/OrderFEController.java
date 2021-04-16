@@ -50,6 +50,8 @@ public class OrderFEController extends BaseFEController {
     private ReceiveNotificationRepository receiveNotificationRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private ProductHighLightRepository productHighLightRepository;
 
     private PaginationController<OrdersDto> pagination;
     private Map<String, OrdersDetailDto> productCartMap;
@@ -116,6 +118,7 @@ public class OrderFEController extends BaseFEController {
                     + (accountDto.getProvinceName() == null ? "" : accountDto.getProvinceName());
             ordersDto.setAddress(address);
             ordersDto.setPhone(accountDto.getPhone());
+            ordersDto.setEmail(accountDto.getEmail());
             ordersDto.setCustomerName(accountDto.getFullName());
         }
     }
@@ -197,19 +200,47 @@ public class OrderFEController extends BaseFEController {
             BeanUtils.copyProperties(dto.getProductDto(), product);
             product.setQuantity(product.getQuantity() - dto.getQuantity());
             productRepository.save(product);
+
+            // update point for product
+            ProductHighLight productHighLight = productHighLightRepository.findLastRecord(dto.getProductId());
+            Integer monthDf = productHighLight.getDateAdd().getMonth();
+            Integer yearDf = productHighLight.getDateAdd().getYear();
+
+            Date now = new Date();
+            Integer monthNow = now.getMonth();
+            Integer yearNow = now.getYear();
+
+            if (yearNow > yearDf) {
+                ProductHighLight productHighLightNew = new ProductHighLight();
+                productHighLightNew.setProductId(dto.getProductId());
+                productHighLightNew.setDateAdd(now);
+                productHighLightNew.setPoint(1);
+                productHighLightRepository.save(productHighLightNew);
+            } else if (yearNow.equals(yearDf)) {
+                if (monthNow > monthDf) {
+                    ProductHighLight productHighLightNew = new ProductHighLight();
+                    productHighLightNew.setProductId(dto.getProductId());
+                    productHighLightNew.setDateAdd(now);
+                    productHighLightNew.setPoint(1);
+                    productHighLightRepository.save(productHighLightNew);
+                } else if (monthNow.equals(monthDf)) {
+                    productHighLight.setPoint(productHighLight.getPoint() + 1);
+                    productHighLightRepository.save(productHighLight);
+                }
+            }
         }
         session.removeAttribute("cartList");
 
         //send notification
         SendNotification sendNotification = new SendNotification();
-        sendNotification.setAccountId(orders.getAccountId() != null ? orders.getAccountId() : null);
+        sendNotification.setAccountId(orders.getAccountId());
         sendNotification.setContent("Có đơn hàng mới");
         sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
         sendNotification.setCreateDate(new Date());
         sendNotification.setUpdateDate(new Date());
         sendNotificationRepository.save(sendNotification);
         //receive notification
-        Account accountAdmin = accountRepository.findAccountByUserNameAndRoleId("admin",DbConstant.ROLE_ID_ADMIN);
+        Account accountAdmin = accountRepository.findAccountByUserNameAndRoleId("admin", DbConstant.ROLE_ID_ADMIN);
         ReceiveNotification receiveNotification = new ReceiveNotification();
         receiveNotification.setAccountId(accountAdmin.getAccountId());
         receiveNotification.setSendNotificationId(sendNotification.getSendNotificationId());
