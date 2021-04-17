@@ -23,7 +23,7 @@ public class NotificationFEController extends BaseFEController {
     @Autowired
     private ReceiveNotificationRepository receiveNotificationRepository;
 
-    private List<ReceiveNotificationDto> notificationDtoList;
+    private List<ReceiveNotificationDto> receiveNotificationDtoList;
     private NotificationSearchDto searchDto;
     private Long countRecord;
     private String notificationJson;
@@ -40,11 +40,11 @@ public class NotificationFEController extends BaseFEController {
         searchDto.setAccountId(getAuthorizationFEController().getAccountDto().getAccountId());
         searchDto.setPageSize(Constant.NOTIFICATION_PAGE_SIZE);
         // check: false -> normal, true -> socket
-        notificationDtoList = receiveNotificationRepository.search(searchDto);
-        notificationLastId = !notificationDtoList.isEmpty() ? notificationDtoList.get(notificationDtoList.size() - 1).getReceiveNotificationId() : null;
+        receiveNotificationDtoList = receiveNotificationRepository.search(searchDto);
+        notificationLastId = !receiveNotificationDtoList.isEmpty() ? receiveNotificationDtoList.get(receiveNotificationDtoList.size() - 1).getReceiveNotificationId() : null;
         //searchDto.setCheck(false);
         countRecord = receiveNotificationRepository.countRecordNotSeen(searchDto);
-        notificationJson = StringUtil.toJson(notificationDtoList);
+        notificationJson = StringUtil.toJson(receiveNotificationDtoList);
     }
 
     public void seenAllNotification() {

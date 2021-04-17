@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ReceiveReceiveNotificationRepositoryImpl implements ReceiveNotificationRepositoryCustom {
+public class ReceiveNotificationRepositoryImpl implements ReceiveNotificationRepositoryCustom {
     @PersistenceContext
     private EntityManager entityManager;
 
