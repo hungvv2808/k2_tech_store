@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.tech.website.store.model.ReceiveNotification;
 
 public interface ReceiveNotificationRepository extends CrudRepository<ReceiveNotification, Long>, ReceiveNotificationRepositoryCustom {
-    @Transactional
-    @Modifying
-    @Query("UPDATE ReceiveNotification r SET r.statusBell = :statusBell WHERE r.accountId = :accountId")
-    void changeStatusBell(@Param("accountId") Long accountId, @Param("statusBell") boolean statusBell);
+//    @Transactional
+//    @Modifying
+//    @Query("UPDATE ReceiveNotification r SET r.statusBell = :statusBell WHERE r.accountId = :accountId")
+//    void changeStatusBell(@Param("accountId") Long accountId, @Param("statusBell") boolean statusBell);
 }

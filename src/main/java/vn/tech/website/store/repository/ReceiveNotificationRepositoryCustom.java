@@ -6,8 +6,7 @@ import vn.tech.website.store.dto.ReceiveNotificationDto;
 import java.util.List;
 
 public interface ReceiveNotificationRepositoryCustom {
-    List<ReceiveNotificationDto> search(NotificationSearchDto searchDto);
-
-    Long countRecordNotSeen(NotificationSearchDto searchDto);
-
+//    List<ReceiveNotificationDto> search(NotificationSearchDto searchDto);
+//
+//    Long countRecordNotSeen(NotificationSearchDto searchDto);
 }

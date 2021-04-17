@@ -36,20 +36,20 @@ public class NotificationFEController extends BaseFEController {
     }
 
     public void resetAll() {
-        searchDto = new NotificationSearchDto();
-        searchDto.setAccountId(getAuthorizationFEController().getAccountDto().getAccountId());
-        searchDto.setPageSize(Constant.NOTIFICATION_PAGE_SIZE);
-        // check: false -> normal, true -> socket
-        notificationDtoList = receiveNotificationRepository.search(searchDto);
-        notificationLastId = !notificationDtoList.isEmpty() ? notificationDtoList.get(notificationDtoList.size() - 1).getReceiveNotificationId() : null;
-        //searchDto.setCheck(false);
-        countRecord = receiveNotificationRepository.countRecordNotSeen(searchDto);
-        notificationJson = StringUtil.toJson(notificationDtoList);
+//        searchDto = new NotificationSearchDto();
+//        searchDto.setAccountId(getAuthorizationFEController().getAccountDto().getAccountId());
+//        searchDto.setPageSize(Constant.NOTIFICATION_PAGE_SIZE);
+//        // check: false -> normal, true -> socket
+//        notificationDtoList = receiveNotificationRepository.search(searchDto);
+//        notificationLastId = !notificationDtoList.isEmpty() ? notificationDtoList.get(notificationDtoList.size() - 1).getReceiveNotificationId() : null;
+//        //searchDto.setCheck(false);
+//        countRecord = receiveNotificationRepository.countRecordNotSeen(searchDto);
+//        notificationJson = StringUtil.toJson(notificationDtoList);
     }
 
     public void seenAllNotification() {
-        receiveNotificationRepository.changeStatusBell(getAuthorizationFEController().getAccountDto().getAccountId(), DbConstant.RNOTIFICATION_STATUS_BELL_SEEN);
-        resetAll();
+//        receiveNotificationRepository.changeStatusBell(getAuthorizationFEController().getAccountDto().getAccountId(), DbConstant.RNOTIFICATION_STATUS_BELL_SEEN);
+//        resetAll();
     }
 
     @Override
