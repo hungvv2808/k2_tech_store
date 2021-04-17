@@ -16,6 +16,12 @@
     </ui:define>
 
     <ui:define name="content">
+        <div class="card">
+            <p:lineChart model="#{dashboardController.lineModel}" style="width: 100%; height: 500px"/>
+        </div>
+        <div class="card">
+            <p:barChart model="#{dashboardController.barModel}" style="width: 100%; height: 500px"/>
+        </div>
     </ui:define>
 
 </ui:composition>
