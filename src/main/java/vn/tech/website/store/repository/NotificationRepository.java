@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import vn.tech.website.store.model.ReceiveNotification;
 
-public interface ReceiveNotificationRepository extends CrudRepository<ReceiveNotification,Long>,ReceiveNotificationRepositoryCustom {
+public interface NotificationRepository extends CrudRepository<ReceiveNotification,Long>, NotificationRepositoryCustom {
     @Transactional
     @Modifying
     @Query("UPDATE ReceiveNotification r SET r.statusBell = :statusBell WHERE r.accountId = :accountId")

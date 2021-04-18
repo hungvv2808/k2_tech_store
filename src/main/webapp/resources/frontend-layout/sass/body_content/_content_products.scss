@@ -105,7 +105,7 @@
     &__img {
       width: 200px;
       height: 250px;
-      object-fit: contain;
+      object-fit: cover;
       border-radius: 1rem;
     }
 
@@ -194,10 +194,11 @@
 
       .option-img {
         .main-img {
-          width: 250px;
+          width: 350px;
           height: 350px;
           object-fit: contain;
-          margin: 2rem 4rem 3rem 4rem;
+          margin: 3rem;
+          border-radius: 1rem;
         }
 
         .child-img {

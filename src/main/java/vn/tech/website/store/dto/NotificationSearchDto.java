@@ -12,5 +12,6 @@ import lombok.Setter;
 public class NotificationSearchDto extends BaseSearchDto {
     private Long accountId;
     private Long receiveNotificationLastId;
+    private boolean check;
     private Long receiveNotificationId;
 }

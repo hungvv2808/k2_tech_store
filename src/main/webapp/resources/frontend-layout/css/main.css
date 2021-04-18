@@ -71,6 +71,9 @@
   color: #ffffff;
   border-radius: 0.5rem;
 }
+.navbar .collapse .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item:hover i {
+  color: #ffffff;
+}
 .navbar .collapse .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item i {
   padding-right: 0.5rem;
 }
@@ -743,7 +746,7 @@
 .content-products .wireless-products__img {
   width: 200px;
   height: 250px;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 1rem;
 }
 .content-products .all-products p,
@@ -872,10 +875,11 @@
   padding: 1rem 0;
 }
 .content-products .detail-products__option .option-img .main-img {
-  width: 250px;
+  width: 350px;
   height: 350px;
   object-fit: contain;
-  margin: 2rem 4rem 3rem 4rem;
+  margin: 3rem;
+  border-radius: 1rem;
 }
 .content-products .detail-products__option .option-img .child-img {
   width: 70px;

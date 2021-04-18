@@ -42,23 +42,28 @@
                             <i class="far fa-newspaper"/>
                             <span>Tất cả tin tức</span>
                         </h:link>
-                        <h:link class="dropdown-item" outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_HOT}">
+                        <h:link class="dropdown-item"
+                                outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_HOT}">
                             <i class="fas fa-fire-alt"/>
                             <span>Tin tức nóng</span>
                         </h:link>
-                        <h:link class="dropdown-item" outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_HIGHLIGHT}">
+                        <h:link class="dropdown-item"
+                                outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_HIGHLIGHT}">
                             <i class="fas fa-highlighter"/>
                             <span>Tin tức nổi bật</span>
                         </h:link>
-                        <h:link class="dropdown-item" outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_TECH}">
+                        <h:link class="dropdown-item"
+                                outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_TECH}">
                             <i class="fas fa-microchip"/>
                             <span>Tin tức công nghệ</span>
                         </h:link>
-                        <h:link class="dropdown-item" outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_PRODUCT}">
+                        <h:link class="dropdown-item"
+                                outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_PRODUCT}">
                             <i class="far fa-plus-square"/>
                             <span>Tin tức sản phẩm mới</span>
                         </h:link>
-                        <h:link class="dropdown-item" outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_DISCOUNT}">
+                        <h:link class="dropdown-item"
+                                outcome="/frontend/news/list-news.xhtml?catid=#{Constant.CATE_NEWS_DISCOUNT}">
                             <i class="fas fa-percentage"/>
                             <span>Tin tức khuyến mãi</span>
                         </h:link>
@@ -75,19 +80,23 @@
                             <i class="fas fa-cart-plus"/>
                             <span>Tất cả sản phẩm</span>
                         </h:link>
-                        <h:link class="dropdown-item" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_PHONE}">
+                        <h:link class="dropdown-item"
+                                outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_PHONE}">
                             <i class="fas fa-mobile-alt"/>
                             <span>Danh sách điện thoại</span>
                         </h:link>
-                        <h:link class="dropdown-item" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_LAPTOP}">
+                        <h:link class="dropdown-item"
+                                outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_LAPTOP}">
                             <i class="fas fa-laptop"/>
                             <span>Danh sách máy tính</span>
                         </h:link>
-                        <h:link class="dropdown-item" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_WATCH}">
+                        <h:link class="dropdown-item"
+                                outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_WATCH}">
                             <i class="fas fa-clock"/>
                             <span>Danh sách đồng hồ</span>
                         </h:link>
-                        <h:link class="dropdown-item" outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_HEADPHONE}">
+                        <h:link class="dropdown-item"
+                                outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_HEADPHONE}">
                             <i class="fas fa-headphones-alt"/>
                             <span>Danh sách tai nghe</span>
                         </h:link>
@@ -104,7 +113,8 @@
                             <i class="fas fa-cart-arrow-down"/>
                             <span>Giỏ hàng</span>
                         </h:link>
-                        <h:link class="dropdown-item" outcome="/frontend/order/my-orders.xhtml" rendered="#{authorizationFEController.hasLogged()}">
+                        <h:link class="dropdown-item" outcome="/frontend/order/my-orders.xhtml"
+                                rendered="#{authorizationFEController.hasLogged()}">
                             <i class="fas fa-wallet"/>
                             <span>Hoá đơn</span>
                         </h:link>
@@ -136,7 +146,8 @@
                                 <span>Thông tin cá nhân</span>
                             </a>
                             <h:form>
-                                <h:commandLink styleClass="dropdown-item" onclick="logout();" actionListener="#{authorizationFEController.logout}">
+                                <h:commandLink styleClass="dropdown-item" onclick="logout();"
+                                               actionListener="#{authorizationFEController.logout}">
                                     <i class="fas fa-sign-out-alt"/>
                                     <span>Đăng xuất</span>
                                 </h:commandLink>
@@ -144,33 +155,19 @@
                         </div>
                     </li>
                     <li class="nav-item nav-item__last-child dropdown">
-                        <div>
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarNotis" role="button"
-                           data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            <div class="noti">
-                                <i class="far fa-bell fa-lg noti__bell"/>
-                                <span class="noti__count">100+</span>
-                            </div>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarNotis">
-                            <a class="dropdown-item" href="#">
-                                <span>Bạn có thông báo mới từ Admin với nội dung: "Alo alo admin on the mic. Mic check mic check"</span>
-                                <br/>
-                                <i>7 giờ trước</i>
-                            </a>
-                        </div>
-                        </div>
+                        <ui:include src="notification.xhtml" />
                     </li>
                 </h:panelGroup>
             </ul>
             <form class="form-inline">
                 <i class="fas fa-search fa-sm search-function" onclick="searchClick(true);"/>
                 <div class="search-function__input">
-                    <p:inputText id="txtSearch" class="form-control mr-sm-2 nav-search" type="search" placeholder="Tìm kiếm"
+                    <p:inputText id="txtSearch" class="form-control mr-sm-2 nav-search" type="search"
+                                 placeholder="Tìm kiếm"
                                  aria-label="Tìm kiếm" value="#{productFEController.searchDto.keyword}"
                                  onkeyup="searchEnter(e);"/>
-                    <p:commandButton id="btnSearch" actionListener="#{productFEController.initData}" style="display: none"/>
+                    <p:commandButton id="btnSearch" actionListener="#{productFEController.initData}"
+                                     style="display: none"/>
                     <i class="fas fa-times fa-sm search-cancel" onclick="searchClick(false);"/>
                 </div>
             </form>

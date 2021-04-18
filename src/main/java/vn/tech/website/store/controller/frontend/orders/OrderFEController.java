@@ -47,7 +47,7 @@ public class OrderFEController extends BaseFEController {
     @Autowired
     private SendNotificationRepository sendNotificationRepository;
     @Autowired
-    private ReceiveNotificationRepository receiveNotificationRepository;
+    private NotificationRepository notificationRepository;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
@@ -234,21 +234,30 @@ public class OrderFEController extends BaseFEController {
         //send notification
         SendNotification sendNotification = new SendNotification();
         sendNotification.setAccountId(orders.getAccountId());
-        sendNotification.setContent("Có đơn hàng mới");
+        String customerName = getAuthorizationFEController().hasLogged() ? getAuthorizationFEController().getAccountDto().getFullName() : ordersDto.getCustomerName();
+        sendNotification.setContent("Bạn nhận được một đơn hàng mới từ khách hàng \"" + customerName + "\" với mã đơn hàng: \"" + ordersSave.getCode() + "\". Kiểm tra ngay");
         sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
         sendNotification.setCreateDate(new Date());
         sendNotification.setUpdateDate(new Date());
+        if (getAuthorizationFEController().hasLogged()) {
+            sendNotification.setCreateBy(getAuthorizationFEController().getAccountDto().getAccountId());
+            sendNotification.setUpdateBy(getAuthorizationFEController().getAccountDto().getAccountId());
+        }
         sendNotificationRepository.save(sendNotification);
         //receive notification
         Account accountAdmin = accountRepository.findAccountByUserNameAndRoleId("admin", DbConstant.ROLE_ID_ADMIN);
         ReceiveNotification receiveNotification = new ReceiveNotification();
         receiveNotification.setAccountId(accountAdmin.getAccountId());
         receiveNotification.setSendNotificationId(sendNotification.getSendNotificationId());
-        receiveNotification.setStatus(DbConstant.RNOTIFICATION_STATUS_NOT_SEEN);
-        receiveNotification.setStatusBell(DbConstant.RNOTIFICATION_STATUS_BELL_NOT_SEEN);
+        receiveNotification.setStatus(DbConstant.NOTIFICATION_STATUS_NOT_SEEN);
+        receiveNotification.setStatusBell(DbConstant.NOTIFICATION_STATUS_BELL_NOT_SEEN);
         receiveNotification.setCreateDate(new Date());
         receiveNotification.setUpdateDate(new Date());
-        receiveNotificationRepository.save(receiveNotification);
+        if (getAuthorizationFEController().hasLogged()) {
+            receiveNotification.setCreateBy(getAuthorizationFEController().getAccountDto().getAccountId());
+            receiveNotification.setUpdateBy(getAuthorizationFEController().getAccountDto().getAccountId());
+        }
+        notificationRepository.save(receiveNotification);
 
         setSuccessForm("Đặt hàng thành công, vui lòng chờ thông báo từ cửa hàng.");
         FacesUtil.redirect("/frontend/index.xhtml");

@@ -81,6 +81,9 @@
                                 background-color: $primary-color;
                                 color: $background-header-default;
                                 border-radius: 0.5rem;
+                                i {
+                                    color: $third-color;
+                                }
                             }
                             i {
                                 padding-right: 0.5rem;

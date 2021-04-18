@@ -146,9 +146,9 @@ public class DbConstant {
     public static final int SNOTIFICATION_STATUS_INACTIVE = 0;
     public static final int SNOTIFICATION_STATUS_ACTIVE = 1;
 
-    //receive notification
-    public static final boolean RNOTIFICATION_STATUS_NOT_SEEN = false;
-    public static final boolean RNOTIFICATION_STATUS_SEEN = true;
-    public static final boolean RNOTIFICATION_STATUS_BELL_NOT_SEEN = false;
-    public static final boolean RNOTIFICATION_STATUS_BELL_SEEN = true;
+    // notification
+    public static final boolean NOTIFICATION_STATUS_NOT_SEEN = false;
+    public static final boolean NOTIFICATION_STATUS_SEEN = true;
+    public static final boolean NOTIFICATION_STATUS_BELL_NOT_SEEN = false;
+    public static final boolean NOTIFICATION_STATUS_BELL_SEEN = true;
 }

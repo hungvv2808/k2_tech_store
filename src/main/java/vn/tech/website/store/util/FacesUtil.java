@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author anhlt
@@ -173,6 +174,15 @@ public class FacesUtil {
      */
     public static String getContextPath() {
         return FacesUtil.getServletContext().getContextPath();
+    }
+
+    /**
+     * Get servlet context based on current instance of faces context
+     *
+     * @return the servlet context
+     */
+    public static Map<String, String> getRequestParameterMap() {
+        return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
     }
 
     public static void resetDataTable(String formId, String dataTableId) {

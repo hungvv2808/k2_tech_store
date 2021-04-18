@@ -47,7 +47,7 @@ public class OrdersController extends BaseController {
     @Autowired
     private SendNotificationRepository sendNotificationRepository;
     @Autowired
-    private ReceiveNotificationRepository receiveNotificationRepository;
+    private NotificationRepository notificationRepository;
 
     private LazyDataModel<OrdersDto> lazyDataModel;
     private OrdersDto ordersDto;
@@ -286,7 +286,7 @@ public class OrdersController extends BaseController {
             if (orders.getAccountId() != null) {
                 SendNotification sendNotification = new SendNotification();
                 sendNotification.setAccountId(authorizationController.getAccountDto().getAccountId());
-                sendNotification.setContent("Đơn hàng của bạn đã được duyệt");
+                sendNotification.setContent("Đơn hàng có mã: \"" + orders.getCode() + "\" của bạn đã được chuẩn bị xong, vui lòng chờ đến khi đơn hàng được vận chuyển đến bạn.");
                 sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
                 sendNotification.setCreateDate(new Date());
                 sendNotification.setUpdateDate(new Date());
@@ -296,11 +296,11 @@ public class OrdersController extends BaseController {
                 ReceiveNotification receiveNotification = new ReceiveNotification();
                 receiveNotification.setAccountId(orders.getAccountId());
                 receiveNotification.setSendNotificationId(sendNotification.getSendNotificationId());
-                receiveNotification.setStatus(DbConstant.RNOTIFICATION_STATUS_NOT_SEEN);
-                receiveNotification.setStatusBell(DbConstant.RNOTIFICATION_STATUS_BELL_NOT_SEEN);
+                receiveNotification.setStatus(DbConstant.NOTIFICATION_STATUS_NOT_SEEN);
+                receiveNotification.setStatusBell(DbConstant.NOTIFICATION_STATUS_BELL_NOT_SEEN);
                 receiveNotification.setCreateDate(new Date());
                 receiveNotification.setUpdateDate(new Date());
-                receiveNotificationRepository.save(receiveNotification);
+                notificationRepository.save(receiveNotification);
             } else {
                 EmailUtil.getInstance().sendNotificationApprovedOrder(orders.getEmail(), orders.getCustomerName(), orders.getCode(), orders.getCreateDate());
             }
