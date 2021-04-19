@@ -383,3 +383,15 @@ create table send_notification
     create_by            int          null,
     create_date          datetime     null
 );
+create table shipping
+(
+    shipping_id int auto_increment,
+    name        nvarchar(200) null,
+    code        varchar(100)  null,
+    price       int           null,
+    detail      text          null,
+    path        varchar(200)  null,
+    status      int(1)        null,
+    constraint shipping_pk
+        primary key (shipping_id)
+);

@@ -54,7 +54,7 @@ public class NewsController extends BaseController {
 
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
-            //init();
+            init();
             resetAll();
         }
     }
@@ -175,6 +175,4 @@ public class NewsController extends BaseController {
     protected EScope getMenuId() {
         return null;
     }
-
-
 }
