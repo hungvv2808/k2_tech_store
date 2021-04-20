@@ -20,13 +20,12 @@ import vn.tech.website.store.util.FacesUtil;
 import vn.tech.website.store.util.StringUtil;
 
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Named
 @Scope(value = "session")
@@ -52,13 +51,22 @@ public class OrderFEController extends BaseFEController {
     private AccountRepository accountRepository;
     @Autowired
     private ProductHighLightRepository productHighLightRepository;
+    @Autowired
+    private ShippingRepository shippingRepository;
 
     private PaginationController<OrdersDto> pagination;
     private Map<String, OrdersDetailDto> productCartMap;
+    private List<Shipping> shippingList;
+    private List<SelectItem> shippingItem;
+    private Map<Long, Shipping> shippingMap;
     private AccountDto accountDto;
     private OrdersDto ordersDto;
 
     private boolean info;
+    private boolean checkShipping;
+    private Long shippingId;
+    private String pathShipping;
+    private String infoShipping;
     private Long totalQty = 0L;
     private Double totalMoney = 0D;
     private HttpSession session;
@@ -80,6 +88,16 @@ public class OrderFEController extends BaseFEController {
         totalMoney = 0D;
         accountDto = new AccountDto();
         ordersDto = new OrdersDto();
+
+        shippingId = -1L;
+        checkShipping = false;
+        shippingList = shippingRepository.findAllShipping();
+        shippingItem = new ArrayList<>();
+        shippingMap = new HashMap<>();
+        for (Shipping s : shippingList) {
+            shippingItem.add(new SelectItem(s.getShippingId(), s.getName()));
+            shippingMap.put(s.getShippingId(), s);
+        }
 
         session = request.getSession(false);
         if (session.getAttribute("cartList") == null) {
@@ -107,7 +125,6 @@ public class OrderFEController extends BaseFEController {
         ordersDto.setCode(StringUtil.createCode(null, Constant.ACRONYM_ORDER, countCode));
         ordersDto.setCountCode(StringUtil.createCountCode(ordersDto.getCode(), Constant.ACRONYM_ORDER));
         ordersDto.setTotalAmount(totalMoney);
-        ordersDto.setShipping(Constant.SHIPPING);
         ordersDto.setStatus(DbConstant.ORDER_STATUS_NOT_APPROVED);
 
         if (accountDto != null) {
@@ -170,6 +187,10 @@ public class OrderFEController extends BaseFEController {
         }
         if (StringUtils.isBlank(ordersDto.getAddress())) {
             setErrorForm("Bạn vui lòng nhập địa chỉ nhận hàng");
+            return false;
+        }
+        if (ordersDto.getShipping() == null) {
+            setErrorForm("Bạn vui chọn đơn vị giao hàng");
             return false;
         }
         return true;
@@ -261,6 +282,22 @@ public class OrderFEController extends BaseFEController {
 
         setSuccessForm("Đặt hàng thành công, vui lòng chờ thông báo từ cửa hàng.");
         FacesUtil.redirect("/frontend/index.xhtml");
+    }
+
+    public void onChangeShipping() {
+        if (shippingId == -1) {
+            checkShipping = false;
+            ordersDto.setShipping(null);
+            ordersDto.setTotalAmount(totalMoney);
+        } else {
+            checkShipping = true;
+            Shipping shipping = shippingMap.get(shippingId);
+            pathShipping = shipping.getPath();
+            infoShipping = shipping.getDetail();
+            ordersDto.setShipping(Double.parseDouble(shipping.getPrice().toString()));
+            ordersDto.setTotalAmount(totalMoney + ordersDto.getShipping());
+        }
+        FacesUtil.updateView("orderList");
     }
 
     @Override

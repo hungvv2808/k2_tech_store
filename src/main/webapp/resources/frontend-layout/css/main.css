@@ -1356,6 +1356,18 @@
 .content-orders .orders-infor__info .form-group:last-child {
   margin-bottom: 1rem;
 }
+.content-orders .orders-infor__info .form-group .order-shipimg {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  margin-top: 1rem;
+  border-radius: 1rem;
+}
+.content-orders .orders-infor__info .form-group .order-shipinfo {
+  padding-top: 1rem;
+  word-break: break-word;
+  width: 100%;
+}
 .content-orders .orders-infor .order-product__header {
   background-color: #3aaf29;
   color: #ffffff;
