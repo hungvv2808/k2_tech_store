@@ -8,12 +8,6 @@
         <f:event type="preRenderView" listener="#{notificationController.initData}"/>
     </f:metadata>
 
-    <style>
-        .main-noti-#{DbConstant.NOTIFICATION_STATUS_NOT_SEEN} {
-            font-weight: bold;
-        }
-    </style>
-
     <h:form prependId="false" id="notificationForm">
         <p:remoteCommand name="seenAllNoti" global="false" update="count-record"
                          actionListener="#{notificationController.seenAllNotification}"/>

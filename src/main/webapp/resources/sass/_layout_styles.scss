@@ -1,8 +1,8 @@
 /* Add your customizations of layout here */
 #bell_menu {
-  width: 310px;
+  width: 400px;
   border: 0;
-  max-height: 720px;
+  max-height: 650px;
   overflow-y: auto;
   background-color: #ffffffee;
   border-radius: 1rem;
@@ -34,36 +34,45 @@
         }
 
         &.ui-state-hover {
+          .ui-menuitem-link {
+            .ui-menuitem-icon {
+              color: $primaryTextColor;
+            }
+          }
           .ui-menuitem-text {
             .target {
-              span {
+              span, b, i {
                 color: $primaryTextColor !important;
                 font-weight: bold;
               }
             }
           }
+
         }
 
         .ui-menuitem-link {
-          padding: 10px 20px;
+          padding: 1rem;
           border-radius: 5px;
           position: relative;
 
           .count-time {
-            font-size: 11px;
+            font-size: 14px;
           }
 
           .ui-menuitem-icon {
             position: absolute;
             right: 0;
             top: 40%;
-            color: $primaryTextColor;
+            color: $primaryColor;
           }
 
           .ui-menuitem-text {
             .target {
               span {
                 color: #0d86e3;
+              }
+              b, i {
+                color: $primaryColor;
               }
             }
           }

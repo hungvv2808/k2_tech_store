@@ -24,13 +24,24 @@
     </ui:define>
 
     <ui:define name="breadcrumb">
-        <p:menuitem value="Tài khoản của tôi" outcome="/account/my-account.xhtml"/>
+        <li>/</li>
+        <li>
+            <p:link outcome="/admin/my-account">Tài khoản của tôi</p:link>
+        </li>
     </ui:define>
 
     <ui:define name="content">
         <style>
-            .layout-content-container {
-                background-color: #EEF2F6;
+            .ui-commandlink {
+                position: absolute;
+                left: 59%;
+                top: 16%;
+                padding: 1rem;
+                color: red;
+                font-size: 16px;
+            }
+            .image-file {
+                margin-left: 1rem;
             }
         </style>
 

@@ -200,8 +200,8 @@ body {
   background-color: #00000000;
   width: 70px;
   height: 50px;
-  border-radius: 0;
   outline: none !important;
+  border: 2px solid #00ff01;
 }
 .layout-wrapper .topbar .panel-notification button.ui-state-focus {
   outline: 0 none;
@@ -2664,9 +2664,9 @@ h2 {
 }
 /* Add your customizations of layout here */
 #bell_menu {
-  width: 310px;
+  width: 400px;
   border: 0;
-  max-height: 720px;
+  max-height: 650px;
   overflow-y: auto;
   background-color: #ffffffee;
   border-radius: 1rem;
@@ -2690,24 +2690,30 @@ h2 {
 #bell_menu.ui-menu .ui-menu-list .ui-menuitem:last-child {
   border-bottom: 0;
 }
-#bell_menu.ui-menu .ui-menu-list .ui-menuitem.ui-state-hover .ui-menuitem-text .target span {
+#bell_menu.ui-menu .ui-menu-list .ui-menuitem.ui-state-hover .ui-menuitem-link .ui-menuitem-icon {
+  color: #ffffff;
+}
+#bell_menu.ui-menu .ui-menu-list .ui-menuitem.ui-state-hover .ui-menuitem-text .target span, #bell_menu.ui-menu .ui-menu-list .ui-menuitem.ui-state-hover .ui-menuitem-text .target b, #bell_menu.ui-menu .ui-menu-list .ui-menuitem.ui-state-hover .ui-menuitem-text .target i {
   color: #ffffff !important;
   font-weight: bold;
 }
 #bell_menu.ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link {
-  padding: 10px 20px;
+  padding: 1rem;
   border-radius: 5px;
   position: relative;
 }
 #bell_menu.ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .count-time {
-  font-size: 11px;
+  font-size: 14px;
 }
 #bell_menu.ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-icon {
   position: absolute;
   right: 0;
   top: 40%;
-  color: #ffffff;
+  color: #6ebc3b;
 }
 #bell_menu.ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-text .target span {
   color: #0d86e3;
+}
+#bell_menu.ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-text .target b, #bell_menu.ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-text .target i {
+  color: #6ebc3b;
 }
