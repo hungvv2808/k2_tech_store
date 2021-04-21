@@ -47,7 +47,9 @@
                         "<span>" + e.send_content + "</span>" +
                         "<br/>" +
                         "<i>" + e.date_before_now + "</i>" +
-                        "</a>"
+                        (!e.status ? "<i class='seen fas fa-circle'/>" : '') +
+                        "</a>" +
+                        "<p style='border-bottom: 1px solid red; margin: 0 0 0 2rem; max-width: 85%;'></p>"
                     );
                 });
                 let bellMenu = $('#bell_menu');

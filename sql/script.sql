@@ -395,3 +395,30 @@ create table shipping
     constraint shipping_pk
         primary key (shipping_id)
 );
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Alo alo admin on the mic. Mic check mic check</i>' where send_notification_id = 1;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Parker dep chai</i>' where send_notification_id = 1;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Tien oc cho</i>' where send_notification_id = 2;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Testing ...</i>' where send_notification_id = 3;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dit cu thang tien ngu</i>' where send_notification_id = 4;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Lai la Parker dep chai</i>' where send_notification_id = 5;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Check it check it</i>' where send_notification_id = 6;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Abc ...</i>' where send_notification_id = 7;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Xin vai lon .</i>' where send_notification_id = 8;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 9;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Alo alo admin on the mic. Mic check mic check</i>' where send_notification_id = 10;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Parker dep chai</i>' where send_notification_id = 11;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Tien oc cho</i>' where send_notification_id = 12;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Testing ...</i>' where send_notification_id = 13;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dit cu thang tien ngu</i>' where send_notification_id = 14;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Lai la Parker dep chai</i>' where send_notification_id = 15;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Check it check it</i>' where send_notification_id = 16;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Abc ...</i>' where send_notification_id = 17;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Xin vai lon.</i>' where send_notification_id = 18;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 19;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Lai la Parker dep chai</i>' where send_notification_id = 20;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Check it check it</i>' where send_notification_id = 21;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Abc ...</i>' where send_notification_id = 22;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Xin vai lon.</i>' where send_notification_id = 23;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 24;
+update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 25;
+

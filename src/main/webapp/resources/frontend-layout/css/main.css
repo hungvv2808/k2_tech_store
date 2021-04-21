@@ -71,7 +71,10 @@
   color: #ffffff;
   border-radius: 0.5rem;
 }
-.navbar .collapse .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item:hover i {
+.navbar .collapse .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item:hover .seen {
+  color: #ffffff;
+}
+.navbar .collapse .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item:hover span, .navbar .collapse .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item:hover b, .navbar .collapse .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item:hover i {
   color: #ffffff;
 }
 .navbar .collapse .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item i {
@@ -125,8 +128,22 @@
   display: block;
   padding: 1rem 2rem;
 }
+.navbar .collapse .navbar-nav .nav-item.nav-item__last-child .dropdown-menu .dropdown-item .seen {
+  position: relative;
+  top: -1.5rem;
+  float: right;
+  margin-right: -1.5rem;
+  color: #3aaf29;
+}
 .navbar .collapse .navbar-nav .nav-item.nav-item__last-child .dropdown-menu .dropdown-item span {
   white-space: normal;
+}
+.navbar .collapse .navbar-nav .nav-item.nav-item__last-child .dropdown-menu .dropdown-item span b {
+  color: #F42F4C;
+}
+.navbar .collapse .navbar-nav .nav-item.nav-item__last-child .dropdown-menu .dropdown-item span i {
+  color: #F42F4C;
+  font-size: 16px;
 }
 .navbar .collapse .navbar-nav .nav-item.nav-item__last-child .dropdown-menu .dropdown-item i {
   font-size: 15px;

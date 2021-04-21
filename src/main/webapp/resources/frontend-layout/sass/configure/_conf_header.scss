@@ -81,7 +81,10 @@
                                 background-color: $primary-color;
                                 color: $background-header-default;
                                 border-radius: 0.5rem;
-                                i {
+                                .seen {
+                                    color: $third-color;
+                                }
+                                span, b, i {
                                     color: $third-color;
                                 }
                             }
@@ -144,8 +147,22 @@
                         .dropdown-item {
                             display: block;
                             padding: 1rem 2rem;
+                            .seen {
+                                position: relative;
+                                top: -1.5rem;
+                                float: right;
+                                margin-right: -1.5rem;
+                                color: $primary-color;
+                            }
                             span {
                                 white-space: normal;
+                                b {
+                                    color: $red-color;
+                                }
+                                i {
+                                    color: $red-color;
+                                    font-size: 16px;
+                                }
                             }
                             i {
                                 font-size: 15px;
