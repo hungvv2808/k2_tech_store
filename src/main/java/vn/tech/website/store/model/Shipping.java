@@ -26,7 +26,7 @@ public class Shipping {
     private String code;
 
     @Column(name = "price")
-    private Integer price;
+    private Double price;
 
     @Column(name = "detail")
     private String detail;

@@ -21,10 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Named
 @Scope(value = "session")
@@ -48,19 +45,26 @@ public class OrdersController extends BaseController {
     private SendNotificationRepository sendNotificationRepository;
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private ShippingRepository shippingRepository;
+    @Autowired
+    private ProductHighLightRepository productHighLightRepository;
 
     private LazyDataModel<OrdersDto> lazyDataModel;
     private OrdersDto ordersDto;
     private OrdersSearchDto searchDto;
     private int orderType;
     private List<OrdersDetailDto> ordersDetailDtoList;
-    private List<OrdersDetailDto> ordersDetailDtoListBak;
     private List<SelectItem> productList;
     private List<SelectItem> accountList;
-    private OrdersDto ordersDtoBak;
-    private OrdersDetailDto ordersDetailDto;
-    private OrdersDetailDto ordersDetailDtoBak;
     private int paymentMethod;
+    private String pathShipping;
+    private String infoShipping;
+    private Long totalQty = 0L;
+    private Double totalMoney = 0D;
+    private List<SelectItem> shippingItem;
+    private Map<Long, Shipping> shippingMap;
+    private boolean isReadonly;
 
     public void initDataOrder() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
@@ -82,16 +86,26 @@ public class OrdersController extends BaseController {
         ordersDto = new OrdersDto();
         searchDto = new OrdersSearchDto();
         productList = new ArrayList<>();
+        isReadonly = false;
         List<Product> products = productRepository.getAllExpertType(DbConstant.PRODUCT_TYPE_PARENT);
         for (Product obj : products) {
             productList.add(new SelectItem(obj.getProductId(), obj.getProductName()));
         }
         ordersDetailDtoList = new ArrayList<>();
         accountList = new ArrayList<>();
-        List<Account> accounts = accountRepository.findAccountByRoleId(3);
+        List<Account> accounts = accountRepository.findAccountByRoleId(DbConstant.ROLE_ID_USER);
         for (Account obj : accounts) {
             accountList.add(new SelectItem(obj.getAccountId(), obj.getFullName()));
         }
+
+        List<Shipping> shippingList = shippingRepository.findAllShipping();
+        shippingItem = new ArrayList<>();
+        shippingMap = new HashMap<>();
+        for (Shipping s : shippingList) {
+            shippingItem.add(new SelectItem(s.getShippingId(), s.getName()));
+            shippingMap.put(s.getShippingId(), s);
+        }
+
         onSearch(orderType);
     }
 
@@ -132,6 +146,7 @@ public class OrdersController extends BaseController {
     }
 
     public void resetDialog() {
+        isReadonly = false;
         ordersDto = new OrdersDto();
         ordersDetailDtoList = new ArrayList<>();
     }
@@ -150,10 +165,13 @@ public class OrdersController extends BaseController {
         Double unitPrice = 0D;
         Float discount = 0F;
         if (ordersDetailDtoList.get(index).getProductId() != null) {
-            unitPrice = productRepository.getByProductId(ordersDetailDtoList.get(index).getProductId()).getPrice();
+            Product product = productRepository.getByProductId(ordersDetailDtoList.get(index).getProductId());
+            unitPrice = product.getPrice();
             ordersDetailDtoList.get(index).setUnitPrice(unitPrice);
-            discount = productRepository.getByProductId(ordersDetailDtoList.get(index).getProductId()).getDiscount() != null ? productRepository.getByProductId(ordersDetailDtoList.get(index).getProductId()).getDiscount() : 0;
+            discount = product.getDiscount() != null ? product.getDiscount() : 0;
             ordersDetailDtoList.get(index).setDiscount(discount);
+            Long maxQty = product.getQuantity();
+            ordersDetailDtoList.get(index).setMaxQuantity(maxQty);
             FacesUtil.updateView("dlForm");
         }
         if (ordersDetailDtoList.get(index).getQuantity() != null) {
@@ -195,6 +213,10 @@ public class OrdersController extends BaseController {
                 return false;
             }
         }
+        if (ordersDto.getShippingId() == null ||ordersDto.getShippingId() == -1){
+            FacesUtil.addErrorMessage("Bạn vui lòng chọn đơn vị vẫn chuyển");
+            return false;
+        }
         return true;
     }
 
@@ -212,10 +234,23 @@ public class OrdersController extends BaseController {
             orders.setCreateBy(authorizationController.getAccountDto().getAccountId());
             orders.setCreateDate(new Date());
         }
-        orders.setShipping(ordersDto.getShipping() != null ? ordersDto.getShipping() : 0);
+        orders.setShippingId(ordersDto.getShippingId());
+        orders.setShipping(ordersDto.getShipping());
         orders.setUpdateBy(authorizationController.getAccountDto().getAccountId());
         orders.setUpdateDate(new Date());
         orderRepository.save(orders);
+
+        //update Qty product when edit
+        if (ordersDto.getOrdersId() != null){
+            List<OrdersDetail> listToDelete = orderDetailRepository.getAllByOrdersId(ordersDto.getOrdersId());
+            for (OrdersDetail ordersDetail : listToDelete){
+                Product product = productRepository.getByProductId(ordersDetail.getProductId());
+                product.setQuantity(product.getQuantity() + ordersDetail.getQuantity());
+                productRepository.save(product);
+                orderDetailRepository.delete(ordersDetail);
+            }
+        }
+        //add orderDetail
         for (OrdersDetailDto dto : ordersDetailDtoList) {
             OrdersDetail ordersDetail = new OrdersDetail();
             ordersDetail.setOrdersId(orders.getOrdersId());
@@ -223,15 +258,51 @@ public class OrdersController extends BaseController {
             ordersDetail.setQuantity(dto.getQuantity());
             ordersDetail.setAmount(dto.getAmount());
             orderDetailRepository.save(ordersDetail);
+
+            // change quality product in stock
+            Product product = productRepository.getByProductId(dto.getProductId());
+            product.setQuantity(product.getQuantity() - dto.getQuantity());
+            productRepository.save(product);
+
+            // update point for product
+//            ProductHighLight productHighLight = productHighLightRepository.findLastRecord(dto.getProductId());
+//            Integer monthDf = productHighLight.getDateAdd().getMonth();
+//            Integer yearDf = productHighLight.getDateAdd().getYear();
+//
+//            Date now = new Date();
+//            Integer monthNow = now.getMonth();
+//            Integer yearNow = now.getYear();
+//
+//            if (yearNow > yearDf) {
+//                ProductHighLight productHighLightNew = new ProductHighLight();
+//                productHighLightNew.setProductId(dto.getProductId());
+//                productHighLightNew.setDateAdd(now);
+//                productHighLightNew.setPoint(1);
+//                productHighLightRepository.save(productHighLightNew);
+//            } else if (yearNow.equals(yearDf)) {
+//                if (monthNow > monthDf) {
+//                    ProductHighLight productHighLightNew = new ProductHighLight();
+//                    productHighLightNew.setProductId(dto.getProductId());
+//                    productHighLightNew.setDateAdd(now);
+//                    productHighLightNew.setPoint(1);
+//                    productHighLightRepository.save(productHighLightNew);
+//                } else if (monthNow.equals(monthDf)) {
+//                    productHighLight.setPoint(productHighLight.getPoint() + 1);
+//                    productHighLightRepository.save(productHighLight);
+//                }
+//            }
         }
+
         FacesUtil.addSuccessMessage("Lưu thành công.");
         FacesUtil.closeDialog("dialogInsertUpdate");
         onSearch(orderType);
     }
 
     public void onDeleteProduct(OrdersDetailDto ordersDetailDto) {
-        ordersDto.setTotalAmount(ordersDto.getTotalAmount() - ordersDetailDto.getAmount());
-        ordersDetailDtoList.remove(ordersDetailDto);
+        if (ordersDetailDto != null) {
+            ordersDto.setTotalAmount(ordersDto.getTotalAmount() - ordersDetailDto.getAmount());
+            ordersDetailDtoList.remove(ordersDetailDto);
+        }
         FacesUtil.updateView("dlForm");
     }
 
@@ -240,19 +311,16 @@ public class OrdersController extends BaseController {
     }
 
     public void onUpdate(OrdersDto resultDto) {
-        ordersDtoBak = new OrdersDto();
+        if (resultDto.getStatus() == DbConstant.ORDER_STATUS_NOT_APPROVED){
+            isReadonly = false;
+        } else {
+            isReadonly = true;
+        }
         ordersDetailDtoList = new ArrayList<>();
         ordersDto = new OrdersDto();
-        OrdersDetailDto ordersDetailDtoNew = new OrdersDetailDto();
         List<OrdersDetail> listOrdersDetails = orderDetailRepository.getAllByOrdersId(resultDto.getOrdersId());
-        ordersDetailDtoBak = new OrdersDetailDto();
-        BeanUtils.copyProperties(resultDto, ordersDtoBak);
         convertEntityToDto(listOrdersDetails);
-        BeanUtils.copyProperties(ordersDetailDtoNew, ordersDetailDtoBak);
-        ordersDetailDtoListBak = new ArrayList<>();
-        copyList(ordersDetailDtoList, ordersDetailDtoListBak);
         BeanUtils.copyProperties(resultDto, ordersDto);
-        ordersDetailDto = ordersDetailDtoNew;
     }
 
     private void convertEntityToDto(List<OrdersDetail> ordersDetails) {
@@ -264,14 +332,6 @@ public class OrdersController extends BaseController {
             dto.setUnitPrice(product.getPrice());
             dto.setDiscount(product.getDiscount());
             ordersDetailDtoList.add(dto);
-        }
-    }
-
-    private void copyList(List<OrdersDetailDto> fromList, List<OrdersDetailDto> toList) {
-        for (OrdersDetailDto dto : fromList) {
-            OrdersDetailDto obj = new OrdersDetailDto();
-            BeanUtils.copyProperties(dto, obj);
-            toList.add(obj);
         }
     }
 
@@ -328,9 +388,6 @@ public class OrdersController extends BaseController {
     }
 
     public void onChangeStatusToPaid(OrdersDto resultDto) {
-        if (paymentMethod == 2) {
-            return;
-        }
         Orders orders = orderRepository.getByOrdersId(resultDto.getOrdersId());
         orders.setStatus(DbConstant.ORDER_STATUS_PAID);
         String code = orders.getCode().replace(Constant.ACRONYM_ORDER, Constant.ACRONYM_BILL);
@@ -340,8 +397,8 @@ public class OrdersController extends BaseController {
         orderRepository.save(orders);
         Payments payments = new Payments();
         BeanUtils.copyProperties(orders, payments);
-        payments.setType(paymentMethod);
-        payments.setTotalAmount(orders.getTotalAmount() + ordersDto.getShipping());
+        payments.setType(0);
+        payments.setTotalAmount(resultDto.getAllTotalAmount());
         payments.setStatus(DbConstant.PAYMENT_STATUS_PAID);
         paymentsRepository.save(payments);
         FacesUtil.addSuccessMessage("Thanh toán thành công.");
@@ -349,9 +406,18 @@ public class OrdersController extends BaseController {
         onSearch(orderType);
     }
 
-    public void showChoosePaymentMethod(OrdersDto resultDto) {
-        paymentMethod = 2;
-        BeanUtils.copyProperties(resultDto, ordersDto);
+    public void onChangeShipping() {
+        if (ordersDto.getShippingId() == -1) {
+            ordersDto.setShipping(null);
+            ordersDto.setAllTotalAmount(ordersDto.getTotalAmount());
+        } else {
+            Shipping shipping = shippingMap.get(ordersDto.getShippingId());
+            pathShipping = shipping.getPath();
+            infoShipping = shipping.getDetail();
+            ordersDto.setShipping(Double.parseDouble(shipping.getPrice().toString()));
+            ordersDto.setAllTotalAmount(ordersDto.getTotalAmount() + ordersDto.getShipping());
+        }
+        FacesUtil.updateView("dlForm");
     }
 
     @Override

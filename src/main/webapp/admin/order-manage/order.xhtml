@@ -31,7 +31,7 @@
 
         <div class="ui-fluid">
             <p:dialog id="dlg" header="Thông tin đơn đặt hàng" widgetVar="dialogInsertUpdate" modal="true" width="1000">
-                <h:form id="dlForm">
+                <h:form id="dlForm" >
                     <p:scrollPanel mode="native" style="width: 100%; max-height: 400px; border: none">
                         <p:focus id="focus"/>
                         <p:panelGrid id="basicPanel1" columns="4"
@@ -41,7 +41,7 @@
                             <p:outputLabel value="Khách hàng:" for="customer" styleClass="requireLabel"/>
                             <p:selectOneMenu id="customer" filter="true" filterMatchMode="contains"
                                              autoWidth="true" dynamic="true" style="width: 100%"
-                                             effect="fade" maxlength="255"
+                                             effect="fade" maxlength="255" disabled="#{ordersController.readonly}"
                                              value="#{ordersController.ordersDto.accountId}">
                                 <f:selectItem itemLabel="Chọn khách hàng" itemValue=""/>
                                 <f:selectItems value="#{ordersController.accountList}"/>
@@ -51,7 +51,7 @@
 
                             <p:outputLabel value="Tên khách hàng:" for="customerName" styleClass="requireLabel"/>
                             <p:inputText id="customerName" placeholder="Nhập tên khách hàng"
-                                         value="#{ordersController.ordersDto.customerName}"
+                                         value="#{ordersController.ordersDto.customerName}" readonly="#{ordersController.readonly}"
                                          maxlength="200"/>
 
                             <p:outputLabel value="Mã đơn hàng:" for="code"/>
@@ -59,17 +59,17 @@
                                          value="#{ordersController.ordersDto.code}"/>
 
                             <p:outputLabel value="Số điện thoại:" for="phone" styleClass="requireLabel"/>
-                            <p:inputText id="phone" placeholder="Nhập số điện thoại"
+                            <p:inputText id="phone" placeholder="Nhập số điện thoại" readonly="#{ordersController.readonly}"
                                          value="#{ordersController.ordersDto.phone}"
                                          maxlength="200"/>
 
                             <p:outputLabel value="Ghi chú:" for="note"/>
-                            <p:inputText id="note" placeholder="Nhập ghi chú"
+                            <p:inputText id="note" placeholder="Nhập ghi chú" readonly="#{ordersController.readonly}"
                                          value="#{ordersController.ordersDto.note}"
                                          maxlength="200"/>
 
                             <p:outputLabel value="Địa chỉ:" for="address" styleClass="requireLabel"/>
-                            <p:inputText id="address" placeholder="Nhập địa chỉ"
+                            <p:inputText id="address" placeholder="Nhập địa chỉ" readonly="#{ordersController.readonly}"
                                          onchange="this.value = this.value.trim()"
                                          maxlength="100" value="#{ordersController.ordersDto.address}"/>
                         </p:panelGrid>
@@ -83,7 +83,7 @@
                                              columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
                                              layout="grid" style="margin:10px" styleClass="ui-panelgrid-blank">
                                     <p:outputLabel value="Sản phẩm: " for="product"/>
-                                    <p:selectOneMenu id="product" autoWidth="false" effect="fade"
+                                    <p:selectOneMenu id="product" autoWidth="false" effect="fade" disabled="#{ordersController.readonly}"
                                                      value="#{ordersDetailDto.productId}" required="true"
                                                      filterMatchMode="contains">
                                         <f:selectItem itemLabel="Chọn sản phẩm" itemValue=""/>
@@ -94,8 +94,8 @@
 
                                     <p:outputLabel value="Số lượng: " for="quantity"/>
                                     <p:inputNumber value="#{ordersDetailDto.quantity}" id="quantity"
-                                                   maxValue="99999999999"
-                                                   placeholder="Nhập số lượng">
+                                                   maxValue="#{ordersDetailDto.maxQuantity}" readonly="#{ordersController.readonly}"
+                                                   placeholder="Nhập số lượng (số lượng tồn còn: #{ordersDetailDto.maxQuantity})">
                                         <f:ajax listener="#{ordersController.updatePrice(status.index)}"/>
                                     </p:inputNumber>
 
@@ -127,7 +127,7 @@
                                     <p:outputLabel></p:outputLabel>
 
                                     <p:commandButton value="Xóa sản phẩm" style="width: auto" styleClass="red-btn"
-                                                     process="@this"
+                                                     process="@this" rendered="#{!ordersController.readonly}"
                                                      actionListener="#{ordersController.onDeleteProduct(ordersDetailDto)}"
                                                      update="dlForm:panel"/>
                                 </p:panelGrid>
@@ -135,7 +135,7 @@
 
                             </p:repeat>
                             <p:commandButton value="Thêm sản phẩm" styleClass="ui-priority-primary"
-                                             style="width: 15%"
+                                             style="width: 15%" rendered="#{!ordersController.readonly}"
                                              icon="fa fa-plus"
                                              actionListener="#{ordersController.onAddNew}"
                                              update="panel growl"/>
@@ -145,7 +145,7 @@
                         <p:panelGrid id="basicPanel2" columns="4"
                                      columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
                                      styleClass="ui-panelgrid-blank" layout="grid">
-                            <p:outputLabel value="Tổng tiền: " for="totalAmount"/>
+                            <p:outputLabel value="Tổng tiền sản phẩm: " for="totalAmount"/>
                             <p:inputText value="#{ordersController.ordersDto.totalAmount}" id="totalAmount"
                                          maxlength="200"
                                          readonly="true" decimalPlaces="0"
@@ -155,18 +155,38 @@
                                                  minFractionDigits="0" locale="vi_VN"/>
                             </p:inputText>
 
-                            <p:outputLabel value="Tiền vận chuyển: " for="shipping"/>
-                            <p:inputText value="#{ordersController.ordersDto.shipping}" id="shipping" maxlength="200"
-                                         maxValue="99999999999"
-                                         placeholder="Nhập phí vận chuyển">
+                            <p:outputLabel for="select-shipfee" class="required-label">Đơn vị vận chuyển:</p:outputLabel>
+                            <p:selectOneMenu id="select-shipfee" value="#{ordersController.ordersDto.shippingId}"
+                                             autoWidth="false" effect="fade" required="true" disabled="#{ordersController.readonly}"
+                                             filterMatchMode="contains">
+                                <f:selectItem itemValue="-1" itemLabel="Chọn đơn vị vận chuyển" />
+                                <f:selectItems value="#{ordersController.shippingItem}"/>s
+                                <f:ajax event="change" listener="#{ordersController.onChangeShipping}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Tiền vận chuyển: " for="shipping" rendered="#{ordersController.ordersDto.shippingId ne null}"/>
+                            <p:inputText value="#{ordersController.ordersDto.shipping}" id="shipping" maxlength="200" readonly="true"
+                                         maxValue="99999999999" rendered="#{ordersController.ordersDto.shippingId ne null}">
+                                <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                 maxFractionDigits="6"
+                                                 minFractionDigits="0" locale="vi_VN"/>
                             </p:inputText>
+
+                            <p:outputLabel value="Tổng tiền phải trả: " for="allTotalAmount" rendered="#{ordersController.ordersDto.shippingId ne null}"/>
+                            <p:inputText value="#{ordersController.ordersDto.allTotalAmount}" id="allTotalAmount" maxlength="200" readonly="true"
+                                         maxValue="99999999999" rendered="#{ordersController.ordersDto.shippingId ne null}">
+                                <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                 maxFractionDigits="6"
+                                                 minFractionDigits="0" locale="vi_VN"/>
+                            </p:inputText>
+
                         </p:panelGrid>
 
                         <p:panelGrid columns="2"
                                      columnClasses="ui-grid-col-6,ui-grid-col-6"
                                      styleClass="ui-panelgrid-blank">
                             <p:commandButton value="Lưu" action="#{ordersController.onSave}"
-                                             rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_NOT_APPROVED or resultDto.ordersId eq null }"
+                                             rendered="#{!ordersController.readonly}"
                                              icon="fa fa-save" style="width: 80px;float:right"
                                              update="searchForm focus growl"/>
                             <p:commandButton value="Ðóng" styleClass="close"
@@ -308,8 +328,8 @@
                                                 <p:menuitem value="Đã thanh toán" style="font-weight: bold;"
                                                             rendered="#{resultDto.status eq DbConstant.ORDER_STATUS_APPROVED}"
                                                             icon="fa fa-credit-card"
-                                                            actionListener="#{ordersController.showChoosePaymentMethod(resultDto)}"
-                                                            oncomplete="PF('dialogPaymentMethod').show();"/>
+                                                            actionListener="#{ordersController.onChangeStatusToPaid(resultDto)}"
+                                                            update="tblSearchResult growl"/>
                                                 <p:menuitem value="Hủy đơn hàng" style="font-weight: bold;"
                                                             icon="fa fa-trash"
                                                             actionListener="#{ordersController.onCancelOrder(resultDto)}"

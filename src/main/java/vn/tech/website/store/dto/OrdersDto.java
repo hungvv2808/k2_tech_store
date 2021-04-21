@@ -15,4 +15,5 @@ import java.util.List;
 @NoArgsConstructor
 public class OrdersDto extends Orders {
     List<OrdersDetail> ordersDetailList;
+    Double allTotalAmount;
 }

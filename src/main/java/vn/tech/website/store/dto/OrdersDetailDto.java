@@ -15,5 +15,6 @@ public class OrdersDetailDto extends OrdersDetail {
     private Float discount;
     private Integer positionProduct;
     private String codeProduct;
+    private Long maxQuantity;
     private ProductDto productDto = new ProductDto();
 }

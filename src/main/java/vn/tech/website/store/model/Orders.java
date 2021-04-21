@@ -46,6 +46,9 @@ public class Orders extends BaseModel {
     @Column(name = "total_amount")
     private Double totalAmount;
 
+    @Column(name = "shipping_id")
+    private Long shippingId;
+
     @Column(name = "shipping")
     private Double shipping;
 

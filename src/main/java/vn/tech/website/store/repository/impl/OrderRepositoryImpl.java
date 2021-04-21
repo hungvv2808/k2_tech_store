@@ -32,6 +32,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 + "o.phone, "
                 + "o.note, "
                 + "o.total_amount, "
+                + "o.shipping_id, "
                 + "o.shipping, "
                 + "o.status, "
                 + "o.create_date, "
@@ -81,12 +82,14 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
             dto.setPhone(ValueUtil.getStringByObject(obj[6]));
             dto.setNote(ValueUtil.getStringByObject(obj[7]));
             dto.setTotalAmount(ValueUtil.getDoubleByObject(obj[8]));
-            dto.setShipping(ValueUtil.getDoubleByObject(obj[9]));
-            dto.setStatus(ValueUtil.getIntegerByObject(obj[10]));
-            dto.setCreateDate(ValueUtil.getDateByObject(obj[11]));
-            dto.setCreateBy(ValueUtil.getLongByObject(obj[12]));
-            dto.setUpdateDate(ValueUtil.getDateByObject(obj[13]));
-            dto.setUpdateBy(ValueUtil.getLongByObject(obj[14]));
+            dto.setShippingId(ValueUtil.getLongByObject(obj[9]));
+            dto.setShipping(ValueUtil.getDoubleByObject(obj[10]));
+            dto.setAllTotalAmount(dto.getTotalAmount() + dto.getShipping());
+            dto.setStatus(ValueUtil.getIntegerByObject(obj[11]));
+            dto.setCreateDate(ValueUtil.getDateByObject(obj[12]));
+            dto.setCreateBy(ValueUtil.getLongByObject(obj[13]));
+            dto.setUpdateDate(ValueUtil.getDateByObject(obj[14]));
+            dto.setUpdateBy(ValueUtil.getLongByObject(obj[15]));
             dtoList.add(dto);
         }
         return dtoList;
