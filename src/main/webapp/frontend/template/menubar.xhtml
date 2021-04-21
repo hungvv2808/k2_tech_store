@@ -141,10 +141,10 @@
                             </div>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarProfile">
-                            <a class="dropdown-item" href="#">
+                            <h:link class="dropdown-item" outcome="/frontend/account/profile.xhtml">
                                 <i class="fas fa-user"/>
                                 <span>Thông tin cá nhân</span>
-                            </a>
+                            </h:link>
                             <h:form>
                                 <h:commandLink styleClass="dropdown-item" onclick="logout();"
                                                actionListener="#{authorizationFEController.logout}">

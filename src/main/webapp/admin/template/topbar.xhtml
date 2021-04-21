@@ -7,10 +7,6 @@
 
             <h:outputLabel styleClass="logo-admin" value="ADMIN" />
 
-            <a id="menu-button" href="#">
-                <i class="fa fa-navicon"/>
-            </a>
-
             <a href="#" class="profile">
                 <h:form id="topbar">
                     <p:graphicImage rendered="#{empty authorizationController.accountDto.imagePath}"
@@ -46,8 +42,8 @@
                 </li>
             </ul>
 
-            <h:panelGroup styleClass="panel-notification" style="margin-top: -11px">
-                <ui:include src="notification.xhtml" />
+            <h:panelGroup styleClass="topbar-panel panel-notification">
+                <ui:include src="../template/notification.xhtml" />
             </h:panelGroup>
         </div>
 </ui:composition>

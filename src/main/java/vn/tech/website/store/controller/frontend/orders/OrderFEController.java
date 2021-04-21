@@ -256,7 +256,7 @@ public class OrderFEController extends BaseFEController {
         SendNotification sendNotification = new SendNotification();
         sendNotification.setAccountId(orders.getAccountId());
         String customerName = getAuthorizationFEController().hasLogged() ? getAuthorizationFEController().getAccountDto().getFullName() : ordersDto.getCustomerName();
-        sendNotification.setContent("Bạn nhận được một đơn hàng mới từ khách hàng \"" + customerName + "\" với mã đơn hàng: \"" + ordersSave.getCode() + "\". Kiểm tra ngay");
+        sendNotification.setContent("Bạn nhận được một đơn hàng mới từ khách hàng " + customerName + " với mã đơn hàng: " + ordersSave.getCode() + ". Kiểm tra ngay");
         sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
         sendNotification.setCreateDate(new Date());
         sendNotification.setUpdateDate(new Date());

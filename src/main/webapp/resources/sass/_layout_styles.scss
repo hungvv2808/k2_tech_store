@@ -1,1 +1,74 @@
 /* Add your customizations of layout here */
+#bell_menu {
+  width: 310px;
+  border: 0;
+  max-height: 720px;
+  overflow-y: auto;
+  background-color: #ffffffee;
+  border-radius: 1rem;
+
+  .ui-menu-list {
+    margin: 5px;
+  }
+
+  .noti-text-date {
+    color: #6b6b7e;
+  }
+
+  .noti-text-link {
+    color: #004AD7;
+  }
+
+  .new {
+    font-weight: bold;
+  }
+
+  &.ui-menu {
+    .ui-menu-list {
+      .ui-menuitem {
+        border-bottom: 1px solid #eee;
+        border-radius: 5px;
+
+        &:last-child {
+          border-bottom: 0;
+        }
+
+        &.ui-state-hover {
+          .ui-menuitem-text {
+            .target {
+              span {
+                color: $primaryTextColor !important;
+                font-weight: bold;
+              }
+            }
+          }
+        }
+
+        .ui-menuitem-link {
+          padding: 10px 20px;
+          border-radius: 5px;
+          position: relative;
+
+          .count-time {
+            font-size: 11px;
+          }
+
+          .ui-menuitem-icon {
+            position: absolute;
+            right: 0;
+            top: 40%;
+            color: $primaryTextColor;
+          }
+
+          .ui-menuitem-text {
+            .target {
+              span {
+                color: #0d86e3;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
