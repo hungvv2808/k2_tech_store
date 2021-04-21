@@ -113,11 +113,12 @@ public class AuthorizationFEController extends BaseController implements Seriali
         resetAll();
     }
 
-    public void initPersonalAccount() {
+    public void initInfoAccount() {
         if (!hasLogged()) {
             FacesUtil.redirect("/frontend/index.xhtml");
             return;
         }
+        resetMyAccount();
     }
 
     public void resetMyAccount() {

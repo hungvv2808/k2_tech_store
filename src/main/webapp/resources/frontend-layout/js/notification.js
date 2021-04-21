@@ -1,3 +1,9 @@
+$('#bell').click(function () {
+    if (!$('#count-record').hasClass('text-notification-0')) {
+        seenAllNoti();
+    }
+});
+
 $('#navbarNotis').click(function () {
     if (!$('#count-record').hasClass('text-notification-0')) {
         seenAllNoti();
