@@ -1,0 +1,66 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{notificationController.initData}"/>
+    </f:metadata>
+
+    <h:form prependId="false" id="id">
+        <p:remoteCommand name="seenAllNoti" global="false" update="count-record"
+                         actionListener="#{notificationController.seenAllNotification}"/>
+        <p:remoteCommand name="cmdLoadmoreNotification" global="false" update="loadMoreNoti"
+                         actionListener="#{notificationController.loadMoreAds()}"
+                         oncomplete="loadMoreNoti();"/>
+        <p:remoteCommand name="redirectPage" global="false"
+                         actionListener="#{notificationController.redirectPage()}"/>
+
+        <p:menuButton id="bell" icon="fa fa-bell"/>
+
+        <a class="nav-link dropdown-toggle" href="#" id="navbarNotis" role="button"
+           data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">
+            <h:panelGroup id="count-record" layout="block" styleClass="noti">
+                <i class="far fa-bell fa-lg noti__bell"/>
+                <span class="noti__count #{notificationController.countRecord eq 0 ? 'display-none' : ''}">#{notificationController.countRecord > 100 ? '100+' : notificationController.countRecord}</span>
+            </h:panelGroup>
+        </a>
+        <h:panelGroup id="bell_menu" layout="block" styleClass="dropdown-menu drop" aria-labelledby="navbarNotis"/>
+    </h:form>
+
+    <h:panelGroup id="loadMoreNoti">
+        <script>
+            //<![CDATA[
+            (function () {
+                // load more to add more record
+                var data = '#{notificationController.notificationJson}';
+                if (data != '') {
+                    data = JSON.parse(data);
+                } else {
+                    return;
+                }
+                data.forEach(function (e) {
+                    $('#bell_menu').append(
+                        "<a class='dropdown-item' href='#'>" +
+                        "<span>" + e.send_content + "</span>" +
+                        "<br/>" +
+                        "<i>" + e.date_before_now + "</i>" +
+                        "</a>"
+                    );
+                });
+                let bellMenu = $('#bell_menu');
+                if ($.isArray(data) && data.length < '#{Constant.NOTIFICATION_PAGE_SIZE}' && !bellMenu.hasClass("ended-scroll")) {
+                    bellMenu.addClass("ended-scroll");
+                    $('#bell_menu').append(
+                        "<a class='dropdown-item' disabled='true'><span>Không có thông báo mới.</span></a>"
+                    );
+                }
+            })();
+            //]]>
+        </script>
+    </h:panelGroup>
+</ui:composition>

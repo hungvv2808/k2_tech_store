@@ -290,6 +290,62 @@ body {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.layout-wrapper .topbar .panel-notification {
+  float: right;
+  margin-right: 15px;
+  overflow-y: hidden;
+  height: 50px;
+}
+.layout-wrapper .topbar .panel-notification button {
+  background-color: #6ebc3b;
+  width: 70px;
+  height: 50px;
+  border-radius: 0;
+  outline: none !important;
+}
+.layout-wrapper .topbar .panel-notification button.ui-state-focus {
+  outline: 0 none;
+  box-shadow: 0 0 14px 0 #6ebc3b;
+  -webkit-box-shadow: 0 0 14px 0 #6ebc3b;
+  -moz-box-shadow: 0 0 14px 0 #6ebc3b;
+}
+.layout-wrapper .topbar .panel-notification button.ui-state-hover {
+  background-color: #63a935;
+}
+.layout-wrapper .topbar .panel-notification button.ui-state-active {
+  background-color: #538d2c;
+}
+.layout-wrapper .topbar .panel-notification button span {
+  color: #ffffff;
+  margin-top: -10px !important;
+}
+.layout-wrapper .topbar .panel-notification button span.ui-button-icon-left {
+  width: 25px;
+  font-size: 22px;
+  font-weight: bold;
+  margin-left: -12px;
+}
+.layout-wrapper .topbar .panel-notification button span.ui-button-text {
+  display: none !important;
+}
+.layout-wrapper .topbar .panel-notification .text-notification {
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: #f87272;
+  border-radius: 50%;
+  padding: 3px 7px 3px 5px;
+  float: right;
+  margin-left: -30px;
+  margin-top: 5px;
+  position: absolute;
+}
+.layout-wrapper .topbar .panel-notification .text-notification.text-two-letter {
+  padding: 4px 5px 4px 4px;
+}
+.layout-wrapper .topbar .panel-notification .text-notification-0 {
+  display: none !important;
+}
 .layout-wrapper.layout-overlay .topbar, .layout-wrapper.layout-static .topbar {
   box-shadow: 0 2px 4px 0px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 2px 4px 0px rgba(0, 0, 0, 0.3);
