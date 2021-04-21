@@ -16,9 +16,19 @@
             input[type="text"][disabled] {
                 color: #121113;
             }
-
             #uploadImage .ui-button-text {
                 padding-top: 8px !important;
+            }
+            .my-card-image-border .ui-commandlink {
+                position: absolute;
+                left: 60%;
+                top: 11%;
+                padding: 1rem;
+                color: red;
+                font-size: 16px;
+            }
+            .image-file {
+                margin-left: 1rem;
             }
         </style>
     </ui:define>
@@ -31,20 +41,6 @@
     </ui:define>
 
     <ui:define name="content">
-        <style>
-            .ui-commandlink {
-                position: absolute;
-                left: 59%;
-                top: 16%;
-                padding: 1rem;
-                color: red;
-                font-size: 16px;
-            }
-            .image-file {
-                margin-left: 1rem;
-            }
-        </style>
-
         <p:dialog header="Thay đổi địa chỉ email" widgetVar="changeEmailDialog" showEffect="clip" hideEffect="clip"
                   width="600" height="auto" modal="true" id="dialogConfirmSaveEmail">
             <h:form id="formDialog" styleClass="shows">

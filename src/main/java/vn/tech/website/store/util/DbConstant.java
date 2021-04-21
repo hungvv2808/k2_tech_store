@@ -26,10 +26,9 @@ public class DbConstant {
     public static final int ACCOUNT_MINLENGTH_USERNAME = 6;
 
     //sex
-    public static final int MAN = 0;
-    public static final int WOMAN = 1;
-    public static final int UNKNOW = 2;
-    public static final int NOGENDER = -1;
+    public static final int UNKNOW = 0;
+    public static final int MAN = 1;
+    public static final int WOMAN = 2;
 
     //role
     public static final int ROLE_ID_NOT_LOGIN = -1;
