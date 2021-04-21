@@ -21,11 +21,26 @@
     &__info {
       border-bottom: 3px solid $red-color;
       margin-bottom: 1rem !important;
+
       .form-group {
         width: 100%;
 
         &:last-child {
           margin-bottom: 1rem;
+        }
+
+        .order-shipimg {
+          width: 300px;
+          height: 200px;
+          object-fit: cover;
+          margin-top: 1rem;
+          border-radius: 1rem;
+        }
+
+        .order-shipinfo {
+          padding-top: 1rem;
+          word-break: break-word;
+          width: 100%;
         }
       }
     }
@@ -68,6 +83,7 @@
       &__action {
         i {
           color: $primary-color;
+
           &:hover {
             color: $red-color;
           }
@@ -77,15 +93,19 @@
 
     &__total {
       border-top: 3px solid $red-color;
+
       .row {
         padding-top: 1rem;
+
         p {
           width: 100%;
           text-align: right;
         }
+
         .qty, .money {
           color: $red-color;
         }
+
         .btn-custom {
           width: 100%;
           color: $third-color;

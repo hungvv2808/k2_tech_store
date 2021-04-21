@@ -52,13 +52,33 @@
                                 <h:inputTextarea id="order-note" styleClass="form-control" rows="3" value="#{orderFEController.ordersDto.note}" placeholder="Nhập ghi chú" />
                             </div>
                             <div class="form-group">
-                                <label for="order-shipfee" class="required-label">Phí vận chuyển:</label>
-                                <h:inputText id="order-shipfee" styleClass="form-control" value="#{orderFEController.ordersDto.shipping}" disabled="true">
-                                    <f:convertNumber type="currency" currencySymbol="VNĐ"
-                                                     maxFractionDigits="6"
-                                                     minFractionDigits="0" locale="vi_VN"/>
-                                </h:inputText>
+                                <label for="select-shipfee" class="required-label">Đơn vị vận chuyển:</label>
+                                <h:selectOneMenu id="select-shipfee" styleClass="form-control" value="#{orderFEController.shippingId}">
+                                    <f:selectItem itemValue="-1" itemLabel="Chọn đơn vị vận chuyển" />
+                                    <f:selectItems value="#{orderFEController.shippingItem}" var="ship"
+                                                   itemValue="#{ship.value}"
+                                                   itemLabel="#{ship.label}"/>
+                                    <f:ajax execute="@form" listener="#{orderFEController.onChangeShipping}"/>
+                                </h:selectOneMenu>
                             </div>
+                            <h:panelGroup layout="block" styleClass="form-group" rendered="#{orderFEController.checkShipping}">
+                                <div class="row">
+                                    <label for="order-shipfee" class="required-label">Phí vận chuyển:</label>
+                                    <h:inputText id="order-shipfee" styleClass="form-control" value="#{orderFEController.ordersDto.shipping}" disabled="true">
+                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                         maxFractionDigits="6"
+                                                         minFractionDigits="0" locale="vi_VN"/>
+                                    </h:inputText>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <p:graphicImage styleClass="order-shipimg" name="#{orderFEController.pathShipping}"/>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <h:outputLabel styleClass="order-shipinfo" value="#{orderFEController.infoShipping}" />
+                                    </div>
+                                </div>
+                            </h:panelGroup>
                         </h:panelGroup>
                         <table class="table table-hover order-product">
                             <thead>
@@ -107,24 +127,26 @@
                         </table>
                         <div class="orders-infor__total">
                             <div class="row">
-                                <div class="col-lg-10">
-                                    <p>Tổng số lượng:</p>
-                                </div>
-                                <div class="col-lg-2">
-                                    <p class="qty"><h:outputText value="#{orderFEController.totalQty}" /></p>
-                                </div>
-                                <div class="col-lg-10">
-                                    <p>Tổng thanh toán:</p>
-                                </div>
-                                <div class="col-lg-2">
-                                    <p class="money">
-                                        <h:outputText value="#{orderFEController.totalMoney}">
-                                            <f:convertNumber type="currency" currencySymbol="VNĐ"
-                                                             maxFractionDigits="6"
-                                                             minFractionDigits="0" locale="vi_VN"/>
-                                        </h:outputText>
-                                    </p>
-                                </div>
+                                <h:panelGroup layout="block" rendered="#{orderFEController.info}">
+                                    <div class="col-lg-10">
+                                        <p>Tổng số lượng:</p>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <p class="qty"><h:outputText value="#{orderFEController.totalQty}" /></p>
+                                    </div>
+                                    <div class="col-lg-10">
+                                        <p>Tổng thanh toán:</p>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <p class="money">
+                                            <h:outputText value="#{orderFEController.ordersDto.totalAmount}">
+                                                <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                 maxFractionDigits="6"
+                                                                 minFractionDigits="0" locale="vi_VN"/>
+                                            </h:outputText>
+                                        </p>
+                                    </div>
+                                </h:panelGroup>
                                 <div class="col-lg-9"></div>
                                 <div class="col-lg-3">
                                     <h:commandButton styleClass="btn btn-warning btn-custom" value="Mua ngay" actionListener="#{orderFEController.confirmInfo}" rendered="#{!orderFEController.info}">

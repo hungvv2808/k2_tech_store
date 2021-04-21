@@ -11,6 +11,7 @@ import vn.tech.website.store.dto.ProductDto;
 import vn.tech.website.store.dto.ProductOptionDetailDto;
 import vn.tech.website.store.dto.ProductOptionDetailSearchDto;
 import vn.tech.website.store.model.ProductImage;
+import vn.tech.website.store.model.ProductOptionDetail;
 import vn.tech.website.store.repository.ProductImageRepository;
 import vn.tech.website.store.repository.ProductOptionDetailRepository;
 import vn.tech.website.store.repository.ProductRepository;
@@ -97,6 +98,12 @@ public class ProductDetailFEController extends BaseFEController {
             if (label.toString().compareTo("") != 0) {
                 optionList.add(new SelectItem(productOptionDetailDtoList.get(i).getProductId(), label.toString()));
                 checkProductIds.add(productOptionDetailDtoList.get(i).getProductId());
+            }
+        }
+        if (optionList.isEmpty()) {
+            for (ProductOptionDetailDto o : productOptionDetailDtoList) {
+                optionList.add(new SelectItem(o.getProductId(), o.getProductOptionName()));
+                checkProductIds.add(o.getProductId());
             }
         }
     }
