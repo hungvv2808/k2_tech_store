@@ -38,7 +38,7 @@ public class AddressFEController implements Serializable {
     private List<District> listDistrict;
     private List<Commune> listCommune;
 
-    private CityDistrictDto cityDistrictDto = new CityDistrictDto();
+    private CityDistrictDto cityDistrictDto;
 
     public void resetAll() {
         cityDistrictDto = new CityDistrictDto();

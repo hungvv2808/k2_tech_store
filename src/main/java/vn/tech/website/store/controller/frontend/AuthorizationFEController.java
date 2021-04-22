@@ -42,7 +42,7 @@ import java.util.*;
 @Scope(value = "session")
 @Getter
 @Setter
-public class AuthorizationFEController extends BaseController implements Serializable {
+public class AuthorizationFEController implements Serializable {
     @Inject
     HttpServletRequest request;
     @Inject
@@ -97,11 +97,6 @@ public class AuthorizationFEController extends BaseController implements Seriali
     @Value("${LOGIN_SECRET_KEY}")
     private String cryptoSecretKey;
 
-    @Override
-    protected EScope getMenuId() {
-        return null;
-    }
-
     @PostConstruct
     public void init() {
         // TODO: We have to check postback at herea
@@ -118,17 +113,16 @@ public class AuthorizationFEController extends BaseController implements Seriali
             FacesUtil.redirect("/frontend/index.xhtml");
             return;
         }
-        resetMyAccount();
+        if (!FacesContext.getCurrentInstance().isPostback()) {
+            resetMyAccount();
+        }
     }
 
     public void resetMyAccount() {
         account = accountRepository.findByAccountId(accountDto.getAccountId());
         BeanUtils.copyProperties(account, accountDto);
         addressFEController.resetAll();
-        CityDistrictDto cityDistrictDto = new CityDistrictDto();
-        cityDistrictDto.setProvinceId(accountDto.getProvinceId());
-        cityDistrictDto.setDistrictId(accountDto.getDistrictId());
-        cityDistrictDto.setCommuneId(accountDto.getCommuneId());
+        CityDistrictDto cityDistrictDto = new CityDistrictDto(accountDto.getProvinceId(), accountDto.getDistrictId(), accountDto.getCommuneId());
         addressFEController.setCityDistrictDto(cityDistrictDto);
         addressFEController.loadData();
         listProvinceAccount = new ArrayList<>();

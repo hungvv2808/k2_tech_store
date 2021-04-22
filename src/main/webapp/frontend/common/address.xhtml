@@ -12,7 +12,7 @@
                                itemLabel="#{addressFEController.upperCaseFirstChar(city.name)}"
                                itemValue="#{city.provinceId}"/>
                 <f:ajax event="change" listener="#{addressFEController.onChangeCity}"
-                        render="@form quanHuyen"/>
+                        render="quanHuyen phuongXa"/>
             </h:selectOneMenu>
         </div>
         <div class="col-md-4 no-padding">
@@ -24,7 +24,7 @@
                                itemLabel="#{addressFEController.upperCaseFirstChar(province.name)}"
                                itemValue="#{province.districtId}"/>
                 <f:ajax event="change" listener="#{addressFEController.onChangeDistrict}"
-                        render="@form phuongXa"/>
+                        render="phuongXa"/>
             </h:selectOneMenu>
         </div>
         <div class="col-md-4 no-padding">
