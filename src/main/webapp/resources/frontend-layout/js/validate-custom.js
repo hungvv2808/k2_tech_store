@@ -1,9 +1,9 @@
-jQuery.validator.setDefaults({
+$.validator.setDefaults({
     submitHandler: function(e) {
     }
 });
 
-jQuery(document).ready(function () {
+$(document).ready(function () {
     validateForm();
 });
 
@@ -11,19 +11,19 @@ var validatePass;
 function validateForm() {
     validatePass = true;
 
-    jQuery.validator.addMethod('customphone', function (value, element) {
+    $.validator.addMethod('customphone', function (value, element) {
         return this.optional(element) || /([0]{1}[1-9]{1}[0-9]{8,9})/.test(value);
     }, "Bạn vui lòng nhập đúng định dạng số điện thoại");
-    jQuery.validator.addMethod('validateCMND', function (value, element) {
+    $.validator.addMethod('validateCMND', function (value, element) {
         return this.optional(element) || /(^[0-9]{9}(?:[0-9]{3})?$)/.test(value);
     }, "Bạn vui lòng nhập đúng định dạng số CMND/CCCD");
-    jQuery.validator.addMethod('validateUserName', function (value, element) {
+    $.validator.addMethod('validateUserName', function (value, element) {
         return this.optional(element) || /(^[\w\.]{6,50}$)/.test(value);
     }, "Tên đăng nhập phải bao gồm 6 kí tự");
-    jQuery.validator.addMethod('validatePassword', function (value, element) {
+    $.validator.addMethod('validatePassword', function (value, element) {
         return this.optional(element) || /(^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{12,}$)/.test(value);
     }, "Mật khẩu phải có tối thiểu 12 ký tự, mật khẩu phải bao gồm chữ cái, chữ số và ký tự đặc biệt");
-    jQuery("#login-form").validate({
+    $("#login-form").validate({
         rules: {
             login_account: {
                 required: true,
@@ -52,22 +52,22 @@ function validateForm() {
             if (element.prop("type") === "checkbox") {
                 error.insertAfter(element.parent("label"));
             } else {
-                jQuery(element).nextAll().remove();
+                $(element).nextAll().remove();
                 error.insertAfter(element);
             }
             validatePass = false;
         },
         highlight: function(element, errorClass, validClass) {
-            jQuery(element).parents(".form-group").addClass("has-error").removeClass("has-success");
+            $(element).parents(".form-group").addClass("has-error").removeClass("has-success");
         },
         unhighlight: function(element, errorClass, validClass) {
-            jQuery(element).parents(".form-group").addClass("has-success").removeClass("has-error");
+            $(element).parents(".form-group").addClass("has-success").removeClass("has-error");
         },
         submitHandler: function(form) {
-            jQuery("#onlogin").click();
+            $("#onlogin").click();
         }
     });
-    jQuery("#lostPass").validate({
+    $("#lostPass").validate({
         rules: {
             lostpass_email: {
                 required: true,
@@ -88,22 +88,22 @@ function validateForm() {
             if (element.prop("type") === "checkbox") {
                 error.insertAfter(element.parent("label"));
             } else {
-                jQuery(element).nextAll().filter('em').remove();
+                $(element).nextAll().filter('em').remove();
                 error.insertAfter(element);
             }
             validatePass = false;
         },
         highlight: function(element, errorClass, validClass) {
-            jQuery(element).parents(".form-group").addClass("has-error").removeClass("has-success");
+            $(element).parents(".form-group").addClass("has-error").removeClass("has-success");
         },
         unhighlight: function(element, errorClass, validClass) {
-            jQuery(element).parents(".form-group").addClass("has-success").removeClass("has-error");
+            $(element).parents(".form-group").addClass("has-success").removeClass("has-error");
         },
         submitHandler: function(form) {
-            jQuery("#getCode").click();
+            $("#getCode").click();
         }
     });
-    jQuery("#auction_form_register").validate({
+    $("#auction_form_register").validate({
         rules: {
             asset_description: {
                 required: true,
@@ -128,23 +128,23 @@ function validateForm() {
             if (element.prop("type") === "checkbox") {
                 error.insertAfter(element.parent("label"));
             } else {
-                jQuery(element).nextAll().remove();
+                $(element).nextAll().remove();
                 error.insertAfter(element);
             }
             validatePass = false;
         },
         highlight: function(element, errorClass, validClass) {
-            jQuery(element).parents(".col-md-10").addClass("has-error").removeClass("has-success");
+            $(element).parents(".col-md-10").addClass("has-error").removeClass("has-success");
         },
         unhighlight: function(element, errorClass, validClass) {
-            jQuery(element).parent().nextAll().filter('em').remove();
-            jQuery(element).parents(".col-md-10").addClass("has-success").removeClass("has-error");
+            $(element).parent().nextAll().filter('em').remove();
+            $(element).parents(".col-md-10").addClass("has-success").removeClass("has-error");
         },
         submitHandler: function(form) {
-            jQuery("#saveAuctionReq").click();
+            $("#saveAuctionReq").click();
         }
     });
-    jQuery("#company-form").validate({
+    $("#company-form").validate({
         rules: {
             tinhThanhPho: {
                 required: true,
@@ -238,33 +238,33 @@ function validateForm() {
             if (element.prop("type") === "checkbox") {
                 error.insertAfter(element.parent("label"));
             } else {
-                if(jQuery(element).attr('id') == 'tinhThanhPho' || jQuery(element).attr('id') == 'quanHuyen' || jQuery(element).attr('id') == 'phuongXa') {
-                    jQuery(element).nextAll().filter('em').remove();
-                    error.insertAfter(jQuery(element).next());
+                if($(element).attr('id') == 'tinhThanhPho' || $(element).attr('id') == 'quanHuyen' || $(element).attr('id') == 'phuongXa') {
+                    $(element).nextAll().filter('em').remove();
+                    error.insertAfter($(element).next());
                 }
                     else
                     {
-                        jQuery(element).nextAll().filter('em').remove();
+                        $(element).nextAll().filter('em').remove();
                         error.insertAfter(element);
                     }
             }
             validatePass = false;
         },
         highlight: function(element, errorClass, validClass) {
-            jQuery(element).parents(".col-md-8").addClass("has-error").removeClass("has-success");
-            jQuery(element).parents(".col-md-4").addClass("has-error").removeClass("has-success");
+            $(element).parents(".col-md-8").addClass("has-error").removeClass("has-success");
+            $(element).parents(".col-md-4").addClass("has-error").removeClass("has-success");
         },
         unhighlight: function(element, errorClass, validClass) {
-            jQuery(element).parent().nextAll().filter('em').remove();
-            jQuery(element).nextAll().filter('em').remove();
-            jQuery(element).parents(".col-md-8").addClass("has-success").removeClass("has-error");
-            jQuery(element).parents(".col-md-4").addClass("has-success").removeClass("has-error");
+            $(element).parent().nextAll().filter('em').remove();
+            $(element).nextAll().filter('em').remove();
+            $(element).parents(".col-md-8").addClass("has-success").removeClass("has-error");
+            $(element).parents(".col-md-4").addClass("has-success").removeClass("has-error");
         },
         submitHandler: function(form) {
-            jQuery("#registerCompany").click();
+            $("#registerCompany").click();
         }
     });
-    jQuery("#personal-form").validate({
+    $("#personal-form").validate({
         rules: {
             person_name: {
                 required: true,
@@ -345,13 +345,13 @@ function validateForm() {
 
 
             if (element.attr('id')== 'person_noicap') {
-                error.insertAfter(jQuery(element).next());
+                error.insertAfter($(element).next());
             } else {
-                if(jQuery(element).attr('id') == 'tinhThanhpho' || jQuery(element).attr('id') == 'quanhuyen' || jQuery(element).attr('id') == 'phuongxa'){
-                    jQuery(element).nextAll().filter('em').remove();
-                    error.insertAfter(jQuery(element).next());
+                if($(element).attr('id') == 'tinhThanhpho' || $(element).attr('id') == 'quanhuyen' || $(element).attr('id') == 'phuongxa'){
+                    $(element).nextAll().filter('em').remove();
+                    error.insertAfter($(element).next());
                 }else{
-                    jQuery(element).nextAll().filter('em').remove();
+                    $(element).nextAll().filter('em').remove();
                     error.insertAfter(element);
                 }
             }
@@ -359,22 +359,22 @@ function validateForm() {
         },
         highlight: function(element, errorClass, validClass) {
 
-            jQuery(element).parents(".col-md-8").addClass("has-error").removeClass("has-success");
-            jQuery(element).parents(".col-md-4").addClass("has-error").removeClass("has-success");
+            $(element).parents(".col-md-8").addClass("has-error").removeClass("has-success");
+            $(element).parents(".col-md-4").addClass("has-error").removeClass("has-success");
         },
         unhighlight: function(element, errorClass, validClass) {
 
-            jQuery(element).parents().nextAll().filter('em').remove();
-            jQuery(element).nextAll().filter('em').remove();
-            jQuery(element).parents(".col-md-8").addClass("has-success").removeClass("has-error");
-            jQuery(element).parents(".col-md-4").addClass("has-success").removeClass("has-error");
+            $(element).parents().nextAll().filter('em').remove();
+            $(element).nextAll().filter('em').remove();
+            $(element).parents(".col-md-8").addClass("has-success").removeClass("has-error");
+            $(element).parents(".col-md-4").addClass("has-success").removeClass("has-error");
 
         },
         submitHandler: function(form) {
-            jQuery("#registerPerson").click();
+            $("#registerPerson").click();
         }
     });
-    jQuery("#personal-account").validate({
+    $("#personal-account").validate({
         rules: {
             person_name: {
                 required: true,
@@ -429,14 +429,14 @@ function validateForm() {
             marriage_name: {
                 required: {
                     depends: function(element) {
-                        return jQuery("#married_box:checked");
+                        return $("#married_box:checked");
                     }
                 },
             },
             marriage_id: {
                 required: {
                     depends: function(element) {
-                        return jQuery("#married_box:checked");
+                        return $("#married_box:checked");
                     }
                 },
                 'validateCMND': true,
@@ -499,48 +499,48 @@ function validateForm() {
             // Add the `help-block` class to the error element
             error.addClass("help-block");
 
-            if(jQuery("#married").val() == "true"){
-                jQuery(element).nextAll().filter('em').remove();
+            if($("#married").val() == "true"){
+                $(element).nextAll().filter('em').remove();
                 error.insertAfter(element);
             }
             if (element.prop("type") === "checkbox") {
                 error.insertAfter(element.parent("label"));
             } else {
                 if (element.hasClass('datetimepicker') || element.hasClass('datetimepicker1')) {
-                    jQuery(element).parent().nextAll().filter('em').remove();
+                    $(element).parent().nextAll().filter('em').remove();
                     error.insertAfter(element.parent());
                 } else {
-                    jQuery(element).nextAll().filter('em').remove();
+                    $(element).nextAll().filter('em').remove();
                     error.insertAfter(element);
                 }
-                if(jQuery(element).attr('id') == 'tinhThanhPho' || jQuery(element).attr('id') == 'quanHuyen' || jQuery(element).attr('id') == 'phuongXa' || jQuery(element).attr('id') == 'person_noicap') {
-                    jQuery(element).nextAll().filter('em').remove();
-                    error.insertAfter(jQuery(element).next());
+                if($(element).attr('id') == 'tinhThanhPho' || $(element).attr('id') == 'quanHuyen' || $(element).attr('id') == 'phuongXa' || $(element).attr('id') == 'person_noicap') {
+                    $(element).nextAll().filter('em').remove();
+                    error.insertAfter($(element).next());
                 }
             }
             validatePass = false;
         },
         highlight: function(element, errorClass, validClass) {
-            jQuery(element).parents(".col-md-8").addClass("has-error").removeClass("has-success");
-            jQuery(element).parents(".col-md-4").addClass("has-error").removeClass("has-success");
+            $(element).parents(".col-md-8").addClass("has-error").removeClass("has-success");
+            $(element).parents(".col-md-4").addClass("has-error").removeClass("has-success");
         },
         unhighlight: function(element, errorClass, validClass) {
-            jQuery(element).parent().nextAll().filter('em').remove();
-            jQuery(element).nextAll().filter('em').remove();
-            jQuery(element).parents(".col-md-8").addClass("has-success").removeClass("has-error");
-            jQuery(element).parents(".col-md-4").addClass("has-success").removeClass("has-error");
+            $(element).parent().nextAll().filter('em').remove();
+            $(element).nextAll().filter('em').remove();
+            $(element).parents(".col-md-8").addClass("has-success").removeClass("has-error");
+            $(element).parents(".col-md-4").addClass("has-success").removeClass("has-error");
         },
         invalidHandler: function(form, validator) {
             if (validator.numberOfInvalids()) {
-                jQuery('#btnUpdate').button('reset');
+                $('#btnUpdate').button('reset');
             }
         },
         submitHandler: function(form) {
-            jQuery("#updatePerson").click();
-            jQuery('#btnUpdate').button('reset');
+            $("#updatePerson").click();
+            $('#btnUpdate').button('reset');
         }
     });
-    jQuery("#company-account").validate({
+    $("#company-account").validate({
         rules: {
             company_name: {
                 required: true,
@@ -597,14 +597,14 @@ function validateForm() {
             marriage_name: {
                 required: {
                     depends: function(element) {
-                        return jQuery("#married_box:checked");
+                        return $("#married_box:checked");
                     }
                 }
             },
             marriage_id: {
                 required: {
                     depends: function(element) {
-                        return jQuery("#married_box:checked");
+                        return $("#married_box:checked");
                     }
                 }
             },
@@ -682,36 +682,36 @@ function validateForm() {
 
 
                 if (element.hasClass('datetimepicker') || element.hasClass('datetimepicker1')) {
-                    jQuery(element).parent().nextAll().filter('em').remove();
+                    $(element).parent().nextAll().filter('em').remove();
                     error.insertAfter(element.parent());
                 } else {
-                    jQuery(element).nextAll().filter('em').remove();
+                    $(element).nextAll().filter('em').remove();
                     error.insertAfter(element);
                 }
-                if(jQuery(element).attr('id') == 'tinhThanhPho' || jQuery(element).attr('id') == 'quanHuyen' || jQuery(element).attr('id') == 'phuongXa') {
-                    jQuery(element).nextAll().filter('em').remove();
-                    error.insertAfter(jQuery(element).next());
+                if($(element).attr('id') == 'tinhThanhPho' || $(element).attr('id') == 'quanHuyen' || $(element).attr('id') == 'phuongXa') {
+                    $(element).nextAll().filter('em').remove();
+                    error.insertAfter($(element).next());
                 }
 
             validatePass = false;
         },
         highlight: function(element, errorClass, validClass) {
-            jQuery(element).parents(".col-md-8").addClass("has-error").removeClass("has-success");
-            jQuery(element).parents(".col-md-4").addClass("has-error").removeClass("has-success");
+            $(element).parents(".col-md-8").addClass("has-error").removeClass("has-success");
+            $(element).parents(".col-md-4").addClass("has-error").removeClass("has-success");
         },
         unhighlight: function(element, errorClass, validClass) {
-            jQuery(element).nextAll().filter('em').remove();
-            jQuery(element).parents(".col-md-8").addClass("has-success").removeClass("has-error");
-            jQuery(element).parents(".col-md-4").addClass("has-success").removeClass("has-error");
+            $(element).nextAll().filter('em').remove();
+            $(element).parents(".col-md-8").addClass("has-success").removeClass("has-error");
+            $(element).parents(".col-md-4").addClass("has-success").removeClass("has-error");
         },
         invalidHandler: function(form, validator) {
             if (validator.numberOfInvalids()) {
-                jQuery('#btnUpdate').button('reset');
+                $('#btnUpdate').button('reset');
             }
         },
         submitHandler: function(form) {
-            jQuery("#updateCompany").click();
-            jQuery('#btnUpdate').button('reset');
+            $("#updateCompany").click();
+            $('#btnUpdate').button('reset');
         }
     });
 }
@@ -719,26 +719,26 @@ function validateForm() {
 var timerLostPassword;
 
 function countdownCheckMail() {
-    jQuery('#code').show()
-    jQuery('#lostpass_email').show()
-    jQuery('#inputCode').show()
-    jQuery('#countdownEx').show()
-    jQuery('#checkCode').show()
-    jQuery('#checkEmail').hide()
-    jQuery('#endTime').hide()
-    jQuery('#lostpass_email').attr('readonly','readonly')
+    $('#code').show();
+    $('#lostpass_email').show();
+    $('#inputCode').show();
+    $('#countdownEx').show();
+    $('#checkCode').show();
+    $('#checkEmail').hide();
+    $('#endTime').hide();
+    $('#lostpass_email').attr('readonly','readonly');
     var count = 60;
     timerLostPassword = setInterval(function () {
-        count--
-        jQuery('#countdownEx').html('Mã xác nhận có hiệu lực trong ' + count + ' giây')
+        count--;
+        $('#countdownEx').html('Mã xác nhận có hiệu lực trong ' + count + ' giây');
         if (count == 0) {
-            clearInterval(timerLostPassword)
-            jQuery('#checkEmail').val('Gửi lại mã xác nhận')
-            jQuery('#checkEmail').show()
-            jQuery('#endTime').show()
-            jQuery('#countdownEx').hide()
-            jQuery('#checkCode').hide()
-            jQuery('#removeCode').click()
+            clearInterval(timerLostPassword);
+            $('#checkEmail').val('Gửi lại mã xác nhận');
+            $('#checkEmail').show();
+            $('#endTime').show();
+            $('#countdownEx').hide();
+            $('#checkCode').hide();
+            $('#removeCode').click();
         }
     }, 1000);
 }

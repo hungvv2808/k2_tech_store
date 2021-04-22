@@ -124,9 +124,11 @@ public class AuthorizationFEController extends BaseController implements Seriali
     public void resetMyAccount() {
         account = accountRepository.findByAccountId(accountDto.getAccountId());
         BeanUtils.copyProperties(account, accountDto);
-        married = false;
         addressFEController.resetAll();
-        CityDistrictDto cityDistrictDto = new CityDistrictDto(accountDto.getProvinceId(), accountDto.getDistrictId(), accountDto.getCommuneId());
+        CityDistrictDto cityDistrictDto = new CityDistrictDto();
+        cityDistrictDto.setProvinceId(accountDto.getProvinceId());
+        cityDistrictDto.setDistrictId(accountDto.getDistrictId());
+        cityDistrictDto.setCommuneId(accountDto.getCommuneId());
         addressFEController.setCityDistrictDto(cityDistrictDto);
         addressFEController.loadData();
         listProvinceAccount = new ArrayList<>();

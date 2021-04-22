@@ -1,0 +1,17 @@
+.content-profile {
+  margin-top: 7rem;
+
+  .title-profile {
+    h1 {
+      text-align: center;
+      width: 100%;
+      padding-bottom: 2rem;
+      color: $primary-color;
+      text-transform: uppercase;
+    }
+  }
+
+  .form-group {
+    width: 100%;
+  }
+}
