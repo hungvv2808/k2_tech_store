@@ -14,13 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentSearchDto extends BaseSearchDto {
-    private Long accountId;
-    private Long assetId;
-    private Long paymentFormality;
-    private Date fromDate;
-    private Date toDate;
-    private Integer status;
-    private List<Integer> statusList;
     private String code;
-    private String regulationCode;
+    private Integer status;
+    private String customerName;
+    private String phone;
+    private Integer statusInit;
 }

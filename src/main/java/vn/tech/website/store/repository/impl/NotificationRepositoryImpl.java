@@ -34,7 +34,9 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom 
                 "       rn.status                  as 'receive_status', " +
                 "       rn.create_date             as 'receive_create_date', " +
                 "       rn.create_by               as 'receive_create_by', " +
-                "       rn.status_bell             as 'receive_status_bell' ");
+                "       rn.status_bell             as 'receive_status_bell'," +
+                "       sn.object_id               as 'object_id',  " +
+                "       sn.type                    as 'type' ");
         appendQueryFromAndWhereForSearch(sb, searchDto);
         sb.append(" order by rn.receive_notification_id desc ");
 
@@ -67,6 +69,8 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom 
             dto.setDateBeforeNow(dateBeforeNow != null ? DateUtil.countTimeBefore(dateBeforeNow) + " " + DateUtil.typeTime + " trước" : "");
             dto.setCreateBy(ValueUtil.getLongByObject(obj[12]));
             dto.setStatusBell(ValueUtil.getBooleanByObject(obj[13]));
+            dto.setObjectId(ValueUtil.getLongByObject(obj[14]));
+            dto.setType(ValueUtil.getIntegerByObject(obj[15]));
             notificationDtoList.add(dto);
         }
         return notificationDtoList;

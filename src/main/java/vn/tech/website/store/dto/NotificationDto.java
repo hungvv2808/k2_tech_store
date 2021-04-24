@@ -44,4 +44,8 @@ public class NotificationDto {
     private String receiveFullname;
     @JsonProperty("date_before_now")
     private String dateBeforeNow;
+    @JsonProperty("object_id")
+    private Long objectId;
+    @JsonProperty("type")
+    private Integer type;
 }

@@ -49,6 +49,8 @@ public class OrdersController extends BaseController {
     private ShippingRepository shippingRepository;
     @Autowired
     private ProductHighLightRepository productHighLightRepository;
+    @Autowired
+    private ProductImageRepository productImageRepository;
 
     private LazyDataModel<OrdersDto> lazyDataModel;
     private OrdersDto ordersDto;
@@ -70,14 +72,6 @@ public class OrdersController extends BaseController {
         if (!FacesContext.getCurrentInstance().isPostback()) {
             init();
             orderType = DbConstant.ORDER_TYPE_ORDER;
-            resetAll(orderType);
-        }
-    }
-
-    public void initDataBill() {
-        if (!FacesContext.getCurrentInstance().isPostback()) {
-            init();
-            orderType = DbConstant.ORDER_TYPE_BILL;
             resetAll(orderType);
         }
     }
@@ -172,6 +166,13 @@ public class OrdersController extends BaseController {
             ordersDetailDtoList.get(index).setDiscount(discount);
             Long maxQty = product.getQuantity();
             ordersDetailDtoList.get(index).setMaxQuantity(maxQty);
+
+            ordersDetailDtoList.get(index).getProductDto().setProductImages(new LinkedHashSet<>());
+            ordersDetailDtoList.get(index).getProductDto().setProductImages(productImageRepository.getImagePathByProductId(ordersDetailDtoList.get(index).getProductId()));
+            if (ordersDetailDtoList.get(index).getProductDto().getProductImages().size() != 0) {
+                ordersDetailDtoList.get(index).getProductDto().setImageToShow(ordersDetailDtoList.get(index).getProductDto().getProductImages().iterator().next());
+            }
+
             FacesUtil.updateView("dlForm");
         }
         if (ordersDetailDtoList.get(index).getQuantity() != null) {
@@ -193,6 +194,10 @@ public class OrdersController extends BaseController {
         }
         if (StringUtils.isBlank(ordersDto.getPhone())) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập số điện thoại");
+            return false;
+        }
+        if (StringUtils.isBlank(ordersDto.getPhone())) {
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập email");
             return false;
         }
         if (StringUtils.isBlank(ordersDto.getAddress())) {
@@ -265,32 +270,32 @@ public class OrdersController extends BaseController {
             productRepository.save(product);
 
             // update point for product
-//            ProductHighLight productHighLight = productHighLightRepository.findLastRecord(dto.getProductId());
-//            Integer monthDf = productHighLight.getDateAdd().getMonth();
-//            Integer yearDf = productHighLight.getDateAdd().getYear();
-//
-//            Date now = new Date();
-//            Integer monthNow = now.getMonth();
-//            Integer yearNow = now.getYear();
-//
-//            if (yearNow > yearDf) {
-//                ProductHighLight productHighLightNew = new ProductHighLight();
-//                productHighLightNew.setProductId(dto.getProductId());
-//                productHighLightNew.setDateAdd(now);
-//                productHighLightNew.setPoint(1);
-//                productHighLightRepository.save(productHighLightNew);
-//            } else if (yearNow.equals(yearDf)) {
-//                if (monthNow > monthDf) {
-//                    ProductHighLight productHighLightNew = new ProductHighLight();
-//                    productHighLightNew.setProductId(dto.getProductId());
-//                    productHighLightNew.setDateAdd(now);
-//                    productHighLightNew.setPoint(1);
-//                    productHighLightRepository.save(productHighLightNew);
-//                } else if (monthNow.equals(monthDf)) {
-//                    productHighLight.setPoint(productHighLight.getPoint() + 1);
-//                    productHighLightRepository.save(productHighLight);
-//                }
-//            }
+            ProductHighLight productHighLight = productHighLightRepository.findLastRecord(dto.getProductId());
+            Integer monthDf = productHighLight.getDateAdd().getMonth();
+            Integer yearDf = productHighLight.getDateAdd().getYear();
+
+            Date now = new Date();
+            Integer monthNow = now.getMonth();
+            Integer yearNow = now.getYear();
+
+            if (yearNow > yearDf) {
+                ProductHighLight productHighLightNew = new ProductHighLight();
+                productHighLightNew.setProductId(dto.getProductId());
+                productHighLightNew.setDateAdd(now);
+                productHighLightNew.setPoint(1);
+                productHighLightRepository.save(productHighLightNew);
+            } else if (yearNow.equals(yearDf)) {
+                if (monthNow > monthDf) {
+                    ProductHighLight productHighLightNew = new ProductHighLight();
+                    productHighLightNew.setProductId(dto.getProductId());
+                    productHighLightNew.setDateAdd(now);
+                    productHighLightNew.setPoint(1);
+                    productHighLightRepository.save(productHighLightNew);
+                } else if (monthNow.equals(monthDf)) {
+                    productHighLight.setPoint(productHighLight.getPoint() + 1);
+                    productHighLightRepository.save(productHighLight);
+                }
+            }
         }
 
         FacesUtil.addSuccessMessage("Lưu thành công.");
@@ -299,10 +304,10 @@ public class OrdersController extends BaseController {
     }
 
     public void onDeleteProduct(OrdersDetailDto ordersDetailDto) {
-        if (ordersDetailDto != null) {
+        if (ordersDetailDto != null && ordersDto.getTotalAmount() != null) {
             ordersDto.setTotalAmount(ordersDto.getTotalAmount() - ordersDetailDto.getAmount());
-            ordersDetailDtoList.remove(ordersDetailDto);
         }
+        ordersDetailDtoList.remove(ordersDetailDto);
         FacesUtil.updateView("dlForm");
     }
 
@@ -331,6 +336,11 @@ public class OrdersController extends BaseController {
             Product product = productRepository.getByProductId(obj.getProductId());
             dto.setUnitPrice(product.getPrice());
             dto.setDiscount(product.getDiscount());
+            dto.getProductDto().setProductImages(new LinkedHashSet<>());
+            dto.getProductDto().setProductImages(productImageRepository.getImagePathByProductId(dto.getProductId()));
+            if (dto.getProductDto().getProductImages().size() != 0) {
+                dto.getProductDto().setImageToShow(dto.getProductDto().getProductImages().iterator().next());
+            }
             ordersDetailDtoList.add(dto);
         }
     }
@@ -397,9 +407,7 @@ public class OrdersController extends BaseController {
         orderRepository.save(orders);
         Payments payments = new Payments();
         BeanUtils.copyProperties(orders, payments);
-        payments.setType(0);
         payments.setTotalAmount(resultDto.getAllTotalAmount());
-        payments.setStatus(DbConstant.PAYMENT_STATUS_PAID);
         paymentsRepository.save(payments);
         FacesUtil.addSuccessMessage("Thanh toán thành công.");
         FacesUtil.closeDialog("dialogPaymentMethod");

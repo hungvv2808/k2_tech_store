@@ -19,12 +19,9 @@ import java.util.Date;
 @Getter
 @Setter
 public class Payment {
-    private static final long serialVersionUID = -313470329227921430L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id")
-    @JsonProperty("payment_id")
     private Long paymentId;
 
     @Column(name = "store_register_id")
@@ -68,20 +65,13 @@ public class Payment {
     protected Date createDate;
 
     @Column(name = "update_date")
-    @JsonIgnore
     protected Date updateDate;
 
     @Column(name = "create_by")
-    @JsonIgnore
     protected Long createBy;
 
     @Column(name = "update_by")
-    @JsonIgnore
     protected Long updateBy;
 
-    public Payment(Long paymentId, String code) {
-        this.paymentId = paymentId;
-        this.code = code;
-    }
 }
 

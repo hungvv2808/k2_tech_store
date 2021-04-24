@@ -11,7 +11,6 @@ import vn.tech.website.store.model.payment.Payment;
 import vn.tech.website.store.model.payment.other.*;
 import vn.tech.website.store.repository.*;
 import vn.tech.website.store.util.Constant;
-import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.payment.PaymentVariableUtil;
 import vn.tech.website.store.util.payment.other.constants.PaymentConstant;
 
@@ -33,7 +32,7 @@ public class PaymentWalletReturnUrlController extends BaseFEController {
     @Autowired
     private PaymentReturnUrlResponseRefRepository paymentReturnUrlResponseRefRepository;
     @Autowired
-    private PaymentRepository paymentRepository;
+    private PaymentsRepository paymentsRepository;
     @Autowired
     private PaymentCheckOrderRequestRepository paymentCheckOrderRequestRepository;
     @Autowired
@@ -56,7 +55,7 @@ public class PaymentWalletReturnUrlController extends BaseFEController {
     public void initData() throws IOException {
         if(!FacesContext.getCurrentInstance().isPostback()){
             init();
-            resetAll();
+            //resetAll();
         }
     }
 
@@ -121,28 +120,28 @@ public class PaymentWalletReturnUrlController extends BaseFEController {
 
         // save data on table payment
         Payment payment = new Payment();
-        payment.setStoreRegisterId(storeRegisterId);
-        payment.setMoney(assetDeposit);
-        payment.setStatus(DbConstant.PAYMENT_STATUS_UNPAID);
-        payment.setPaymentFormality(DbConstant.PAYMENT_FORMALITY_ONLINE);
-        payment.setNote("Thu tiền đặt trước tài sản đấu giá \"" + assetName + "\"");
-        payment.setCreateDate(new Date());
-        payment.setCreateBy(authorizationFEController.getAccountDto().getAccountId());
-        payment.setSendBillStatus(DbConstant.PAYMENT_SEND_BILL_STATUS_UNPAID);
-        Payment paymentTmp = paymentRepository.save(payment);
+//        payment.setStoreRegisterId(storeRegisterId);
+//        payment.setMoney(assetDeposit);
+//        payment.setStatus(DbConstant.PAYMENT_STATUS_UNPAID);
+//        payment.setPaymentFormality(DbConstant.PAYMENT_FORMALITY_ONLINE);
+//        payment.setNote("Thu tiền đặt trước tài sản đấu giá \"" + assetName + "\"");
+//        payment.setCreateDate(new Date());
+//        payment.setCreateBy(authorizationFEController.getAccountDto().getAccountId());
+//        payment.setSendBillStatus(DbConstant.PAYMENT_SEND_BILL_STATUS_UNPAID);
+//        Payment paymentTmp = paymentRepository.save(payment);
+//
+//        // update status on table payment
+//        paymentTmp.setCode("GD" + String.format("%06d", payment.getPaymentId()));
+//        paymentTmp.setStatus(status == PaymentConstant.API_WALLET_STATUS_ALREADY_PAID ? DbConstant.PAYMENT_STATUS_PAID : DbConstant.PAYMENT_STATUS_UNPAID);
+//        paymentRepository.save(paymentTmp);
+//        System.err.println("Update data on table payment complete !!!");
 
-        // update status on table payment
-        paymentTmp.setCode("GD" + String.format("%06d", payment.getPaymentId()));
-        paymentTmp.setStatus(status == PaymentConstant.API_WALLET_STATUS_ALREADY_PAID ? DbConstant.PAYMENT_STATUS_PAID : DbConstant.PAYMENT_STATUS_UNPAID);
-        paymentRepository.save(paymentTmp);
-        System.err.println("Update data on table payment complete !!!");
-
-        // update payment id on payment return url request table
-        PaymentReturnUrlRequest paymentReturnUrlRequest = paymentReturnUrlRequestRepository.findById(paymentReturnUrlRequestId).orElse(null);
-        paymentReturnUrlRequest.setPaymentId(paymentTmp.getPaymentId());
-        paymentReturnUrlRequestRepository.save(paymentReturnUrlRequest);
-        System.err.println("Update data on table payment_return_url_request complete !!!");
-        System.err.println("Update status on table store register complete !!!");
+//        // update payment id on payment return url request table
+//        PaymentReturnUrlRequest paymentReturnUrlRequest = paymentReturnUrlRequestRepository.findById(paymentReturnUrlRequestId).orElse(null);
+//        paymentReturnUrlRequest.setPaymentId(paymentTmp.getPaymentId());
+//        paymentReturnUrlRequestRepository.save(paymentReturnUrlRequest);
+//        System.err.println("Update data on table payment_return_url_request complete !!!");
+//        System.err.println("Update status on table store register complete !!!");
     }
     
     public void setLocalMessage() {

@@ -63,6 +63,11 @@
                                          value="#{ordersController.ordersDto.phone}"
                                          maxlength="200"/>
 
+                            <p:outputLabel value="Email:" for="email" styleClass="requireLabel"/>
+                            <p:inputText id="email" placeholder="Nhập email" readonly="#{ordersController.readonly}"
+                                         value="#{ordersController.ordersDto.email}"
+                                         maxlength="200"/>
+
                             <p:outputLabel value="Ghi chú:" for="note"/>
                             <p:inputText id="note" placeholder="Nhập ghi chú" readonly="#{ordersController.readonly}"
                                          value="#{ordersController.ordersDto.note}"
@@ -82,6 +87,12 @@
                                 <p:panelGrid columns="4"
                                              columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
                                              layout="grid" style="margin:10px" styleClass="ui-panelgrid-blank">
+
+                                    <p:outputLabel value="Ảnh" for="image" rendered="#{not empty ordersDetailDto.productDto.imageToShow}"/>
+                                    <p:graphicImage id="image" style="width: 50px; height: 50px"
+                                                    rendered="#{not empty ordersDetailDto.productDto.imageToShow}"
+                                                    name="#{ordersDetailDto.productDto.imageToShow}"/>
+
                                     <p:outputLabel value="Sản phẩm: " for="product"/>
                                     <p:selectOneMenu id="product" autoWidth="false" effect="fade" disabled="#{ordersController.readonly}"
                                                      value="#{ordersDetailDto.productId}" required="true"
@@ -123,8 +134,8 @@
                                                          minFractionDigits="0" locale="vi_VN"/>
                                     </p:inputText>
 
-                                    <p:outputLabel></p:outputLabel>
-                                    <p:outputLabel></p:outputLabel>
+                                    <p:outputLabel rendered="#{empty ordersDetailDto.productDto.imageToShow}"/>
+                                    <p:outputLabel rendered="#{empty ordersDetailDto.productDto.imageToShow}"/>
 
                                     <p:commandButton value="Xóa sản phẩm" style="width: auto" styleClass="red-btn"
                                                      process="@this" rendered="#{!ordersController.readonly}"

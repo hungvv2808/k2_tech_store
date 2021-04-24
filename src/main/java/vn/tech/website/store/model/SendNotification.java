@@ -22,8 +22,14 @@ public class SendNotification extends BaseModel{
     @Column(name = "account_id")
     private Long accountId;
 
+    @Column(name = "object_id")
+    private Long objectId;
+
     @Column(name = "content")
     private String content;
+
+    @Column(name = "type")
+    private Integer type;
 
     @Column(name = "status")
     private Integer status;

@@ -9,4 +9,6 @@ import java.util.List;
 public interface ShippingRepository extends CrudRepository<Shipping, Long>, ShippingRepositoryCustom {
     @Query("select s from Shipping s")
     List<Shipping> findAllShipping();
+
+    Shipping getByShippingId(Long shippingId);
 }

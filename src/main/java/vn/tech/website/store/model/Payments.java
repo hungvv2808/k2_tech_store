@@ -17,20 +17,14 @@ public class Payments extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id")
-    private Integer paymentId;
+    private Long paymentId;
 
     @Column(name = "orders_id")
-    private Integer ordersId;
+    private Long ordersId;
 
     @Column(name = "code")
     private String code;
 
     @Column(name = "total_amount")
     private Double totalAmount;
-
-    @Column(name = "type")
-    private Integer type;
-
-    @Column(name = "status")
-    private Integer status;
 }

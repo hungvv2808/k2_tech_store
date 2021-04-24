@@ -5,7 +5,7 @@ import vn.tech.website.store.dto.payment.PaymentSearchDto;
 
 import java.util.List;
 
-public interface PaymentRepositoryCustom  {
+public interface PaymentsRepositoryCustom {
     List<PaymentDto> search(PaymentSearchDto paymentSearchDto);
     Long countSearch(PaymentSearchDto paymentSearchDto);
 }
