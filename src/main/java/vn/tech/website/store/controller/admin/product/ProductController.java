@@ -51,6 +51,10 @@ public class ProductController extends BaseController {
     private ProductImageRepository productImageRepository;
     @Autowired
     private ProductHighLightRepository productHighLightRepository;
+    @Autowired
+    private SendNotificationRepository sendNotificationRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     private LazyDataModel<ProductDto> lazyDataModel;
     private ProductDto productDto;
@@ -288,13 +292,24 @@ public class ProductController extends BaseController {
                     }
                 }
             }
+            String option = "";
             for (int i = 0; i < listOptionSelect.size(); i++) {
                 Long productOptionId = ValueUtil.getLongByObject(listOptionSelect.get(i));
                 ProductOptionDetail productOptionDetail = new ProductOptionDetail();
                 productOptionDetail.setProductId(product.getProductId());
                 productOptionDetail.setProductOptionId(productOptionId);
                 productOptionDetailRepository.save(productOptionDetail);
+
+                //set productOptionName
+                ProductOption productOption = productOptionRepository.getByProductOptionId(productOptionDetail.getProductOptionId());
+                if (option == "") {
+                    option += productOption.getOptionName();
+                } else {
+                    option += " - " + productOption.getOptionName();
+                }
+                productDto.setProductNameToShow(product.getProductName() +  "(" + option + ")");
             }
+
             //save to product_link
             if (product.getType() == DbConstant.PRODUCT_TYPE_CHILD) {
                 ProductLink productLinkDelete = productLinkRepository.getByChildId(product.getProductId());
@@ -307,6 +322,32 @@ public class ProductController extends BaseController {
                 productLinkRepository.save(productLink);
             }
         }
+
+        if (productDto.getProductId() == null) {
+            //send notification
+            SendNotification sendNotification = new SendNotification();
+            sendNotification.setAccountId(authorizationController.getAccountDto().getAccountId());
+            sendNotification.setContent("Có sản phẩm mới: " + productDto.getProductNameToShow() != null ? productDto.getProductNameToShow() : product.getProductName());
+            sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
+            sendNotification.setObjectId(product.getProductId());
+            sendNotification.setType(DbConstant.NOTIFICATION_TYPE_PRODUCT);
+            sendNotification.setCreateDate(new Date());
+            sendNotification.setUpdateDate(new Date());
+            sendNotificationRepository.save(sendNotification);
+            //receive notification
+            List<Account> customerList = getAccountRepository().findAccountByRoleId(DbConstant.ROLE_ID_USER);
+            for (Account customer : customerList) {
+                ReceiveNotification receiveNotification = new ReceiveNotification();
+                receiveNotification.setAccountId(customer.getAccountId());
+                receiveNotification.setSendNotificationId(sendNotification.getSendNotificationId());
+                receiveNotification.setStatus(DbConstant.NOTIFICATION_STATUS_NOT_SEEN);
+                receiveNotification.setStatusBell(DbConstant.NOTIFICATION_STATUS_BELL_NOT_SEEN);
+                receiveNotification.setCreateDate(new Date());
+                receiveNotification.setUpdateDate(new Date());
+                notificationRepository.save(receiveNotification);
+            }
+        }
+
         FacesUtil.addSuccessMessage("Lưu thành công.");
         FacesUtil.closeDialog("dialogInsertUpdate");
         resetAll();

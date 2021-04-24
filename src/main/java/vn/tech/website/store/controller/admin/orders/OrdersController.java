@@ -51,6 +51,10 @@ public class OrdersController extends BaseController {
     private ProductHighLightRepository productHighLightRepository;
     @Autowired
     private ProductImageRepository productImageRepository;
+    @Autowired
+    private ProductOptionDetailRepository productOptionDetailRepository;
+    @Autowired
+    private ProductOptionRepository productOptionRepository;
 
     private LazyDataModel<OrdersDto> lazyDataModel;
     private OrdersDto ordersDto;
@@ -83,7 +87,17 @@ public class OrdersController extends BaseController {
         isReadonly = false;
         List<Product> products = productRepository.getAllExpertType(DbConstant.PRODUCT_TYPE_PARENT);
         for (Product obj : products) {
-            productList.add(new SelectItem(obj.getProductId(), obj.getProductName()));
+            List<ProductOptionDetail> productOptionDetails = productOptionDetailRepository.findAllByProductId(obj.getProductId());
+            String option = "";
+            for (ProductOptionDetail productOptionDetail : productOptionDetails) {
+                ProductOption productOption = productOptionRepository.getByProductOptionId(productOptionDetail.getProductOptionId());
+                if (option == "") {
+                    option += productOption.getOptionName();
+                } else {
+                    option += " - " + productOption.getOptionName();
+                }
+            }
+            productList.add(new SelectItem(obj.getProductId(), obj.getProductName() + "(" + option + ")"));
         }
         ordersDetailDtoList = new ArrayList<>();
         accountList = new ArrayList<>();
@@ -218,7 +232,7 @@ public class OrdersController extends BaseController {
                 return false;
             }
         }
-        if (ordersDto.getShippingId() == null ||ordersDto.getShippingId() == -1){
+        if (ordersDto.getShippingId() == null || ordersDto.getShippingId() == -1) {
             FacesUtil.addErrorMessage("Bạn vui lòng chọn đơn vị vẫn chuyển");
             return false;
         }
@@ -246,9 +260,9 @@ public class OrdersController extends BaseController {
         orderRepository.save(orders);
 
         //update Qty product when edit
-        if (ordersDto.getOrdersId() != null){
+        if (ordersDto.getOrdersId() != null) {
             List<OrdersDetail> listToDelete = orderDetailRepository.getAllByOrdersId(ordersDto.getOrdersId());
-            for (OrdersDetail ordersDetail : listToDelete){
+            for (OrdersDetail ordersDetail : listToDelete) {
                 Product product = productRepository.getByProductId(ordersDetail.getProductId());
                 product.setQuantity(product.getQuantity() + ordersDetail.getQuantity());
                 productRepository.save(product);
@@ -316,7 +330,7 @@ public class OrdersController extends BaseController {
     }
 
     public void onUpdate(OrdersDto resultDto) {
-        if (resultDto.getStatus() == DbConstant.ORDER_STATUS_NOT_APPROVED){
+        if (resultDto.getStatus() == DbConstant.ORDER_STATUS_NOT_APPROVED) {
             isReadonly = false;
         } else {
             isReadonly = true;
@@ -358,6 +372,8 @@ public class OrdersController extends BaseController {
                 sendNotification.setAccountId(authorizationController.getAccountDto().getAccountId());
                 sendNotification.setContent("Đơn hàng có mã: \"" + orders.getCode() + "\" của bạn đã được chuẩn bị xong, vui lòng chờ đến khi đơn hàng được vận chuyển đến bạn.");
                 sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
+                sendNotification.setObjectId(orders.getOrdersId());
+                sendNotification.setType(DbConstant.NOTIFICATION_TYPE_ORDER);
                 sendNotification.setCreateDate(new Date());
                 sendNotification.setUpdateDate(new Date());
                 sendNotificationRepository.save(sendNotification);

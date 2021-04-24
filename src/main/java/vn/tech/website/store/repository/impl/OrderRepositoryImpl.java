@@ -61,7 +61,6 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         }
 
         Query query = createQueryObjForSearch(sb, searchDto);
-        query.setParameter("statusInit", DbConstant.ORDER_STATUS_PAID);
         if (searchDto.getPageSize() > 0) {
             query.setFirstResult(searchDto.getPageIndex());
             query.setMaxResults(searchDto.getPageSize());
@@ -103,19 +102,18 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         sb.append(" SELECT COUNT(o.orders_id) ");
         appendQueryFromAndWhereForSearch(sb, searchDto);
         Query query = createQueryObjForSearch(sb, searchDto);
-        query.setParameter("statusInit", DbConstant.ORDER_STATUS_PAID);
         return Long.valueOf(query.getSingleResult().toString());
     }
 
     private void appendQueryFromAndWhereForSearch(StringBuilder sb, OrdersSearchDto searchDto) {
         sb.append(" FROM orders o " +
                 " LEFT JOIN account acc ON o.account_id = acc.account_id ");
-        sb.append(" WHERE 1=1 AND o.status <> " + DbConstant.ORDER_STATUS_CANCEL);
-        if (searchDto.getStatusInit() == DbConstant.ORDER_TYPE_ORDER) {
-            sb.append(" AND o.status <> :statusInit ");
+        sb.append(" WHERE 1=1 ");
+        if (searchDto.getAccountId() != null) {
+            sb.append(" AND o.account_id = :accountId ");
         }
-        if (searchDto.getStatusInit() == DbConstant.ORDER_TYPE_BILL) {
-            sb.append(" AND o.status = :statusInit ");
+        if (searchDto.getStatusInit() != null && searchDto.getStatusInit() == DbConstant.ORDER_TYPE_ORDER){
+            sb.append(" AND o.status <> :statusInit ");
         }
         if (StringUtils.isNotBlank(searchDto.getCustomerName())) {
             sb.append(" AND o.customer_name LIKE :customerName ");
@@ -133,6 +131,12 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
     private Query createQueryObjForSearch(StringBuilder sb, OrdersSearchDto searchDto) {
         Query query = entityManager.createNativeQuery(sb.toString());
+        if (searchDto.getStatusInit() != null) {
+            query.setParameter("statusInit", DbConstant.ORDER_STATUS_PAID);
+        }
+        if (searchDto.getAccountId() != null) {
+            query.setParameter("accountId", searchDto.getAccountId());
+        }
         if (StringUtils.isNotBlank(searchDto.getCustomerName())) {
             query.setParameter("customerName", "%" + searchDto.getCustomerName().trim() + "%");
         }

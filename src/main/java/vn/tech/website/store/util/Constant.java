@@ -109,6 +109,10 @@ public class Constant {
     public static final int CATE_MALE = 1;
     public static final int CATE_FEMALE = 2;
     public static final int CATE_KID = 3;
+    public static final String CATE_AO = "AO";
+    public static final String CATE_QUAN = "QUAN";
+    public static final String CATE_GIAY = "GIAY";
+    public static final String CATE_PHU_KIEN = "PHUKIEN";
     public static final int CATE_FASHION = 5;
     public static final int CATE_FOOTWARE = 6;
 

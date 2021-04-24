@@ -16,10 +16,11 @@ import vn.tech.website.store.dto.CategorySearchDto;
 import vn.tech.website.store.dto.NewsDto;
 import vn.tech.website.store.dto.NewsSearchDto;
 import vn.tech.website.store.entity.EScope;
-import vn.tech.website.store.model.Category;
-import vn.tech.website.store.model.News;
+import vn.tech.website.store.model.*;
 import vn.tech.website.store.repository.CategoryRepository;
 import vn.tech.website.store.repository.NewsRepository;
+import vn.tech.website.store.repository.NotificationRepository;
+import vn.tech.website.store.repository.SendNotificationRepository;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
 
@@ -46,6 +47,10 @@ public class NewsController extends BaseController {
     private NewsRepository newsRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private SendNotificationRepository sendNotificationRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     private LazyDataModel<NewsDto> lazyDataModel;
     private NewsDto newsDto;
@@ -143,6 +148,32 @@ public class NewsController extends BaseController {
         news.setUpdateDate(new Date());
         news.setUpdateBy(authorizationController.getAccountDto().getAccountId());
         newsRepository.save(news);
+
+        if (newsDto.getNewsId() == null) {
+            //send notification
+            SendNotification sendNotification = new SendNotification();
+            sendNotification.setAccountId(authorizationController.getAccountDto().getAccountId());
+            sendNotification.setContent("Có tin tức mới: " + news.getContent());
+            sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
+            sendNotification.setObjectId(news.getNewsId());
+            sendNotification.setType(DbConstant.NOTIFICATION_TYPE_NEWS);
+            sendNotification.setCreateDate(new Date());
+            sendNotification.setUpdateDate(new Date());
+            sendNotificationRepository.save(sendNotification);
+            //receive notification
+            List<Account> customerList = getAccountRepository().findAccountByRoleId(DbConstant.ROLE_ID_USER);
+            for (Account customer : customerList) {
+                ReceiveNotification receiveNotification = new ReceiveNotification();
+                receiveNotification.setAccountId(customer.getAccountId());
+                receiveNotification.setSendNotificationId(sendNotification.getSendNotificationId());
+                receiveNotification.setStatus(DbConstant.NOTIFICATION_STATUS_NOT_SEEN);
+                receiveNotification.setStatusBell(DbConstant.NOTIFICATION_STATUS_BELL_NOT_SEEN);
+                receiveNotification.setCreateDate(new Date());
+                receiveNotification.setUpdateDate(new Date());
+                notificationRepository.save(receiveNotification);
+            }
+        }
+
         FacesUtil.addSuccessMessage("Lưu thành công.");
         FacesUtil.closeDialog("dialogInsertUpdate");
         onSearch();

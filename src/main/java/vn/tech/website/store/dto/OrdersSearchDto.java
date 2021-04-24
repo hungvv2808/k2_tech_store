@@ -15,4 +15,5 @@ public class OrdersSearchDto extends BaseSearchDto {
     private String customerName;
     private String phone;
     private Integer statusInit;
+    private Long accountId;
 }

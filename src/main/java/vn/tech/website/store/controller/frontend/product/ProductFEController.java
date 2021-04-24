@@ -90,6 +90,7 @@ public class ProductFEController extends BaseFEController {
         pagination.setRequest(request);
         searchDto = new ProductSearchDto();
         searchDto.setCategoryId(categoryId);
+        //searchDto.setCategoryId(categoryRepository.getByCode(request.getParameter("catecode")).getCategoryId());
         searchDto.setBrandId(brandId);
         onSearch(searchDto);
 

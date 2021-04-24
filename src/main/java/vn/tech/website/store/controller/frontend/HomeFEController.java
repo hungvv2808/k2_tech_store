@@ -11,6 +11,7 @@ import vn.tech.website.store.dto.NewsDto;
 import vn.tech.website.store.dto.NewsSearchDto;
 import vn.tech.website.store.dto.ProductDto;
 import vn.tech.website.store.dto.ProductSearchDto;
+import vn.tech.website.store.repository.CategoryRepository;
 import vn.tech.website.store.repository.NewsRepository;
 import vn.tech.website.store.repository.ProductImageRepository;
 import vn.tech.website.store.repository.ProductRepository;
@@ -41,16 +42,20 @@ public class HomeFEController extends BaseFEController {
     private ProductRepository productRepository;
     @Autowired
     private ProductImageRepository productImageRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     private Date now;
     private List<NewsDto> newsDtoList;
     private List<ProductDto> mobileList;
     private List<ProductDto> laptopList;
     private List<ProductDto> watchList;
-    private List<ProductDto> maleList;
-    private List<ProductDto> femaleList;
-    private List<ProductDto> kidList;
     private List<ProductDto> airList;
+    private List<ProductDto> shirtList;
+    private List<ProductDto> pantList;
+    private List<ProductDto> sneakerList;
+    private List<ProductDto> accessoriesList;
+
     private ProductSearchDto searchDto;
 
     public void initData() {
@@ -81,18 +86,35 @@ public class HomeFEController extends BaseFEController {
         watchList = onSearchListProduct(Constant.CATE_WATCH);
         airList = new ArrayList<>();
         airList = onSearchListProduct(Constant.CATE_HEADPHONE);
-        maleList = new ArrayList<>();
-        maleList = onSearchListProduct(Constant.CATE_MALE);
-        femaleList = new ArrayList<>();
-        femaleList = onSearchListProduct(Constant.CATE_FEMALE);
-        kidList = new ArrayList<>();
-        kidList = onSearchListProduct(Constant.CATE_KID);
+        shirtList = new ArrayList<>();
+        shirtList = onSearchListProductByCodeCate(Constant.CATE_AO);
+        pantList = new ArrayList<>();
+        pantList = onSearchListProductByCodeCate(Constant.CATE_QUAN);
+        sneakerList = new ArrayList<>();
+        sneakerList = onSearchListProductByCodeCate(Constant.CATE_GIAY);
+        accessoriesList = new ArrayList<>();
+        accessoriesList = onSearchListProductByCodeCate(Constant.CATE_PHU_KIEN);
     }
 
     private List<ProductDto> onSearchListProduct(Integer categoryId) {
         searchDto.setPageSize(DbConstant.LIMIT_SHOW_FE);
         searchDto.setType(DbConstant.PRODUCT_TYPE_PARENT);
         searchDto.setCategoryId(Long.valueOf(categoryId));
+        List<ProductDto> showList = productRepository.search(searchDto);
+        for (ProductDto dto : showList){
+            dto.setProductImages(new LinkedHashSet<>());
+            dto.setProductImages(productImageRepository.getImagePathByProductId(dto.getProductId()));
+            if (dto.getProductImages().size() != 0) {
+                dto.setImageToShow(dto.getProductImages().iterator().next());
+            }
+        }
+        return showList;
+    }
+
+    private List<ProductDto> onSearchListProductByCodeCate(String cateCode) {
+        searchDto.setPageSize(DbConstant.LIMIT_SHOW_FE);
+        searchDto.setType(DbConstant.PRODUCT_TYPE_PARENT);
+        searchDto.setCategoryId(categoryRepository.getByCode(cateCode).getCategoryId());
         List<ProductDto> showList = productRepository.search(searchDto);
         for (ProductDto dto : showList){
             dto.setProductImages(new LinkedHashSet<>());

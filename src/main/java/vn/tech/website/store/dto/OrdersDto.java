@@ -7,6 +7,7 @@ import lombok.Setter;
 import vn.tech.website.store.model.Orders;
 import vn.tech.website.store.model.OrdersDetail;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,6 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrdersDto extends Orders {
-    List<OrdersDetail> ordersDetailList;
+    List<OrdersDetailDto> ordersDetailDtoList = new ArrayList<>();
     Double allTotalAmount;
+    String statusString;
+    Boolean showDetail;
 }

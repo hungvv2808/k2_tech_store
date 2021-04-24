@@ -49,24 +49,16 @@
                     <div class="dropdown-menu" aria-labelledby="navbarProducts">
                         <h:link class="dropdown-item" value="Tất cả sản phẩm"
                                 outcome="/frontend/product/product.xhtml"/>
-                        <h:link class="dropdown-item" value="Thời trang nam"
-                                outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_MALE}"/>
-                        <h:link class="dropdown-item" value="Thời trang nữ"
-                                outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_FEMALE}"/>
-                        <h:link class="dropdown-item" value="Thời trang trẻ em"
-                                outcome="/frontend/product/product.xhtml?catid=#{Constant.CATE_KID}"/>
+                        <h:link class="dropdown-item" value="Áo"
+                                outcome="/frontend/product/product2.xhtml?catecode=#{Constant.CATE_AO}"/>
+                        <h:link class="dropdown-item" value="Quần"
+                                outcome="/frontend/product/product2.xhtml?catecode=#{Constant.CATE_QUAN}"/>
+                        <h:link class="dropdown-item" value="Giày"
+                                outcome="/frontend/product/product2.xhtml?catecode=#{Constant.CATE_GIAY}"/>
+                        <h:link class="dropdown-item" value="Phụ kiện"
+                                outcome="/frontend/product/product2.xhtml?catecode=#{Constant.CATE_PHU_KIEN}"/>
                     </div>
                 </li>
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link nav-link__home" href="#" id="navbarBrands">-->
-<!--                        <span class="uppercase">Thương hiệu</span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link nav-link__home" href="#" id="navbarCates">-->
-<!--                        <span class="uppercase">Loại sản phẩm</span>-->
-<!--                    </a>-->
-<!--                </li>-->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarOrders" role="button" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
@@ -78,7 +70,8 @@
                             <i class="fas fa-cart-arrow-down"/>
                             <span>Giỏ hàng</span>
                         </h:link>
-                        <h:link class="dropdown-item" outcome="/frontend/order/my-orders.xhtml">
+                        <h:link class="dropdown-item" outcome="/frontend/order/my-orders.xhtml"
+                                rendered="#{authorizationFEController.hasLogged()}">
                             <i class="fas fa-wallet"/>
                             <span>Hoá đơn</span>
                         </h:link>
@@ -94,23 +87,24 @@
                     </li>
                 </h:panelGroup>
 
-                <h:panelGroup id="topbar" rendered="#{authorizationFEController.hasLogged()}" style="display: inherit">
+                <h:panelGroup rendered="#{authorizationFEController.hasLogged()}">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle dropdown-toggle__profile" href="#" id="navbarProfile"
                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <div class="profile">
                                 <p:graphicImage styleClass="profile__avatar"
-                                                name="#{authorizationFEController.accountDto.imagePath == null ? resource['frontend-layout:img/customer-demo-1.png'] : authorizationFEController.accountDto.imagePath}"/>
-                                <span class="profile__name">#{authorizationFEController.accountDto.fullName == null ? authorizationFEController.accountDto.userName : authorizationFEController.accountDto.fullName}</span>
+                                                name="#{authorizationFEController.accountDto.imagePath == null ? resource['frontend-layout:img/founder.jpg'] : authorizationFEController.accountDto.imagePath}"/>
+                                <span class="profile__name">#{authorizationFEController.accountDto.fullName == null ? 'Vũ Văn Hùng' : authorizationFEController.accountDto.fullName}</span>
                             </div>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarProfile">
-                            <p:link class="dropdown-item" outcome="/frontend/profile.xhtml">
+                            <h:link class="dropdown-item" outcome="/frontend/account/profile.xhtml">
                                 <i class="fas fa-user"/>
                                 <span>Thông tin cá nhân</span>
-                            </p:link>
+                            </h:link>
                             <h:form>
-                                <h:commandLink styleClass="dropdown-item" onclick="logout();" actionListener="#{authorizationFEController.logout}">
+                                <h:commandLink styleClass="dropdown-item" onclick="logout();"
+                                               actionListener="#{authorizationFEController.logout}">
                                     <i class="fas fa-sign-out-alt"/>
                                     <span>Đăng xuất</span>
                                 </h:commandLink>
@@ -118,17 +112,7 @@
                         </div>
                     </li>
                     <li class="nav-item nav-item__last-child dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarNotis" role="button"
-                           data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            <div class="noti">
-                                <i class="far fa-bell fa-lg noti__bell"/>
-                                <span class="noti__count">100+</span>
-                            </div>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarNotis">
-
-                        </div>
+                        <ui:include src="notification.xhtml" />
                     </li>
                 </h:panelGroup>
             </ul>

@@ -148,6 +148,9 @@ public class DbConstant {
     //send notification
     public static final int SNOTIFICATION_STATUS_INACTIVE = 0;
     public static final int SNOTIFICATION_STATUS_ACTIVE = 1;
+    public static final int NOTIFICATION_TYPE_ORDER = 0;
+    public static final int NOTIFICATION_TYPE_PRODUCT = 1;
+    public static final int NOTIFICATION_TYPE_NEWS = 2;
 
     // notification
     public static final boolean NOTIFICATION_STATUS_NOT_SEEN = false;

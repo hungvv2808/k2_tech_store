@@ -31,4 +31,6 @@ public interface CategoryRepository extends CrudRepository<Category, Long>, Cate
             " and c.status = " + DbConstant.CATEGORY_STATUS_ACTIVE
             + " and c.type = " + DbConstant.CATEGORY_TYPE_NEWS)
     List<Category> findAllCategoryNewsExpertId(@Param("categoryId") Long categoryId);
+
+    Category getByCode(String code);
 }

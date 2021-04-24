@@ -13,9 +13,7 @@ import vn.tech.website.store.dto.OrdersDetailDto;
 import vn.tech.website.store.dto.payment.PaymentDto;
 import vn.tech.website.store.dto.payment.PaymentSearchDto;
 import vn.tech.website.store.entity.EScope;
-import vn.tech.website.store.model.OrdersDetail;
-import vn.tech.website.store.model.Product;
-import vn.tech.website.store.model.Shipping;
+import vn.tech.website.store.model.*;
 import vn.tech.website.store.repository.*;
 import vn.tech.website.store.util.FacesUtil;
 
@@ -49,6 +47,10 @@ public class PaymentController extends BaseController {
     private ShippingRepository shippingRepository;
     @Autowired
     private ProductImageRepository productImageRepository;
+    @Autowired
+    private ProductOptionDetailRepository productOptionDetailRepository;
+    @Autowired
+    private ProductOptionRepository productOptionRepository;
 
 
     private LazyDataModel<PaymentDto> lazyDataModel;
@@ -122,8 +124,22 @@ public class PaymentController extends BaseController {
             BeanUtils.copyProperties(obj, dto);
             Product product = productRepository.getByProductId(obj.getProductId());
             dto.getProductDto().setProductName(product.getProductName());
+            //set optionName to Show
+            List<ProductOptionDetail> productOptionDetails = productOptionDetailRepository.findAllByProductId(obj.getProductId());
+            String option = "";
+            for (ProductOptionDetail productOptionDetail : productOptionDetails) {
+                ProductOption productOption = productOptionRepository.getByProductOptionId(productOptionDetail.getProductOptionId());
+                if (option == "") {
+                    option += productOption.getOptionName();
+                } else {
+                    option += " - " + productOption.getOptionName();
+                }
+            }
+            dto.getProductDto().setProductNameToShow(dto.getProductDto().getProductName() + "(" + option + ")");
+            //set price & discount
             dto.getProductDto().setPrice(product.getPrice());
             dto.getProductDto().setDiscount(product.getDiscount() != null ? product.getDiscount() : 0);
+            //set imageToShow
             dto.getProductDto().setProductImages(new LinkedHashSet<>());
             dto.getProductDto().setProductImages(productImageRepository.getImagePathByProductId(dto.getProductId()));
             if (dto.getProductDto().getProductImages().size() != 0) {

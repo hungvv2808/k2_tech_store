@@ -15,4 +15,6 @@ public interface ProductOptionRepository extends CrudRepository<ProductOption, L
 
     @Query("select po from ProductOption po where po.productOptionId <> :productOptionId and po.status = " + DbConstant.OPTION_STATUS_ACTIVE)
     List<ProductOption> findAllExpertId(@Param("productOptionId") Long productOptionId);
+
+    ProductOption getByProductOptionId(Long productOptionId);
 }
