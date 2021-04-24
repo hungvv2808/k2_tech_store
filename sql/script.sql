@@ -214,6 +214,7 @@ create table if not exists orders
     note         text          null comment 'Ghi chú của khách hàng',
     total_amount double(22, 0) null comment 'Tổng tiền đơn hàng',
     shipping     double(22, 0) null comment 'Phí ship cho đơn hàng',
+    shipping_id  int           null,
     create_date  datetime      null comment 'Ngày tạo',
     create_by    int           null comment 'Nười tạo',
     update_date  datetime      null comment 'Ngày cập nhật',
@@ -263,99 +264,99 @@ create table product_highlight
     date_add             datetime null,
     point                int      null
 );
-insert into product_highlight(product_id, date_add, point)
-values (2, now(), 0),
-       (5, now(), 0),
-       (8, now(), 0),
-       (11, now(), 0),
-       (13, now(), 0),
-       (14, now(), 0),
-       (18, now(), 0),
-       (19, now(), 0),
-       (20, now(), 0),
-       (22, now(), 0),
-       (23, now(), 0),
-       (26, now(), 0),
-       (28, now(), 0),
-       (29, now(), 0),
-       (30, now(), 0),
-       (31, now(), 0),
-       (32, now(), 0),
-       (35, now(), 0),
-       (37, now(), 0),
-       (38, now(), 0),
-       (39, now(), 0),
-       (40, now(), 0),
-       (42, now(), 0),
-       (43, now(), 0),
-       (44, now(), 0),
-       (46, now(), 0),
-       (47, now(), 0),
-       (49, now(), 0),
-       (51, now(), 0),
-       (52, now(), 0),
-       (53, now(), 0),
-       (55, now(), 0),
-       (56, now(), 0),
-       (57, now(), 0),
-       (59, now(), 0),
-       (60, now(), 0),
-       (61, now(), 0),
-       (63, now(), 0),
-       (64, now(), 0),
-       (65, now(), 0),
-       (67, now(), 0),
-       (68, now(), 0),
-       (69, now(), 0),
-       (71, now(), 0),
-       (72, now(), 0),
-       (73, now(), 0),
-       (74, now(), 0),
-       (75, now(), 0),
-       (76, now(), 0),
-       (77, now(), 0),
-       (78, now(), 0),
-       (79, now(), 0),
-       (80, now(), 0),
-       (81, now(), 0),
-       (82, now(), 0),
-       (83, now(), 0),
-       (84, now(), 0),
-       (85, now(), 0),
-       (86, now(), 0),
-       (87, now(), 0),
-       (88, now(), 0),
-       (89, now(), 0),
-       (90, now(), 0),
-       (91, now(), 0),
-       (92, now(), 0),
-       (93, now(), 0),
-       (94, now(), 0),
-       (95, now(), 0),
-       (96, now(), 0),
-       (97, now(), 0),
-       (98, now(), 0),
-       (99, now(), 0),
-       (100, now(), 0),
-       (101, now(), 0),
-       (102, now(), 0),
-       (103, now(), 0),
-       (104, now(), 0),
-       (105, now(), 0),
-       (106, now(), 0),
-       (107, now(), 0),
-       (108, now(), 0),
-       (109, now(), 0),
-       (110, now(), 0),
-       (111, now(), 0),
-       (113, now(), 0),
-       (114, now(), 0),
-       (115, now(), 0),
-       (116, now(), 0),
-       (117, now(), 0),
-       (118, now(), 0),
-       (119, now(), 0),
-       (120, now(), 0);
+# insert into product_highlight(product_id, date_add, point)
+# values (2, now(), 0),
+#        (5, now(), 0),
+#        (8, now(), 0),
+#        (11, now(), 0),
+#        (13, now(), 0),
+#        (14, now(), 0),
+#        (18, now(), 0),
+#        (19, now(), 0),
+#        (20, now(), 0),
+#        (22, now(), 0),
+#        (23, now(), 0),
+#        (26, now(), 0),
+#        (28, now(), 0),
+#        (29, now(), 0),
+#        (30, now(), 0),
+#        (31, now(), 0),
+#        (32, now(), 0),
+#        (35, now(), 0),
+#        (37, now(), 0),
+#        (38, now(), 0),
+#        (39, now(), 0),
+#        (40, now(), 0),
+#        (42, now(), 0),
+#        (43, now(), 0),
+#        (44, now(), 0),
+#        (46, now(), 0),
+#        (47, now(), 0),
+#        (49, now(), 0),
+#        (51, now(), 0),
+#        (52, now(), 0),
+#        (53, now(), 0),
+#        (55, now(), 0),
+#        (56, now(), 0),
+#        (57, now(), 0),
+#        (59, now(), 0),
+#        (60, now(), 0),
+#        (61, now(), 0),
+#        (63, now(), 0),
+#        (64, now(), 0),
+#        (65, now(), 0),
+#        (67, now(), 0),
+#        (68, now(), 0),
+#        (69, now(), 0),
+#        (71, now(), 0),
+#        (72, now(), 0),
+#        (73, now(), 0),
+#        (74, now(), 0),
+#        (75, now(), 0),
+#        (76, now(), 0),
+#        (77, now(), 0),
+#        (78, now(), 0),
+#        (79, now(), 0),
+#        (80, now(), 0),
+#        (81, now(), 0),
+#        (82, now(), 0),
+#        (83, now(), 0),
+#        (84, now(), 0),
+#        (85, now(), 0),
+#        (86, now(), 0),
+#        (87, now(), 0),
+#        (88, now(), 0),
+#        (89, now(), 0),
+#        (90, now(), 0),
+#        (91, now(), 0),
+#        (92, now(), 0),
+#        (93, now(), 0),
+#        (94, now(), 0),
+#        (95, now(), 0),
+#        (96, now(), 0),
+#        (97, now(), 0),
+#        (98, now(), 0),
+#        (99, now(), 0),
+#        (100, now(), 0),
+#        (101, now(), 0),
+#        (102, now(), 0),
+#        (103, now(), 0),
+#        (104, now(), 0),
+#        (105, now(), 0),
+#        (106, now(), 0),
+#        (107, now(), 0),
+#        (108, now(), 0),
+#        (109, now(), 0),
+#        (110, now(), 0),
+#        (111, now(), 0),
+#        (113, now(), 0),
+#        (114, now(), 0),
+#        (115, now(), 0),
+#        (116, now(), 0),
+#        (117, now(), 0),
+#        (118, now(), 0),
+#        (119, now(), 0),
+#        (120, now(), 0);
 
 -- auto-generated definition
 create table receive_notification
@@ -395,57 +396,59 @@ create table shipping
     constraint shipping_pk
         primary key (shipping_id)
 );
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Alo alo admin on the mic. Mic check mic check</i>' where send_notification_id = 1;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Parker dep chai</i>' where send_notification_id = 1;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Tien oc cho</i>' where send_notification_id = 2;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Testing ...</i>' where send_notification_id = 3;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dit cu thang tien ngu</i>' where send_notification_id = 4;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Lai la Parker dep chai</i>' where send_notification_id = 5;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Check it check it</i>' where send_notification_id = 6;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Abc ...</i>' where send_notification_id = 7;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Xin vai lon .</i>' where send_notification_id = 8;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 9;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Alo alo admin on the mic. Mic check mic check</i>' where send_notification_id = 10;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Parker dep chai</i>' where send_notification_id = 11;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Tien oc cho</i>' where send_notification_id = 12;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Testing ...</i>' where send_notification_id = 13;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dit cu thang tien ngu</i>' where send_notification_id = 14;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Lai la Parker dep chai</i>' where send_notification_id = 15;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Check it check it</i>' where send_notification_id = 16;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Abc ...</i>' where send_notification_id = 17;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Xin vai lon.</i>' where send_notification_id = 18;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 19;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Lai la Parker dep chai</i>' where send_notification_id = 20;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Check it check it</i>' where send_notification_id = 21;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Abc ...</i>' where send_notification_id = 22;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Xin vai lon.</i>' where send_notification_id = 23;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 24;
-update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 25;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 26;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 27;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 28;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 29;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 30;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 31;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 32;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 33;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 34;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 35;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 36;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 37;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 38;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 39;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 40;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 41;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 42;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 43;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 44;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 45;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 46;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 47;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 48;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 49;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 50;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 51;
-update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 52;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Alo alo admin on the mic. Mic check mic check</i>' where send_notification_id = 1;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Parker dep chai</i>' where send_notification_id = 1;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Tien oc cho</i>' where send_notification_id = 2;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Testing ...</i>' where send_notification_id = 3;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dit cu thang tien ngu</i>' where send_notification_id = 4;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Lai la Parker dep chai</i>' where send_notification_id = 5;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Check it check it</i>' where send_notification_id = 6;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Abc ...</i>' where send_notification_id = 7;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Xin vai lon .</i>' where send_notification_id = 8;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 9;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Alo alo admin on the mic. Mic check mic check</i>' where send_notification_id = 10;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Parker dep chai</i>' where send_notification_id = 11;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Tien oc cho</i>' where send_notification_id = 12;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Testing ...</i>' where send_notification_id = 13;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dit cu thang tien ngu</i>' where send_notification_id = 14;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Lai la Parker dep chai</i>' where send_notification_id = 15;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Check it check it</i>' where send_notification_id = 16;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Abc ...</i>' where send_notification_id = 17;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Xin vai lon.</i>' where send_notification_id = 18;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 19;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Lai la Parker dep chai</i>' where send_notification_id = 20;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Check it check it</i>' where send_notification_id = 21;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Abc ...</i>' where send_notification_id = 22;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Xin vai lon.</i>' where send_notification_id = 23;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 24;
+# update send_notification set content = 'Bạn có thông báo mới từ <b>Admin</b> với nội dung: <i>Dinh thuc su !!!</i>' where send_notification_id = 25;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 26;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 27;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 28;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 29;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 30;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 31;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 32;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 33;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 34;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 35;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 36;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 37;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 38;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 39;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 40;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 41;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 42;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 43;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 44;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 45;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 46;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 47;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 48;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 49;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000018</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 50;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 51;
+# update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 52;
 
+ALTER TABLE k2_tech_store.orders MODIFY COLUMN note text
+    CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;

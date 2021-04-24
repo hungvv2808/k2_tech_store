@@ -1435,6 +1435,20 @@
   color: #ffffff;
 }
 
+.content-profile {
+  margin-top: 7rem;
+}
+.content-profile .title-profile h1 {
+  text-align: center;
+  width: 100%;
+  padding-bottom: 2rem;
+  color: #3aaf29;
+  text-transform: uppercase;
+}
+.content-profile .form-group {
+  width: 100%;
+}
+
 #login-modal .modal-dialog .modal-content {
   border: 1px solid #ffffff;
   border-radius: 1rem;

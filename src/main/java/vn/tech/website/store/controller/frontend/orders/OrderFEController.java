@@ -64,7 +64,6 @@ public class OrderFEController extends BaseFEController {
 
     private boolean info;
     private boolean checkShipping;
-    private Long shippingId;
     private String pathShipping;
     private String infoShipping;
     private Long totalQty = 0L;
@@ -88,8 +87,8 @@ public class OrderFEController extends BaseFEController {
         totalMoney = 0D;
         accountDto = new AccountDto();
         ordersDto = new OrdersDto();
+        ordersDto.setShippingId(-1L);
 
-        shippingId = -1L;
         checkShipping = false;
         shippingList = shippingRepository.findAllShipping();
         shippingItem = new ArrayList<>();
@@ -143,6 +142,7 @@ public class OrderFEController extends BaseFEController {
     public void removeProduct(OrdersDetailDto dto) {
         totalQty -= dto.getQuantity();
         totalMoney -= dto.getAmount() * dto.getQuantity();
+        ordersDto.setTotalAmount(totalMoney);
 
         if (productCartMap.size() == 1) {
             session.removeAttribute("cartList");
@@ -285,17 +285,18 @@ public class OrderFEController extends BaseFEController {
     }
 
     public void onChangeShipping() {
-        if (shippingId == -1) {
+        if (ordersDto.getShippingId() == -1) {
             checkShipping = false;
             ordersDto.setShipping(null);
-            ordersDto.setTotalAmount(totalMoney);
+            totalMoney = ordersDto.getTotalAmount();
         } else {
             checkShipping = true;
-            Shipping shipping = shippingMap.get(shippingId);
+            Shipping shipping = shippingMap.get(ordersDto.getShippingId());
             pathShipping = shipping.getPath();
             infoShipping = shipping.getDetail();
             ordersDto.setShipping(Double.parseDouble(shipping.getPrice().toString()));
-            ordersDto.setTotalAmount(totalMoney + ordersDto.getShipping());
+            totalMoney = ordersDto.getTotalAmount();
+            totalMoney += ordersDto.getShipping();
         }
         FacesUtil.updateView("orderList");
     }

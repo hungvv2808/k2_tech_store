@@ -53,7 +53,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="select-shipfee" class="required-label">Đơn vị vận chuyển:</label>
-                                <h:selectOneMenu id="select-shipfee" styleClass="form-control" value="#{orderFEController.shippingId}">
+                                <h:selectOneMenu id="select-shipfee" styleClass="form-control" value="#{orderFEController.ordersDto.shippingId}">
                                     <f:selectItem itemValue="-1" itemLabel="Chọn đơn vị vận chuyển" />
                                     <f:selectItems value="#{orderFEController.shippingItem}" var="ship"
                                                    itemValue="#{ship.value}"
@@ -139,7 +139,7 @@
                                     </div>
                                     <div class="col-lg-2">
                                         <p class="money">
-                                            <h:outputText value="#{orderFEController.ordersDto.totalAmount}">
+                                            <h:outputText value="#{orderFEController.totalMoney}">
                                                 <f:convertNumber type="currency" currencySymbol="VNĐ"
                                                                  maxFractionDigits="6"
                                                                  minFractionDigits="0" locale="vi_VN"/>

@@ -2,39 +2,40 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html">
-
-    <div class="col-md-4 col-sm-4 col-xs-12" style="padding-right: 5px;padding-left: 0px;">
-        <h:selectOneMenu id="tinhThanhPho" value="#{addressFEController.cityDistrictDto.provinceId}"
-                         styleClass="form-control tinhThanhpho_select">
-            <f:selectItem itemValue=""
-                          itemLabel="Tỉnh/Thành phố"/>
-            <f:selectItems value="#{addressFEController.listProvince}" var="tinhTp"
-                           itemLabel="#{addressFEController.upperCaseFirstChar(tinhTp.name)}"
-                           itemValue="#{tinhTp.provinceId}"/>
-            <f:ajax event="change" listener="#{addressFEController.onChangeCity}"
-                    render="quanHuyen phuongXa scriptResetListener"/>
-        </h:selectOneMenu>
-    </div>
-    <div class="col-md-4 col-sm-4 col-xs-12" style="padding-left: 5px;padding-right: 5px">
-        <h:selectOneMenu id="quanHuyen" value="#{addressFEController.cityDistrictDto.districtId}"
-                         styleClass="form-control quanhuyen_select select2-hidden-accessible">
-            <f:selectItem itemValue=""
-                          itemLabel="Quận/huyện"/>
-            <f:selectItems value="#{addressFEController.listDistrict}" var="quanHuyen"
-                           itemLabel="#{addressFEController.upperCaseFirstChar(quanHuyen.name)}"
-                           itemValue="#{quanHuyen.districtId}"/>
-            <f:ajax event="change" listener="#{addressFEController.onChangeDistrict}"
-                    render="phuongXa scriptResetListener"/>
-        </h:selectOneMenu>
-    </div>
-    <div class="col-md-4 col-sm-4 col-xs-12" style="padding-left: 5px;padding-right: 0px;">
-        <h:selectOneMenu id="phuongXa" value="#{addressFEController.cityDistrictDto.communeId}"
-                         styleClass="form-control phuongxa_select select2-hidden-accessible">
-            <f:selectItem itemValue=""
-                          itemLabel="Phường/xã"/>
-            <f:selectItems value="#{addressFEController.listCommune}" var="phuongXa"
-                           itemLabel="#{addressFEController.upperCaseFirstChar(phuongXa.name)}"
-                           itemValue="#{phuongXa.communeId}"/>
-        </h:selectOneMenu>
+    <div class="row">
+        <div class="col-md-4 no-padding">
+            <h:selectOneMenu id="tinhThanhPho" value="#{addressFEController.cityDistrictDto.provinceId}"
+                             styleClass="form-control">
+                <f:selectItem itemValue=""
+                              itemLabel="Tỉnh/Thành phố"/>
+                <f:selectItems value="#{addressFEController.listProvince}" var="city"
+                               itemLabel="#{addressFEController.upperCaseFirstChar(city.name)}"
+                               itemValue="#{city.provinceId}"/>
+                <f:ajax event="change" listener="#{addressFEController.onChangeCity}"
+                        render="quanHuyen phuongXa"/>
+            </h:selectOneMenu>
+        </div>
+        <div class="col-md-4 no-padding">
+            <h:selectOneMenu id="quanHuyen" value="#{addressFEController.cityDistrictDto.districtId}"
+                             styleClass="form-control">
+                <f:selectItem itemValue=""
+                              itemLabel="Quận/huyện"/>
+                <f:selectItems value="#{addressFEController.listDistrict}" var="province"
+                               itemLabel="#{addressFEController.upperCaseFirstChar(province.name)}"
+                               itemValue="#{province.districtId}"/>
+                <f:ajax event="change" listener="#{addressFEController.onChangeDistrict}"
+                        render="phuongXa"/>
+            </h:selectOneMenu>
+        </div>
+        <div class="col-md-4 no-padding">
+            <h:selectOneMenu id="phuongXa" value="#{addressFEController.cityDistrictDto.communeId}"
+                             styleClass="form-control">
+                <f:selectItem itemValue=""
+                              itemLabel="Phường/xã"/>
+                <f:selectItems value="#{addressFEController.listCommune}" var="commune"
+                               itemLabel="#{addressFEController.upperCaseFirstChar(commune.name)}"
+                               itemValue="#{commune.communeId}"/>
+            </h:selectOneMenu>
+        </div>
     </div>
 </ui:composition>
