@@ -1157,7 +1157,20 @@ class lazy_import:
         for v in variant_data:
             v_data = {'product_id': v[0], 'code': v[1]}
             data_repair = str(v_data['code']).split('_')
-            print(data_repair)
+            parent_id = parent_map.get(data_repair[0])
+
+            product_highlight = [{'product_id': v_data['product_id'], 'date_add': self.now, 'point': 0}]
+            self.execute('product_highlight', product_highlight, False)
+
+            self.cur.execute(f"select * from product_link pl where pl.child_id = {v_data['product_id']} and pl.parent_id = {parent_id}")
+            check_exists = self.cur.fetchall()
+            if not check_exists:
+                product_link = [{'parent_id': parent_id, 'child_id': v_data['product_id']}]
+                self.execute('product_link', product_link, False)
+
+            for o in data_repair[1:]:
+                product_option_detail = [{'product_id': v_data['product_id'], 'product_option_id': product_options.get(o)}]
+                self.execute('product_option_detail', product_option_detail, False)
 
 
 if __name__ == '__main__':
