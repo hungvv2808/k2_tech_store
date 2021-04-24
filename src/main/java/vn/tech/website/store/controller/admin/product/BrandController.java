@@ -44,7 +44,7 @@ public class BrandController extends BaseController {
 
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
-            //init();
+            init();
             resetAll();
         }
     }
