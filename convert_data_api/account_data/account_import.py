@@ -11,11 +11,12 @@ conn = mysql.connector.connect(
 cur = conn.cursor()
 
 try:
-    cur.execute('SET FOREIGN_KEY_CHECKS = 0;')
-    cur.execute('truncate table account;')
-    cur.execute('SET FOREIGN_KEY_CHECKS = 1;')
+    # cur.execute('SET FOREIGN_KEY_CHECKS = 0;')
+    # cur.execute('truncate table account;')
+    # cur.execute('SET FOREIGN_KEY_CHECKS = 1;')
 
-    with open('data_customer.json') as data:
+    with open('data_customer.json') as a:
+        data = json.loads(a.read())
         query = "insert into account(" \
                 "user_name, " \
                 "full_name, " \
@@ -38,10 +39,8 @@ try:
                 "update_by) " \
                 "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
-        json = json.loads(data)
         for a in data:
-            json = json.loads(a)
-            print(json)
+            print(a)
     conn.commit()
     conn.close()
 except Exception as e:

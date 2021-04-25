@@ -360,6 +360,7 @@ public class ProductController extends BaseController {
         uploadMultipleImageController.resetAll(productDto.getProductImages());
         productDto.setOptionDetails(new ArrayList<>());
         productDto.setOptionDetails(productOptionDetailRepository.findAllByProductId(productDto.getProductId()));
+        listOptionSelect = new ArrayList<>();
         for (ProductOptionDetail obj : productDto.getOptionDetails()) {
             listOptionSelect.add(obj.getProductOptionId());
         }
