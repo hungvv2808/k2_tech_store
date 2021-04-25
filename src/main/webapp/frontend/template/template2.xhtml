@@ -57,7 +57,7 @@
     <h:body>
         <div class="wapper">
             <div class="topbar">
-                <ui:include src="topbar.xhtml"/>
+                <ui:include src="topbar2.xhtml"/>
                 <ui:insert name="slide-bar"/>
             </div>
 
@@ -66,12 +66,13 @@
             </div>
 
             <footer class="footer">
-                <ui:include src="footer.xhtml"/>
+                <ui:include src="footer2.xhtml"/>
             </footer>
         </div>
 
         <c:if test="#{!authorizationFEController.hasLogged()}">
             <ui:include src="/frontend/modal/login-modal.xhtml"/>
+            <ui:include src="/frontend/modal/register-modal.xhtml"/>
             <ui:include src="/frontend/modal/lost-password-modal.xhtml"/>
             <ui:include src="/frontend/common/modal_register.xhtml"/>
             <ui:include src="/frontend/common/create_new_password.xhtml"/>
