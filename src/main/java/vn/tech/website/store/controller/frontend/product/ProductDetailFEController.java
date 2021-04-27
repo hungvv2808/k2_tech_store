@@ -78,6 +78,7 @@ public class ProductDetailFEController extends BaseFEController {
     public void getOptionProduct() {
         searchDto = new ProductOptionDetailSearchDto();
         searchDto.setParentId(parentId);
+        searchDto.setProductIdTypeNone(productDtoView.getProductId());
         productOptionDetailDtoList = new ArrayList<>();
         optionList = new ArrayList<>();
         List<Long> checkProductIds = new ArrayList<>();

@@ -131,7 +131,7 @@ public class ProductFEController extends BaseFEController {
     }
 
     public void onSearch(ProductSearchDto searchDto) {
-        searchDto.setType(DbConstant.PRODUCT_TYPE_CHILD);
+        searchDto.setExpertType(DbConstant.PRODUCT_TYPE_PARENT);
         pagination.setLazyDataModel(new LazyDataModel<ProductDto>() {
             @Override
             public List<ProductDto> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
@@ -163,13 +163,24 @@ public class ProductFEController extends BaseFEController {
 
             productDetailFEController.setParentId(productDto.getProductId());
             searchDto.setParentId(productDto.getProductId());
-        } else {
+        } if (productDto.getType() == DbConstant.PRODUCT_TYPE_CHILD){
             productDetailFEController.setProductId(productDto.getProductId());
 
             ProductLink productLink = productLinkRepository.findProductLinkByChildId(productDto.getProductId());
             Long parentId = productLink.getParentId();
             productDetailFEController.setParentId(parentId);
             searchDto.setParentId(parentId);
+        }
+        if (productDto.getType() == DbConstant.PRODUCT_TYPE_NONE){
+            productDetailFEController.setParentId(null);
+            productDetailFEController.setProductId(productDto.getProductId());
+            Map<Long, ProductDto> childProductMap = new HashMap<>();
+            childProductMap.put(productDto.getProductId(), productDto);
+            productDetailFEController.setChildProductMap(new HashMap<>());
+            productDetailFEController.setChildProductMap(childProductMap);
+
+            FacesUtil.redirect("/frontend/product/detail.xhtml");
+            return;
         }
 
         List<ProductDto> childProducts = productRepository.search(searchDto);

@@ -22,10 +22,21 @@ public class ProductOptionDetailRepositoryImpl implements ProductOptionDetailRep
         sb.append("SELECT DISTINCT pod.product_id AS 'productId', pod.product_option_id AS 'productOptionId', po.name AS 'productOptionName', po.type AS 'productOptionType' " +
                 "FROM product_option_detail pod " +
                 "         INNER JOIN product_option po ON pod.product_option_id = po.product_option_id " +
-                "WHERE pod.product_id IN (SELECT pl.child_id FROM product_link pl WHERE pl.parent_id = :parentId) " +
-                "GROUP BY pod.product_id, po.type, po.name, pod.product_option_id");
+                "WHERE 1=1 ");
+        if (searchDto.getParentId() != null){
+            sb.append(" AND pod.product_id IN (SELECT pl.child_id FROM product_link pl WHERE pl.parent_id = :parentId) ");
+        }
+        if (searchDto.getParentId() == null){
+            sb.append(" AND pod.product_id = :productId ");
+        }
+         sb.append("GROUP BY pod.product_id, po.type, po.name, pod.product_option_id");
         Query query = entityManager.createNativeQuery(sb.toString());
-        query.setParameter("parentId", searchDto.getParentId());
+        if (searchDto.getParentId() != null ) {
+            query.setParameter("parentId", searchDto.getParentId());
+        }
+        if (searchDto.getParentId() == null){
+            query.setParameter("productId", searchDto.getProductIdTypeNone());
+        }
         return EntityMapper.mapper(query, sb.toString(), ProductOptionDetailDto.class);
     }
 }

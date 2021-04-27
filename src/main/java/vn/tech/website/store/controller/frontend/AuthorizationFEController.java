@@ -181,27 +181,52 @@ public class AuthorizationFEController implements Serializable {
         accuracyCompanyFilePathMap.remove(key);
     }
 
+    public boolean validateProfile() {
+        if (StringUtils.isBlank(accountDto.getFullName())) {
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập họ và tên");
+            return false;
+        }
+        if (accountDto.getDateOfBirth() == null) {
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập ngày sinh");
+            return false;
+        }
+        if (!accountDto.getDateOfBirth().before(new Date())) {
+            facesNoticeController.addErrorMessage("Ngày sinh phải nhỏ hơn ngày hiện tại");
+            return false;
+        }
+        if (StringUtils.isBlank(accountDto.getPhone())) {
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập số điện thoại");
+            return false;
+        }
+        if (!accountDto.getPhone().matches("^0[1-9]{1}[0-9]{8,9}$|")) {
+            facesNoticeController.addErrorMessage("Số điện thoại không đúng định dạng");
+            return false;
+        }
+        if (StringUtils.isBlank(accountDto.getAddress())) {
+            FacesUtil.addErrorMessage("Bạn vui lòng nhập địa chỉ");
+            return false;
+        }
+
+        return true;
+    }
+
     public void onSaveData() {
-//        if (!validateField(accountDto, accuracyCompanyFilePathMap)) {
-//            resetMyAccount();
-//            return;
-//        }
+        if (!validateProfile()) {
+            return;
+        }
         accountDto.setProvinceId(addressFEController.getCityDistrictDto().getProvinceId());
         accountDto.setDistrictId(addressFEController.getCityDistrictDto().getDistrictId());
         accountDto.setCommuneId(addressFEController.getCityDistrictDto().getCommuneId());
         Account account = new Account();
         BeanUtils.copyProperties(accountDto, account);
-        //account.setFinishInfoStatus(true);
         account.setUpdateBy(accountDto.getAccountId());
-//        if (!married) {
-//            account.setRelativeName(null);
-//            account.setRelativeIdCardNumber(null);
-//        }
+        account.setUpdateDate(new Date());
         accountRepository.save(account);
 
-        facesNoticeController.addSuccessMessage("Cập nhật thành công");
-
         resetMyAccount();
+
+        facesNoticeController.addSuccessMessage("Cập nhật thành công");
+        FacesUtil.updateView(Constant.ERROR_FE_GROWL_ID);
     }
 
     public void initChangePassword() {

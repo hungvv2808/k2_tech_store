@@ -12,4 +12,5 @@ import vn.tech.website.store.model.ProductOptionDetail;
 @AllArgsConstructor
 public class ProductOptionDetailSearchDto extends BaseSearchDto {
     private Long parentId;
+    private Long productIdTypeNone;
 }

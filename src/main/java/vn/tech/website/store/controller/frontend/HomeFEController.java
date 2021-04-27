@@ -109,7 +109,7 @@ public class HomeFEController extends BaseFEController {
 
     private List<ProductDto> onSearchListProduct(Integer categoryId) {
         searchDto.setPageSize(DbConstant.LIMIT_SHOW_FE);
-        searchDto.setType(DbConstant.PRODUCT_TYPE_PARENT);
+        searchDto.setExpertType(DbConstant.PRODUCT_TYPE_CHILD);
         if (categoryId != null) {
             searchDto.setCategoryId(Long.valueOf(categoryId));
         }
