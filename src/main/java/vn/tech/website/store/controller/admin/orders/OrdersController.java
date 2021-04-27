@@ -153,6 +153,7 @@ public class OrdersController extends BaseController {
     public void loadData() {
         List<SelectItem> loadMoreProduct = convertProduct(lastProductId, 20);
         productList.addAll(loadMoreProduct);
+        lastProductId = Long.parseLong(productList.get(productList.size() - 1).getValue().toString());
         FacesUtil.updateView("dlForm");
     }
 

@@ -16,7 +16,7 @@ public class DbConstant {
 
     //maxlengthPassword
     public static final int ACCOUNT_MAXLENGTH_PASSWORD_ADMIN = 12;
-    public static final int ACCOUNT_MINLENGTH_PASSWORD_USER = 12;
+    public static final int ACCOUNT_MINLENGTH_PASSWORD_USER = 6;
     //isOrg
     public static final boolean PESONAL = false;
     public static final boolean ORGANIZATION = true;

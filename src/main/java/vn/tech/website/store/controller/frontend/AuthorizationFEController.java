@@ -115,6 +115,7 @@ public class AuthorizationFEController implements Serializable {
         }
         if (!FacesContext.getCurrentInstance().isPostback()) {
             resetMyAccount();
+            check = false;
         }
     }
 
@@ -126,6 +127,9 @@ public class AuthorizationFEController implements Serializable {
         addressFEController.setCityDistrictDto(cityDistrictDto);
         addressFEController.loadData();
         listProvinceAccount = new ArrayList<>();
+        oldPassword = null;
+        newPassword = null;
+        newRepassword = null;
     }
 
     private boolean validateUploadFile(FileUploadEvent e) {
@@ -380,12 +384,16 @@ public class AuthorizationFEController implements Serializable {
         return accountDto;
     }
 
+    public void showChangePassword(){
+        check=!check;
+    }
+
     public void onChangePassword() {
-        if (oldPassword.equals("")) {
-            facesNoticeController.addErrorMessage("Bạn vui lòng nhập mật khẩu cũ");
+        if (StringUtils.isBlank(oldPassword)) {
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập mật khẩu hiện tại");
             return;
         }
-        if (newPassword.equals("")) {
+        if (StringUtils.isBlank(newPassword)) {
             facesNoticeController.addErrorMessage("Bạn vui lòng nhập mật khẩu mới");
             return;
         }
@@ -395,20 +403,15 @@ public class AuthorizationFEController implements Serializable {
         }
 
         if (newPassword.length() < DbConstant.ACCOUNT_MINLENGTH_PASSWORD_USER) {
-            facesNoticeController.addErrorMessage("Mật khẩu phải có tối thiểu 12 ký tự, mật khẩu phải bao gồm chữ cái, chữ số và ký tự đặc biệt.");
+            facesNoticeController.addErrorMessage("Mật khẩu phải có tối thiểu 6 ký tự.");
             return;
         }
-
-        if (!newPassword.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{12,}$")) {
-            facesNoticeController.addErrorMessage("Mật khẩu phải có tối thiểu 12 ký tự, mật khẩu phải bao gồm chữ cái, chữ số và ký tự đặc biệt.");
-            return;
-        }
-        if ("".equals(newRepassword)) {
-            facesNoticeController.addErrorMessage("Bạn vui lòng nhập nhắc lại mật khẩu");
+        if (StringUtils.isBlank(newRepassword)) {
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập nhập lại mật khẩu");
             return;
         }
         if (!newPassword.equals(newRepassword)) {
-            facesNoticeController.addErrorMessage("Mật khẩu mới và nhắc lại mật khẩu không giống nhau");
+            facesNoticeController.addErrorMessage("Mật khẩu mới và nhập lại mật khẩu không giống nhau");
             return;
         }
 
@@ -430,9 +433,8 @@ public class AuthorizationFEController implements Serializable {
 //        user.setTimeToChangePassword(new Date());
         accountRepository.save(user);
         facesNoticeController.addSuccessMessage("Thay đổi mật khẩu thành công");
-        resetAll();
-        FacesUtil.redirect("/frontend/index.xhtml");
-        facesNoticeController.openModal("loginPopup");
+        resetMyAccount();
+        check=!check;
     }
 
     public void onCheckEmail() {

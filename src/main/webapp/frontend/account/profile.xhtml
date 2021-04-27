@@ -168,36 +168,69 @@
                     </div>
                 </div>
 
+                <div class="row mt-30">
+                    <div class="col-lg-12 submit-area text-left">
+                        <h:commandButton id="btnChangePassword"
+                                         value="Đổi mật khẩu" style="width: 120px; margin-bottom: 50px"
+                                         styleClass="btn btn-info"
+                                         action="#{authorizationFEController.showChangePassword}">
+                            <f:ajax execute="@form" render="#{Constant.ERROR_FE_GROWL_ID} @form" />
+                        </h:commandButton>
+                    </div>
+                </div>
+                <h:outputLabel rendered="#{authorizationFEController.check}">
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <div class="form-group no-margin-top">
                             <div class="row">
-                                <label class="col-lg-4 required-label" for="username">Mật khẩu:</label>
+                                <label class="col-lg-4 required-label" for="oldPassword">Mật khẩu hiện tại:</label>
                                 <div class="col-lg-8">
-                                    <h:inputSecret class="form-control" id="password"
+                                    <h:inputSecret class="form-control" id="oldPassword"
                                                    type="password" placeholder="Mật khẩu"
                                                    maxlength="100"
-                                                   value="#{authorizationFEController.accountDto.password}"/>
+                                                   value="#{authorizationFEController.oldPassword}"/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <div class="form-group no-margin-top">
                             <div class="row">
-                                <label class="col-lg-4 required-label" for="username">Nhập lại mật khẩu:</label>
+                                <label class="col-lg-4 required-label" for="newPassword">Mật khẩu mới:</label>
+                                <div class="col-lg-8">
+                                    <h:inputSecret class="form-control" id="newPassword"
+                                                   type="password" placeholder="Mật khẩu"
+                                                   maxlength="100"
+                                                   value="#{authorizationFEController.newPassword}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group no-margin-top">
+                            <div class="row">
+                                <label class="col-lg-4 required-label" for="repassword">Nhập lại mật khẩu:</label>
                                 <div class="col-lg-8">
                                     <h:inputSecret class="form-control" id="repassword"
                                                    type="password" placeholder="Nhập lại mật khẩu"
                                                    maxlength="100"
-                                                   value="#{authorizationFEController.accountDto.rePassword}"/>
+                                                   value="#{authorizationFEController.newRepassword}"/>
                                 </div>
                             </div>
                         </div>
                     </div>
-
+                    <div class="row mt-30">
+                        <div class="col-lg-12 submit-area text-left">
+                            <h:commandButton id="btnComfirmChangePassword"
+                                             value="Đổi" style="width: 60px;"
+                                             styleClass="btn btn-info"
+                                             action="#{authorizationFEController.onChangePassword}">
+                                <f:ajax execute="@form" render="#{Constant.ERROR_FE_GROWL_ID} @form"/>
+                            </h:commandButton>
+                        </div>
+                    </div>
                 </div>
-
+                </h:outputLabel>
                 <div class="row mt-30">
                     <div class="col-lg-12 submit-area text-center">
                         <h:commandButton id="btnUpdate"
@@ -205,7 +238,7 @@
                                          styleClass="btn btn-success btn-custom"
                                          action="#{authorizationFEController.onSaveData}">
                             <f:ajax execute="@form"
-                                    render="#{Constant.ERROR_FE_GROWL_ID}"/>
+                                    render="#{Constant.ERROR_FE_GROWL_ID} "/>
                         </h:commandButton>
                     </div>
                 </div>
@@ -230,12 +263,6 @@
                     }, 10)
                 }
             }
-            $(document).load(function() {
-                $(".datepicker").datepicker({
-                    showOn: "button",
-                    buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
-                    buttonImageOnly: true})
-            });
             //]]>
         </script>
     </ui:define>
