@@ -3,7 +3,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html">
     <div class="row">
-        <div class="col-md-4 no-padding">
+        <div class="col-md-4 padding-1px">
             <h:selectOneMenu id="tinhThanhPho" value="#{addressFEController.cityDistrictDto.provinceId}"
                              styleClass="form-control">
                 <f:selectItem itemValue=""
@@ -15,7 +15,7 @@
                         render="quanHuyen phuongXa"/>
             </h:selectOneMenu>
         </div>
-        <div class="col-md-4 no-padding">
+        <div class="col-md-4 padding-1px">
             <h:selectOneMenu id="quanHuyen" value="#{addressFEController.cityDistrictDto.districtId}"
                              styleClass="form-control">
                 <f:selectItem itemValue=""
@@ -27,7 +27,7 @@
                         render="phuongXa"/>
             </h:selectOneMenu>
         </div>
-        <div class="col-md-4 no-padding">
+        <div class="col-md-4 padding-1px">
             <h:selectOneMenu id="phuongXa" value="#{addressFEController.cityDistrictDto.communeId}"
                              styleClass="form-control">
                 <f:selectItem itemValue=""
