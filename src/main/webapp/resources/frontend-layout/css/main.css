@@ -1392,6 +1392,7 @@
 }
 .content-orders .orders-infor .order-product__header th {
   text-align: center;
+  vertical-align: middle;
 }
 .content-orders .orders-infor .order-product__header th:first-child {
   border-top-left-radius: 1rem;

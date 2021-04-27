@@ -24,7 +24,7 @@
                 <div class="card no-margin">
                     <p:commandButton value="Thêm mới" icon="fa fa-plus"
                                      actionListener="#{ordersController.resetDialog}"
-                                     oncomplete="PF('dialogInsertUpdate').show();" update="dlForm"/>
+                                     oncomplete="PF('dialogInsertUpdate').show();onChangeBtn(false);" update="dlForm"/>
                 </div>
             </div>
         </p:outputPanel>
@@ -95,8 +95,8 @@
 
                                     <p:outputLabel value="Sản phẩm: " for="product"/>
                                     <p:selectOneMenu id="product" autoWidth="false" effect="fade" disabled="#{ordersController.readonly}"
-                                                     value="#{ordersDetailDto.productId}" required="true"
-                                                     filterMatchMode="contains">
+                                                     value="#{ordersDetailDto.productId}"
+                                                     filterMatchMode="contains" filter="true">
                                         <f:selectItem itemLabel="Chọn sản phẩm" itemValue=""/>
                                         <f:selectItems value="#{ordersController.productList}"/>
                                         <f:ajax event="change"
@@ -147,9 +147,14 @@
                             </p:repeat>
                             <p:commandButton value="Thêm sản phẩm" styleClass="ui-priority-primary"
                                              style="width: 15%" rendered="#{!ordersController.readonly}"
-                                             icon="fa fa-plus"
+                                             icon="fa fa-plus" onclick="onChangeBtn(true)"
                                              actionListener="#{ordersController.onAddNew}"
                                              update="panel growl"/>
+                            <p:remoteCommand name="loadData" actionListener="#{ordersController.loadData()}" />
+                            <button type="button" class="ui-button ui-priority-secondary load-more-option" onclick="loadData();">
+                                <i class="fa fa-refresh"/>
+                                Xem thêm lựa chọn
+                            </button>
                         </p:panel>
 
 
@@ -361,5 +366,17 @@
         </h:form>
     </ui:define>
 
-
+    <ui:define name="jslibrary">
+        <script>
+            //<![CDATA[
+            function onChangeBtn(e) {
+                if (e === true) {
+                    $('.load-more-option').removeClass('display-none');
+                } else {
+                    $('.load-more-option').addClass('display-none');
+                }
+            }
+            //]]>
+        </script>
+    </ui:define>
 </ui:composition>

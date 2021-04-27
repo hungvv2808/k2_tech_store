@@ -450,5 +450,17 @@ create table shipping
 # update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000019</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 51;
 # update send_notification set content = 'Bạn nhận được một đơn hàng mới từ khách hàng <b>Vũ Hùng</b> với mã đơn hàng <b>DH000020</b>. <i>Kiểm tra ngay !!!</i>' where send_notification_id = 52;
 
+ALTER TABLE k2_tech_store.account MODIFY COLUMN address text
+    CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE k2_tech_store.news MODIFY COLUMN content text
+    CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE k2_tech_store.product MODIFY COLUMN description text
+    CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE k2_tech_store.orders MODIFY COLUMN address text
+    CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 ALTER TABLE k2_tech_store.orders MODIFY COLUMN note text
+    CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE k2_tech_store.shipping MODIFY COLUMN detail text
+    CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE k2_tech_store.send_notification MODIFY COLUMN content text
     CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
