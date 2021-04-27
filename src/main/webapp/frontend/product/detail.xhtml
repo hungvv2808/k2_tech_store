@@ -16,7 +16,7 @@
                 <div class="container">
                     <div class="title-products">
                         <div class="row">
-                            <h1 class="_product">#{productDetailFEController.productDtoView.productName} (#{productDetailFEController.productDtoView.code})</h1>
+                            <h1 class="_product">#{productDetailFEController.productDtoView.productName}</h1>
                         </div>
                     </div>
                     <div class="detail-products">
@@ -63,9 +63,9 @@
                                 <div class="row">
                                     <h3 class="option-detail__title">Thông tin tuỳ chọn của sản phẩm</h3>
                                 </div>
-                                <div class="row">
+                                <div class="row #{productDetailFEController.optionList.size() > 6 ? 'option-scroll' : ''}">
                                     <p:repeat value="#{productDetailFEController.optionList}" var="option">
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-4 no-padding">
                                             <p:remoteCommand name="child#{option.value}"
                                                              actionListener="#{productDetailFEController.onChangeItem(option.value)}"/>
                                             <h:outputLabel styleClass="option-detail__selected">

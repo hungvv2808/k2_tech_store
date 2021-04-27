@@ -20,145 +20,158 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-lg-4 required-label" for="fullname">Họ và tên:</label>
-                            <div class="col-lg-8">
-                                <h:inputText styleClass="form-control" name="fullname"
-                                             id="fullname" type="text" maxlength="100"
-                                             placeholder="Họ và tên"
-                                             onblur="this.value = this.value.trim()" autofocus=""
-                                             value="#{authorizationFEController.accountDto.fullName}"/>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-lg-4 required-label" for="gender">Giới tính:</label>
-                            <div class="col-lg-8">
-                                <h:selectOneMenu styleClass="form-control" id="gender"
-                                                 value="#{authorizationFEController.accountDto.gender}">
-                                    <f:selectItem itemLabel="Chọn giới tính" itemValue="-1"/>
-                                    <f:selectItem itemLabel="Khác" itemValue="#{DbConstant.UNKNOW}"/>
-                                    <f:selectItem itemLabel="Nam" itemValue="#{DbConstant.MAN}"/>
-                                    <f:selectItem itemLabel="Nữ" itemValue="#{DbConstant.WOMAN}"/>
-                                </h:selectOneMenu>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-lg-4 required-label" for="date_of_birth">Ngày sinh:</label>
-                            <div class="col-lg-8">
-                                <div class='input-group date'>
-                                    <h:inputText styleClass="form-control datetimepicker"
-                                                 id="date_of_birth"
-                                                 value="#{authorizationFEController.accountDto.dateOfBirth}"
-                                                 onfocus="focusRemoveReadOnly(this);"
-                                                 placeholder="Chọn ngày sinh">
-                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
-                                    </h:inputText>
-                                    <span class="input-group-addon"
-                                          onclick="document.getElementById('date_of_birth').focus()"><i
-                                            class="custom-icon calendar"/></span>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-lg-4 required-label" for="fullname">Họ và tên:</label>
+                                <div class="col-lg-8">
+                                    <h:inputText styleClass="form-control" name="fullname"
+                                                 id="fullname" type="text" maxlength="100"
+                                                 placeholder="Họ và tên"
+                                                 onblur="this.value = this.value.trim()" autofocus=""
+                                                 value="#{authorizationFEController.accountDto.fullName}"/>
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-lg-4 required-label" for="gender">Giới tính:</label>
+                                <div class="col-lg-8">
+                                    <h:selectOneMenu styleClass="form-control" id="gender"
+                                                     value="#{authorizationFEController.accountDto.gender}">
+                                        <f:selectItem itemLabel="Chọn giới tính" itemValue="-1"/>
+                                        <f:selectItem itemLabel="Khác" itemValue="#{DbConstant.UNKNOW}"/>
+                                        <f:selectItem itemLabel="Nam" itemValue="#{DbConstant.MAN}"/>
+                                        <f:selectItem itemLabel="Nữ" itemValue="#{DbConstant.WOMAN}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-lg-4 required-label" for="date_of_birth">Ngày sinh:</label>
+                                <div class="col-lg-8">
+                                    <div class='input-group date'>
+                                        <h:inputText styleClass="form-control datetimepicker"
+                                                     id="date_of_birth"
+                                                     value="#{authorizationFEController.accountDto.dateOfBirth}"
+                                                     onfocus="focusRemoveReadOnly(this);"
+                                                     placeholder="Chọn ngày sinh">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:inputText>
+                                        <span class="input-group-addon"
+                                              onclick="document.getElementById('date_of_birth').focus()"><i
+                                                class="custom-icon calendar"/></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-lg-4 required-label" for="phone">Số điện thoại:</label>
+                                <div class="col-lg-8">
+                                    <h:inputText type="text"
+                                                 onkeyup="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                                 styleClass="form-control" name="phone"
+                                                 id="phone"
+                                                 placeholder="Nhập số điện thoại"
+                                                 value="#{authorizationFEController.accountDto.phone}"
+                                                 maxlength="11" size="12"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-lg-4 required-label" for="email">Email:</label>
+                                <div class="col-lg-8">
+                                    <h:inputText styleClass="form-control" name="email"
+                                                 type="email" id="email" maxlength="50"
+                                                 disabled="true"
+                                                 value="#{authorizationFEController.accountDto.email}"
+                                                 placeholder="Nhập Email"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-lg-4 required-label" for="address">Địa chỉ nhà:</label>
+                                <div class="col-lg-8">
+                                    <h:inputText styleClass="form-control" name="address" id="address"
+                                                 type="text" placeholder="Địa chỉ nhà"
+                                                 onblur="this.value = this.value.trim()"
+                                                 value="#{authorizationFEController.accountDto.address}"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <div class="row">
+                                <h:panelGroup id="avatar">
+                                    <label class="col-lg-4 required-label">Ảnh đại diện:</label>
+                                    <div class="col-lg-8">
+                                        <div class="avatar-profile">
+                                            <p:fileUpload id="fileUpload" mode="advanced"
+                                                          allowTypes="/(\.|\/)(gif|GIF|jpe?g|JPE?G|png|PNG)$/"
+                                                          fileUploadListener="#{authorizationFEController.onUploadAvatar}"
+                                                          update="avatar"
+                                                          dragDropSupport="false" auto="true"
+                                                          onstart="loadingScreen();" oncomplete="stopLoadingScreen();">
+                                                <c:if test="#{empty authorizationFEController.accountDto.imagePath}">
+                                                    <img src="#{resource['frontend-layout:images/noavatar.png']}"/>
+                                                </c:if>
+                                                <c:if test="#{not empty authorizationFEController.accountDto.imagePath}">
+                                                    <a data-fancybox="gallery"
+                                                       data-options='{animationEffect: "zoom"}'
+                                                       href="#{resource[authorizationFEController.accountDto.imagePath]}">
+                                                        <img src="#{resource[authorizationFEController.accountDto.imagePath]}" alt=""/>
+                                                    </a>
+                                                </c:if>
+                                            </p:fileUpload>
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-lg-4 required-label" for="username">Tên đăng nhập:</label>
+                                <div class="col-lg-8">
+                                    <h:inputText class="form-control" id="username"
+                                                 type="text" placeholder="Tên đăng nhập"
+                                                 onkeyup="this.value=this.value.replace(/[^\w\d\.\_]/g, '');"
+                                                 maxlength="100"
+                                                 disabled="true"
+                                                 value="#{authorizationFEController.accountDto.userName}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group form-custom">
                         <div class="row">
-                            <label class="col-lg-4 required-label">Địa chỉ:</label>
-                            <div class="col-lg-8">
+                            <label class="col-lg-2 required-label">Địa chỉ:</label>
+                            <div class="col-lg-10 field-custom">
                                 <ui:include src="/frontend/common/address.xhtml"/>
                             </div>
                         </div>
                     </div>
-
-                    <div class="form-group">
+                    <div class="form-group form-custom">
                         <div class="row">
-                            <label class="col-lg-4 required-label" for="address">Địa chỉ nhà:</label>
-                            <div class="col-lg-8">
-                                <h:inputText styleClass="form-control" name="address" id="address"
-                                             type="text" placeholder="Địa chỉ nhà"
-                                             onblur="this.value = this.value.trim()"
-                                             value="#{authorizationFEController.accountDto.address}"/>
+                            <label class="col-lg-2 required-label">Địa chỉ:</label>
+                            <div class="col-lg-10 field-custom">
+                                <ui:include src="/frontend/common/address.xhtml"/>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-lg-4 required-label" for="phone">Số điện thoại:</label>
-                            <div class="col-lg-8">
-                                <h:inputText type="text"
-                                             onkeyup="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                                             styleClass="form-control" name="phone"
-                                             id="phone"
-                                             placeholder="Nhập số điện thoại"
-                                             value="#{authorizationFEController.accountDto.phone}"
-                                             maxlength="11" size="12"/>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-lg-4 required-label" for="email">Email:</label>
-                            <div class="col-lg-8">
-                                <h:inputText styleClass="form-control" name="email"
-                                             type="email" id="email" maxlength="50"
-                                             disabled="true"
-                                             value="#{authorizationFEController.accountDto.email}"
-                                             placeholder="Nhập Email"/>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="row">
-                            <label class="col-lg-4 required-label" for="username">Tên đăng nhập:</label>
-                            <div class="col-lg-8">
-                                <h:inputText class="form-control" id="username"
-                                             type="text" placeholder="Tên đăng nhập"
-                                             onkeyup="this.value=this.value.replace(/[^\w\d\.\_]/g, '');"
-                                             maxlength="100"
-                                             disabled="true"
-                                             value="#{authorizationFEController.accountDto.userName}"/>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="row">
-                            <h:panelGroup id="image">
-                                <label class="col-lg-4">Ảnh đại diện:</label>
-                                <div class="col-lg-8">
-                                    <div class="inputfile-box">
-                                        <p:fileUpload id="fileUpload" mode="advanced"
-                                                      allowTypes="/(\.|\/)(gif|GIF|jpe?g|JPE?G|png|PNG)$/"
-                                                      fileUploadListener="#{authorizationFEController.onUploadAvatar}"
-                                                      label="Chọn hình ảnh"
-                                                      update="image"
-                                                      dragDropSupport="false" auto="true"
-                                                      onstart="loadingScreen();" oncomplete="stopLoadingScreen();">
-                                            <c:if test="#{empty authorizationFEController.accountDto.imagePath}">
-                                                <img src="#{resource['frontend-layout:images/noavatar.png']}"/>
-                                            </c:if>
-                                            <c:if test="#{not empty authorizationFEController.accountDto.imagePath}">
-                                                <a data-fancybox="gallery"
-                                                   data-options='{animationEffect: "zoom"}'
-                                                   href="#{resource[authorizationFEController.accountDto.imagePath]}">
-                                                    <img src="#{resource[authorizationFEController.accountDto.imagePath]}" alt=""/>
-                                                </a>
-                                            </c:if>
-                                        </p:fileUpload>
-                                    </div>
-                                </div>
-                            </h:panelGroup>
                         </div>
                     </div>
                 </div>

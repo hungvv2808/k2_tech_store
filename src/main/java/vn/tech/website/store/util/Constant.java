@@ -98,9 +98,13 @@ public class Constant {
 
     //param cate search product FE
     public static final int CATE_PHONE = 1;
-    public static final int CATE_LAPTOP = 7;
-    public static final int CATE_WATCH = 2;
-    public static final int CATE_HEADPHONE = 6;
+    public static final int CATE_HEADPHONE = 2;
+    public static final int CATE_LAPTOP = 3;
+    public static final int CATE_WATCH = 4;
+    public static final String CATE_PHONE_CODE = "phone";
+    public static final String CATE_LAPTOP_CODE = "pc";
+    public static final String CATE_WATCH_CODE = "watch";
+    public static final String CATE_HEADPHONE_CODE = "headphone";
 
     public static final int CATE_NEWS_DISCOUNT = 9;
     public static final int CATE_NEWS_PRODUCT = 8;

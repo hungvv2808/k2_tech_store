@@ -1,5 +1,5 @@
 import time
-
+import os
 import mysql.connector
 
 
@@ -143,8 +143,8 @@ class lazy_import:
         # self.product_option_import()
         # self.product_parent_import()
         # self.product_variant_import()
-        self.product_variant_expert()
-
+        # self.product_variant_expert()
+        self.product_image_import()
         self.conn.commit()
         self.conn.close()
 
@@ -181,6 +181,11 @@ class lazy_import:
 
             return brands, categories, product_options, product_option_names
         return brands, categories
+
+    def create_src_img(self, path, name):
+        # create file
+        with open(os.path.join(path, f"{name}.jpg"), 'w') as f:
+            pass
 
     def category_import(self):
         # import category
@@ -276,7 +281,8 @@ class lazy_import:
              'update_date': str(self.now), 'update_by': 3},
             {'name': 'Purple', 'value': 'purple', 'type': COLOR, 'status': 1, 'create_date': str(self.now),
              'create_by': 3, 'update_date': str(self.now), 'update_by': 3},
-            {'name': 'Midnight Green', 'value': 'midnight-green', 'type': COLOR, 'status': 1, 'create_date': str(self.now),
+            {'name': 'Midnight Green', 'value': 'midnight-green', 'type': COLOR, 'status': 1,
+             'create_date': str(self.now),
              'create_by': 3, 'update_date': str(self.now), 'update_by': 3},
             {'name': 'Blue', 'value': 'blue', 'type': COLOR, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
              'update_date': str(self.now), 'update_by': 3},
@@ -698,7 +704,8 @@ class lazy_import:
                                  + product_option_names.get('memory-256gb') + ' - '
                                  + product_option_names.get('2018') + ' - '
                                  + product_option_names.get('has-touch'),
-                         'code': p_data['code'] + '_' + 'ram-16gb' + '_' + 'memory-256gb' + '_' + '2018' + '_' + 'has-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-16gb' + '_' + 'memory-256gb' + '_' + '2018' + '_' + 'has-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -709,7 +716,8 @@ class lazy_import:
                                  + product_option_names.get('memory-256gb') + ' - '
                                  + product_option_names.get('2018') + ' - '
                                  + product_option_names.get('non-touch'),
-                         'code': p_data['code'] + '_' + 'ram-16gb' + '_' + 'memory-256gb' + '_' + '2018' + '_' + 'non-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-16gb' + '_' + 'memory-256gb' + '_' + '2018' + '_' + 'non-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -722,7 +730,8 @@ class lazy_import:
                                  + product_option_names.get('memory-256gb') + ' - '
                                  + product_option_names.get('2020') + ' - '
                                  + product_option_names.get('has-touch'),
-                         'code': p_data['code'] + '_' + 'ram-16gb' + '_' + 'memory-256gb' + '_' + '2020' + '_' + 'has-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-16gb' + '_' + 'memory-256gb' + '_' + '2020' + '_' + 'has-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -733,7 +742,8 @@ class lazy_import:
                                  + product_option_names.get('memory-256gb') + ' - '
                                  + product_option_names.get('2020') + ' - '
                                  + product_option_names.get('non-touch'),
-                         'code': p_data['code'] + '_' + 'ram-16gb' + '_' + 'memory-256gb' + '_' + '2020' + '_' + 'non-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-16gb' + '_' + 'memory-256gb' + '_' + '2020' + '_' + 'non-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -748,7 +758,8 @@ class lazy_import:
                                  + product_option_names.get('memory-512gb') + ' - '
                                  + product_option_names.get('2018') + ' - '
                                  + product_option_names.get('has-touch'),
-                         'code': p_data['code'] + '_' + 'ram-16gb' + '_' + 'memory-512gb' + '_' + '2018' + '_' + 'has-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-16gb' + '_' + 'memory-512gb' + '_' + '2018' + '_' + 'has-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -759,7 +770,8 @@ class lazy_import:
                                  + product_option_names.get('memory-512gb') + ' - '
                                  + product_option_names.get('2018') + ' - '
                                  + product_option_names.get('non-touch'),
-                         'code': p_data['code'] + '_' + 'ram-16gb' + '_' + 'memory-512gb' + '_' + '2018' + '_' + 'non-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-16gb' + '_' + 'memory-512gb' + '_' + '2018' + '_' + 'non-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -772,7 +784,8 @@ class lazy_import:
                                  + product_option_names.get('memory-512gb') + ' - '
                                  + product_option_names.get('2020') + ' - '
                                  + product_option_names.get('has-touch'),
-                         'code': p_data['code'] + '_' + 'ram-16gb' + '_' + 'memory-512gb' + '_' + '2018' + '_' + 'has-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-16gb' + '_' + 'memory-512gb' + '_' + '2018' + '_' + 'has-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -783,7 +796,8 @@ class lazy_import:
                                  + product_option_names.get('memory-512gb') + ' - '
                                  + product_option_names.get('2020') + ' - '
                                  + product_option_names.get('non-touch'),
-                         'code': p_data['code'] + '_' + 'ram-16gb' + '_' + 'memory-512gb' + '_' + '2020' + '_' + 'non-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-16gb' + '_' + 'memory-512gb' + '_' + '2020' + '_' + 'non-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -800,7 +814,8 @@ class lazy_import:
                                  + product_option_names.get('memory-256gb') + ' - '
                                  + product_option_names.get('2018') + ' - '
                                  + product_option_names.get('has-touch'),
-                         'code': p_data['code'] + '_' + 'ram-32gb' + '_' + 'memory-256gb' + '_' + '2018' + '_' + 'has-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-32gb' + '_' + 'memory-256gb' + '_' + '2018' + '_' + 'has-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -811,7 +826,8 @@ class lazy_import:
                                  + product_option_names.get('memory-256gb') + ' - '
                                  + product_option_names.get('2018') + ' - '
                                  + product_option_names.get('non-touch'),
-                         'code': p_data['code'] + '_' + 'ram-32gb' + '_' + 'memory-256gb' + '_' + '2018' + '_' + 'non-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-32gb' + '_' + 'memory-256gb' + '_' + '2018' + '_' + 'non-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -824,7 +840,8 @@ class lazy_import:
                                  + product_option_names.get('memory-256gb') + ' - '
                                  + product_option_names.get('2020') + ' - '
                                  + product_option_names.get('has-touch'),
-                         'code': p_data['code'] + '_' + 'ram-32gb' + '_' + 'memory-256gb' + '_' + '2020' + '_' + 'has-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-32gb' + '_' + 'memory-256gb' + '_' + '2020' + '_' + 'has-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -835,7 +852,8 @@ class lazy_import:
                                  + product_option_names.get('memory-256gb') + ' - '
                                  + product_option_names.get('2020') + ' - '
                                  + product_option_names.get('non-touch'),
-                         'code': p_data['code'] + '_' + 'ram-32gb' + '_' + 'memory-256gb' + '_' + '2020' + '_' + 'non-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-32gb' + '_' + 'memory-256gb' + '_' + '2020' + '_' + 'non-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -850,7 +868,8 @@ class lazy_import:
                                  + product_option_names.get('memory-512gb') + ' - '
                                  + product_option_names.get('2018') + ' - '
                                  + product_option_names.get('has-touch'),
-                         'code': p_data['code'] + '_' + 'ram-32gb' + '_' + 'memory-512gb' + '_' + '2018' + '_' + 'has-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-32gb' + '_' + 'memory-512gb' + '_' + '2018' + '_' + 'has-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -861,7 +880,8 @@ class lazy_import:
                                  + product_option_names.get('memory-512gb') + ' - '
                                  + product_option_names.get('2018') + ' - '
                                  + product_option_names.get('non-touch'),
-                         'code': p_data['code'] + '_' + 'ram-32gb' + '_' + 'memory-512gb' + '_' + '2018' + '_' + 'non-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-32gb' + '_' + 'memory-512gb' + '_' + '2018' + '_' + 'non-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -886,7 +906,8 @@ class lazy_import:
                                  + product_option_names.get('memory-512gb') + ' - '
                                  + product_option_names.get('2020') + ' - '
                                  + product_option_names.get('non-touch'),
-                         'code': p_data['code'] + '_' + 'ram-32gb' + '_' + 'memory-512gb' + '_' + '2020' + '_' + 'non-touch',
+                         'code': p_data[
+                                     'code'] + '_' + 'ram-32gb' + '_' + 'memory-512gb' + '_' + '2020' + '_' + 'non-touch',
                          'quantity': 10, 'type': 1, 'description': self.description_demo,
                          'price': 20000000, 'status': 1, 'create_date': str(self.now), 'create_by': 3,
                          'update_date': str(self.now), 'update_by': 3},
@@ -1162,15 +1183,74 @@ class lazy_import:
             product_highlight = [{'product_id': v_data['product_id'], 'date_add': self.now, 'point': 0}]
             self.execute('product_highlight', product_highlight, False)
 
-            self.cur.execute(f"select * from product_link pl where pl.child_id = {v_data['product_id']} and pl.parent_id = {parent_id}")
+            self.cur.execute(
+                f"select * from product_link pl where pl.child_id = {v_data['product_id']} and pl.parent_id = {parent_id}")
             check_exists = self.cur.fetchall()
             if not check_exists:
                 product_link = [{'parent_id': parent_id, 'child_id': v_data['product_id']}]
                 self.execute('product_link', product_link, False)
 
             for o in data_repair[1:]:
-                product_option_detail = [{'product_id': v_data['product_id'], 'product_option_id': product_options.get(o)}]
+                product_option_detail = [
+                    {'product_id': v_data['product_id'], 'product_option_id': product_options.get(o)}]
                 self.execute('product_option_detail', product_option_detail, False)
+
+    def product_image_import(self):
+        brands, categories, product_options, product_option_names = self.get_map(True)
+
+        # get map parent
+        self.cur.execute('select product_id, brand_id, category_id, code, type from product')
+        product_data = self.cur.fetchall()
+
+        brand_map = {
+            brands.get('apple'): 'apple/',
+            brands.get('xiaomi'): 'xiaomi/',
+        }
+
+        cate_map = {
+            categories.get('phone'): 'phone/',
+            categories.get('headphone'): 'headphone/',
+            categories.get('pc'): 'pc/',
+            categories.get('watch'): 'watch/',
+        }
+
+        path_df = '/upload/img_data/'
+        src_path = '/Users/vuhung/Desktop/img_data/'
+        for p in product_data:
+            p_data = {'product_id': p[0], 'brand_id': p[1], 'category_id': p[2], 'code': p[3], 'type': p[4]}
+            real_path = src_path + cate_map.get(p_data['category_id']) + brand_map.get(p_data['brand_id'])
+
+            if p_data['type'] == 0:
+                product_image = [{
+                    'product_id': p_data['product_id'],
+                    'image_name': p_data['code'],
+                    'image_path': path_df
+                                  + cate_map.get(p_data['category_id'])
+                                  + brand_map.get(p_data['brand_id'])
+                                  + p_data['code'] + '.jpg',
+                    'create_date': str(self.now),
+                    'create_by': 3,
+                    'update_date': str(self.now),
+                    'update_by': 3,
+                }]
+                self.execute('product_image', product_image, False)
+                self.create_src_img(real_path, p_data['code'])
+            else:
+                for i in range(1, 6):
+                    product_image = [{
+                        'product_id': p_data['product_id'],
+                        'image_name': p_data['code'] + f'_{i}',
+                        'image_path': path_df
+                                      + cate_map.get(p_data['category_id'])
+                                      + brand_map.get(p_data['brand_id'])
+                                      + p_data['code'] + f'_{i}.jpg',
+                        'create_date': str(self.now),
+                        'create_by': 3,
+                        'update_date': str(self.now),
+                        'update_by': 3,
+                    }]
+                    self.execute('product_image', product_image, False)
+                    self.create_src_img(real_path, p_data['code'] + f'_{i}')
 
 
 if __name__ == '__main__':

@@ -11,6 +11,7 @@ import vn.tech.website.store.dto.NewsDto;
 import vn.tech.website.store.dto.NewsSearchDto;
 import vn.tech.website.store.dto.ProductDto;
 import vn.tech.website.store.dto.ProductSearchDto;
+import vn.tech.website.store.model.Category;
 import vn.tech.website.store.repository.CategoryRepository;
 import vn.tech.website.store.repository.NewsRepository;
 import vn.tech.website.store.repository.ProductImageRepository;
@@ -88,6 +89,7 @@ public class HomeFEController extends BaseFEController {
         watchList = onSearchListProduct(Constant.CATE_WATCH);
         airList = new ArrayList<>();
         airList = onSearchListProduct(Constant.CATE_HEADPHONE);
+
         shirtList = new ArrayList<>();
         shirtList = onSearchListProductByCodeCate(Constant.CATE_AO);
         pantList = new ArrayList<>();
@@ -97,12 +99,20 @@ public class HomeFEController extends BaseFEController {
         accessoriesList = new ArrayList<>();
         accessoriesList = onSearchListProductByCodeCate(Constant.CATE_PHU_KIEN);
         productHighlightList = new ArrayList<>();
+        accessoriesList = onSearchListProduct(getCateIdByCode(Constant.CATE_PHU_KIEN));
+    }
+
+    private Integer getCateIdByCode(String code) {
+        Category category = categoryRepository.getCateIdByCode(code);
+        return category != null ? Integer.parseInt(category.getCategoryId().toString()) : null;
     }
 
     private List<ProductDto> onSearchListProduct(Integer categoryId) {
         searchDto.setPageSize(DbConstant.LIMIT_SHOW_FE);
         searchDto.setType(DbConstant.PRODUCT_TYPE_PARENT);
-        searchDto.setCategoryId(Long.valueOf(categoryId));
+        if (categoryId != null) {
+            searchDto.setCategoryId(Long.valueOf(categoryId));
+        }
         List<ProductDto> showList = productRepository.search(searchDto);
         for (ProductDto dto : showList){
             dto.setProductImages(new LinkedHashSet<>());

@@ -32,5 +32,6 @@ public interface CategoryRepository extends CrudRepository<Category, Long>, Cate
             + " and c.type = " + DbConstant.CATEGORY_TYPE_NEWS)
     List<Category> findAllCategoryNewsExpertId(@Param("categoryId") Long categoryId);
 
-    Category getByCode(String code);
+    @Query("select c from Category c where c.code = :code")
+    Category getCateIdByCode(@Param("code") String code);
 }
