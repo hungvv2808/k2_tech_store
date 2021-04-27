@@ -56,8 +56,6 @@ public class HomeFEController extends BaseFEController {
     private List<ProductDto> pantList;
     private List<ProductDto> sneakerList;
     private List<ProductDto> accessoriesList;
-    private List<ProductDto> productHighlightList;
-
 
     private ProductSearchDto searchDto;
 
@@ -91,14 +89,12 @@ public class HomeFEController extends BaseFEController {
         airList = onSearchListProduct(Constant.CATE_HEADPHONE);
 
         shirtList = new ArrayList<>();
-        shirtList = onSearchListProductByCodeCate(Constant.CATE_AO);
+        shirtList = onSearchListProduct(getCateIdByCode(Constant.CATE_AO));
         pantList = new ArrayList<>();
-        pantList = onSearchListProductByCodeCate(Constant.CATE_QUAN);
+        pantList = onSearchListProduct(getCateIdByCode(Constant.CATE_QUAN));
         sneakerList = new ArrayList<>();
-        sneakerList = onSearchListProductByCodeCate(Constant.CATE_GIAY);
+        sneakerList = onSearchListProduct(getCateIdByCode(Constant.CATE_GIAY));
         accessoriesList = new ArrayList<>();
-        accessoriesList = onSearchListProductByCodeCate(Constant.CATE_PHU_KIEN);
-        productHighlightList = new ArrayList<>();
         accessoriesList = onSearchListProduct(getCateIdByCode(Constant.CATE_PHU_KIEN));
     }
 
@@ -122,25 +118,6 @@ public class HomeFEController extends BaseFEController {
             }
         }
         return showList;
-    }
-
-    private List<ProductDto> onSearchListProductByCodeCate(String cateCode) {
-        searchDto.setPageSize(DbConstant.LIMIT_SHOW_FE);
-        searchDto.setType(DbConstant.PRODUCT_TYPE_PARENT);
-        searchDto.setCategoryId(categoryRepository.getCateIdByCode(cateCode).getCategoryId());
-        List<ProductDto> showList = productRepository.search(searchDto);
-        for (ProductDto dto : showList){
-            dto.setProductImages(new LinkedHashSet<>());
-            dto.setProductImages(productImageRepository.getImagePathByProductId(dto.getProductId()));
-            if (dto.getProductImages().size() != 0) {
-                dto.setImageToShow(dto.getProductImages().iterator().next());
-            }
-        }
-        return showList;
-    }
-
-    public void onSearch() {
-
     }
 
     public void viewNewsDetail(NewsDto resultDto) {
