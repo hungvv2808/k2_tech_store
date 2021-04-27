@@ -112,24 +112,24 @@ public class NewsController extends BaseController {
     }
 
     public boolean validateData() {
-        if (newsDto.getCategoryId() == null){
+        if (newsDto.getCategoryId() == null) {
             FacesUtil.addErrorMessage("Bạn vui lòng chọn loại tin tức");
             return false;
         }
         newsDto.setImgPath(uploadSingleImageController.getImagePath());
-        if (newsDto.getImgPath() == null){
+        if (newsDto.getImgPath() == null) {
             FacesUtil.addErrorMessage("Bạn vui lòng tải ảnh cho tin tức");
             return false;
         }
-        if (StringUtils.isBlank(newsDto.getTitle())){
+        if (StringUtils.isBlank(newsDto.getTitle())) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập tiêu đề");
             return false;
         }
-        if (StringUtils.isBlank(newsDto.getShortContent())){
+        if (StringUtils.isBlank(newsDto.getShortContent())) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập nội dung tóm tắt");
             return false;
         }
-        if (StringUtils.isBlank(newsDto.getContent())){
+        if (StringUtils.isBlank(newsDto.getContent())) {
             FacesUtil.addErrorMessage("Bạn vui lòng nhập nội dung");
             return false;
         }
@@ -153,7 +153,7 @@ public class NewsController extends BaseController {
             //send notification
             SendNotification sendNotification = new SendNotification();
             sendNotification.setAccountId(authorizationController.getAccountDto().getAccountId());
-            sendNotification.setContent("Có tin tức mới: " + news.getContent());
+            sendNotification.setContent("Có tin tức mới: <b><i>" + news.getTitle() + "</i></b>");
             sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
             sendNotification.setObjectId(news.getNewsId());
             sendNotification.setType(DbConstant.NOTIFICATION_TYPE_NEWS);

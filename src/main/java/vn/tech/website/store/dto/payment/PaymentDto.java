@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentDto extends Payments {
-    private List<OrdersDetail> ordersDetailList;
     private Double amountProduct;
     private String userName;
     private String shippingName;

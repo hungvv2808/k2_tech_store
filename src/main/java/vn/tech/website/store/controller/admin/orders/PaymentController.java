@@ -4,26 +4,32 @@ import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
+import org.primefaces.model.StreamedContent;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.admin.BaseController;
 import vn.tech.website.store.controller.admin.auth.AuthorizationController;
 import vn.tech.website.store.dto.OrdersDetailDto;
+import vn.tech.website.store.dto.OrdersDto;
+import vn.tech.website.store.dto.ProductDto;
+import vn.tech.website.store.dto.common.ReportExcelDto;
 import vn.tech.website.store.dto.payment.PaymentDto;
 import vn.tech.website.store.dto.payment.PaymentSearchDto;
 import vn.tech.website.store.entity.EScope;
 import vn.tech.website.store.model.*;
 import vn.tech.website.store.repository.*;
+import vn.tech.website.store.util.Constant;
+import vn.tech.website.store.util.DbConstant;
+import vn.tech.website.store.util.ExportUtil;
 import vn.tech.website.store.util.FacesUtil;
 
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.*;
 
 @Named
 @Scope(value = "session")
@@ -87,7 +93,27 @@ public class PaymentController extends BaseController {
                     sort = "DESC";
                 }
                 searchDto.setSortOrder(sort);
-                return paymentsRepository.search(searchDto);
+                List<PaymentDto> paymentDtoList = paymentsRepository.search(searchDto);
+                for (PaymentDto dto : paymentDtoList) {
+                    List<OrdersDetail> ordersDetailList = orderDetailRepository.getAllByOrdersId(dto.getOrdersId());
+                    Long i = 1L;
+                    for (OrdersDetail ordersDetail : ordersDetailList) {
+                        OrdersDetailDto ordersDetailDto = new OrdersDetailDto();
+                        BeanUtils.copyProperties(ordersDetail, ordersDetailDto);
+                        ordersDetailDto.setCount(i);
+                        Product product = productRepository.getByProductId(ordersDetail.getProductId());
+                        BeanUtils.copyProperties(product, ordersDetailDto.getProductDto());
+                        ordersDetailDto.setDiscount(product.getDiscount() == null ? 0 : product.getDiscount());
+                        ordersDetailDto.getProductDto().setProductImages(new LinkedHashSet<>());
+                        ordersDetailDto.getProductDto().setProductImages(productImageRepository.getImagePathByProductId(ordersDetailDto.getProductId()));
+                        if (ordersDetailDto.getProductDto().getProductImages().size() != 0) {
+                            ordersDetailDto.getProductDto().setImageToShow(ordersDetailDto.getProductDto().getProductImages().iterator().next());
+                        }
+                        dto.getOrdersDto().getOrdersDetailDtoList().add(ordersDetailDto);
+                        i++;
+                    }
+                }
+                return paymentDtoList;
             }
 
             @Override
@@ -147,6 +173,31 @@ public class PaymentController extends BaseController {
             }
             ordersDetailDtoList.add(dto);
         }
+    }
+
+    public StreamedContent exportFileExcel(PaymentDto resultDto) {
+        try {
+            return getDownloadFileAssetList(resultDto);
+        } catch (Exception e) {
+            FacesUtil.addErrorMessage(Constant.ERROR_MESSAGE_ID, "Lấy dữ liệu bị lỗi");
+        }
+        return null;
+    }
+
+    private StreamedContent getDownloadFileAssetList(PaymentDto resultDto) throws ParseException {
+        ReportExcelDto reportExcelDto = new ReportExcelDto();
+        reportExcelDto.setReportPayment(resultDto);
+        reportExcelDto.setOrdersDetailDtoList(resultDto.getOrdersDto().getOrdersDetailDtoList());
+
+        String fileName = ExportUtil.getFileNameExport(resultDto.getCode());
+
+        try {
+            return ExportUtil.downloadExcelFile(reportExcelDto, fileName, Constant.TEMPLATE_BILL, Constant.REPORT_EXPORT_FILE);
+        } catch (IOException e) {
+            FacesUtil.addErrorMessage(Constant.ERROR_MESSAGE);
+            return null;
+        }
+
     }
 
     @Override

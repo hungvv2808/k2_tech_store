@@ -117,7 +117,7 @@ public class PaymentsRepositoryImpl implements PaymentsRepositoryCustom {
 
     private Query createQueryObjForSearch(StringBuilder sb, PaymentSearchDto searchDto) {
         Query query = entityManager.createNativeQuery(sb.toString());
-        if (StringUtils.isNotBlank(searchDto.getCustomerName())) {
+        if (StringUtils.isNotBlank(searchDto.getKeyword())) {
             query.setParameter("keyword", "%" + searchDto.getKeyword().trim() + "%");
         }
         return query;

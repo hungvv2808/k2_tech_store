@@ -370,7 +370,7 @@ public class OrdersController extends BaseController {
             if (orders.getAccountId() != null) {
                 SendNotification sendNotification = new SendNotification();
                 sendNotification.setAccountId(authorizationController.getAccountDto().getAccountId());
-                sendNotification.setContent("Đơn hàng có mã: \"" + orders.getCode() + "\" của bạn đã được chuẩn bị xong, vui lòng chờ đến khi đơn hàng được vận chuyển đến bạn.");
+                sendNotification.setContent("Đơn hàng có mã: <b><i>" + orders.getCode() + "</i></b> của bạn đã được chuẩn bị xong, vui lòng chờ đến khi đơn hàng được vận chuyển đến bạn.");
                 sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
                 sendNotification.setObjectId(orders.getOrdersId());
                 sendNotification.setType(DbConstant.NOTIFICATION_TYPE_ORDER);

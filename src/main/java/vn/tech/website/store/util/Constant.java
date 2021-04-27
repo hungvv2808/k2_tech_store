@@ -9,6 +9,7 @@ public class Constant {
     public static final String ERROR_FE_GROWL_ID = ":notification";
     public static final String ERROR_GROWL_ID = "growl";
     public static final String ERROR_GROWL_DETAIL_ID = "growlDetail";
+    public static final String EMPTY_MESSAGE = "Error";
 
     // page size
     public static final int PAGE_INDEX = 0;
@@ -76,6 +77,7 @@ public class Constant {
     public static final String REPORT_EXPORT_FILE_BILL_TRANSACTION_CONTROL = "/WEB-INF/report/BillTransactionControl.docx";
     public static final String TEMPLATE_REPORT_ASSET_LIST_EXPORT_FILE = "/WEB-INF/template/TemplateReportAssetList.xlsx";
     public static final String TEMPLATE_REPORT_AND_STATISTICAL = "/WEB-INF/template/ReportAndStatistical.xlsx";
+    public static final String TEMPLATE_BILL = "/WEB-INF/template/Bill.xlsx";
 
     // Excel export report
     public static final String REPORT_ASSET_LIST_EXPORT_FILE = "/WEB-INF/report/PrintReportAssetList.xlsx";
@@ -137,6 +139,9 @@ public class Constant {
     public static final int BRAND_YSL_ID = 7;
     public static final int BRAND_ZARA_ID = 8;
     public static final int BRAND_ZEUS_ID = 12;
+    public static final int BRAND_BOO_ID = 11;
+    public static final int BRAND_BAD_HABIT_ID = 10;
+    public static final int BRAND_SWE_ID = 9;
 
     // Min length of password
     public static final int ACCOUNT_MINLENGTH_PASSWORD_USER = 6;
@@ -146,4 +151,7 @@ public class Constant {
     public static final int STEP_PRICE = 500000;
 
     public static final int NOTIFICATION_PAGE_SIZE = 10;
+
+
+    public static final String REPORT_EXPORT_FILE = "/WEB-INF/report/thongke.xlsx";
 }

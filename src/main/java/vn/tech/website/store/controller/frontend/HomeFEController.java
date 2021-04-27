@@ -55,6 +55,8 @@ public class HomeFEController extends BaseFEController {
     private List<ProductDto> pantList;
     private List<ProductDto> sneakerList;
     private List<ProductDto> accessoriesList;
+    private List<ProductDto> productHighlightList;
+
 
     private ProductSearchDto searchDto;
 
@@ -94,6 +96,7 @@ public class HomeFEController extends BaseFEController {
         sneakerList = onSearchListProductByCodeCate(Constant.CATE_GIAY);
         accessoriesList = new ArrayList<>();
         accessoriesList = onSearchListProductByCodeCate(Constant.CATE_PHU_KIEN);
+        productHighlightList = new ArrayList<>();
     }
 
     private List<ProductDto> onSearchListProduct(Integer categoryId) {

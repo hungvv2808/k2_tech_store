@@ -69,7 +69,7 @@ public class ProductController extends BaseController {
 
     public void initData() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
-            //init();
+            init();
             resetAll();
         }
     }
@@ -327,7 +327,7 @@ public class ProductController extends BaseController {
             //send notification
             SendNotification sendNotification = new SendNotification();
             sendNotification.setAccountId(authorizationController.getAccountDto().getAccountId());
-            sendNotification.setContent("Có sản phẩm mới: " + productDto.getProductNameToShow() != null ? productDto.getProductNameToShow() : product.getProductName());
+            sendNotification.setContent("Có sản phẩm mới: <b>" + productDto.getProductNameToShow() != null ? productDto.getProductNameToShow() : product.getProductName() + "</b>");
             sendNotification.setStatus(DbConstant.SNOTIFICATION_STATUS_ACTIVE);
             sendNotification.setObjectId(product.getProductId());
             sendNotification.setType(DbConstant.NOTIFICATION_TYPE_PRODUCT);

@@ -17,4 +17,5 @@ public class OrdersDetailDto extends OrdersDetail {
     private String codeProduct;
     private Long maxQuantity;
     private ProductDto productDto = new ProductDto();
+    private Long count;
 }

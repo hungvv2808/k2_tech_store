@@ -1,7 +1,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
+                xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/admin/template/template.xhtml"
                 xmlns:f="http://java.sun.com/jsf/core">
     <f:metadata>
@@ -43,7 +43,7 @@
                             <p:inputText id="code" readonly="true" placeholder="Tự động tạo khi thêm mới"
                                          value="#{paymentController.paymentDto.code}"/>
 
-                            <p:outputLabel value="Số điện thoại:" for="phone" />
+                            <p:outputLabel value="Số điện thoại:" for="phone"/>
                             <p:inputText id="phone" placeholder="Nhập số điện thoại" readonly="true"
                                          value="#{paymentController.paymentDto.ordersDto.phone}"
                                          maxlength="200"/>
@@ -53,7 +53,7 @@
                                          value="#{paymentController.paymentDto.ordersDto.note}"
                                          maxlength="200"/>
 
-                            <p:outputLabel value="Địa chỉ:" for="address" />
+                            <p:outputLabel value="Địa chỉ:" for="address"/>
                             <p:inputText id="address" placeholder="Nhập địa chỉ" readonly="true"
                                          onchange="this.value = this.value.trim()"
                                          maxlength="100" value="#{paymentController.paymentDto.ordersDto.address}"/>
@@ -68,7 +68,8 @@
                                              columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
                                              layout="grid" style="margin:10px" styleClass="ui-panelgrid-blank">
 
-                                    <p:outputLabel value="Ảnh" for="image" rendered="#{not empty ordersDetailDto.productDto.imageToShow}"/>
+                                    <p:outputLabel value="Ảnh" for="image"
+                                                   rendered="#{not empty ordersDetailDto.productDto.imageToShow}"/>
                                     <p:graphicImage id="image" style="width: 50px; height: 50px"
                                                     rendered="#{not empty ordersDetailDto.productDto.imageToShow}"
                                                     name="#{ordersDetailDto.productDto.imageToShow}"/>
@@ -85,7 +86,8 @@
                                     </p:inputNumber>
 
                                     <p:outputLabel value="Đơn giá: " for="unitPrice"/>
-                                    <p:inputText value="#{ordersDetailDto.productDto.price}" id="unitPrice" maxlength="200"
+                                    <p:inputText value="#{ordersDetailDto.productDto.price}" id="unitPrice"
+                                                 maxlength="200"
                                                  readonly="true" maxValue="99999999999"
                                                  placeholder="Đơn giá">
                                         <f:convertNumber type="currency" currencySymbol="VNĐ" maxFractionDigits="6"
@@ -93,7 +95,8 @@
                                     </p:inputText>
 
                                     <p:outputLabel value="Giảm giá: " for="discount"/>
-                                    <p:inputText value="#{ordersDetailDto.productDto.discount} %" id="discount" maxlength="200"
+                                    <p:inputText value="#{ordersDetailDto.productDto.discount} %" id="discount"
+                                                 maxlength="200"
                                                  readonly="true" maxValue="99999999999"
                                                  placeholder="Giảm giá">
                                         <f:convertNumber type="currency" currencySymbol="%" maxFractionDigits="6"
@@ -131,13 +134,15 @@
                                                  minFractionDigits="0" locale="vi_VN"/>
                             </p:inputText>
 
-                            <p:outputLabel for="select-shipfee" class="required-label">Đơn vị vận chuyển:</p:outputLabel>
+                            <p:outputLabel for="select-shipfee"
+                                           class="required-label">Đơn vị vận chuyển:</p:outputLabel>
                             <p:inputText id="select-shipfee" value="#{paymentController.paymentDto.shippingName}"
                                          readonly="true">
                             </p:inputText>
 
                             <p:outputLabel value="Tiền vận chuyển: " for="shipping"/>
-                            <p:inputText value="#{paymentController.paymentDto.ordersDto.shipping}" id="shipping" maxlength="200"
+                            <p:inputText value="#{paymentController.paymentDto.ordersDto.shipping}" id="shipping"
+                                         maxlength="200"
                                          readonly="true"
                                          thousandSeparator="." maxValue="99999999999"
                                          placeholder="Nhập phí vận chuyển">
@@ -208,12 +213,25 @@
                                         <h:outputText value="#{rowIndex + 1}"/>
                                     </p:column>
 
+                                    <p:column headerText="Chi tiết" exportable="false" width="30"
+                                              style="text-align: center">
+                                        <p:rowToggler/>
+                                    </p:column>
+
                                     <p:column headerText="Tên khách hàng " sortBy="#{resultDto.customerName}">
                                         <h:outputText value="#{resultDto.ordersDto.customerName}"/>
                                     </p:column>
 
                                     <p:column headerText="Mã hóa đơn" sortBy="#{resultDto.code}">
                                         <h:outputText value="#{resultDto.code}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Số điện thoại">
+                                        <h:outputText value="#{resultDto.ordersDto.phone}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Địa chỉ">
+                                        <h:outputText value="#{resultDto.ordersDto.address}"/>
                                     </p:column>
 
                                     <p:column headerText="Tổng tiền " sortBy="#{resultDto.totalAmount}">
@@ -242,6 +260,90 @@
                                             </p:commandLink>
                                         </div>
                                     </p:column>
+
+                                    <p:column headerText="Xuất"
+                                              exportable="false" style="width: 30px">
+                                        <p:commandLink styleClass="edit">
+                                            <p:fileDownload value="#{paymentController.exportFileExcel(resultDto)}"/>
+                                            <i class="fa fa-edit"/>
+                                        </p:commandLink>
+                                    </p:column>
+
+                                    <p:rowExpansion>
+                                        <p:dataTable id="display" var="orderDetailDto"
+                                                     value="#{resultDto.ordersDto.ordersDetailDtoList}">
+                                            <!--                                            <p:repeat value="#{resultDto.ordersDto.ordersDetailDtoList}"-->
+                                            <!--                                                      var="orderDetailDto">-->
+                                            <div class="product">
+                                                <p:column exportable="false" headerText="Ảnh" width="70">
+                                                    <p:graphicImage id="imageDetail"
+                                                                    style="width: 70px; height: 70px"
+                                                                    rendered="#{not empty orderDetailDto.productDto.imageToShow}"
+                                                                    name="#{orderDetailDto.productDto.imageToShow}"/>
+                                                </p:column>
+                                                <p:column headerText="Tên sản phẩm">
+                                                    <h:outputText value="#{orderDetailDto.productDto.productName}"/>
+                                                </p:column>
+                                                <p:column headerText="Đơn giá">
+                                                    <h:outputText value="#{orderDetailDto.productDto.price}">
+                                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                         maxFractionDigits="6"
+                                                                         minFractionDigits="0" locale="vi_VN"/>
+                                                    </h:outputText>
+                                                </p:column>
+                                                <p:column headerText="Giảm giá">
+                                                    <h:outputText
+                                                            value="#{orderDetailDto.productDto.discount == null ? '0 %' : orderDetailDto.productDto.discount}">
+                                                        <f:convertNumber type="currency" currencySymbol="%"
+                                                                         maxFractionDigits="6"
+                                                                         minFractionDigits="0" locale="vi_VN"/>
+                                                    </h:outputText>
+                                                </p:column>
+                                                <p:column headerText="Số lượng">
+                                                    <h:outputText value="#{orderDetailDto.quantity}"/>
+                                                </p:column>
+                                                <p:column headerText="Thành tiền">
+                                                    <h:outputText value="#{(orderDetailDto.productDto.price - orderDetailDto.productDto.price*orderDetailDto.productDto.discount) * orderDetailDto.quantity}">
+                                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                         maxFractionDigits="6"
+                                                                         minFractionDigits="0" locale="vi_VN"/>
+                                                    </h:outputText>
+                                                </p:column>
+                                            </div>
+                                        </p:dataTable>
+                                        <!--                                            </p:repeat>-->
+                                        <p:panelGrid columns="4"
+                                                     columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-2,ui-grid-col-1.5,ui-grid-col-2"
+                                                     styleClass="ui-panelgrid-blank" layout="grid">
+                                            <h:outputText/><h:outputText/>
+                                            <p:outputLabel value="Tiền sản phẩm: "/>
+                                            <h:outputText value="#{resultDto.amountProduct}">
+                                            <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                             maxFractionDigits="6"
+                                                             minFractionDigits="0" locale="vi_VN"/>
+                                            </h:outputText>
+                                            <h:outputText/><h:outputText/>
+                                            <p:outputLabel value="Tiền vận chuyển: "/>
+                                            <h:outputText value="#{resultDto.ordersDto.shipping}">
+                                                <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                 maxFractionDigits="6"
+                                                                 minFractionDigits="0" locale="vi_VN"/>
+                                            </h:outputText>
+                                            <h:outputText/><h:outputText/>
+                                            <p:outputLabel value="Tổng tiền thu: "/>
+                                            <h:outputText value="#{resultDto.totalAmount}" style="font-weight: bold">
+                                                <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                 maxFractionDigits="6"
+                                                                 minFractionDigits="0" locale="vi_VN"/>
+                                            </h:outputText>
+                                        </p:panelGrid>
+                                        <p:commandLink id="pdf" ajax="false" value="Xuất">
+                                            <!--                                                <f:setPropertyActionListener value="false" target="#{exporterController.customExporter}" />-->
+                                            <pe:exporter type="pdf" target="tblSearchResult"
+                                                         fileName="Hóa đơn #{resultDto.code}"
+                                                         facetBackground="#AAFFBB" datasetPadding="4"/>
+                                        </p:commandLink>
+                                    </p:rowExpansion>
                                 </p:dataTable>
                             </p:panel>
                         </div>
