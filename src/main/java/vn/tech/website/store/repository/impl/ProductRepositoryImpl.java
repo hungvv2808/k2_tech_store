@@ -2,11 +2,9 @@ package vn.tech.website.store.repository.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import vn.tech.website.store.dto.CategoryDto;
-import vn.tech.website.store.dto.CategorySearchDto;
-import vn.tech.website.store.dto.ProductDto;
-import vn.tech.website.store.dto.ProductSearchDto;
+import vn.tech.website.store.dto.*;
 import vn.tech.website.store.entity.EntityMapper;
+import vn.tech.website.store.model.Product;
 import vn.tech.website.store.repository.ProductImageRepository;
 import vn.tech.website.store.repository.ProductRepositoryCustom;
 import vn.tech.website.store.util.DbConstant;
@@ -179,5 +177,35 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
 
         return query;
+    }
+
+    @Override
+    public List getAllExpertType(Long id, Integer type, Integer limit) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select p.product_id  as productId," +
+                "       p.brand_id    as brandId," +
+                "       p.category_id as categoryId," +
+                "       p.name        as productName," +
+                "       p.code        as code," +
+                "       p.count_code  as countCode," +
+                "       p.quantity    as quantity," +
+                "       p.type        as type," +
+                "       p.description as description," +
+                "       p.price       as price," +
+                "       p.discount    as discount," +
+                "       p.status      as status," +
+                "       p.create_date as createDate," +
+                "       p.create_by   as createBy," +
+                "       p.update_date as updateDate," +
+                "       p.update_by   as updateBy " +
+                "from product p " +
+                "where p.product_id > :idSrc " +
+                "  and p.type <> :typePro " +
+                "limit :limitLoad");
+        Query query = entityManager.createNativeQuery(sb.toString());
+        query.setParameter("idSrc", id);
+        query.setParameter("typePro", type);
+        query.setParameter("limitLoad", limit);
+        return EntityMapper.mapper(query, sb.toString(), Product.class);
     }
 }

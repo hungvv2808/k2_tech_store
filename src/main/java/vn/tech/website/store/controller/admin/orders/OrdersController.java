@@ -71,6 +71,7 @@ public class OrdersController extends BaseController {
     private List<SelectItem> shippingItem;
     private Map<Long, Shipping> shippingMap;
     private boolean isReadonly;
+    private Long lastProductId;
 
     public void initDataOrder() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
@@ -81,26 +82,18 @@ public class OrdersController extends BaseController {
     }
 
     public void resetAll(Integer orderType) {
+        isReadonly = false;
         ordersDto = new OrdersDto();
         searchDto = new OrdersSearchDto();
         productList = new ArrayList<>();
-        isReadonly = false;
-        List<Product> products = productRepository.getAllExpertType(DbConstant.PRODUCT_TYPE_PARENT);
-        for (Product obj : products) {
-            List<ProductOptionDetail> productOptionDetails = productOptionDetailRepository.findAllByProductId(obj.getProductId());
-            String option = "";
-            for (ProductOptionDetail productOptionDetail : productOptionDetails) {
-                ProductOption productOption = productOptionRepository.getByProductOptionId(productOptionDetail.getProductOptionId());
-                if (option == "") {
-                    option += productOption.getOptionName();
-                } else {
-                    option += " - " + productOption.getOptionName();
-                }
-            }
-            productList.add(new SelectItem(obj.getProductId(), obj.getProductName() + "(" + option + ")"));
-        }
         ordersDetailDtoList = new ArrayList<>();
         accountList = new ArrayList<>();
+        onSearch(orderType);
+
+        List<SelectItem> products = convertProduct(0L, 10);
+        productList.addAll(products);
+        lastProductId = Long.parseLong(products.get(products.size() - 1).getValue().toString());
+
         List<Account> accounts = accountRepository.findAccountByRoleId(DbConstant.ROLE_ID_USER);
         for (Account obj : accounts) {
             accountList.add(new SelectItem(obj.getAccountId(), obj.getFullName()));
@@ -113,8 +106,6 @@ public class OrdersController extends BaseController {
             shippingItem.add(new SelectItem(s.getShippingId(), s.getName()));
             shippingMap.put(s.getShippingId(), s);
         }
-
-        onSearch(orderType);
     }
 
     public void onSearch(Integer orderType) {
@@ -157,6 +148,31 @@ public class OrdersController extends BaseController {
         isReadonly = false;
         ordersDto = new OrdersDto();
         ordersDetailDtoList = new ArrayList<>();
+    }
+
+    public void loadData() {
+        List<SelectItem> loadMoreProduct = convertProduct(lastProductId, 20);
+        productList.addAll(loadMoreProduct);
+        FacesUtil.updateView("dlForm");
+    }
+
+    public List<SelectItem> convertProduct(Long id, Integer limit) {
+        List<Product> products = productRepository.getAllExpertType(id, DbConstant.PRODUCT_TYPE_PARENT, limit);
+        List<SelectItem> productListClone = new ArrayList<>();
+        for (Product obj : products) {
+            List<ProductOptionDetail> productOptionDetails = productOptionDetailRepository.findAllByProductId(obj.getProductId());
+            String option = "";
+            for (ProductOptionDetail productOptionDetail : productOptionDetails) {
+                ProductOption productOption = productOptionRepository.getByProductOptionId(productOptionDetail.getProductOptionId());
+                if (option == "") {
+                    option += productOption.getOptionName();
+                } else {
+                    option += " - " + productOption.getOptionName();
+                }
+            }
+            productListClone.add(new SelectItem(obj.getProductId(), obj.getProductName() + "(" + option + ")"));
+        }
+        return productListClone;
     }
 
     public void updatePanel() {

@@ -13,9 +13,6 @@ public interface ProductRepository extends CrudRepository<Product, Long>, Produc
 
     List<Product> getAllByType(Integer type);
 
-    @Query("select p from Product p where p.type <> :type")
-    List<Product> getAllExpertType(Integer type);
-
     @Query("select p from Product p where p.categoryId = :categoryId and p.type <> :type")
     List<Product> getByCategoryIdExpertType(@Param("categoryId") Long cateId, @Param("type") Integer type);
 

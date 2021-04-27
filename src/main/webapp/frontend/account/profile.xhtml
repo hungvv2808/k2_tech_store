@@ -57,7 +57,6 @@
                                         <h:inputText styleClass="form-control datetimepicker datepicker"
                                                      id="date_of_birth"
                                                      value="#{authorizationFEController.accountDto.dateOfBirth}"
-                                                     onfocus="focusRemoveReadOnly(this);"
                                                      placeholder="Chọn ngày sinh">
                                             <f:convertDateTime pattern="dd/MM/yyyy"/>
                                         </h:inputText>
@@ -131,7 +130,8 @@
                                                     <a data-fancybox="gallery"
                                                        data-options='{animationEffect: "zoom"}'
                                                        href="#{resource[authorizationFEController.accountDto.imagePath]}">
-                                                        <img src="#{resource[authorizationFEController.accountDto.imagePath]}" alt=""/>
+                                                        <img src="#{resource[authorizationFEController.accountDto.imagePath]}"
+                                                             alt=""/>
                                                     </a>
                                                 </c:if>
                                             </p:fileUpload>
@@ -160,12 +160,42 @@
                 <div class="row">
                     <div class="form-group form-custom">
                         <div class="row">
-                            <label class="col-lg-2">Địa chỉ:</label>
+                            <label class="col-lg-2 required-label">Địa chỉ:</label>
                             <div class="col-lg-10 field-custom">
                                 <ui:include src="/frontend/common/address.xhtml"/>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group no-margin-top">
+                            <div class="row">
+                                <label class="col-lg-4 required-label" for="username">Mật khẩu:</label>
+                                <div class="col-lg-8">
+                                    <h:inputSecret class="form-control" id="password"
+                                                   type="password" placeholder="Mật khẩu"
+                                                   maxlength="100"
+                                                   value="#{authorizationFEController.accountDto.password}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group no-margin-top">
+                            <div class="row">
+                                <label class="col-lg-4 required-label" for="username">Nhập lại mật khẩu:</label>
+                                <div class="col-lg-8">
+                                    <h:inputSecret class="form-control" id="repassword"
+                                                   type="password" placeholder="Nhập lại mật khẩu"
+                                                   maxlength="100"
+                                                   value="#{authorizationFEController.accountDto.rePassword}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="row mt-30">
@@ -185,7 +215,11 @@
 
     <ui:define name="jslibrary">
         <script>
-            $(".datetimepicker,.datetimepicker1").mask('99/99/9999');
+            //<![CDATA[
+            (function() {
+                $(".datetimepicker").mask('99/99/9999');
+                $('#date_of_birth').datepicker();
+            })();
 
             function focusRemoveReadOnly(e) {
                 if (e.getAttribute('readonly') !== null) {
@@ -202,6 +236,7 @@
                     buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
                     buttonImageOnly: true})
             });
+            //]]>
         </script>
     </ui:define>
 
