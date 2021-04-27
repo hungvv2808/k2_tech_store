@@ -127,7 +127,7 @@ public class HomeFEController extends BaseFEController {
     private List<ProductDto> onSearchListProductByCodeCate(String cateCode) {
         searchDto.setPageSize(DbConstant.LIMIT_SHOW_FE);
         searchDto.setType(DbConstant.PRODUCT_TYPE_PARENT);
-        searchDto.setCategoryId(categoryRepository.getByCode(cateCode).getCategoryId());
+        searchDto.setCategoryId(categoryRepository.getCateIdByCode(cateCode).getCategoryId());
         List<ProductDto> showList = productRepository.search(searchDto);
         for (ProductDto dto : showList){
             dto.setProductImages(new LinkedHashSet<>());
