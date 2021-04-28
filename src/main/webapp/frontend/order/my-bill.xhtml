@@ -41,7 +41,7 @@
                             <tbody>
                             <h:outputScript>var index = 1;</h:outputScript>
                             <p:repeat value="#{billFEController.ordersDtoMap.values()}" var="ordersDto">
-                                <tr>
+                                <tr data-children="">
                                     <td scope="row" class="order-product__id">
                                         <p class="id-#{ordersDto.ordersId}"/>
                                         <h:outputScript>$('.id-#{ordersDto.ordersId}').text(index)</h:outputScript>
@@ -70,11 +70,10 @@
                                         </h:commandLink>
                                     </td>
                                 </tr>
-                                <h:outputScript>index += 1</h:outputScript>
                                 <h:panelGroup rendered="#{ordersDto.showDetail}">
-                                    <table class="table table-hover order-product" >
+                                    <table class="table table-hover order-product" style="width: 80%; margin: 0 auto;">
                                         <thead>
-                                        <tr class="order-product__header">
+                                        <tr class="order-product__header" style="background-color: #00ff01;">
                                             <th scope="col">ID</th>
                                             <th scope="col">Hình ảnh</th>
                                             <th scope="col">Tên sản phẩm</th>
@@ -112,6 +111,8 @@
                                         </tbody>
                                     </table>
                                 </h:panelGroup>
+
+                                <h:outputScript>index += 1</h:outputScript>
                             </p:repeat>
                             </tbody>
                         </table>

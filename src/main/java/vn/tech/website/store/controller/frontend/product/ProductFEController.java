@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.frontend.BaseFEController;
@@ -15,6 +16,7 @@ import vn.tech.website.store.dto.ProductOptionSearchDto;
 import vn.tech.website.store.dto.ProductSearchDto;
 import vn.tech.website.store.model.Brand;
 import vn.tech.website.store.model.Category;
+import vn.tech.website.store.model.Product;
 import vn.tech.website.store.model.ProductLink;
 import vn.tech.website.store.repository.*;
 import vn.tech.website.store.util.Constant;
@@ -53,6 +55,7 @@ public class ProductFEController extends BaseFEController {
 
     private Long categoryId;
     private Long brandId;
+    private Long productIdParams;
     private ProductSearchDto searchDto;
     private ProductSearchDto productSearchDto;
     private List<ProductOptionDto> productOptionDtoList;
@@ -76,6 +79,8 @@ public class ProductFEController extends BaseFEController {
             categoryId = cateId == null ? null : Long.parseLong(cateId);
             String braId = request.getParameter("braid");
             brandId = braId == null ? null : Long.parseLong(braId);
+            String proId = request.getParameter("proid");
+            productIdParams = proId == null ? null : Long.parseLong(proId);
             resetAll();
         }
     }
@@ -86,6 +91,14 @@ public class ProductFEController extends BaseFEController {
         productSearchDto.setMaxPrice(0L);
         productSearchDto.setEnableSearchPrice(false);
         checkType = true;
+
+        Product productFromNoti = productRepository.getByProductId(productIdParams);
+        if (productFromNoti != null){
+            ProductDto productDto = new ProductDto();
+            BeanUtils.copyProperties(productFromNoti,productDto);
+            viewDetailProduct(productDto);
+            return;
+        }
 
         pagination.setRequest(request);
         searchDto = new ProductSearchDto();
@@ -207,8 +220,8 @@ public class ProductFEController extends BaseFEController {
             return;
         }
 
-        productSearchDto.setCategoryId(categoryId);
-        productSearchDto.setBrandId(brandId);
+//        productSearchDto.setCategoryId(categoryId);
+//        productSearchDto.setBrandId(brandId);
         if (productSearchDto.getOptionColorId() == -1 && productSearchDto.getOptionSizeId() == -1 && productSearchDto.getOptionReleaseId() == -1 && productSearchDto.getOptionOtherId() == -1) {
             productSearchDto.setOptionCondition(null);
         } else {

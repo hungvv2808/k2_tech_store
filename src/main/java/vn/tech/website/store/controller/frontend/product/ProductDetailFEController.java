@@ -10,11 +10,13 @@ import vn.tech.website.store.dto.OrdersDetailDto;
 import vn.tech.website.store.dto.ProductDto;
 import vn.tech.website.store.dto.ProductOptionDetailDto;
 import vn.tech.website.store.dto.ProductOptionDetailSearchDto;
+import vn.tech.website.store.model.Product;
 import vn.tech.website.store.model.ProductImage;
 import vn.tech.website.store.model.ProductOptionDetail;
 import vn.tech.website.store.repository.ProductImageRepository;
 import vn.tech.website.store.repository.ProductOptionDetailRepository;
 import vn.tech.website.store.repository.ProductRepository;
+import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
 
 import javax.faces.context.FacesContext;

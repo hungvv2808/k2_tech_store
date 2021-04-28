@@ -9,7 +9,9 @@ import vn.tech.website.store.dto.NotificationDto;
 import vn.tech.website.store.dto.NotificationSearchDto;
 import vn.tech.website.store.entity.EScope;
 import vn.tech.website.store.model.ReceiveNotification;
+import vn.tech.website.store.model.SendNotification;
 import vn.tech.website.store.repository.NotificationRepository;
+import vn.tech.website.store.repository.SendNotificationRepository;
 import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.FacesUtil;
@@ -27,6 +29,8 @@ import java.util.Map;
 public class NotificationController extends BaseController {
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private SendNotificationRepository sendNotificationRepository;
 
     private List<NotificationDto> notificationDtoList;
     private NotificationSearchDto searchDto;
@@ -63,7 +67,16 @@ public class NotificationController extends BaseController {
         ReceiveNotification receiveNotification = notificationRepository.findById(notificationId).orElse(null);
         receiveNotification.setStatus(DbConstant.NOTIFICATION_STATUS_SEEN);
         notificationRepository.save(receiveNotification);
-        FacesUtil.redirect("");
+        SendNotification sendNotification = sendNotificationRepository.getBySendNotificationId(receiveNotification.getSendNotificationId());
+        if (sendNotification.getType() == DbConstant.NOTIFICATION_TYPE_ORDER){
+            FacesUtil.redirect("/admin/order-manage/order.xhtml?orderid="+sendNotification.getObjectId());
+        }
+        if (sendNotification.getType() == DbConstant.NOTIFICATION_TYPE_PRODUCT){
+            FacesUtil.redirect("/admin/product-manage/product.xhtml?proid="+sendNotification.getObjectId());
+        }
+        if (sendNotification.getType() == DbConstant.NOTIFICATION_TYPE_NEWS){
+            FacesUtil.redirect("/admin/news-manage/news.xhtml?newsid="+sendNotification.getObjectId());
+        }
         resetAll();
     }
 

@@ -43,7 +43,7 @@
                 }
                 data.forEach(function (e) {
                     $('#bell_menu').append(
-                        "<a class='dropdown-item' href='#'>" +
+                        "<a class='dropdown-item' href='#' onclick=\"redirectPage([{name:'notificationId',value:'" + e.receive_notification_id + "'}]);\">" +
                         "<span>" + e.send_content + "</span>" +
                         "<br/>" +
                         "<i>" + e.date_before_now + "</i>" +

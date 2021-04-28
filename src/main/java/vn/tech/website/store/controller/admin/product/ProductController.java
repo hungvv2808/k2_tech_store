@@ -263,7 +263,7 @@ public class ProductController extends BaseController {
         product = productRepository.save(product);
 
         // create df prod high light
-        if (product.getType() == DbConstant.PRODUCT_TYPE_CHILD) {
+        if (product.getType() != DbConstant.PRODUCT_TYPE_PARENT) {
             ProductHighLight productHighLight = new ProductHighLight();
             productHighLight.setProductId(product.getProductId());
             productHighLightRepository.save(productHighLight);
@@ -323,7 +323,7 @@ public class ProductController extends BaseController {
             }
         }
 
-        if (productDto.getProductId() == null) {
+        if (productDto.getProductId() == null && productDto.getType() != DbConstant.PRODUCT_TYPE_PARENT) {
             //send notification
             SendNotification sendNotification = new SendNotification();
             sendNotification.setAccountId(authorizationController.getAccountDto().getAccountId());

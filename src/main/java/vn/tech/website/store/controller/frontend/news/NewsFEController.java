@@ -12,6 +12,7 @@ import vn.tech.website.store.controller.frontend.AuthorizationFEController;
 import vn.tech.website.store.controller.frontend.BaseFEController;
 import vn.tech.website.store.controller.frontend.common.PaginationController;
 import vn.tech.website.store.dto.*;
+import vn.tech.website.store.model.News;
 import vn.tech.website.store.model.Product;
 import vn.tech.website.store.repository.*;
 import vn.tech.website.store.util.DbConstant;
@@ -48,6 +49,7 @@ public class NewsFEController extends BaseFEController {
 
     private List<NewsDto> newsDtoList;
     private String cateId;
+    private Long newsIdParams;
     private List<OrdersDetailDto> listAddToCart;
     private NewsSearchDto searchDto;
     private PaginationController<NewsDto> pagination;
@@ -61,6 +63,8 @@ public class NewsFEController extends BaseFEController {
         if (!FacesContext.getCurrentInstance().isPostback()) {
             init();
             cateId = request.getParameter("catid");
+            String newsId = request.getParameter("newsid");
+            newsIdParams = newsId == null ? null : Long.parseLong(newsId);
             resetAll(cateId == null ? null : Long.parseLong(cateId));
         }
     }
@@ -69,6 +73,12 @@ public class NewsFEController extends BaseFEController {
         newsDtoList = new ArrayList<>();
         searchDto = new NewsSearchDto();
         pagination.setRequest(request);
+        if (newsIdParams != null){
+            News news = newsRepository.getByNewsId(newsIdParams);
+            BeanUtils.copyProperties(news,newsDto);
+            viewNewsDetail(newsDto);
+            return;
+        }
         onSearch(categoryId);
     }
 

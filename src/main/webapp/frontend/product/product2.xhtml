@@ -35,7 +35,7 @@
                                 <div class="form-group">
                                     <h:outputLabel value="Chọn loại sản phẩm:" />
                                     <h:selectOneMenu styleClass="form-control" value="#{productFEController.productSearchDto.categoryId}">
-                                        <f:selectItem itemValue="-1" itemLabel="Chọn loại" />
+                                        <f:selectItem itemValue="" itemLabel="Chọn loại" />
                                         <f:selectItems value="#{productFEController.categories}" var="cate"
                                                        itemValue="#{cate.value}"
                                                        itemLabel="#{cate.label}"/>
@@ -44,7 +44,7 @@
                                 <div class="form-group">
                                     <h:outputLabel value="Chọn thương hiệu sản phẩm:" />
                                     <h:selectOneMenu styleClass="form-control" value="#{productFEController.productSearchDto.brandId}">
-                                        <f:selectItem itemValue="-1" itemLabel="Chọn thương hiệu" />
+                                        <f:selectItem itemValue="" itemLabel="Chọn thương hiệu" />
                                         <f:selectItems value="#{productFEController.brands}" var="brand"
                                                        itemValue="#{brand.value}"
                                                        itemLabel="#{brand.label}"/>

@@ -21,6 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Named
@@ -30,6 +31,8 @@ import java.util.*;
 public class OrdersController extends BaseController {
     @Inject
     private AuthorizationController authorizationController;
+    @Inject
+    private HttpServletRequest request;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -72,11 +75,14 @@ public class OrdersController extends BaseController {
     private Map<Long, Shipping> shippingMap;
     private boolean isReadonly;
     private Long lastProductId;
+    private Long orderIdParams;
 
     public void initDataOrder() {
         if (!FacesContext.getCurrentInstance().isPostback()) {
             init();
             orderType = DbConstant.ORDER_TYPE_ORDER;
+            String orderId = request.getParameter("orderid");
+            orderIdParams = orderId == null ? null : Long.parseLong(orderId);
             resetAll(orderType);
         }
     }
@@ -88,6 +94,8 @@ public class OrdersController extends BaseController {
         productList = new ArrayList<>();
         ordersDetailDtoList = new ArrayList<>();
         accountList = new ArrayList<>();
+
+        searchDto.setOrdersId(orderIdParams);
         onSearch(orderType);
 
         List<SelectItem> products = convertProduct(0L, 10);

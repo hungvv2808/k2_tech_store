@@ -109,6 +109,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         sb.append(" FROM orders o " +
                 " LEFT JOIN account acc ON o.account_id = acc.account_id ");
         sb.append(" WHERE 1=1 ");
+        if (searchDto.getOrdersId() != null) {
+            sb.append(" AND o.orders_id = :ordersId ");
+        }
         if (searchDto.getAccountId() != null) {
             sb.append(" AND o.account_id = :accountId ");
         }
@@ -131,6 +134,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
     private Query createQueryObjForSearch(StringBuilder sb, OrdersSearchDto searchDto) {
         Query query = entityManager.createNativeQuery(sb.toString());
+        if (searchDto.getOrdersId() != null) {
+            query.setParameter("ordersId", searchDto.getOrdersId());
+        }
         if (searchDto.getStatusInit() != null) {
             query.setParameter("statusInit", DbConstant.ORDER_STATUS_PAID);
         }

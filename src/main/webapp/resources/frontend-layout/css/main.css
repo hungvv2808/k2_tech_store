@@ -1563,6 +1563,49 @@
   width: 100%;
 }
 
+#register-modal .modal-dialog .modal-content {
+  border: 1px solid #ffffff;
+  border-radius: 1rem;
+}
+#register-modal .modal-dialog .modal-content .modal-header {
+  background-color: #3aaf29;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+#register-modal .modal-dialog .modal-content .modal-header .modal-title {
+  width: 100%;
+  text-align: center;
+  color: #ffffff;
+}
+#register-modal .modal-dialog .modal-content .modal-header .close {
+  color: #ffffff;
+}
+#register-modal .modal-dialog .modal-content .modal-body .lost-password-btn {
+  text-align: right;
+  font-style: italic;
+  font-size: 14px;
+}
+#register-modal .modal-dialog .modal-content .modal-body .lost-password-btn a {
+  color: #3aaf29;
+}
+#register-modal .modal-dialog .modal-content .modal-body .lost-password-btn a:hover {
+  color: #02ff3985;
+}
+#register-modal .modal-dialog .modal-content .modal-body .btn-custom {
+  background-color: #3aaf29 !important;
+  color: #ffffff !important;
+  width: 100%;
+}
+#register-modal .modal-dialog .modal-content .modal-body .btn-custom:hover {
+  background-color: #02ff3985;
+}
+#register-modal .modal-dialog .modal-content .modal-footer {
+  text-align: center;
+}
+#register-modal .modal-dialog .modal-content .modal-footer .signup {
+  width: 100%;
+}
+
 .no-padding {
   padding: 0;
 }
