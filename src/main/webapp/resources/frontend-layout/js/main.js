@@ -26,8 +26,7 @@ $(document).ready(function() {
 // press esc to exit search form
 $(document).on('keydown', function(e) {
     if (e.keyCode === 27) {
-        $('.search-function').show();
-        $('.search-function__input').hide();
+        searchClick(false);
     }
 });
 
@@ -82,14 +81,13 @@ function searchClick(e) {
         }
 
         $('.search-function__input').hide();
+        $('.result-search').addClass('display-none');
     }
 }
-//enter search
-function searchEnter(e) {
-    if (e.keyCode == 13){
-        $('btnSearch').click();
-        alert("dá");
-    }
+
+// search all
+function onSearch() {
+    $('.result-search').removeClass('display-none');
 }
 
 // override function owl carousel

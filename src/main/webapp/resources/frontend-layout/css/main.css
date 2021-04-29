@@ -253,6 +253,23 @@
   transform: rotate(0);
 }
 
+.result-search {
+  position: absolute;
+  background: #ffffff;
+  border: 2px solid #F42F4C;
+  border-radius: 10px;
+  top: 5rem;
+  width: 80%;
+  height: 50vh;
+}
+.result-search .empty-result {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  margin: 0;
+  padding: 22vh 0;
+}
+
 #carouselExampleIndicators .carousel-inner .carousel-item img {
   height: 825px;
   justify-content: center;

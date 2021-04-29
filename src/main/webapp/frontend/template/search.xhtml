@@ -1,0 +1,29 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{searchFEController.initData}"/>
+    </f:metadata>
+
+    <h:form prependId="false" styleClass="form-inline">
+        <i class="fas fa-search fa-sm search-function" onclick="searchClick(true);"/>
+        <div class="search-function__input">
+            <p:inputText id="txtSearch" class="form-control mr-sm-2 nav-search" type="search"
+                         placeholder="Tìm kiếm"
+                         aria-label="Tìm kiếm"
+                         onkeyup="onSearch();"/>
+            <i class="fas fa-times fa-sm search-cancel" onclick="searchClick(false);"/>
+        </div>
+        <h:panelGroup layout="block" id="result" styleClass="result-search display-none">
+            <div class="container-fluid">
+                <div class="row">
+                    <p class="empty-result">Không có kết quả nào</p>
+                </div>
+            </div>
+        </h:panelGroup>
+    </h:form>
+</ui:composition>
