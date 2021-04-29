@@ -64,54 +64,12 @@
                                         #{ordersDto.statusString}
                                     </td>
                                     <td class="order-product__action">
-                                        <h:commandLink styleClass="main-color"
-                                                       actionListener="#{billFEController.onShowDetail(ordersDto)}">
-                                            <i class="fas fa-angle-down"></i>
-                                        </h:commandLink>
+                                        <p:remoteCommand name="getDetail" actionListener="#{billFEController.onShowDetail(ordersDto)}" update="detail"/>
+                                        <a class="main-color" onclick="getDetail();" data-toggle="modal" data-target="#detail-modal">
+                                            <i class="fas fa-eye"/>
+                                        </a>
                                     </td>
                                 </tr>
-                                <h:panelGroup rendered="#{ordersDto.showDetail}">
-                                    <table class="table table-hover order-product" style="width: 80%; margin: 0 auto;">
-                                        <thead>
-                                        <tr class="order-product__header" style="background-color: #00ff01;">
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Hình ảnh</th>
-                                            <th scope="col">Tên sản phẩm</th>
-                                            <th scope="col">Mã sản phẩm</th>
-                                            <th scope="col">Đơn giá</th>
-                                            <th scope="col">Số lượng</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <h:outputScript>var index2 = 1;</h:outputScript>
-                                        <p:repeat value="#{ordersDto.ordersDetailDtoList}" var="ordersDto">
-                                            <tr>
-                                                <td scope="row" class="order-product__id">
-                                                    <p class="id-#{ordersDto.productDto.productId}"/>
-                                                    <h:outputScript>$('.id-#{ordersDto.productDto.productId}').text(index2)</h:outputScript>
-                                                </td>
-                                                <td class="order-product__img">
-                                                    <p:graphicImage styleClass="profile__avatar" name="#{ordersDto.productDto.imageToShow}"/>
-                                                </td>
-                                                <td class="order-product__name">#{ordersDto.productDto.productName}</td>
-                                                <td class="order-product__code">#{ordersDto.productDto.code}</td>
-                                                <td class="order-product__price">
-                                                    <h:outputText value="#{ordersDto.amount}">
-                                                        <f:convertNumber type="currency" currencySymbol="VNĐ"
-                                                                         maxFractionDigits="6"
-                                                                         minFractionDigits="0" locale="vi_VN"/>
-                                                    </h:outputText>
-                                                </td>
-                                                <td class="order-product__qty">
-                                                    #{ordersDto.quantity}
-                                                </td>
-                                            </tr>
-                                            <h:outputScript>index2 += 1</h:outputScript>
-                                        </p:repeat>
-                                        </tbody>
-                                    </table>
-                                </h:panelGroup>
-
                                 <h:outputScript>index += 1</h:outputScript>
                             </p:repeat>
                             </tbody>
@@ -120,6 +78,71 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="detail-modal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title width-100 text-center">Chi tiết đơn hàng</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&#xD7;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="content-orders no-margin-top">
+                            <h:panelGroup id="detail" layout="block" styleClass="orders-infor">
+                                <table class="table table-hover order-product" style="width: 80%; margin: 0 auto;">
+                                    <thead>
+                                    <tr class="order-product__header">
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Hình ảnh</th>
+                                        <th scope="col">Tên sản phẩm</th>
+                                        <th scope="col" class="display-none">Mã sản phẩm</th>
+                                        <th scope="col">Đơn giá</th>
+                                        <th scope="col">Số lượng</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <h:outputScript>var index2 = 1;</h:outputScript>
+                                    <p:repeat value="#{billFEController.ordersDetailDtoList}" var="ordersDto">
+                                        <tr>
+                                            <td scope="row" class="order-product__id">
+                                                <p class="id-#{ordersDto.productDto.productId}"/>
+                                                <h:outputScript>$('.id-#{ordersDto.productDto.productId}').text(index2)</h:outputScript>
+                                            </td>
+                                            <td class="order-product__img">
+                                                <p:graphicImage styleClass="profile__avatar" name="#{ordersDto.productDto.imageToShow}"/>
+                                            </td>
+                                            <td class="order-product__name">#{ordersDto.productDto.productName}</td>
+                                            <td class="order-product__code display-none">#{ordersDto.productDto.code}</td>
+                                            <td class="order-product__price">
+                                                <h:outputText value="#{ordersDto.amount}">
+                                                    <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                     maxFractionDigits="6"
+                                                                     minFractionDigits="0" locale="vi_VN"/>
+                                                </h:outputText>
+                                            </td>
+                                            <td class="order-product__qty">
+                                                #{ordersDto.quantity}
+                                            </td>
+                                        </tr>
+                                        <h:outputScript>index2 += 1</h:outputScript>
+                                    </p:repeat>
+                                    </tbody>
+                                </table>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .modal-dialog {
+                max-width: 70vw !important;
+            }
+        </style>
     </ui:define>
 
 </ui:composition>
