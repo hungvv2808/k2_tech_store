@@ -6,8 +6,7 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vn.tech.website.store.dto.OrdersDetailDto;
-import vn.tech.website.store.dto.OrdersDto;
+import vn.tech.website.store.dto.ExportOrderDto;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
@@ -26,7 +25,7 @@ public class ExportUtil {
     }
 
     public static StreamedContent downloadExcelOrdersDetailFile(
-            OrdersDto reportExcelDto, String fileName, String templeteFile,
+            ExportOrderDto reportExcelDto, String fileName, String templeteFile,
             String reportFile) throws IOException {
 
         ServletContext servletContext = ((ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext());

@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.controller.admin.BaseController;
 import vn.tech.website.store.controller.admin.auth.AuthorizationController;
-import vn.tech.website.store.dto.OrdersDetailDto;
-import vn.tech.website.store.dto.OrdersDto;
-import vn.tech.website.store.dto.ProductDto;
+import vn.tech.website.store.dto.*;
 import vn.tech.website.store.dto.common.ReportExcelDto;
 import vn.tech.website.store.dto.payment.PaymentDto;
 import vn.tech.website.store.dto.payment.PaymentSearchDto;
@@ -175,18 +173,39 @@ public class PaymentController extends BaseController {
         }
     }
 
-    public StreamedContent getDownloadOrdersDetailFile(OrdersDto ordersDto) {
-        if (ordersDto != null) {
-            String fileName = ExportUtil.getFileNameExport("OrdersDetail" + ordersDto.getCode());
-            try {
-                return ExportUtil.downloadExcelOrdersDetailFile(ordersDto, fileName, Constant.TEMPLETE_REPORT_ADD_DATA_EXPORT_ORDERS_FILE, Constant.REPORT_ADD_DATA_EXPORT_ORDERS_FILE);
-            } catch (IOException e) {
-                FacesUtil.addErrorMessage("Có lỗi xảy ra");
-                System.out.println("Error: " + e);
-                return null;
-            }
-        } else {
-            FacesUtil.addErrorMessage("Không tồn tại dữ liệu");
+    public StreamedContent getDownloadOrdersDetailFile(PaymentDto paymentDto) {
+        ExportOrderDto exportOrderDto = new ExportOrderDto();
+        exportOrderDto.setManufactureName("K2 Tech Store");
+        exportOrderDto.setOrderCode(paymentDto.getCode());
+        exportOrderDto.setCustomerName(paymentDto.getOrdersDto().getCustomerName());
+        exportOrderDto.setCustomerPhone(paymentDto.getOrdersDto().getPhone());
+        exportOrderDto.setCustomerAddress(paymentDto.getOrdersDto().getAddress());
+        exportOrderDto.setAmountProduct(paymentDto.getAmountProduct());
+        exportOrderDto.setAmountShipping(paymentDto.getOrdersDto().getShipping());
+        exportOrderDto.setAmountTotal(paymentDto.getTotalAmount());
+        exportOrderDto.setFounder("Vũ Văn Hùng");
+
+        List<ExportProductDetailDto> exportProductDetailDtoArrayList = new ArrayList<>();
+        for (OrdersDetailDto ordersDetailDto : paymentDto.getOrdersDto().getOrdersDetailDtoList()) {
+            ExportProductDetailDto exportProductDetailDto = new ExportProductDetailDto();
+            exportProductDetailDto.setProductName(ordersDetailDto.getProductDto().getProductName());
+            exportProductDetailDto.setPrice(ordersDetailDto.getProductDto().getPrice());
+            exportProductDetailDto.setDiscount(ordersDetailDto.getProductDto().getDiscount());
+            exportProductDetailDto.setQuantity(ordersDetailDto.getQuantity());
+            Double totalAmount = (ordersDetailDto.getProductDto().getPrice()
+                    - ordersDetailDto.getProductDto().getPrice() * ordersDetailDto.getProductDto().getDiscount())
+                    * ordersDetailDto.getQuantity();
+            exportProductDetailDto.setTotalAmount(totalAmount);
+            exportProductDetailDtoArrayList.add(exportProductDetailDto);
+        }
+        exportOrderDto.setExportProductDetailDtoList(exportProductDetailDtoArrayList);
+
+        String fileName = ExportUtil.getFileNameExport("OrdersDetail_" + exportOrderDto.getOrderCode() + "_");
+        try {
+            return ExportUtil.downloadExcelOrdersDetailFile(exportOrderDto, fileName, Constant.TEMPLETE_REPORT_ADD_DATA_EXPORT_ORDERS_FILE, Constant.REPORT_ADD_DATA_EXPORT_ORDERS_FILE);
+        } catch (IOException e) {
+            FacesUtil.addErrorMessage("Có lỗi xảy ra");
+            System.out.println("Error: " + e);
             return null;
         }
     }
