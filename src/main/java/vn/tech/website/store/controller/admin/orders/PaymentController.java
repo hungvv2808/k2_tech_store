@@ -182,6 +182,7 @@ public class PaymentController extends BaseController {
                 return ExportUtil.downloadExcelOrdersDetailFile(ordersDto, fileName, Constant.TEMPLETE_REPORT_ADD_DATA_EXPORT_ORDERS_FILE, Constant.REPORT_ADD_DATA_EXPORT_ORDERS_FILE);
             } catch (IOException e) {
                 FacesUtil.addErrorMessage("Có lỗi xảy ra");
+                System.out.println("Error: " + e);
                 return null;
             }
         } else {
