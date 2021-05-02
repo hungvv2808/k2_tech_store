@@ -7,6 +7,7 @@ import vn.tech.website.store.entity.EntityMapper;
 import vn.tech.website.store.model.Product;
 import vn.tech.website.store.repository.ProductImageRepository;
 import vn.tech.website.store.repository.ProductRepositoryCustom;
+import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.DbConstant;
 import vn.tech.website.store.util.ValueUtil;
 
@@ -92,7 +93,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     private void appendQueryFromAndWhereForSearch(StringBuilder sb, ProductSearchDto searchDto) {
         sb.append("FROM product p " +
-                " INNER JOIN category c ON p.category_id = c. category_id " +
+                " INNER JOIN category c ON p.category_id = c.category_id " +
                 " INNER JOIN brand b ON p.brand_id = b.brand_id ");
         if (searchDto.getParentId() != null) {
             sb.append(" INNER JOIN product_link pl ON p.product_id = pl.child_id ");
@@ -139,6 +140,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         if (searchDto.getOptionCondition() != null) {
             sb.append(" AND pod.product_option_id IN ").append(searchDto.getOptionCondition()).append(" ");
         }
+
+        if (searchDto.getKeyword() != null) {
+            sb.append(" AND (p.name LIKE :keyword OR p.code LIKE :keyword) ");
+        }
     }
 
     private Query createQueryObjForSearch(StringBuilder sb, ProductSearchDto searchDto) {
@@ -176,6 +181,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             }
         }
 
+        if (searchDto.getKeyword() != null) {
+            query.setParameter("keyword", "%" + searchDto.getKeyword() + "%");
+        }
+
         return query;
     }
 
@@ -206,6 +215,22 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         query.setParameter("idSrc", id);
         query.setParameter("typePro", type);
         query.setParameter("limitLoad", limit);
+        return EntityMapper.mapper(query, sb.toString(), Product.class);
+    }
+
+    @Override
+    public List searchByKeyword(String keyword) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT p.product_id AS productId, p.name AS productName " +
+                "FROM product p " +
+                "WHERE p.type = :type " +
+                "  AND p.status = :status " +
+                "  AND (p.name LIKE :keyword OR p.code LIKE :keyword) LIMIT :limit");
+        Query query = entityManager.createNativeQuery(sb.toString());
+        query.setParameter("type", DbConstant.PRODUCT_TYPE_CHILD);
+        query.setParameter("status", DbConstant.PRODUCT_STATUS_ACTIVE);
+        query.setParameter("keyword", "%" + keyword + "%");
+        query.setParameter("limit", Constant.PAGE_SIZE_MAX);
         return EntityMapper.mapper(query, sb.toString(), Product.class);
     }
 }

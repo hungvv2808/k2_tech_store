@@ -90,7 +90,7 @@ public class BrandRepositoryImpl implements BrandRepositoryCustom {
     private void appendQueryFromAndWhereForSearch(StringBuilder sb, BrandSearchDto searchDto) {
         sb.append("FROM brand b " +
                 " LEFT JOIN account acc ON b.update_by = acc.account_id ");
-        sb.append(" WHERE 1=1  AND b.status = " + DbConstant.BRAND_STATUS_ACTIVE);
+        sb.append(" WHERE 1=1 AND b.status = " + DbConstant.BRAND_STATUS_ACTIVE);
 
         if (StringUtils.isNotBlank(searchDto.getBrandName())) {
             sb.append(" AND b.name LIKE :brandName ");

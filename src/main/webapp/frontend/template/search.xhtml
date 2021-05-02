@@ -12,18 +12,60 @@
     <h:form prependId="false" styleClass="form-inline">
         <i class="fas fa-search fa-sm search-function" onclick="searchClick(true);"/>
         <div class="search-function__input">
-            <p:inputText id="txtSearch" class="form-control mr-sm-2 nav-search" type="search"
-                         placeholder="Tìm kiếm"
-                         aria-label="Tìm kiếm"
-                         onkeyup="onSearch();"/>
+            <h:inputText id="txtSearch" styleClass="form-control mr-sm-2 nav-search"
+                         value="#{searchFEController.keyword}"
+                         placeholder="Tìm kiếm" onkeyup="onSearch();"/>
             <i class="fas fa-times fa-sm search-cancel" onclick="searchClick(false);"/>
         </div>
+        <p:remoteCommand name="getData" actionListener="#{searchFEController.onSearch}" update="loadDataSearch" />
         <h:panelGroup layout="block" id="result" styleClass="result-search display-none">
             <div class="container-fluid">
-                <div class="row">
+                <div class="row result-none">
                     <p class="empty-result">Không có kết quả nào</p>
                 </div>
+                <div class="row result-data">
+                    <h5 class="width-100">Sản phẩm liên quan</h5>
+                    <p class="width-100">iPhone 11 Pro Max</p>
+                    <p class="width-100">iPhone 12 Pro Max</p>
+                    <p class="width-100">iPhone 13 Pro Max</p>
+                    <p class="width-100">iPhone 14 Pro Max</p>
+                    <p class="width-100">iPhone 15 Pro Max</p>
+                </div>
             </div>
+        </h:panelGroup>
+        <h:panelGroup id="loadDataSearch">
+            <script>
+                //<![CDATA[
+                // search all
+                function onSearch() {
+                    $('.result-search').removeClass('display-none');
+                    $('.result-data').addClass('display-none');
+                    setTimeout(function () {
+                        $('.result-none').addClass('display-none');
+                        $('.result-data').removeClass('display-none');
+                    }, 0.5);
+                    getData();
+                    const data = '#{searchFEController.searchDtoJson}';
+                    console.log('data: ' + data);
+                }
+
+                // press esc to exit search form
+                $(document).on('keydown', function(e) {
+                    const keyword = $('#txtSearch').val();
+                    if (e.keyCode === 8) {
+                        console.log(keyword);
+                        if (keyword === '') {
+                            console.log('none');
+                            $('.result-none').removeClass('display-none');
+                            $('.result-data').addClass('display-none');
+                        }
+                    }
+                    if (e.keyCode === 27) {
+                        searchClick(false);
+                    }
+                });
+                //]]>
+            </script>
         </h:panelGroup>
     </h:form>
 </ui:composition>

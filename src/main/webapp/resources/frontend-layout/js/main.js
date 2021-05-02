@@ -1,3 +1,4 @@
+//<![CDATA[
 // do when access web
 (function() {
 
@@ -21,13 +22,6 @@ $(document).ready(function() {
     autoPlayCarousel('.my-projects-slide', 300000, true, 3);
     autoPlayCarousel('.content-brands-slides', 300000, false, 4);
     autoPlayCarousel('.my-feedback-slide', 300000, false, 3);
-});
-
-// press esc to exit search form
-$(document).on('keydown', function(e) {
-    if (e.keyCode === 27) {
-        searchClick(false);
-    }
 });
 
 // change bg navrbar after scroll
@@ -83,11 +77,6 @@ function searchClick(e) {
         $('.search-function__input').hide();
         $('.result-search').addClass('display-none');
     }
-}
-
-// search all
-function onSearch() {
-    $('.result-search').removeClass('display-none');
 }
 
 // override function owl carousel
@@ -185,3 +174,4 @@ function useModal(e) {
 function showVerifyRegister() {
     $('#verify').attr('style','display: block');
 }
+//]]>
