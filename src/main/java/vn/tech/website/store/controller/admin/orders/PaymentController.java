@@ -175,29 +175,19 @@ public class PaymentController extends BaseController {
         }
     }
 
-    public StreamedContent exportFileExcel(PaymentDto resultDto) {
-        try {
-            return getDownloadFileAssetList(resultDto);
-        } catch (Exception e) {
-            FacesUtil.addErrorMessage(Constant.ERROR_MESSAGE_ID, "Lấy dữ liệu bị lỗi");
-        }
-        return null;
-    }
-
-    private StreamedContent getDownloadFileAssetList(PaymentDto resultDto) throws ParseException {
-        ReportExcelDto reportExcelDto = new ReportExcelDto();
-        reportExcelDto.setReportPayment(resultDto);
-        reportExcelDto.setOrdersDetailDtoList(resultDto.getOrdersDto().getOrdersDetailDtoList());
-
-        String fileName = ExportUtil.getFileNameExport(resultDto.getCode());
-
-        try {
-            return ExportUtil.downloadExcelFile(reportExcelDto, fileName, Constant.TEMPLATE_BILL, Constant.REPORT_EXPORT_FILE);
-        } catch (IOException e) {
-            FacesUtil.addErrorMessage(Constant.ERROR_MESSAGE);
+    public StreamedContent getDownloadOrdersDetailFile(OrdersDto ordersDto) {
+        if (ordersDto != null) {
+            String fileName = ExportUtil.getFileNameExport("OrdersDetail" + ordersDto.getCode());
+            try {
+                return ExportUtil.downloadExcelOrdersDetailFile(ordersDto, fileName, Constant.TEMPLETE_REPORT_ADD_DATA_EXPORT_ORDERS_FILE, Constant.REPORT_ADD_DATA_EXPORT_ORDERS_FILE);
+            } catch (IOException e) {
+                FacesUtil.addErrorMessage("Có lỗi xảy ra");
+                return null;
+            }
+        } else {
+            FacesUtil.addErrorMessage("Không tồn tại dữ liệu");
             return null;
         }
-
     }
 
     @Override

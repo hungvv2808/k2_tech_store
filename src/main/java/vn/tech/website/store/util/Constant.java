@@ -60,6 +60,9 @@ public class Constant {
     public static final String TEMPLETE_EXPORT_FILE_DIRECT_PAYMENT = "/WEB-INF/export/template_direct_payment.xlsx";
     public static final String REPORT_EXPORT_FILE_DIRECT_PAYMENT = "/WEB-INF/report/";
 
+    public static final String TEMPLETE_REPORT_ADD_DATA_EXPORT_ORDERS_FILE = "/WEB-INF/template/orders_detail.xlsx";
+    public static final String REPORT_ADD_DATA_EXPORT_ORDERS_FILE = "/WEB-INF/report/orders_detail.xlsx";
+
     //Index row start
     public static final int INDEX_ROW_START_EXPORT = 10;
 
