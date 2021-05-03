@@ -302,37 +302,39 @@
                                             </div>
                                         </p:dataTable>
                                         <p:panelGrid columns="4"
-                                                     columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-2,ui-grid-col-1.5,ui-grid-col-2"
+                                                     columnClasses="ui-grid-col-8,ui-grid-col-2,ui-grid-col-2"
                                                      styleClass="ui-panelgrid-blank" layout="grid">
                                             <h:outputText/><h:outputText/>
-                                            <p:outputLabel value="Tiền sản phẩm: "/>
+                                            <p:outputLabel value="Thành tiền: "/>
                                             <h:outputText value="#{resultDto.amountProduct}">
                                             <f:convertNumber type="currency" currencySymbol="VNĐ"
                                                              maxFractionDigits="6"
                                                              minFractionDigits="0" locale="vi_VN"/>
                                             </h:outputText>
                                             <h:outputText/><h:outputText/>
-                                            <p:outputLabel value="Tiền vận chuyển: "/>
+                                            <p:outputLabel value="Phí vận chuyển: "/>
                                             <h:outputText value="#{resultDto.ordersDto.shipping}">
                                                 <f:convertNumber type="currency" currencySymbol="VNĐ"
                                                                  maxFractionDigits="6"
                                                                  minFractionDigits="0" locale="vi_VN"/>
                                             </h:outputText>
                                             <h:outputText/><h:outputText/>
-                                            <p:outputLabel value="Tổng tiền thu: "/>
+                                            <p:outputLabel value="Tổng thanh toán: "/>
                                             <h:outputText value="#{resultDto.totalAmount}" style="font-weight: bold">
                                                 <f:convertNumber type="currency" currencySymbol="VNĐ"
                                                                  maxFractionDigits="6"
                                                                  minFractionDigits="0" locale="vi_VN"/>
                                             </h:outputText>
+                                            <h:outputText/>
+                                            <p:commandButton value="Xuất dữ liệu"
+                                                             ajax="false"
+                                                             onclick="PrimeFaces.monitorDownload(start, stop);"
+                                                             update="growl"
+                                                             icon="fa fa-fw fa-download">
+                                                <p:fileDownload value="#{paymentController.getDownloadOrdersDetailFile(resultDto)}"/>
+                                            </p:commandButton>
+                                            <h:outputText/>
                                         </p:panelGrid>
-                                        <p:commandButton value="Xuất dữ liệu"
-                                                         ajax="false"
-                                                         onclick="PrimeFaces.monitorDownload(start, stop);"
-                                                         update="growl"
-                                                         icon="fa fa-fw fa-download">
-                                            <p:fileDownload value="#{paymentController.getDownloadOrdersDetailFile(resultDto)}"/>
-                                        </p:commandButton>
                                     </p:rowExpansion>
                                 </p:dataTable>
                             </p:panel>

@@ -5,19 +5,20 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import vn.tech.website.store.dto.*;
-import vn.tech.website.store.model.Product;
 import vn.tech.website.store.repository.BrandRepository;
 import vn.tech.website.store.repository.CategoryRepository;
 import vn.tech.website.store.repository.NewsRepository;
 import vn.tech.website.store.repository.ProductRepository;
 import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.DbConstant;
+import vn.tech.website.store.util.FacesUtil;
 import vn.tech.website.store.util.StringUtil;
 
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -51,27 +52,30 @@ public class SearchFEController extends BaseFEController {
     }
 
     public void onSearch() {
+        searchDtoList = new ArrayList<>();
+        keyword = keyword.toLowerCase();
+
         // search product
         ProductSearchDto productSearchDto = new ProductSearchDto();
         productSearchDto.setType(DbConstant.PRODUCT_TYPE_CHILD);
-        productSearchDto.setPageSize(Constant.PAGE_SIZE_MAX);
+        productSearchDto.setPageSize(Constant.PAGE_SIZE_SEARCH);
         productSearchDto.setKeyword(keyword);
         List<ProductDto> productDtos = productRepository.search(productSearchDto);
 
         BrandSearchDto brandSearchDto = new BrandSearchDto();
         brandSearchDto.setKeyword(keyword);
-        brandSearchDto.setPageSize(Constant.PAGE_SIZE_MAX);
+        brandSearchDto.setPageSize(Constant.PAGE_SIZE_SEARCH);
         List<BrandDto> brandDtos = brandRepository.search(brandSearchDto);
 
         CategorySearchDto categorySearchDto = new CategorySearchDto();
         categorySearchDto.setKeyword(keyword);
         categorySearchDto.setType(DbConstant.CATEGORY_TYPE_PRODUCT);
-        categorySearchDto.setPageSize(Constant.PAGE_SIZE_MAX);
+        categorySearchDto.setPageSize(Constant.PAGE_SIZE_SEARCH);
         List<CategoryDto> categoryDtos = categoryRepository.search(categorySearchDto);
 
         NewsSearchDto newsSearchDto = new NewsSearchDto();
         newsSearchDto.setKeyword(keyword);
-        newsSearchDto.setPageSize(Constant.PAGE_SIZE_MAX);
+        newsSearchDto.setPageSize(Constant.PAGE_SIZE_SEARCH);
         List<NewsDto> newsDtos = newsRepository.search(newsSearchDto);
 
         for (ProductDto p : productDtos) {
@@ -113,8 +117,22 @@ public class SearchFEController extends BaseFEController {
         }
     }
 
-    public void clearList() {
+    public void redirectPage() {
         searchDtoList = new ArrayList<>();
+        Map<String, String> params = FacesUtil.getRequestParameterMap();
+        String[] info = String.valueOf(params.get("data")).split("_");
+        String type = info[0];
+        Long objectId = Long.valueOf(info[1]);
+        switch (type) {
+            case "product":
+                FacesUtil.redirect("");
+            case "category":
+                FacesUtil.redirect("");
+            case "brand":
+                FacesUtil.redirect("");
+            case "news":
+                FacesUtil.redirect("");
+        }
     }
 
     @Override
