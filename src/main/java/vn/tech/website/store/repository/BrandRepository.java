@@ -8,7 +8,7 @@ import vn.tech.website.store.util.DbConstant;
 
 import java.util.List;
 
-public interface BrandRepository extends CrudRepository<Brand, Long>,BrandRepositoryCustom {
+public interface BrandRepository extends CrudRepository<Brand, Long>, BrandRepositoryCustom {
 
     @Query("select b from Brand b where b.status = " + DbConstant.BRAND_STATUS_ACTIVE)
     List<Brand> findAll();

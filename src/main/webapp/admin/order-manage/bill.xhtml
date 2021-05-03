@@ -261,19 +261,9 @@
                                         </div>
                                     </p:column>
 
-                                    <p:column headerText="Xuất"
-                                              exportable="false" style="width: 30px">
-                                        <p:commandLink styleClass="edit">
-                                            <p:fileDownload value="#{paymentController.exportFileExcel(resultDto)}"/>
-                                            <i class="fa fa-edit"/>
-                                        </p:commandLink>
-                                    </p:column>
-
                                     <p:rowExpansion>
                                         <p:dataTable id="display" var="orderDetailDto"
                                                      value="#{resultDto.ordersDto.ordersDetailDtoList}">
-                                            <!--                                            <p:repeat value="#{resultDto.ordersDto.ordersDetailDtoList}"-->
-                                            <!--                                                      var="orderDetailDto">-->
                                             <div class="product">
                                                 <p:column exportable="false" headerText="Ảnh" width="70">
                                                     <p:graphicImage id="imageDetail"
@@ -311,38 +301,40 @@
                                                 </p:column>
                                             </div>
                                         </p:dataTable>
-                                        <!--                                            </p:repeat>-->
                                         <p:panelGrid columns="4"
-                                                     columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-2,ui-grid-col-1.5,ui-grid-col-2"
+                                                     columnClasses="ui-grid-col-8,ui-grid-col-2,ui-grid-col-2"
                                                      styleClass="ui-panelgrid-blank" layout="grid">
                                             <h:outputText/><h:outputText/>
-                                            <p:outputLabel value="Tiền sản phẩm: "/>
+                                            <p:outputLabel value="Thành tiền: "/>
                                             <h:outputText value="#{resultDto.amountProduct}">
                                             <f:convertNumber type="currency" currencySymbol="VNĐ"
                                                              maxFractionDigits="6"
                                                              minFractionDigits="0" locale="vi_VN"/>
                                             </h:outputText>
                                             <h:outputText/><h:outputText/>
-                                            <p:outputLabel value="Tiền vận chuyển: "/>
+                                            <p:outputLabel value="Phí vận chuyển: "/>
                                             <h:outputText value="#{resultDto.ordersDto.shipping}">
                                                 <f:convertNumber type="currency" currencySymbol="VNĐ"
                                                                  maxFractionDigits="6"
                                                                  minFractionDigits="0" locale="vi_VN"/>
                                             </h:outputText>
                                             <h:outputText/><h:outputText/>
-                                            <p:outputLabel value="Tổng tiền thu: "/>
+                                            <p:outputLabel value="Tổng thanh toán: "/>
                                             <h:outputText value="#{resultDto.totalAmount}" style="font-weight: bold">
                                                 <f:convertNumber type="currency" currencySymbol="VNĐ"
                                                                  maxFractionDigits="6"
                                                                  minFractionDigits="0" locale="vi_VN"/>
                                             </h:outputText>
+                                            <h:outputText/>
+                                            <p:commandButton value="Xuất dữ liệu"
+                                                             ajax="false"
+                                                             onclick="PrimeFaces.monitorDownload(start, stop);"
+                                                             update="growl"
+                                                             icon="fa fa-fw fa-download">
+                                                <p:fileDownload value="#{paymentController.getDownloadOrdersDetailFile(resultDto)}"/>
+                                            </p:commandButton>
+                                            <h:outputText/>
                                         </p:panelGrid>
-                                        <p:commandLink id="pdf" ajax="false" value="Xuất">
-                                            <!--                                                <f:setPropertyActionListener value="false" target="#{exporterController.customExporter}" />-->
-                                            <pe:exporter type="pdf" target="tblSearchResult"
-                                                         fileName="Hóa đơn #{resultDto.code}"
-                                                         facetBackground="#AAFFBB" datasetPadding="4"/>
-                                        </p:commandLink>
                                     </p:rowExpansion>
                                 </p:dataTable>
                             </p:panel>

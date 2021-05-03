@@ -17,6 +17,7 @@ public class Constant {
     public static final int PAGE_SIZE_REGULATION_LIST = 6;
     public static final int PAGE_SIZE_ASSET_LIST = 8;
     public static final int PAGE_SIZE_MAX = 10;
+    public static final int PAGE_SIZE_SEARCH = 5;
 
     //Max file size
     public static final int MAX_FILE_SIZE = 50000000;
@@ -59,6 +60,9 @@ public class Constant {
     //Url template export direct payment
     public static final String TEMPLETE_EXPORT_FILE_DIRECT_PAYMENT = "/WEB-INF/export/template_direct_payment.xlsx";
     public static final String REPORT_EXPORT_FILE_DIRECT_PAYMENT = "/WEB-INF/report/";
+
+    public static final String TEMPLETE_REPORT_ADD_DATA_EXPORT_ORDERS_FILE = "/WEB-INF/template/orders_detail.xlsx";
+    public static final String REPORT_ADD_DATA_EXPORT_ORDERS_FILE = "/WEB-INF/report/orders_detail.xlsx";
 
     //Index row start
     public static final int INDEX_ROW_START_EXPORT = 10;

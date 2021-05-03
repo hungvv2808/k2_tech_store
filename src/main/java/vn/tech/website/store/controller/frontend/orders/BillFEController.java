@@ -67,6 +67,7 @@ public class BillFEController extends BaseFEController {
     private PaymentDto paymentDto;
     private LazyDataModel<OrdersDto> lazyDataModel;
     private OrdersSearchDto searchDto;
+    private List<OrdersDetailDto> ordersDetailDtoList;
 
     public BillFEController() {
         pagination = new PaginationController<>();
@@ -86,6 +87,7 @@ public class BillFEController extends BaseFEController {
         searchDto = new OrdersSearchDto();
         searchDto.setSortOrder("DECS");
         onSearch();
+        ordersDetailDtoList = new ArrayList<>();
     }
 
     public void onSearch() {
@@ -126,9 +128,9 @@ public class BillFEController extends BaseFEController {
         }
     }
 
-    public void onShowDetail(OrdersDto resultDto){
-        resultDto.setShowDetail(!resultDto.getShowDetail());
-        FacesUtil.updateView("orderList");
+    public void onShowDetail(OrdersDto resultDto) {
+        ordersDetailDtoList = new ArrayList<>();
+        ordersDetailDtoList = resultDto.getOrdersDetailDtoList();
     }
 
     @Override

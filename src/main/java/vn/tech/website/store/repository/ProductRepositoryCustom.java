@@ -13,4 +13,6 @@ public interface ProductRepositoryCustom {
     Long countSearch(ProductSearchDto searchDto);
 
     List<Product> getAllExpertType(Long id, Integer type, Integer limit);
+
+    List<Product> searchByKeyword(String keyword);
 }

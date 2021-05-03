@@ -1,3 +1,4 @@
+//<![CDATA[
 // do when access web
 (function() {
 
@@ -21,14 +22,6 @@ $(document).ready(function() {
     autoPlayCarousel('.my-projects-slide', 300000, true, 3);
     autoPlayCarousel('.content-brands-slides', 300000, false, 4);
     autoPlayCarousel('.my-feedback-slide', 300000, false, 3);
-});
-
-// press esc to exit search form
-$(document).on('keydown', function(e) {
-    if (e.keyCode === 27) {
-        $('.search-function').show();
-        $('.search-function__input').hide();
-    }
 });
 
 // change bg navrbar after scroll
@@ -82,13 +75,7 @@ function searchClick(e) {
         }
 
         $('.search-function__input').hide();
-    }
-}
-//enter search
-function searchEnter(e) {
-    if (e.keyCode == 13){
-        $('btnSearch').click();
-        alert("dá");
+        $('.result-search').addClass('display-none');
     }
 }
 
@@ -187,3 +174,4 @@ function useModal(e) {
 function showVerifyRegister() {
     $('#verify').attr('style','display: block');
 }
+//]]>

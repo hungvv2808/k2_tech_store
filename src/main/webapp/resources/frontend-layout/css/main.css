@@ -253,6 +253,26 @@
   transform: rotate(0);
 }
 
+#ui-id-1 {
+  background-color: #ffffffde;
+  border: 1px solid #F42F4C;
+  border-radius: 1rem;
+  overflow-y: auto;
+  max-height: 50vh;
+}
+#ui-id-1 .ui-menu-item {
+  list-style-type: none;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+#ui-id-1 .ui-menu-item:hover {
+  color: #ffffff;
+  background-color: #3aaf29;
+}
+#ui-id-1 .ui-menu-item #ui-id-2 {
+  padding: 5px;
+}
+
 #carouselExampleIndicators .carousel-inner .carousel-item img {
   height: 825px;
   justify-content: center;
