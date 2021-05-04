@@ -31,8 +31,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.Serializable;
 import java.util.*;
@@ -214,13 +218,18 @@ public class AuthorizationFEController implements Serializable {
         return true;
     }
 
-    public void onSaveData() {
+    public void onSaveData() throws ScriptException {
         if (!validateProfile()) {
             return;
         }
         accountDto.setProvinceId(addressFEController.getCityDistrictDto().getProvinceId());
         accountDto.setDistrictId(addressFEController.getCityDistrictDto().getDistrictId());
         accountDto.setCommuneId(addressFEController.getCityDistrictDto().getCommuneId());
+        if (check) {
+            if (!onChangePassword()) {
+                return;
+            }
+        }
         Account account = new Account();
         BeanUtils.copyProperties(accountDto, account);
         account.setUpdateBy(accountDto.getAccountId());
@@ -228,7 +237,9 @@ public class AuthorizationFEController implements Serializable {
         accountRepository.save(account);
 
         resetMyAccount();
+        check = false;
 
+        FacesUtil.redirect("/frontend/account/profile.xhtml");
         facesNoticeController.addSuccessMessage("Cập nhật thành công");
         FacesUtil.updateView(Constant.ERROR_FE_GROWL_ID);
     }
@@ -384,57 +395,52 @@ public class AuthorizationFEController implements Serializable {
         return accountDto;
     }
 
-    public void showChangePassword(){
-        check=!check;
+    public void showChangePassword() {
+        check = !check;
     }
 
-    public void onChangePassword() {
+    public boolean onChangePassword() {
         if (StringUtils.isBlank(oldPassword)) {
             facesNoticeController.addErrorMessage("Bạn vui lòng nhập mật khẩu hiện tại");
-            return;
+            return false;
         }
         if (StringUtils.isBlank(newPassword)) {
             facesNoticeController.addErrorMessage("Bạn vui lòng nhập mật khẩu mới");
-            return;
+            return false;
         }
         if (oldPassword.equals(newPassword)) {
             facesNoticeController.addErrorMessage("Mật khẩu mới không được giống mật khẩu hiện tại");
-            return;
+            return false;
         }
 
         if (newPassword.length() < DbConstant.ACCOUNT_MINLENGTH_PASSWORD_USER) {
             facesNoticeController.addErrorMessage("Mật khẩu phải có tối thiểu 6 ký tự.");
-            return;
+            return false;
         }
         if (StringUtils.isBlank(newRepassword)) {
             facesNoticeController.addErrorMessage("Bạn vui lòng nhập nhập lại mật khẩu");
-            return;
+            return false;
         }
         if (!newPassword.equals(newRepassword)) {
             facesNoticeController.addErrorMessage("Mật khẩu mới và nhập lại mật khẩu không giống nhau");
-            return;
+            return false;
         }
 
         Account user = accountRepository.findAccountByAccountId(accountDto.getAccountId());
         if (user == null) {
             facesNoticeController.addErrorMessage("Tài khoản của bạn đã không còn tồn tại");
-            return;
+            return false;
         }
         if (!user.getPassword().equals(StringUtil.encryptPassword(oldPassword, user.getSalt()))) {
             facesNoticeController.addErrorMessage("Mật khẩu hiện tại không đúng");
-            return;
+            return false;
         }
         if (user.getPassword().equals(StringUtil.encryptPassword(newPassword))) {
             facesNoticeController.addErrorMessage("Mật khẩu mới phải khác mật khẩu cũ");
-            return;
+            return false;
         }
-        user.setPassword(StringUtil.encryptPassword(newPassword, user.getSalt()));
-//        user.setFirstTimeLogin(true);
-//        user.setTimeToChangePassword(new Date());
-        accountRepository.save(user);
-        facesNoticeController.addSuccessMessage("Thay đổi mật khẩu thành công");
-        resetMyAccount();
-        check=!check;
+        accountDto.setPassword(StringUtil.encryptPassword(newPassword, user.getSalt()));
+        return true;
     }
 
     public void onCheckEmail() {

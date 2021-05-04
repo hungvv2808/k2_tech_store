@@ -233,4 +233,29 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         query.setParameter("limit", Constant.PAGE_SIZE_MAX);
         return EntityMapper.mapper(query, sb.toString(), Product.class);
     }
+
+    @Override
+    public List searchProductHighlight() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select "
+                + " p.product_id AS productId, "
+                + "p.name AS productName, "
+                + "p.type AS type, "
+                + "p.code AS code, "
+                + "p.count_code AS countCode, "
+                + "p.description AS description, "
+                + "p.quantity AS quantity, "
+                + "p.price AS price, "
+                + "p.discount AS discount, "
+                + "p.price - p.price * p.discount / 100 AS priceAfterDiscount, "
+                + "(SELECT pi.image_path FROM product_image pi WHERE pi.product_id = p.product_id LIMIT 1) AS imageToShow, "
+                + "(SELECT sum(p_v.quantity) FROM product_link pl INNER JOIN product p_v ON pl.child_id = p_v.product_id WHERE pl.parent_id = p.product_id) AS totalQtyParent "
+                + " from product p "
+                + " where p.product_id in (select ph.product_id "
+                + " from product_highlight ph "
+                + " where month(ph.date_add) = month(now()) "
+                + " order by ph.point desc) limit 10");
+        Query query = entityManager.createNativeQuery(sb.toString());
+        return EntityMapper.mapper(query, sb.toString(), ProductDto.class);
+    }
 }

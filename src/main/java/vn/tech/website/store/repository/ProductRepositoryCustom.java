@@ -15,4 +15,6 @@ public interface ProductRepositoryCustom {
     List<Product> getAllExpertType(Long id, Integer type, Integer limit);
 
     List<Product> searchByKeyword(String keyword);
+
+    List<ProductDto> searchProductHighlight();
 }

@@ -48,6 +48,7 @@ public class HomeFEController extends BaseFEController {
 
     private Date now;
     private List<NewsDto> newsDtoList;
+    private List<ProductDto> proHighlightList;
     private List<ProductDto> mobileList;
     private List<ProductDto> laptopList;
     private List<ProductDto> watchList;
@@ -79,6 +80,9 @@ public class HomeFEController extends BaseFEController {
         newsDtoList = newsRepository.search(newsSearchDto);
 
         // list products
+        proHighlightList = new ArrayList<>();
+        proHighlightList = onSearchListProduct(null);
+
         mobileList = new ArrayList<>();
         mobileList = onSearchListProduct(Constant.CATE_PHONE);
         laptopList = new ArrayList<>();
@@ -106,10 +110,13 @@ public class HomeFEController extends BaseFEController {
     private List<ProductDto> onSearchListProduct(Integer categoryId) {
         searchDto.setPageSize(DbConstant.LIMIT_SHOW_FE);
         searchDto.setExpertType(DbConstant.PRODUCT_TYPE_CHILD);
+        List<ProductDto> showList = new ArrayList<>();
         if (categoryId != null) {
             searchDto.setCategoryId(Long.valueOf(categoryId));
+            showList = productRepository.search(searchDto);
+        }else {
+            showList = productRepository.searchProductHighlight();
         }
-        List<ProductDto> showList = productRepository.search(searchDto);
         for (ProductDto dto : showList){
             dto.setProductImages(new LinkedHashSet<>());
             dto.setProductImages(productImageRepository.getImagePathByProductId(dto.getProductId()));

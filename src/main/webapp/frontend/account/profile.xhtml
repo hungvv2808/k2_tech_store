@@ -219,22 +219,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-30">
-                        <div class="col-lg-12 submit-area text-left">
-                            <h:commandButton id="btnComfirmChangePassword"
-                                             value="Đổi" style="width: 60px;"
-                                             styleClass="btn btn-info"
-                                             action="#{authorizationFEController.onChangePassword}">
-                                <f:ajax execute="@form" render="#{Constant.ERROR_FE_GROWL_ID} @form"/>
-                            </h:commandButton>
-                        </div>
-                    </div>
                 </div>
                 </h:outputLabel>
                 <div class="row mt-30">
                     <div class="col-lg-12 submit-area text-center">
                         <h:commandButton id="btnUpdate"
-                                         value="Cập nhập" onclick="window.location.reload()"
+                                         value="Cập nhập"
                                          styleClass="btn btn-success btn-custom"
                                          action="#{authorizationFEController.onSaveData}">
                             <f:ajax execute="@form"
