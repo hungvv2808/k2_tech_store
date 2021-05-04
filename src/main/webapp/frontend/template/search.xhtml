@@ -28,6 +28,13 @@
                     }
                 });
 
+                var lang = {
+                    'product': 'Sản phẩm',
+                    'category': 'Nhãn hiệu',
+                    'brand': 'Thương hiệu',
+                    'news': 'Tin tức'
+                };
+
                 (function() {
                     var data = '#{searchFEController.searchDtoJson}';
                     if (data !== '') {
@@ -41,7 +48,7 @@
                                 var name = obj.name;
                                 if (name.indexOf(request.term) !== -1) {
                                     return {
-                                        label: obj.name + ' (' + obj.type + ')',
+                                        label: obj.name + ' (' + lang[obj.type] + ')',
                                         value: obj.type + '_' + obj.object_id
                                     }
                                 } else {

@@ -50,30 +50,20 @@ function scrollPage() {
 function searchClick(e) {
     if (e === true) {
         $('.search-function').hide();
-
-        if ($(window).width() >= 1900) {
-            $('.nav').addClass('display-none');
-            // $('.navbar-brand').addClass('display-none');
-            // $('.collapse').addClass('padding-1rem');
-            $('.form-inline').css('width', '100%').css('left', '20rem');
-            $('.search-function__input').css('width', '100%').css('padding', '10px 0');
-            $('.nav-search').css('width', '97%');
-        }
-
+        $('.nav').addClass('display-none');
+        $('.form-inline').css('width', '100%').css('left', '20rem');
+        $('.search-function__input').css('width', '100%').css('padding', '10px 0');
+        $('.nav-search').css('width', $(window).width() >= 1900 ? '97%' : '95%');
         $('.search-function__input').show();
         $('.nav-search').focus();
     } else {
         $('.search-function').show();
-
-        if ($(window).width() >= 1900) {
-            $('.nav').removeClass('display-none');
-            $('.navbar-brand').removeClass('display-none');
-            $('.collapse').removeClass('padding-1rem');
-            $('.form-inline').css('width', '').css('left', '');
-            $('.search-function__input').css('width', '');
-            $('.nav-search').css('width', '');
-        }
-
+        $('.nav').removeClass('display-none');
+        $('.navbar-brand').removeClass('display-none');
+        $('.collapse').removeClass('padding-1rem');
+        $('.form-inline').css('width', '').css('left', '');
+        $('.search-function__input').css('width', '');
+        $('.nav-search').css('width', '');
         $('.search-function__input').hide();
         $('.result-search').addClass('display-none');
     }
@@ -153,7 +143,7 @@ function useModal(e) {
     if(e === true){
         $('#login-modal').modal('hide');
         $('#register-modal').modal('show');
-        $('#verify').css('display','none')
+        $('#verify').css('display','none');
         $('#fullName').val(null);
         $('#register_account').val(null);
         $('#register_password').val(null);
