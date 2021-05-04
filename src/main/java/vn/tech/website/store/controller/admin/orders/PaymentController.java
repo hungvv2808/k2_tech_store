@@ -190,10 +190,10 @@ public class PaymentController extends BaseController {
             ExportProductDetailDto exportProductDetailDto = new ExportProductDetailDto();
             exportProductDetailDto.setProductName(ordersDetailDto.getProductDto().getProductName());
             exportProductDetailDto.setPrice(ordersDetailDto.getProductDto().getPrice());
-            exportProductDetailDto.setDiscount(ordersDetailDto.getProductDto().getDiscount());
+            exportProductDetailDto.setDiscount(ordersDetailDto.getProductDto().getDiscount() == null ? 0 : ordersDetailDto.getProductDto().getDiscount());
             exportProductDetailDto.setQuantity(ordersDetailDto.getQuantity());
             Double totalAmount = (ordersDetailDto.getProductDto().getPrice()
-                    - ordersDetailDto.getProductDto().getPrice() * ordersDetailDto.getProductDto().getDiscount())
+                    - ordersDetailDto.getProductDto().getPrice() * exportProductDetailDto.getDiscount())
                     * ordersDetailDto.getQuantity();
             exportProductDetailDto.setTotalAmount(totalAmount);
             exportProductDetailDtoArrayList.add(exportProductDetailDto);
