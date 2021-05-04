@@ -105,7 +105,7 @@ public class SearchFEController extends BaseFEController {
         for (NewsDto n : newsDtos) {
             SearchDto s = new SearchDto();
             s.setObjectId(n.getNewsId());
-            s.setName(n.getShortContent());
+            s.setName(n.getTitle());
             s.setType("news");
             searchDtoList.add(s);
         }
@@ -125,13 +125,13 @@ public class SearchFEController extends BaseFEController {
         Long objectId = Long.valueOf(info[1]);
         switch (type) {
             case "product":
-                FacesUtil.redirect("");
+                FacesUtil.redirect("/frontend/product/product.xhtml?proid="+ objectId);
             case "category":
-                FacesUtil.redirect("");
+                FacesUtil.redirect("/frontend/product/product.xhtml?catid="+ objectId);
             case "brand":
-                FacesUtil.redirect("");
+                FacesUtil.redirect("/frontend/product/product.xhtml?braid="+ objectId);
             case "news":
-                FacesUtil.redirect("");
+                FacesUtil.redirect("/frontend/news/list-news.xhtml?newsid="+ objectId);
         }
     }
 

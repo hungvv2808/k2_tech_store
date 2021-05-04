@@ -191,6 +191,70 @@
         </div>
 
         <div class="content-products">
+            <h:panelGroup layout="block" rendered="#{not empty homeFEController.proHighlightList}">
+                <div class="container">
+                    <div class="title-products">
+                        <div class="row">
+                            <h1>Sản phẩm bán chạy</h1>
+                        </div>
+                    </div>
+                    <div class="mobile-products">
+                        <h:form prependId="false">
+                            <div class="row">
+                                <p:repeat value="#{homeFEController.proHighlightList}" var="productDto">
+                                    <div class="col-lg-3 grid-style">
+                                        <p:commandLink
+                                                actionListener="#{productFEController.viewDetailProduct(productDto)}">
+                                            <p:graphicImage styleClass="mobile-products__img"
+                                                            rendered="#{not empty productDto.imageToShow}"
+                                                            name="#{productDto.imageToShow}"/>
+
+                                            <p class="mobile-products__title">#{productDto.productName}</p>
+                                            <p class="mobile-products__discount #{productDto.discount eq null ? 'display-none' : ''}">
+                                                Giảm
+                                                <h:outputText value="#{productDto.discount}">
+                                                    <f:convertNumber pattern="#####,00%"/>
+                                                </h:outputText>
+                                            </p>
+                                            <p class="mobile-products__price #{productDto.discount eq null ? '' : 'special-price'}">
+                                                <h:outputText value="#{productDto.price}">
+                                                    <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                     maxFractionDigits="6"
+                                                                     minFractionDigits="0" locale="vi_VN"/>
+                                                </h:outputText>
+                                            </p>
+                                            <p class="mobile-products__price #{productDto.discount eq null ? 'display-none' : ''}">
+                                                <h:outputText value="#{productDto.priceAfterDiscount}">
+                                                    <f:convertNumber type="currency" currencySymbol="VNĐ"
+                                                                     maxFractionDigits="6"
+                                                                     minFractionDigits="0" locale="vi_VN"/>
+                                                </h:outputText>
+                                            </p>
+                                            <div class="display-none">
+                                                <p:commandLink styleClass="add-to-cart"
+                                                               actionListener="#{productDetailFEController.addToCartCommon(productDto)}"
+                                                               update="#{Constant.ERROR_FE_GROWL_ID}"
+                                                               rendered="#{productDto.quantity ne 0}">
+                                                    <i class="fa fa-cart-plus"/>
+                                                    <span>Thêm vào giỏ hàng</span>
+                                                    <i class="fas fa-caret-right"/>
+                                                </p:commandLink>
+                                                <p:outputLabel styleClass="out-of-stock"
+                                                               rendered="#{productDto.quantity eq 0}">
+                                                    <i class="fas fa-cart-arrow-down"/>
+                                                    <span>Hết hàng</span>
+                                                    <i class="fas fa-times"/>
+                                                </p:outputLabel>
+                                            </div>
+                                        </p:commandLink>
+                                    </div>
+                                </p:repeat>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </h:panelGroup>
+
             <h:panelGroup layout="block" rendered="#{not empty homeFEController.shirtList}">
                 <div class="container">
                     <div class="title-products">

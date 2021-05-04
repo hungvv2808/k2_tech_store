@@ -116,14 +116,7 @@
                     </li>
                 </h:panelGroup>
             </ul>
-            <form class="form-inline">
-                <i class="fas fa-search fa-sm search-function" onclick="searchClick(true);"/>
-                <div class="search-function__input">
-                    <input class="form-control mr-sm-2 nav-search" type="search" placeholder="Tìm kiếm"
-                           aria-label="Tìm kiếm"/>
-                    <i class="fas fa-times fa-sm search-cancel" onclick="searchClick(false);"/>
-                </div>
-            </form>
+            <ui:include src="search.xhtml" />
         </div>
     </nav>
 

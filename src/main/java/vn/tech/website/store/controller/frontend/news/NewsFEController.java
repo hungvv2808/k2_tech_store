@@ -73,6 +73,7 @@ public class NewsFEController extends BaseFEController {
         newsDtoList = new ArrayList<>();
         searchDto = new NewsSearchDto();
         pagination.setRequest(request);
+        newsDto = new NewsDto();
         if (newsIdParams != null){
             News news = newsRepository.getByNewsId(newsIdParams);
             BeanUtils.copyProperties(news,newsDto);
