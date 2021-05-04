@@ -53,7 +53,7 @@ function searchClick(e) {
         $('.nav').addClass('display-none');
         $('.form-inline').css('width', '100%').css('left', '20rem');
         $('.search-function__input').css('width', '100%').css('padding', '10px 0');
-        $('.nav-search').css('width', $(window).width() >= 1900 ? '97%' : '95%');
+        $('.nav-search').css('width', $(window).width() >= 1900 ? '97%' : '90%');
         $('.search-function__input').show();
         $('.nav-search').focus();
     } else {
