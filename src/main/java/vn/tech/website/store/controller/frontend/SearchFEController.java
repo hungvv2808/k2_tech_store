@@ -47,11 +47,13 @@ public class SearchFEController extends BaseFEController {
 
     public void resetAll() {
         keyword = null;
+        searchDtoJson = null;
         checkResult = false;
         searchDtoList = new ArrayList<>();
     }
 
     public void onSearch() {
+        searchDtoJson = null;
         searchDtoList = new ArrayList<>();
         keyword = keyword.toLowerCase();
 

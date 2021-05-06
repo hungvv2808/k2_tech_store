@@ -17,7 +17,7 @@ public class Constant {
     public static final int PAGE_SIZE_REGULATION_LIST = 6;
     public static final int PAGE_SIZE_ASSET_LIST = 8;
     public static final int PAGE_SIZE_MAX = 10;
-    public static final int PAGE_SIZE_SEARCH = 5;
+    public static final int PAGE_SIZE_SEARCH = 10;
 
     //Max file size
     public static final int MAX_FILE_SIZE = 50000000;
