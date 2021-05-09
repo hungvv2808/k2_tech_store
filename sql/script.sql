@@ -464,3 +464,20 @@ ALTER TABLE k2_tech_store.shipping MODIFY COLUMN detail text
     CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 ALTER TABLE k2_tech_store.send_notification MODIFY COLUMN content text
     CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
+
+select distinct
+    (select sum(p_1.total_amount) as total from payments p_1 where month(p_1.create_date) = 1 and year(p_1.create_date) = year(p_df.create_date)) as January,
+    (select sum(p_2.total_amount) as total from payments p_2 where month(p_2.create_date) = 2 and year(p_2.create_date) = year(p_df.create_date)) as February,
+    (select sum(p_3.total_amount) as total from payments p_3 where month(p_3.create_date) = 3 and year(p_3.create_date) = year(p_df.create_date)) as March,
+    (select sum(p_4.total_amount) as total from payments p_4 where month(p_4.create_date) = 4 and year(p_4.create_date) = year(p_df.create_date)) as April,
+    (select sum(p_5.total_amount) as total from payments p_5 where month(p_5.create_date) = 5 and year(p_5.create_date) = year(p_df.create_date)) as May,
+    (select sum(p_6.total_amount) as total from payments p_6 where month(p_6.create_date) = 6 and year(p_6.create_date) = year(p_df.create_date)) as June,
+    (select sum(p_7.total_amount) as total from payments p_7 where month(p_7.create_date) = 7 and year(p_7.create_date) = year(p_df.create_date)) as July,
+    (select sum(p_8.total_amount) as total from payments p_8 where month(p_8.create_date) = 8 and year(p_8.create_date) = year(p_df.create_date)) as August,
+    (select sum(p_9.total_amount) as total from payments p_9 where month(p_9.create_date) = 9 and year(p_9.create_date) = year(p_df.create_date)) as September,
+    (select sum(p_10.total_amount) as total from payments p_10 where month(p_10.create_date) = 10 and year(p_10.create_date) = year(p_df.create_date)) as October,
+    (select sum(p_11.total_amount) as total from payments p_11 where month(p_11.create_date) = 11 and year(p_11.create_date) = year(p_df.create_date)) as November,
+    (select sum(p_12.total_amount) as total from payments p_12 where month(p_12.create_date) = 12 and year(p_12.create_date) = year(p_df.create_date)) as December
+from payments p_df
+where year(p_df.create_date) = year(now())
