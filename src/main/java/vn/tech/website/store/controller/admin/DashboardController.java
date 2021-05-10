@@ -1,7 +1,5 @@
 package vn.tech.website.store.controller.admin;
 
-
-import javafx.animation.Animation;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.model.charts.ChartData;
@@ -11,14 +9,19 @@ import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearTicks;
 import org.primefaces.model.charts.bar.BarChartDataSet;
 import org.primefaces.model.charts.bar.BarChartModel;
 import org.primefaces.model.charts.bar.BarChartOptions;
-import org.primefaces.model.charts.line.LineChartModel;
 import org.primefaces.model.charts.line.LineChartDataSet;
+import org.primefaces.model.charts.line.LineChartModel;
 import org.primefaces.model.charts.line.LineChartOptions;
 import org.primefaces.model.charts.optionconfig.legend.Legend;
 import org.primefaces.model.charts.optionconfig.legend.LegendLabel;
 import org.primefaces.model.charts.optionconfig.title.Title;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import vn.tech.website.store.dto.ChartModelDto;
+import vn.tech.website.store.dto.LineChartModelDto;
 import vn.tech.website.store.entity.EScope;
+import vn.tech.website.store.repository.CategoryRepository;
+import vn.tech.website.store.repository.PaymentsRepository;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -33,13 +36,20 @@ import java.util.List;
 @Named
 @Scope(value = "session")
 public class DashboardController extends BaseController {
+    @Autowired
+    private PaymentsRepository paymentsRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     private Long storeRegisterForOthers;
     private BarChartModel barModel;
     private LineChartModel lineModel;
     private Date time;
     private List<SelectItem> listYear;
-    private String year;
+    private Integer year;
     private Long selectedYear;
+    private ChartModelDto chartModelDto;
+    private LineChartModelDto lineChartModelDto;
 
     @PostConstruct
     public void initData() {
@@ -50,6 +60,29 @@ public class DashboardController extends BaseController {
     }
 
     public void resetAll() {
+        time = new Date();
+        year = time.getYear() + 1900;
+        chartModelDto = paymentsRepository.getDataModelChart(year, true, null).get(0);
+
+        Long phone = categoryRepository.getCateIdByCode("phone").getCategoryId();
+        Long headphone = categoryRepository.getCateIdByCode("headphone").getCategoryId();
+        Long pc = categoryRepository.getCateIdByCode("pc").getCategoryId();
+        Long watch = categoryRepository.getCateIdByCode("watch").getCategoryId();
+        String condition = "(" + phone + ", " + headphone + ", " + pc + ", " + watch + ")";
+        lineChartModelDto = new LineChartModelDto();
+        List<ChartModelDto> chartModelDtos = paymentsRepository.getDataModelChart(year, false, condition);
+        for (ChartModelDto c : chartModelDtos) {
+            if (c.getCategoryId().equals(phone)) {
+                lineChartModelDto.setChartModelPhoneDto(c);
+            } else if (c.getCategoryId().equals(headphone)) {
+                lineChartModelDto.setChartModelWirelessDto(c);
+            } else if (c.getCategoryId().equals(pc)) {
+                lineChartModelDto.setChartModelDesktopDto(c);
+            } else {
+                lineChartModelDto.setChartModelWatchDto(c);
+            }
+        }
+
         createLineModel();
         createBarModel();
     }
@@ -58,21 +91,41 @@ public class DashboardController extends BaseController {
         lineModel = new LineChartModel();
         ChartData data = new ChartData();
 
-        LineChartDataSet dataSet = new LineChartDataSet();
-        List<Number> values = new ArrayList<>();
-        values.add(65);
-        values.add(59);
-        values.add(80);
-        values.add(81);
-        values.add(56);
-        values.add(55);
-        values.add(40);
-        dataSet.setData(values);
-        dataSet.setFill(false);
-        dataSet.setLabel("My First Dataset");
-        dataSet.setBorderColor("rgb(75, 192, 192)");
-        dataSet.setLineTension(0.1);
-        data.addChartDataSet(dataSet);
+        LineChartDataSet dataSetPhone = new LineChartDataSet();
+        List<Number> valuesPhone = addValue(lineChartModelDto.getChartModelPhoneDto() != null ? lineChartModelDto.getChartModelPhoneDto() : new ChartModelDto());
+        dataSetPhone.setData(valuesPhone);
+        dataSetPhone.setFill(false);
+        dataSetPhone.setLabel("Điện thoại");
+        dataSetPhone.setBorderColor("rgb(255, 0, 0)");
+        dataSetPhone.setLineTension(0.1);
+        data.addChartDataSet(dataSetPhone);
+
+        LineChartDataSet dataSetDesktop = new LineChartDataSet();
+        List<Number> valuesDesktop = addValue(lineChartModelDto.getChartModelDesktopDto() != null ? lineChartModelDto.getChartModelDesktopDto() : new ChartModelDto());
+        dataSetDesktop.setData(valuesDesktop);
+        dataSetDesktop.setFill(false);
+        dataSetDesktop.setLabel("Máy tính");
+        dataSetDesktop.setBorderColor("rgb(4, 255, 21)");
+        dataSetDesktop.setLineTension(0.1);
+        data.addChartDataSet(dataSetDesktop);
+
+        LineChartDataSet dataSetWireless = new LineChartDataSet();
+        List<Number> valuesWireless = addValue(lineChartModelDto.getChartModelWirelessDto() != null ? lineChartModelDto.getChartModelWirelessDto() : new ChartModelDto());
+        dataSetWireless.setData(valuesWireless);
+        dataSetWireless.setFill(false);
+        dataSetWireless.setLabel("Tai nghe");
+        dataSetWireless.setBorderColor("rgb(4, 55, 255)");
+        dataSetWireless.setLineTension(0.1);
+        data.addChartDataSet(dataSetWireless);
+
+        LineChartDataSet dataSetWatch = new LineChartDataSet();
+        List<Number> valuesWatch = addValue(lineChartModelDto.getChartModelWatchDto() != null ? lineChartModelDto.getChartModelWatchDto() : new ChartModelDto());
+        dataSetWatch.setData(valuesWatch);
+        dataSetWatch.setFill(false);
+        dataSetWatch.setLabel("Đồng hồ");
+        dataSetWatch.setBorderColor("rgb(255, 214, 4)");
+        dataSetWatch.setLineTension(0.1);
+        data.addChartDataSet(dataSetWatch);
 
         List<String> labels = new ArrayList<>();
         labels.add("January");
@@ -82,13 +135,19 @@ public class DashboardController extends BaseController {
         labels.add("May");
         labels.add("June");
         labels.add("July");
+        labels.add("August");
+        labels.add("September");
+        labels.add("October");
+        labels.add("November");
+        labels.add("December");
         data.setLabels(labels);
 
         //Options
         LineChartOptions options = new LineChartOptions();
         Title title = new Title();
         title.setDisplay(true);
-        title.setText("Line Chart");
+        title.setText("THỐNG KÊ DOANH THU THEO LOẠI SẢN PHẨM");
+        title.setFontSize(25);
         options.setTitle(title);
 
         lineModel.setOptions(options);
@@ -100,16 +159,9 @@ public class DashboardController extends BaseController {
         ChartData data = new ChartData();
 
         BarChartDataSet barDataSet = new BarChartDataSet();
-        barDataSet.setLabel("My First Dataset");
+        barDataSet.setLabel("Doanh thu hàng tháng");
 
-        List<Number> values = new ArrayList<>();
-        values.add(65);
-        values.add(59);
-        values.add(80);
-        values.add(81);
-        values.add(56);
-        values.add(55);
-        values.add(40);
+        List<Number> values = addValue(chartModelDto);
         barDataSet.setData(values);
 
         List<String> bgColor = new ArrayList<>();
@@ -120,11 +172,21 @@ public class DashboardController extends BaseController {
         bgColor.add("rgba(54, 162, 235, 0.2)");
         bgColor.add("rgba(153, 102, 255, 0.2)");
         bgColor.add("rgba(201, 203, 207, 0.2)");
+        bgColor.add("rgba(255, 205, 86, 0.2)");
+        bgColor.add("rgba(75, 192, 192, 0.2)");
+        bgColor.add("rgba(54, 162, 235, 0.2)");
+        bgColor.add("rgba(153, 102, 255, 0.2)");
+        bgColor.add("rgba(201, 203, 207, 0.2)");
         barDataSet.setBackgroundColor(bgColor);
 
         List<String> borderColor = new ArrayList<>();
         borderColor.add("rgb(255, 99, 132)");
         borderColor.add("rgb(255, 159, 64)");
+        borderColor.add("rgb(255, 205, 86)");
+        borderColor.add("rgb(75, 192, 192)");
+        borderColor.add("rgb(54, 162, 235)");
+        borderColor.add("rgb(153, 102, 255)");
+        borderColor.add("rgb(201, 203, 207)");
         borderColor.add("rgb(255, 205, 86)");
         borderColor.add("rgb(75, 192, 192)");
         borderColor.add("rgb(54, 162, 235)");
@@ -143,6 +205,11 @@ public class DashboardController extends BaseController {
         labels.add("May");
         labels.add("June");
         labels.add("July");
+        labels.add("August");
+        labels.add("September");
+        labels.add("October");
+        labels.add("November");
+        labels.add("December");
         data.setLabels(labels);
         barModel.setData(data);
 
@@ -159,7 +226,8 @@ public class DashboardController extends BaseController {
 
         Title title = new Title();
         title.setDisplay(true);
-        title.setText("Bar Chart");
+        title.setText("THỐNG KÊ DOANH THU THEO THÁNG NĂM " + year);
+        title.setFontSize(25);
         options.setTitle(title);
 
         Legend legend = new Legend();
@@ -173,6 +241,23 @@ public class DashboardController extends BaseController {
         options.setLegend(legend);
 
         barModel.setOptions(options);
+    }
+
+    private List<Number> addValue(ChartModelDto chartModelDto) {
+        List<Number> dataValues = new ArrayList<>();
+        dataValues.add(chartModelDto.getTotalJanuary() != null ? chartModelDto.getTotalJanuary().intValue() : 0);
+        dataValues.add(chartModelDto.getTotalFebruary() != null ? chartModelDto.getTotalFebruary().intValue() : 0);
+        dataValues.add(chartModelDto.getTotalMarch() != null ? chartModelDto.getTotalMarch().intValue() : 0);
+        dataValues.add(chartModelDto.getTotalApril() != null ? chartModelDto.getTotalApril().intValue() : 0);
+        dataValues.add(chartModelDto.getTotalMay() != null ? chartModelDto.getTotalMay().intValue() : 0);
+        dataValues.add(chartModelDto.getTotalJune() != null ? chartModelDto.getTotalJune().intValue() : 0);
+        dataValues.add(chartModelDto.getTotalJuly() != null ? chartModelDto.getTotalJuly().intValue() : 0);
+        dataValues.add(chartModelDto.getTotalAugust() != null ? chartModelDto.getTotalAugust().intValue() : 0);
+        dataValues.add(chartModelDto.getTotalSeptember() != null ? chartModelDto.getTotalSeptember().intValue() : 0);
+        dataValues.add(chartModelDto.getTotalOctober() != null ? chartModelDto.getTotalOctober().intValue() : 0);
+        dataValues.add(chartModelDto.getTotalNovember() != null ? chartModelDto.getTotalNovember().intValue() : 0);
+        dataValues.add(chartModelDto.getTotalDecember() != null ? chartModelDto.getTotalDecember().intValue() : 0);
+        return dataValues;
     }
 
     @Override

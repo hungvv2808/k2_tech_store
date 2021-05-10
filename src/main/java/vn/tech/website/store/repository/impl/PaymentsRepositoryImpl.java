@@ -2,8 +2,10 @@ package vn.tech.website.store.repository.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
+import vn.tech.website.store.dto.ChartModelDto;
 import vn.tech.website.store.dto.payment.PaymentDto;
 import vn.tech.website.store.dto.payment.PaymentSearchDto;
+import vn.tech.website.store.entity.EntityMapper;
 import vn.tech.website.store.repository.PaymentsRepositoryCustom;
 import vn.tech.website.store.util.ValueUtil;
 
@@ -121,6 +123,30 @@ public class PaymentsRepositoryImpl implements PaymentsRepositoryCustom {
             query.setParameter("keyword", "%" + searchDto.getKeyword().trim() + "%");
         }
         return query;
+    }
+
+    @Override
+    public List getDataModelChart(Integer year, boolean countDetail, String condition) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select distinct " + (!countDetail ? " p2_df.category_id as categoryId, " : "") +
+                "    (select sum(p_1.total_amount) from payments p_1 where month(p_1.create_date) = 1 and year(p_1.create_date) = year(p_df.create_date)) as totalJanuary, " +
+                "    (select sum(p_2.total_amount) from payments p_2 where month(p_2.create_date) = 2 and year(p_2.create_date) = year(p_df.create_date)) as totalFebruary, " +
+                "    (select sum(p_3.total_amount) from payments p_3 where month(p_3.create_date) = 3 and year(p_3.create_date) = year(p_df.create_date)) as totalMarch, " +
+                "    (select sum(p_4.total_amount) from payments p_4 where month(p_4.create_date) = 4 and year(p_4.create_date) = year(p_df.create_date)) as totalApril, " +
+                "    (select sum(p_5.total_amount) from payments p_5 where month(p_5.create_date) = 5 and year(p_5.create_date) = year(p_df.create_date)) as totalMay, " +
+                "    (select sum(p_6.total_amount) from payments p_6 where month(p_6.create_date) = 6 and year(p_6.create_date) = year(p_df.create_date)) as totalJune, " +
+                "    (select sum(p_7.total_amount) from payments p_7 where month(p_7.create_date) = 7 and year(p_7.create_date) = year(p_df.create_date)) as totalJuly, " +
+                "    (select sum(p_8.total_amount) from payments p_8 where month(p_8.create_date) = 8 and year(p_8.create_date) = year(p_df.create_date)) as totalAugust, " +
+                "    (select sum(p_9.total_amount) from payments p_9 where month(p_9.create_date) = 9 and year(p_9.create_date) = year(p_df.create_date)) as totalSeptember, " +
+                "    (select sum(p_10.total_amount) from payments p_10 where month(p_10.create_date) = 10 and year(p_10.create_date) = year(p_df.create_date)) as totalOctober, " +
+                "    (select sum(p_11.total_amount) from payments p_11 where month(p_11.create_date) = 11 and year(p_11.create_date) = year(p_df.create_date)) as totalNovember, " +
+                "    (select sum(p_12.total_amount) from payments p_12 where month(p_12.create_date) = 12 and year(p_12.create_date) = year(p_df.create_date)) as totalDecember " +
+                "from payments p_df " +
+                (!countDetail ? " inner join order_detail od_df on p_df.orders_id = od_df.orders_id inner join product p2_df on od_df.product_id = p2_df.product_id " : "") +
+                "where year(p_df.create_date) = :year " + (!countDetail ? " and p2_df.category_id in " + condition : ""));
+        Query query = entityManager.createNativeQuery(sb.toString());
+        query.setParameter("year", year);
+        return EntityMapper.mapper(query, sb.toString(), ChartModelDto.class);
     }
 
 }
