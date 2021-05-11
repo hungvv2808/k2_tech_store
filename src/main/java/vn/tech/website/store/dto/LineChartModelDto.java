@@ -14,4 +14,9 @@ public class LineChartModelDto {
     private ChartModelDto chartModelDesktopDto;
     private ChartModelDto chartModelWirelessDto;
     private ChartModelDto chartModelWatchDto;
+
+    private ChartModelDto chartModelAoDto;
+    private ChartModelDto chartModelQuanDto;
+    private ChartModelDto chartModelGiayDto;
+    private ChartModelDto chartModelPKDto;
 }

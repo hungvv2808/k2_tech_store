@@ -22,14 +22,18 @@ import vn.tech.website.store.dto.LineChartModelDto;
 import vn.tech.website.store.entity.EScope;
 import vn.tech.website.store.repository.CategoryRepository;
 import vn.tech.website.store.repository.PaymentsRepository;
+import vn.tech.website.store.util.StringUtil;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -87,6 +91,34 @@ public class DashboardController extends BaseController {
         createBarModel();
     }
 
+    public void resetAllNiet() {
+        time = new Date();
+        year = time.getYear() + 1900;
+        chartModelDto = paymentsRepository.getDataModelChart(year, true, null).get(0);
+
+        Long ao = categoryRepository.getCateIdByCode("AO").getCategoryId();
+        Long quan = categoryRepository.getCateIdByCode("QUAN").getCategoryId();
+        Long giay = categoryRepository.getCateIdByCode("GIAY").getCategoryId();
+        Long pk = categoryRepository.getCateIdByCode("PHUKIEN").getCategoryId();
+        String condition = "(" + ao + ", " + quan + ", " + giay + ", " + pk + ")";
+        lineChartModelDto = new LineChartModelDto();
+        List<ChartModelDto> chartModelDtos = paymentsRepository.getDataModelChart(year, false, condition);
+        for (ChartModelDto c : chartModelDtos) {
+            if (c.getCategoryId().equals(ao)) {
+                lineChartModelDto.setChartModelAoDto(c);
+            } else if (c.getCategoryId().equals(quan)) {
+                lineChartModelDto.setChartModelQuanDto(c);
+            } else if (c.getCategoryId().equals(giay)) {
+                lineChartModelDto.setChartModelGiayDto(c);
+            } else {
+                lineChartModelDto.setChartModelPKDto(c);
+            }
+        }
+
+        createLineModelNiet();
+        createBarModel();
+    }
+
     public void createLineModel() {
         lineModel = new LineChartModel();
         ChartData data = new ChartData();
@@ -126,6 +158,73 @@ public class DashboardController extends BaseController {
         dataSetWatch.setBorderColor("rgb(255, 214, 4)");
         dataSetWatch.setLineTension(0.1);
         data.addChartDataSet(dataSetWatch);
+
+        List<String> labels = new ArrayList<>();
+        labels.add("January");
+        labels.add("February");
+        labels.add("March");
+        labels.add("April");
+        labels.add("May");
+        labels.add("June");
+        labels.add("July");
+        labels.add("August");
+        labels.add("September");
+        labels.add("October");
+        labels.add("November");
+        labels.add("December");
+        data.setLabels(labels);
+
+        //Options
+        LineChartOptions options = new LineChartOptions();
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("THỐNG KÊ DOANH THU THEO LOẠI SẢN PHẨM");
+        title.setFontSize(25);
+        options.setTitle(title);
+
+        lineModel.setOptions(options);
+        lineModel.setData(data);
+    }
+
+    public void createLineModelNiet() {
+        lineModel = new LineChartModel();
+        ChartData data = new ChartData();
+
+        LineChartDataSet dataSetAo = new LineChartDataSet();
+        List<Number> valuesAo = addValue(lineChartModelDto.getChartModelAoDto() != null ? lineChartModelDto.getChartModelAoDto() : new ChartModelDto());
+        dataSetAo.setData(valuesAo);
+        dataSetAo.setFill(false);
+        dataSetAo.setLabel("Áo");
+        dataSetAo.setBorderColor("rgb(255, 0, 0)");
+        dataSetAo.setLineTension(0.1);
+        data.addChartDataSet(dataSetAo);
+
+        LineChartDataSet dataSetQuan = new LineChartDataSet();
+        List<Number> valuesQuan = addValue(lineChartModelDto.getChartModelQuanDto() != null ? lineChartModelDto.getChartModelQuanDto() : new ChartModelDto());
+        dataSetQuan.setData(valuesQuan);
+        dataSetQuan.setFill(false);
+        dataSetQuan.setLabel("Quần");
+        dataSetQuan.setBorderColor("rgb(4, 255, 21)");
+        dataSetQuan.setLineTension(0.1);
+        data.addChartDataSet(dataSetQuan);
+
+        LineChartDataSet dataSetGiay = new LineChartDataSet();
+        List<Number> valuesGiay = addValue(lineChartModelDto.getChartModelGiayDto() != null ? lineChartModelDto.getChartModelGiayDto() : new ChartModelDto());
+        dataSetGiay.setData(valuesGiay);
+        dataSetGiay.setFill(false);
+        dataSetGiay.setLabel("Giày");
+        dataSetGiay.setBorderColor("rgb(4, 55, 255)");
+        dataSetGiay.setLineTension(0.1);
+        data.addChartDataSet(dataSetGiay);
+
+        LineChartDataSet dataSetPK = new LineChartDataSet();
+        List<Number> valuesPK = addValue(lineChartModelDto.getChartModelPKDto() != null ? lineChartModelDto.getChartModelPKDto() : new ChartModelDto());
+        dataSetPK.setData(valuesPK);
+        dataSetPK.setFill(false);
+        dataSetPK.setLabel("Phụ kiện");
+        dataSetPK.setBorderColor("rgb(255, 214, 4)");
+        dataSetPK.setLineTension(0.1);
+        data.addChartDataSet(dataSetPK);
 
         List<String> labels = new ArrayList<>();
         labels.add("January");
