@@ -293,7 +293,7 @@
                                                     <h:outputText value="#{orderDetailDto.quantity}"/>
                                                 </p:column>
                                                 <p:column headerText="Thành tiền">
-                                                    <h:outputText value="#{(orderDetailDto.productDto.price - orderDetailDto.productDto.price*orderDetailDto.productDto.discount) * orderDetailDto.quantity}">
+                                                    <h:outputText value="#{(orderDetailDto.productDto.price - orderDetailDto.productDto.price*orderDetailDto.productDto.discount/100) * orderDetailDto.quantity}">
                                                         <f:convertNumber type="currency" currencySymbol="VNĐ"
                                                                          maxFractionDigits="6"
                                                                          minFractionDigits="0" locale="vi_VN"/>
