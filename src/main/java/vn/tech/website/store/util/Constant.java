@@ -162,4 +162,13 @@ public class Constant {
 
 
     public static final String REPORT_EXPORT_FILE = "/WEB-INF/report/thongke.xlsx";
+
+    public static final String URL_LOGO_K2 = "https://i2.paste.pics/fe148b655d53d6f87590d41d074d46c0.png";
+    public static final String URL_LOGO_ZEUS = "https://i2.paste.pics/cace1603401daa1b64bc6ba5b44dd8eb.png";
+
+    public static final String ZEUS_SHOP = "Zeus Shop";
+    public static final String K2_SHOP = "K2 Tech Store";
+
+    public static final String K2_FOUNDER = "Parker Vu";
+    public static final String ZEUS_FOUNDER = "Niet Pham";
 }

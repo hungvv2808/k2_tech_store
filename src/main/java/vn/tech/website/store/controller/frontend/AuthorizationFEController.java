@@ -79,6 +79,7 @@ public class AuthorizationFEController implements Serializable {
     private String newRepassword;
     private String inputCode;
     private String code;
+    private boolean checkLostPass;
     private boolean resend;
     private boolean rememberLogin;
     private boolean checkActiveStatus;
@@ -457,34 +458,35 @@ public class AuthorizationFEController implements Serializable {
             facesNoticeController.addErrorMessage("Email không tồn tại");
             return;
         }
-        if (account.getStatus().equals(DbConstant.ACCOUNT_LOCK_STATUS)) {
-            facesNoticeController.addErrorMessage("Tài khoản của bạn đã bị khóa vui lòng mở khóa đề đổi mật khẩu");
-            return;
-        }
         code = StringUtil.generateSalt();
-        EmailUtil.getInstance().sendLostPasswordEmail(account.getEmail(), code, account.getFullName());
-        facesNoticeController.addSuccessMessage("Mã xác nhận đã được gửi về tài khoản email của bạn");
-        facesNoticeController.activeFunction("countdownCheckMail");
+        EmailUtil.getInstance().sendLostPasswordEmail(account.getEmail(), true, Constant.K2_SHOP, account.getUserName(), code, Constant.K2_FOUNDER, null, null);
+        checkLostPass = true;
+        facesNoticeController.addSuccessMessage("Mã xác nhận đã được gửi về tài khoản email của bạn.");
     }
 
-    public void onCheckCode() {
+    public void onChangePasswordByCode() {
         if (StringUtils.isBlank(inputCode)) {
-            facesNoticeController.addErrorMessage("Bạn vui lòng nhập mã xác nhận");
-            facesNoticeController.resetSubmitButton();
+            facesNoticeController.addErrorMessage("Bạn vui lòng nhập mã xác thực");
             return;
         }
         if (!code.equals(inputCode.trim())) {
-            facesNoticeController.addErrorMessage("Mã xác nhận không chính xác, vui lòng nhập lại mã xác nhận");
-            facesNoticeController.resetSubmitButton();
+            facesNoticeController.addErrorMessage("Mã xác nhận không chính xác, vui lòng nhập lại mã xác thực");
             return;
         }
-        facesNoticeController.closeModal("lostPassPopup");
-        facesNoticeController.openModal("CreateNewPassword");
-    }
 
-    public void removeCode() {
+        String newPassword = StringUtil.generatePassword();
+        EmailUtil.getInstance().sendLostPasswordEmail(account.getEmail(), false, Constant.K2_SHOP, account.getUserName(), code, Constant.K2_FOUNDER, account.getEmail(), newPassword);
+        Account accountUpdate = new Account();
+        BeanUtils.copyProperties(account, accountUpdate);
+        accountUpdate.setPassword(StringUtil.encryptPassword(newPassword, account.getSalt()));
+        accountRepository.save(accountUpdate);
+
         code = "";
-        facesNoticeController.activeFunction("onTakeNewCode");
+        account = new Account();
+        accountDto = new AccountDto();
+        facesNoticeController.addSuccessMessage("Đặt lại mật khẩu thành công, vui lòng sử dụng mật khẩu mới được gửi đến email của bạn.");
+        facesNoticeController.closeModal("lost-pass-modal");
+        facesNoticeController.openModal("login-modal");
     }
 
     public void onCreateNewPassword() {
@@ -510,8 +512,6 @@ public class AuthorizationFEController implements Serializable {
             return;
         }
         account.setPassword(StringUtil.encryptPassword(newPassword, account.getSalt()));
-//        account.setFirstTimeLogin(true);
-//        account.setTimeToChangePassword(new Date());
         accountRepository.save(account);
         facesNoticeController.addSuccessMessage("Lấy lại mật khẩu thành công");
         facesNoticeController.closeModal("CreateNewPassword");

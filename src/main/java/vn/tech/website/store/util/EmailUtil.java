@@ -56,28 +56,6 @@ public class EmailUtil implements Runnable {
                 .replace("{MAT_KHAU}", password);
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
-    public boolean sendPasswordAdminEmail(String loaiTaiKhoan, String emailTo, String password,String fullname, String userName) {
-        String subject = PropertiesUtil.getProperty("email.createUser.subject");
-        String content = PropertiesUtil.getProperty("email.createAdmin.content")
-                .replace("{LOAI_TAI_KHOAN}", loaiTaiKhoan)
-                .replace("{USER_NAME}", userName)
-                .replace("{TEN_TAI_KHOAN}", emailTo)
-                .replace("{FULL_NAME}", fullname)
-                .replace("{MAT_KHAU}", password);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
-    }
-
-    public boolean onLockAccount(String emailTo, String fullname) {
-        String subject = PropertiesUtil.getProperty("email.blockAccount.subject");
-        String content = PropertiesUtil.getProperty("email.reasonLock.content").replace("{USER_NAME}", fullname);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
-    }
-
-    public boolean onUnLockAccount(String emailTo, String fullname) {
-        String subject = PropertiesUtil.getProperty("email.unBlockAccount.subject");
-        String content = PropertiesUtil.getProperty("email.notiUnlock.content").replace("{USER_NAME}", fullname);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
-    }
 
     public boolean sendCreateUserEmail(String emailTo, String link, String fullName) {
         String subject = PropertiesUtil.getProperty("email.createNewUser.subject");
@@ -87,97 +65,28 @@ public class EmailUtil implements Runnable {
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
-    public boolean sendRefuseRegister(String emailTo, String assetName, String regulationCode, String reason, String fullName) {
-        String subject = PropertiesUtil.getProperty("email.createRefuseRegister.subject");
-        String content = PropertiesUtil.getProperty("email.createRefuseRegister.content")
-                .replace("{TEN_TAI_KHOAN}", fullName)
-                .replace("{ASSET_NAME}", assetName)
-                .replace("{REGULATION_CODE}", regulationCode)
-                .replace("{REASON}", reason);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
-    }
-
-    public boolean sendLostPasswordEmail(String emailTo, String code, String fullName) {
-        String subject = PropertiesUtil.getProperty("email.lostPassword.subject");
-        String content = PropertiesUtil.getProperty("email.lostPassword.content")
-                .replace("{USER_NAME}", fullName)
-                .replace("{CODE}", code);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
-    }
-
-    public boolean sendResetPasswordUserEmail(String emailTo,String username, String password, String fullname) {
-        String subject = PropertiesUtil.getProperty("email.resetPassword.subject");
-        String content = PropertiesUtil.getProperty("email.resetPassword.content")
-                .replace("{USER_NAME}", username)
-                .replace("{FULL_NAME}", fullname)
-                .replace("{PASSWORD}", password);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
-    }
-
-
-    public boolean sendBillPaid(String emailTo, String filePath, String fileName, String name, String assetName, String regulationCode, String username) {
-        String subject = PropertiesUtil.getProperty("email.sendBill.subject");
-        String content = PropertiesUtil.getProperty("email.sendBill.content")
-                .replace("{USER_NAME}", username)
-                .replace("{ASSET_NAME}", assetName)
-                .replace("{CODE}", regulationCode)
-                .replace("{NAME}", fileName);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content, fileName, filePath));
-    }
-
-    public boolean sendBillRefund(String emailTo, String filePath, String fileName, String name, String assetName, String regulationCode, String username) {
-        String subject = PropertiesUtil.getProperty("email.sendBillRefund.subject");
-        String content = PropertiesUtil.getProperty("email.sendBillRefund.content")
-                .replace("{USER_NAME}", username)
-                .replace("{ASSET_NAME}", assetName)
-                .replace("{CODE}", regulationCode)
-                .replace("{NAME}", fileName);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content, fileName, filePath));
-    }
-
-    public boolean sendBillTransactionControl(String emailTo, String fullname) {
-        String subject = PropertiesUtil.getProperty("email.sendBillTransactionControl.subject");
-        String content = PropertiesUtil.getProperty("email.sendBillTransactionControl.content")
-                .replace("{USER_NAME}", fullname);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
-    }
-
-    public boolean sendReasonCancelRegulation(String emailTo, String filePath, String fileName, String name, String code, String reasonCancel) {
-        String subject = PropertiesUtil.getProperty("email.sendRegulationCancel.subject");
-        String content = PropertiesUtil.getProperty("email.sendRegulationCancel.content")
-                .replace("{CODE}", code)
-                .replace("{REASON_CANCEL}", reasonCancel)
-                .replace("{NAME}", name);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content, fileName, filePath));
-    }
-
-    public boolean sendReasonCancelAsset(String emailTo, String filePath, String fileName, String name, String code, String regulationCode, String reasonCancel) {
-        String subject = PropertiesUtil.getProperty("email.sendAssetCancel.subject");
-        String content = PropertiesUtil.getProperty("email.sendAssetCancel.content")
-                .replace("{CODE}", code)
-                .replace("{REGULATION_CODE}", regulationCode)
-                .replace("{REASON_CANCEL}", reasonCancel)
-                .replace("{NAME}", name);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content, fileName, filePath));
-    }
-
-    public boolean sendNotificationNotChecked(String emailTo, String name, String assetName, String regulationCode){
-        String subject = PropertiesUtil.getProperty("email.notificationNotChecked.subject")
-                .replace("{NAME}", name);
-        String content = PropertiesUtil.getProperty("email.notificationNotChecked.content")
-                .replace("{NAME}", name)
-                .replace("{ASSET_NAME}", assetName)
-                .replace("{REGULATION_CODE}", regulationCode);
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
-    }
-
-    public boolean sendNotificationAccepted(String emailTo, String name, String assetName, String regulationCode, String code){
-        String subject = PropertiesUtil.getProperty("email.notificationAccepted.subject");
-        String content = PropertiesUtil.getProperty("email.notificationAccepted.content")
-                .replace("{TEN_TAI_KHOAN}", name)
-                .replace("{ASSET_NAME}", assetName)
-                .replace("{REGULATION_CODE}", regulationCode)
-                .replace("{REASON}", code);
+    public boolean sendLostPasswordEmail(String emailTo, boolean check, String shopName, String username, String verifyCode, String adminName, String email, String newPass) {
+        String subject;
+        String content;
+        if (check) {
+            subject = PropertiesUtil.getProperty("email.lostPasswordGetCode.subject")
+                    .replace("{SHOP_NAME}", shopName.toUpperCase())
+                    .replace("{USER_NAME}", username);
+            content = PropertiesUtil.getProperty("email.lostPasswordGetCode.content")
+                    .replace("{USER_NAME}", username.toUpperCase())
+                    .replace("{VERIFY_CODE}", verifyCode)
+                    .replace("{ADMIN}", adminName)
+                    .replace("{SHOP_NAME}", shopName);
+        } else {
+            subject = PropertiesUtil.getProperty("email.lostPasswordUpdate.subject")
+                    .replace("{SHOP_NAME}", shopName.toUpperCase());
+            content = PropertiesUtil.getProperty("email.lostPasswordUpdate.content")
+                    .replace("{USER_NAME}", username.toUpperCase())
+                    .replace("{CUSTOMER_EMAIL}", email)
+                    .replace("{NEW_PASS}", newPass)
+                    .replace("{ADMIN}", adminName)
+                    .replace("{SHOP_NAME}", shopName);
+        }
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
@@ -206,31 +115,6 @@ public class EmailUtil implements Runnable {
                 .replace("{EMAIL}",emailTo)
                 .replace("{ORDER_CODE}", orderCode)
                 .replace("{ORDER_TIME}", Objects.requireNonNull(DateUtil.formatToPattern(orderTime, DateUtil.DATE_FORMAT)));
-        return mailDtoQueue.add(new MailDto(emailTo, subject, content));
-    }
-
-    public boolean sendResultStore(String emailTo, String userName, Boolean status, String regulationCode, String assetName, Date startTime, Date endTime, Long price, Date timeAccept){
-        String content;
-        if (status == DbConstant.ASSET_MANAGEMENT_ENDING_GOOD) {
-            content = PropertiesUtil.getProperty("email.sendResultStoreSuccess.content")
-                    .replace("{USER_NAME}", userName)
-                    .replace("{STATUS}", "Đấu giá thành công")
-                    .replace("{REGULATION_CODE}", regulationCode)
-                    .replace("{ASSET_NAME}", assetName)
-                    .replace("{START_TIME}", Objects.requireNonNull(DateUtil.formatToPattern(startTime, DateUtil.HHMMSS_DDMMYYYY)))
-                    .replace("{END_TIME}", Objects.requireNonNull(DateUtil.formatToPattern(endTime, DateUtil.HHMMSS_DDMMYYYY)))
-                    .replace("{PRICE}", StringUtil.formatCurrency(price) + " VNĐ")
-                    .replace("{ACCEPT_TIME}", Objects.requireNonNull(DateUtil.formatToPattern(timeAccept, DateUtil.HHMMSS_DDMMYYYY)));
-        } else {
-            content = PropertiesUtil.getProperty("email.sendResultStoreFaile.content")
-                    .replace("{USER_NAME}", userName)
-                    .replace("{STATUS}", "Đấu giá không thành")
-                    .replace("{REGULATION_CODE}", regulationCode)
-                    .replace("{ASSET_NAME}", assetName)
-                    .replace("{START_TIME}", Objects.requireNonNull(DateUtil.formatToPattern(startTime, DateUtil.HHMMSS_DDMMYYYY)))
-                    .replace("{END_TIME}", Objects.requireNonNull(DateUtil.formatToPattern(endTime, DateUtil.HHMMSS_DDMMYYYY)));
-        }
-        String subject = PropertiesUtil.getProperty("email.sendResultStore.subject");
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
