@@ -481,3 +481,29 @@ select distinct
     (select sum(p_12.total_amount) as total from payments p_12 where month(p_12.create_date) = 12 and year(p_12.create_date) = year(p_df.create_date)) as December
 from payments p_df
 where year(p_df.create_date) = year(now())
+
+insert into k2_tech_store.account (user_name, full_name, date_of_birth, gender, role_id, password, salt, email, phone,
+                                   address, avatar_path, status, province_id, district_id, commune_id, verify_code,
+                                   create_date, create_by, update_date, update_by)
+select concat(lower(c._address_firstname), '_', lower(c._address_lastname)) as username,
+       concat(c._address_firstname, ' ', c._address_lastname)               as fullname,
+       now()                                                                as date_of_birth,
+       1                                                                    as gender,
+       3                                                                    as role,
+       '29ca7b2b1990d7029dfbb504494a8380839d5d4e4d68eb1b7b8b2e19bdccfd81'   as password,
+       'ZK9lZFhfpa'                                                         as salt,
+       concat('parker', '.', c.email)                                       as email,
+       substr(replace(c._address_telephone, '-', ''), 1, 11)                as phone,
+       c._address_street                                                    as address,
+       '/upload/20210424/24042021012454776.jpg'                             as avapath,
+       1                                                                    as status,
+       1                                                                    as province,
+       1                                                                    as district,
+       1                                                                    as commune,
+       '123456a@'                                                           as verify,
+       now()                                                                as create_date,
+       3                                                                    as create_by,
+       now()                                                                as update_date,
+       3                                                                    as update_by
+from csv_to_sql_parker.catalog_customer c
+where c._address_telephone <> ''
