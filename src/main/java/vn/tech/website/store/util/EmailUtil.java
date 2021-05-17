@@ -65,7 +65,7 @@ public class EmailUtil implements Runnable {
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
-    public boolean sendLostPasswordEmail(String emailTo, boolean check, String shopName, String username, String verifyCode, String adminName, String email, String newPass) {
+    public boolean sendLostPasswordEmail(String emailTo, boolean check, String shopName, String username, String verifyCode, String adminName, String email, String newPass, String urlImage) {
         String subject;
         String content;
         if (check) {
@@ -76,7 +76,8 @@ public class EmailUtil implements Runnable {
                     .replace("{USER_NAME}", username.toUpperCase())
                     .replace("{VERIFY_CODE}", verifyCode)
                     .replace("{ADMIN}", adminName)
-                    .replace("{SHOP_NAME}", shopName);
+                    .replace("{SHOP_NAME}", shopName)
+                    .replace("{URL_IMAGE}", urlImage);
         } else {
             subject = PropertiesUtil.getProperty("email.lostPasswordUpdate.subject")
                     .replace("{SHOP_NAME}", shopName.toUpperCase());
@@ -85,12 +86,13 @@ public class EmailUtil implements Runnable {
                     .replace("{CUSTOMER_EMAIL}", email)
                     .replace("{NEW_PASS}", newPass)
                     .replace("{ADMIN}", adminName)
-                    .replace("{SHOP_NAME}", shopName);
+                    .replace("{SHOP_NAME}", shopName)
+                    .replace("{URL_IMAGE}", urlImage);
         }
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
-    public boolean sendConfirmChangeEmail(String emailTo,String userName,String code,String shopName, String admin) {
+    public boolean sendConfirmChangeEmail(String emailTo,String userName,String code,String shopName, String admin, String urlImage) {
         String subject = PropertiesUtil.getProperty("email.changeEmail.subject")
                 .replace("{SHOP_NAME}", shopName.toUpperCase());
         String content = PropertiesUtil.getProperty("email.changeEmail.content")
@@ -98,11 +100,12 @@ public class EmailUtil implements Runnable {
                 .replace("{EMAIL}",emailTo)
                 .replace("{CODE}", code)
                 .replace("{SHOP_NAME}",shopName.toUpperCase())
-                .replace("{ADMIN}",admin);
+                .replace("{ADMIN}",admin)
+                .replace("{URL_IMAGE}", urlImage);
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
-    public boolean sendVerifyCodeToRegister(String emailTo,String userName,String code, String shopName, String admin) {
+    public boolean sendVerifyCodeToRegister(String emailTo,String userName,String code, String shopName, String admin, String urlImage) {
         String subject = PropertiesUtil.getProperty("email.register.subject")
                 .replace("{SHOP_NAME}", shopName.toUpperCase());
         String content = PropertiesUtil.getProperty("email.register.content")
@@ -110,11 +113,12 @@ public class EmailUtil implements Runnable {
                 .replace("{EMAIL}",emailTo)
                 .replace("{CODE}", code)
                 .replace("{SHOP_NAME}",shopName.toUpperCase())
-                .replace("{ADMIN}",admin);
+                .replace("{ADMIN}",admin)
+                .replace("{URL_IMAGE}", urlImage);
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
-    public boolean sendNotificationApprovedOrder(String emailTo,String userName,String orderCode,Date orderTime,String shopName, String admin) {
+    public boolean sendNotificationApprovedOrder(String emailTo,String userName,String orderCode,Date orderTime,String shopName, String admin, String urlImage) {
         String subject = PropertiesUtil.getProperty("email.approvedOrder.subject")
                 .replace("{SHOP_NAME}",shopName.toUpperCase());
         String content = PropertiesUtil.getProperty("email.approvedOrder.content")
@@ -122,7 +126,8 @@ public class EmailUtil implements Runnable {
                 .replace("{ORDER_CODE}", orderCode)
                 .replace("{ORDER_TIME}", Objects.requireNonNull(DateUtil.formatToPattern(orderTime, DateUtil.DATE_FORMAT)))
                 .replace("{SHOP_NAME}",shopName.toUpperCase())
-                .replace("{ADMIN}",admin);
+                .replace("{ADMIN}",admin)
+                .replace("{URL_IMAGE}", urlImage);
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 

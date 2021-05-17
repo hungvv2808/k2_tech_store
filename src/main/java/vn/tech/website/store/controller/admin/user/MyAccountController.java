@@ -185,7 +185,7 @@ public class MyAccountController {
         }
         account.setVerifyCode(StringUtil.generateSalt());
         account = accountRepository.save(account);
-        EmailUtil.getInstance().sendConfirmChangeEmail(newEmail, account.getUserName(),account.getVerifyCode(), Constant.K2_SHOP, Constant.K2_FOUNDER);
+        EmailUtil.getInstance().sendConfirmChangeEmail(newEmail, account.getUserName(),account.getVerifyCode(), Constant.K2_SHOP, Constant.K2_FOUNDER,Constant.URL_LOGO_K2);
         FacesUtil.addSuccessMessage("Bạn vui lòng kiếm tra mail để lẩy mã xác nhận");
         allowSendCode = true;
     }

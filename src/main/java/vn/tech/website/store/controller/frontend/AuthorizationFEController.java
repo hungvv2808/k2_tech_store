@@ -459,7 +459,7 @@ public class AuthorizationFEController implements Serializable {
             return;
         }
         code = StringUtil.generateSalt();
-        EmailUtil.getInstance().sendLostPasswordEmail(account.getEmail(), true, Constant.K2_SHOP, account.getUserName(), code, Constant.K2_FOUNDER, null, null);
+        EmailUtil.getInstance().sendLostPasswordEmail(account.getEmail(), true, Constant.K2_SHOP, account.getUserName(), code, Constant.K2_FOUNDER, null, null, Constant.URL_LOGO_K2);
         checkLostPass = true;
         facesNoticeController.addSuccessMessage("Mã xác nhận đã được gửi về tài khoản email của bạn.");
     }
@@ -475,7 +475,7 @@ public class AuthorizationFEController implements Serializable {
         }
 
         String newPassword = StringUtil.generatePassword();
-        EmailUtil.getInstance().sendLostPasswordEmail(account.getEmail(), false, Constant.K2_SHOP, account.getUserName(), code, Constant.K2_FOUNDER, account.getEmail(), newPassword);
+        EmailUtil.getInstance().sendLostPasswordEmail(account.getEmail(), false, Constant.K2_SHOP, account.getUserName(), code, Constant.K2_FOUNDER, account.getEmail(), newPassword, Constant.URL_LOGO_K2);
         Account accountUpdate = new Account();
         BeanUtils.copyProperties(account, accountUpdate);
         accountUpdate.setPassword(StringUtil.encryptPassword(newPassword, account.getSalt()));
@@ -613,7 +613,7 @@ public class AuthorizationFEController implements Serializable {
             emailBak = accountDto.getEmail();
             isFirstClick = false;
             verifyCodeRegister = StringUtil.generateSalt();
-            EmailUtil.getInstance().sendVerifyCodeToRegister(accountDto.getEmail(), accountDto.getFullName(), verifyCodeRegister, Constant.K2_SHOP, Constant.K2_FOUNDER);
+            EmailUtil.getInstance().sendVerifyCodeToRegister(accountDto.getEmail(), accountDto.getFullName(), verifyCodeRegister, Constant.K2_SHOP, Constant.K2_FOUNDER, Constant.URL_LOGO_K2);
             facesNoticeController.addSuccessMessage("Bạn vui lòng kiểm tra email và nhập mã xác nhận");
             facesNoticeController.showVerifyRegister();
             return;
@@ -621,7 +621,7 @@ public class AuthorizationFEController implements Serializable {
         if (!isFirstClick) {
             if (!accountDto.getEmail().equals(emailBak)) {
                 verifyCodeRegister = StringUtil.generateSalt();
-                EmailUtil.getInstance().sendVerifyCodeToRegister(accountDto.getEmail(), accountDto.getFullName(), verifyCodeRegister, Constant.K2_SHOP, Constant.K2_FOUNDER);
+                EmailUtil.getInstance().sendVerifyCodeToRegister(accountDto.getEmail(), accountDto.getFullName(), verifyCodeRegister, Constant.K2_SHOP, Constant.K2_FOUNDER, Constant.URL_LOGO_K2);
             }
             if (StringUtils.isBlank(accountDto.getVerifyCode())) {
                 facesNoticeController.addErrorMessage("Bạn vui lòng kiểm tra email và nhập mã xác nhận");
