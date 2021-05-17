@@ -90,31 +90,39 @@ public class EmailUtil implements Runnable {
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
-    public boolean sendConfirmChangeEmail(String emailTo,String userName,String code) {
-        String subject = PropertiesUtil.getProperty("email.changeEmail.subject");
+    public boolean sendConfirmChangeEmail(String emailTo,String userName,String code,String shopName, String admin) {
+        String subject = PropertiesUtil.getProperty("email.changeEmail.subject")
+                .replace("{SHOP_NAME}", shopName.toUpperCase());
         String content = PropertiesUtil.getProperty("email.changeEmail.content")
-                .replace("{TEN_TAI_KHOAN}", userName)
+                .replace("{USER_NAME}", userName)
                 .replace("{EMAIL}",emailTo)
-                .replace("{CODE}", code);
+                .replace("{CODE}", code)
+                .replace("{SHOP_NAME}",shopName.toUpperCase())
+                .replace("{ADMIN}",admin);
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
-    public boolean sendVerifyCodeToRegister(String emailTo,String userName,String code) {
-        String subject = PropertiesUtil.getProperty("email.register.subject");
+    public boolean sendVerifyCodeToRegister(String emailTo,String userName,String code, String shopName, String admin) {
+        String subject = PropertiesUtil.getProperty("email.register.subject")
+                .replace("{SHOP_NAME}", shopName.toUpperCase());
         String content = PropertiesUtil.getProperty("email.register.content")
-                .replace("{TEN_TAI_KHOAN}", userName)
+                .replace("{USER_NAME}", userName)
                 .replace("{EMAIL}",emailTo)
-                .replace("{CODE}", code);
+                .replace("{CODE}", code)
+                .replace("{SHOP_NAME}",shopName.toUpperCase())
+                .replace("{ADMIN}",admin);
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
-    public boolean sendNotificationApprovedOrder(String emailTo,String userName,String orderCode,Date orderTime) {
-        String subject = PropertiesUtil.getProperty("email.changeEmail.subject");
-        String content = PropertiesUtil.getProperty("email.changeEmail.content")
-                .replace("{TEN_TAI_KHOAN}", userName)
-                .replace("{EMAIL}",emailTo)
+    public boolean sendNotificationApprovedOrder(String emailTo,String userName,String orderCode,Date orderTime,String shopName, String admin) {
+        String subject = PropertiesUtil.getProperty("email.approvedOrder.subject")
+                .replace("{SHOP_NAME}",shopName.toUpperCase());
+        String content = PropertiesUtil.getProperty("email.approvedOrder.content")
+                .replace("{USER_NAME}", userName)
                 .replace("{ORDER_CODE}", orderCode)
-                .replace("{ORDER_TIME}", Objects.requireNonNull(DateUtil.formatToPattern(orderTime, DateUtil.DATE_FORMAT)));
+                .replace("{ORDER_TIME}", Objects.requireNonNull(DateUtil.formatToPattern(orderTime, DateUtil.DATE_FORMAT)))
+                .replace("{SHOP_NAME}",shopName.toUpperCase())
+                .replace("{ADMIN}",admin);
         return mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 

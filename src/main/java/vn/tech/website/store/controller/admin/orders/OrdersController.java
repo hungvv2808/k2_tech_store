@@ -413,7 +413,7 @@ public class OrdersController extends BaseController {
                 receiveNotification.setUpdateDate(new Date());
                 notificationRepository.save(receiveNotification);
             } else {
-                EmailUtil.getInstance().sendNotificationApprovedOrder(orders.getEmail(), orders.getCustomerName(), orders.getCode(), orders.getCreateDate());
+                EmailUtil.getInstance().sendNotificationApprovedOrder(orders.getEmail(), orders.getCustomerName(), orders.getCode(), orders.getCreateDate(), Constant.K2_SHOP, Constant.K2_FOUNDER);
             }
 
         }

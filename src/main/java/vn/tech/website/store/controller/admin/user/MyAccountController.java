@@ -16,6 +16,7 @@ import vn.tech.website.store.model.Account;
 import vn.tech.website.store.model.Province;
 import vn.tech.website.store.repository.AccountRepository;
 import vn.tech.website.store.repository.ProvinceRepository;
+import vn.tech.website.store.util.Constant;
 import vn.tech.website.store.util.EmailUtil;
 import vn.tech.website.store.util.FacesUtil;
 import vn.tech.website.store.util.StringUtil;
@@ -184,7 +185,7 @@ public class MyAccountController {
         }
         account.setVerifyCode(StringUtil.generateSalt());
         account = accountRepository.save(account);
-        EmailUtil.getInstance().sendConfirmChangeEmail(newEmail, account.getUserName(),account.getVerifyCode());
+        EmailUtil.getInstance().sendConfirmChangeEmail(newEmail, account.getUserName(),account.getVerifyCode(), Constant.K2_SHOP, Constant.K2_FOUNDER);
         FacesUtil.addSuccessMessage("Bạn vui lòng kiếm tra mail để lẩy mã xác nhận");
         allowSendCode = true;
     }
