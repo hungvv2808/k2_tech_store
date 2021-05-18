@@ -8,7 +8,7 @@
 $(document).ready(function() {
     searchClick(false);
     $('.carousel').carousel({
-        interval: 200000
+        interval: 2000
     });
     $('.content-introduce-detail__content').hover(
         function() {
@@ -19,9 +19,9 @@ $(document).ready(function() {
         }
     );
     scrollPage();
-    autoPlayCarousel('.my-projects-slide', 300000, true, 3);
-    autoPlayCarousel('.content-brands-slides', 300000, false, 4);
-    autoPlayCarousel('.my-feedback-slide', 300000, false, 3);
+    autoPlayCarousel('.my-projects-slide', 2000, true, 3);
+    autoPlayCarousel('.content-brands-slides', 2000, false, 4);
+    autoPlayCarousel('.my-feedback-slide', 2000, false, 3);
 });
 
 // change bg navrbar after scroll
