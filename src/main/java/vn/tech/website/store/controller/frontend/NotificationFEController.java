@@ -59,7 +59,7 @@ public class NotificationFEController extends BaseFEController {
         resetAll();
     }
 
-    public void redirectPage() {
+    public void redirectPageNoti() {
         Map<String, String> params = FacesUtil.getRequestParameterMap();
         Long notificationId = Long.valueOf(params.get("notificationId"));
         ReceiveNotification receiveNotification = notificationRepository.findById(notificationId).orElse(null);

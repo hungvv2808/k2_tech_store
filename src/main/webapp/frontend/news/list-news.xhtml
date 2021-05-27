@@ -20,7 +20,12 @@
                 </div>
                 <div class="top-news">
                     <h:form id="productList" prependId="false">
-                        <div class="row">
+                        <h:panelGroup layout="block" styleClass="row" rendered="#{empty newsFEController.pagination.data}">
+                            <p class="top-news__empty">
+                                Không có bản ghi nào.
+                            </p>
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="row" rendered="#{not empty newsFEController.pagination.data}">
                             <p:repeat value="#{newsFEController.pagination.data}" var="newsDto">
                                 <div class="row">
                                     <div class="col-lg-3">
@@ -48,7 +53,7 @@
                                     </div>
                                 </div>
                             </p:repeat>
-                        </div>
+                        </h:panelGroup>
                     </h:form>
                 </div>
                 <ui:include src="../template/paginate/pagination.xhtml">

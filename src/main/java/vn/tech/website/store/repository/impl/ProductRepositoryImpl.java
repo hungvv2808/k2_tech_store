@@ -254,7 +254,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 + " where p.product_id in (select ph.product_id "
                 + " from product_highlight ph "
                 + " where month(ph.date_add) = month(now()) "
-                + " order by ph.point desc) limit 10");
+                + " order by ph.point desc) limit " + DbConstant.LIMIT_SHOW_FE);
         Query query = entityManager.createNativeQuery(sb.toString());
         return EntityMapper.mapper(query, sb.toString(), ProductDto.class);
     }

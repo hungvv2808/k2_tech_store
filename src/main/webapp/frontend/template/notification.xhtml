@@ -16,8 +16,8 @@
         <p:remoteCommand name="cmdLoadmoreNotification" global="false" update="loadMoreNoti"
                          actionListener="#{notificationFEController.loadMoreAds()}"
                          oncomplete="loadMoreNoti();"/>
-        <p:remoteCommand name="redirectPage" global="false"
-                         actionListener="#{notificationFEController.redirectPage()}"/>
+        <p:remoteCommand name="redirectPageNoti" global="false"
+                         actionListener="#{notificationFEController.redirectPageNoti()}"/>
 
         <a class="nav-link dropdown-toggle" href="#" id="navbarNotis" role="button"
            data-toggle="dropdown"
@@ -43,7 +43,7 @@
                 }
                 data.forEach(function (e) {
                     $('#bell_menu').append(
-                        "<a class='dropdown-item' href='#' onclick=\"redirectPage([{name:'notificationId',value:'" + e.receive_notification_id + "'}]);\">" +
+                        "<a class='dropdown-item' href='#' onclick=\"redirectPageNoti([{name:'notificationId',value:'" + e.receive_notification_id + "'}]);\">" +
                         "<span>" + e.send_content + "</span>" +
                         "<br/>" +
                         "<i>" + e.date_before_now + "</i>" +

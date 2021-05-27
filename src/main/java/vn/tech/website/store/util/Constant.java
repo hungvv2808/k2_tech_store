@@ -110,11 +110,11 @@ public class Constant {
     public static final String CATE_WATCH_CODE = "watch";
     public static final String CATE_HEADPHONE_CODE = "headphone";
 
-    public static final int CATE_NEWS_DISCOUNT = 9;
+    public static final int CATE_NEWS_HOT = 5;
+    public static final int CATE_NEWS_HIGHLIGHT = 6;
+    public static final int CATE_NEWS_DISCOUNT = 7;
     public static final int CATE_NEWS_PRODUCT = 8;
-    public static final int CATE_NEWS_TECH = 5;
-    public static final int CATE_NEWS_HOT = 3;
-    public static final int CATE_NEWS_HIGHLIGHT = 4;
+    public static final int CATE_NEWS_TECH = 10;
 
     public static final int CATE_MALE = 1;
     public static final int CATE_FEMALE = 2;

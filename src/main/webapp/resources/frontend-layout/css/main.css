@@ -552,6 +552,12 @@
 .content-news .top-news a {
   text-decoration: none;
 }
+.content-news .top-news__empty {
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  font-size: 18px;
+}
 .content-news .top-news__img img {
   width: 280px;
   height: 170px;

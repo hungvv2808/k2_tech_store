@@ -281,7 +281,12 @@ public class AuthorizationFEController implements Serializable {
         }
 
         AccountSearchDto searchDto = new AccountSearchDto(DbConstant.ROLE_ID_USER, username.trim());
-        AccountDto account = accountRepository.search(searchDto).get(0);
+        List<AccountDto> accounts = accountRepository.search(searchDto);
+        if (accounts.isEmpty()) {
+            facesNoticeController.addErrorMessage("Tên đăng nhập hoặc mật khẩu không chính xác");
+            return;
+        }
+        AccountDto account = accounts.get(0);
         if (account == null) {
             facesNoticeController.addErrorMessage("Tên đăng nhập hoặc mật khẩu không chính xác");
             return;
